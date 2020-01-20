@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.unit;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.input.ManInputListener;
@@ -14,9 +15,6 @@ public class SpearMen extends AbstractWarrior {
     public SpearMen(ShapeRenderer shapeRenderer, SelectionController selectionController) {
         this.shapeRenderer = shapeRenderer;
         this.selectionController =  selectionController;
-        setX(10);
-        setY(10);
-
         addListener(new ManInputListener(this, selectionController));
 
         setTouchable(Touchable.enabled);

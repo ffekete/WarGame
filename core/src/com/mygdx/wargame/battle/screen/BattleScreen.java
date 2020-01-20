@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.SpearMen;
+import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.battle.unit.Unit;
 import com.mygdx.wargame.util.DrawUtils;
 
@@ -40,6 +41,7 @@ public class BattleScreen implements Screen {
 
         AbstractWarrior spearman  =new SpearMen(shapeRenderer, selectionController);
         Unit unit = new Unit();
+        unit.setTeam(Team.own);
         spearman.setUnit(unit);
         spearman.setPosition(10,10);
         unit.add(spearman);
@@ -50,6 +52,24 @@ public class BattleScreen implements Screen {
         spearman2.setPosition(35,10);
         unit.add(spearman2);
         stage.addActor(spearman2);
+
+
+
+        AbstractWarrior spearman3  =new SpearMen(shapeRenderer, selectionController);
+        Unit unit2 = new Unit();
+        unit2.setTeam(Team.enemy);
+        spearman3.setUnit(unit2);
+        spearman3.setPosition(100,50);
+        unit2.add(spearman3);
+        stage.addActor(spearman3);
+
+        AbstractWarrior spearman4  =new SpearMen(shapeRenderer, selectionController);
+        spearman4.setUnit(unit2);
+        spearman4.setPosition(135,50);
+        unit2.add(spearman4);
+        stage.addActor(spearman4);
+
+
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
