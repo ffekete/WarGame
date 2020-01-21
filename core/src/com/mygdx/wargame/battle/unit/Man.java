@@ -21,4 +21,9 @@ public interface Man {
             shapeRenderer.circle(x + 10, y + 10, 12);
         }
     }
+
+    public float getX();
+    public float getY();
+
+    public String getName();
 }

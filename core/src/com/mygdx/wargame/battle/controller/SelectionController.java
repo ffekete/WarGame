@@ -36,4 +36,8 @@ public class SelectionController {
     public void deselectAll() {
         selected.clear();
     }
+
+    public Unit selectedUnit() {
+        return selected.stream().findFirst().get().getUnit();
+    }
 }

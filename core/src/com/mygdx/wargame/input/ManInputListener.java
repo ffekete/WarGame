@@ -1,9 +1,8 @@
 package com.mygdx.wargame.input;
 
-import com.badlogic.gdx.ai.pfa.PathFinder;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.wargame.battle.combat.MeleeAttackTargetCalculator;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.unit.Man;
 import com.mygdx.wargame.battle.unit.Team;
@@ -12,10 +11,12 @@ public class ManInputListener extends InputListener {
 
     private Man man;
     private SelectionController selectionController;
+    private MeleeAttackTargetCalculator meleeAttackTargetCalculator;
 
-    public ManInputListener(Man man, SelectionController selectionController) {
+    public ManInputListener(Man man, SelectionController selectionController, MeleeAttackTargetCalculator meleeAttackTargetCalculator) {
         this.man = man;
         this.selectionController = selectionController;
+        this.meleeAttackTargetCalculator = meleeAttackTargetCalculator;
     }
 
     @Override
@@ -29,6 +30,7 @@ public class ManInputListener extends InputListener {
                 selectionController.selectUnit(man.getUnit());
         } else if (man.getUnit().getTeam().equals(Team.enemy)) {
             // attack
+            meleeAttackTargetCalculator.calculate(selectionController.selectedUnit(), man.getUnit());
         } else {
             // ???
         }
