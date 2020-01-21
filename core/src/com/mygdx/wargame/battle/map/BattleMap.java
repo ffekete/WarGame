@@ -25,7 +25,7 @@ public class BattleMap {
 
     public void addPath(AbstractWarrior man, Collection<Node> path) {
         paths.computeIfAbsent(man, value -> new ArrayList<>());
-        //paths.get(man).clear();
+        paths.get(man).clear();
         paths.get(man).addAll(path);
     }
 

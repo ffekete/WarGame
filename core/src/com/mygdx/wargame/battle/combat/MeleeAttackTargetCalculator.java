@@ -35,7 +35,7 @@ public class MeleeAttackTargetCalculator implements AttackCalculator {
 
         // rotate
         SequenceAction sequenceAction = new SequenceAction();
-        //sequenceAction.addAction(new RotateUnit(attacker, defender.getCenter(), battleMap, shapeRenderer, stage));
+        sequenceAction.addAction(new RotateUnit(attacker, defender.getCenter(), battleMap, shapeRenderer, stage));
         sequenceAction.addAction(new CalculatePathToUnit(attackers, battleMap, defenders, shapeRenderer, stage));
         attacker.addAction(sequenceAction);
     }

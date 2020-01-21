@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
@@ -17,6 +18,7 @@ public class CalculatePathToUnit extends Action {
     private Set<AbstractWarrior> selected = new HashSet<>(); // this is empty
     private ShapeRenderer shapeRenderer;
     private Stage stage;
+    private boolean calculated = false;
 
     public CalculatePathToUnit(Set<AbstractWarrior> attackers, BattleMap battleMap, Set<AbstractWarrior> defenders, ShapeRenderer shapeRenderer, Stage stage) {
         this.attackers = attackers;
@@ -28,40 +30,44 @@ public class CalculatePathToUnit extends Action {
 
     @Override
     public boolean act(float delta) {
-        for (AbstractWarrior at : attackers) {
+        if(!calculated) {
+            calculated = true;
+            for (AbstractWarrior at : attackers) {
 
-            // walk through attackers, find a free defender
-            AbstractWarrior target = findNextFree(at, defenders, false);
+                // walk through attackers, find a free defender
+                AbstractWarrior target = findNextFree(at, defenders, false);
 
-            if (target == null) {
-                // if nothing left, find the closest selected
-                target = findNextFree(at, selected, true);
-            } else {
-                selected.add(target); // select target
-                defenders.remove(target);
+                if (target == null) {
+                    // if nothing left, find the closest selected
+                    target = findNextFree(at, selected, true);
+                } else {
+                    selected.add(target); // select target
+                    defenders.remove(target);
+                }
+
+                // walk to the defender
+                //double[] p = battleMap.getPath(at).isEmpty() ? new double[]{at.getX(), at.getY()} : new double[]{battleMap.getPath(at).get(battleMap.getPath(at).size() - 1).getX(), battleMap.getPath(at).get(battleMap.getPath(at).size() - 1).getY()};
+                double[] p = new double[]{at.getX(), at.getY()};
+
+                Node s = new Node(0, (int) p[0], (int) p[1], 0, shapeRenderer);
+                Node g = new Node(0, target.getX(), target.getY(), 0, shapeRenderer);
+                List<Node> paths = battleMap.calculatePath(s, g);
+                System.out.println("Found target : " + target.getName() + " for " + at.getName());
+
+                // save paths for later
+                System.out.println("paths size: " + paths.size());
+
+                paths.remove(paths.size() - 1);
+                paths.remove(0);
+
+                //paths.forEach(stage::addActor);
+                battleMap.addPath(at, paths);
+
+                at.addAction(new MovementAction(battleMap, at, stage));
             }
-
-            // walk to the defender
-            //double[] p = battleMap.getPath(at).isEmpty() ? new double[]{at.getX(), at.getY()} : new double[]{battleMap.getPath(at).get(battleMap.getPath(at).size() - 1).getX(), battleMap.getPath(at).get(battleMap.getPath(at).size() - 1).getY()};
-            double[] p =  new double[]{at.getX(), at.getY()};
-
-            Node s = new Node(0, (int)p[0], (int)p[1], 0, shapeRenderer);
-            Node g = new Node(0, target.getX(), target.getY(), 0, shapeRenderer);
-            List<Node> paths = battleMap.calculatePath(s, g);
-            System.out.println("Found target : " + target.getName() + " for " + at.getName());
-
-            // save paths for later
-            System.out.println("paths size: " + paths.size());
-
-            paths.remove(paths.size() - 1);
-            paths.remove(0);
-
-            //paths.forEach(stage::addActor);
-            battleMap.addPath(at, paths);
-            at.addAction(new RotateUnit(at.getUnit(), at.getUnit().getCenter(), battleMap, shapeRenderer, stage));
-            at.addAction(new MovementAction(battleMap, at, stage));
         }
-        return true;
+
+        return attackers.stream().allMatch(u -> u.getActions().isEmpty());
     }
 
     private AbstractWarrior findNextFree(AbstractWarrior attacker, Set<AbstractWarrior> defenders,

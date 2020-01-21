@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
@@ -65,7 +66,7 @@ public class RotateUnit extends Action {
             calculated = true;
         }
 
-        return true;
+        return unit.getAll().stream().allMatch(u -> u.getActions().isEmpty());
     }
 
     public float getAngle(double[] from, double[] target) {

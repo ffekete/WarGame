@@ -20,7 +20,6 @@ public class MovementAction extends Action {
         this.stage = stage;
     }
 
-
     @Override
     public boolean act(float delta) {
         List<Node> nodes = battleMap.getPath(abstractWarrior);
