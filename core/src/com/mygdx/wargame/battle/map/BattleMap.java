@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.map;
 
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Man;
+import com.sun.org.apache.xalan.internal.xsltc.dom.NodeSortRecord;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class BattleMap {
 
     public void addPath(AbstractWarrior man, Collection<Node> path) {
         paths.computeIfAbsent(man, value -> new ArrayList<>());
-        paths.get(man).clear();
+        //paths.get(man).clear();
         paths.get(man).addAll(path);
     }
 

@@ -47,16 +47,16 @@ public class BattleScreen implements Screen {
         BattleMap battleMap = new BattleMap(new PathFinder(1000, 1000, shapeRenderer), 1000, 1000);
         meleeAttackTargetCalculator = new MeleeAttackTargetCalculator(battleMap, stage, shapeRenderer);
 
-        Unit unit = new Unit();
+        Unit unit = new Unit(16, 10);
         unit.setTeam(Team.own);
 
-        Unit unit2 = new Unit();
+        Unit unit2 = new Unit(16, 10);
         unit2.setTeam(Team.enemy);
 
 
         for(int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
-                createSpearmanUnit(unit, String.valueOf(i), 10 + i * 10, 10 + j * 10, battleMap);
+                createSpearmanUnit(unit, String.valueOf(i), 50 + i * 10, 50 + j * 10, battleMap);
             }
         }
 
@@ -66,7 +66,8 @@ public class BattleScreen implements Screen {
             }
         }
 
-
+        stage.addActor(unit);
+        stage.addActor(unit2);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(stage);
