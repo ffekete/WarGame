@@ -86,7 +86,7 @@ public class Node extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.circle(getX() + 1, getY() + 1, 2);
+        shapeRenderer.setColor(Color.valueOf("44440033"));
+        shapeRenderer.circle(getX(), getY(), 1);
     }
 }

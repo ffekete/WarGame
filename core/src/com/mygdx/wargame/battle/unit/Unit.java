@@ -7,18 +7,18 @@ import java.util.Set;
 
 public class Unit extends Actor {
 
-    private Set<Man> entities;
+    private Set<AbstractWarrior> entities;
     private Team team;
 
     public Unit() {
         this.entities = new HashSet<>();
     }
 
-    public void add(Man man) {
+    public void add(AbstractWarrior man) {
         this.entities.add(man);
     }
 
-    public Set<Man> getAll() {
+    public Set<AbstractWarrior> getAll() {
         return entities;
     }
 

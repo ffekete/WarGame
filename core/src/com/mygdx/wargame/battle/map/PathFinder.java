@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PathFinder {
 
-    public static final float DEFAULT_EFFORT = 40;
+    public static final float DEFAULT_EFFORT = 4;
 
     private static final int[][] availableNodesForCheck =
             new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
@@ -92,8 +92,8 @@ public class PathFinder {
             openNodes.remove(current);
             closedNodes.add(current);
 
-            if ((current.getX() == target.getX() && current.getY() == target.getY()) ||
-                    map[(int)target.getX()][(int)target.getY()].getTile() == 1 && distance(current, new Node(0, target.getX(), target.getY(), 0.f, shapeRenderer)) < 2
+            if ((distance(current, new Node(0, target.getX(), target.getY(), 0.f, shapeRenderer)) < 30) ||
+                    map[(int)target.getX()][(int)target.getY()].getTile() == 1 && distance(current, new Node(0, target.getX(), target.getY(), 0.f, shapeRenderer)) < 10
             ) {
                 // hurra
                 Node c = current;

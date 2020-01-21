@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.battle.unit.Man;
+import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Unit;
+import com.mygdx.wargame.battle.unit.action.MovementAction;
 
 import java.util.*;
 
@@ -24,15 +25,15 @@ public class MeleeAttackTargetCalculator implements AttackCalculator {
     @Override
     public void calculate(Unit attacker, Unit defender) {
         // list all defenders
-        Set<Man> attackers = new HashSet<>(attacker.getAll());
+        Set<AbstractWarrior> attackers = new HashSet<>(attacker.getAll());
 
-        Set<Man> defenders = new HashSet<>(defender.getAll());
-        Set<Man> selected = new HashSet<>(); // this is empty
+        Set<AbstractWarrior> defenders = new HashSet<>(defender.getAll());
+        Set<AbstractWarrior> selected = new HashSet<>(); // this is empty
 
         long startTime = System.currentTimeMillis();
-        for (Man at : attackers) {
+        for (AbstractWarrior at : attackers) {
             // walk through attackers, find a free defender
-            Man target = findNextFree(at, defenders, false);
+            AbstractWarrior target = findNextFree(at, defenders, false);
 
             if (target == null) {
                 // if nothing left, find the closest selected
@@ -51,15 +52,20 @@ public class MeleeAttackTargetCalculator implements AttackCalculator {
 
             // save paths for later
             System.out.println("paths size: " + paths.size());
-            paths.forEach(stage::addActor);
+
+            paths.remove(paths.size() - 1);
+            paths.remove(0);
+
+            //paths.forEach(stage::addActor);
             battleMap.addPath(at, paths);
+            at.addAction(new MovementAction(battleMap, at, stage));
         }
 
 
     }
 
-    private Man findNextFree(Man attacker, Set<Man> defenders, boolean randomized) {
-        TreeMap<Float, Man> distances = new TreeMap<>();
+    private AbstractWarrior findNextFree(AbstractWarrior attacker, Set<AbstractWarrior> defenders, boolean randomized) {
+        TreeMap<Float, AbstractWarrior> distances = new TreeMap<>();
         defenders.forEach(
                 d -> {
                     distances.put(distance(d.getX(), d.getY(), attacker.getX(), attacker.getY()), d);

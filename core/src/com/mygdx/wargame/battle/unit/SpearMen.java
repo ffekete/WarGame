@@ -20,7 +20,7 @@ public class SpearMen extends AbstractWarrior {
         addListener(new ManInputListener(this, selectionController, meleeAttackTargetCalculator));
 
         setTouchable(Touchable.enabled);
-        setSize(20, 20);
+        setSize(10, 10);
     }
 
     @Override
@@ -31,10 +31,5 @@ public class SpearMen extends AbstractWarrior {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(getX(), getY(), shapeRenderer, selectionController);
-    }
-
-    @Override
-    public float getX() {
-        return super.getX();
     }
 }

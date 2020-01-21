@@ -47,42 +47,24 @@ public class BattleScreen implements Screen {
         BattleMap battleMap = new BattleMap(new PathFinder(1000, 1000, shapeRenderer), 1000, 1000);
         meleeAttackTargetCalculator = new MeleeAttackTargetCalculator(battleMap, stage, shapeRenderer);
 
-        AbstractWarrior spearman = new SpearMen("1", shapeRenderer, selectionController, meleeAttackTargetCalculator);
         Unit unit = new Unit();
         unit.setTeam(Team.own);
-        spearman.setUnit(unit);
-        spearman.setPosition(10, 10);
-        unit.add(spearman);
-        stage.addActor(spearman);
 
-        AbstractWarrior spearman2 = new SpearMen("2", shapeRenderer, selectionController, meleeAttackTargetCalculator);
-        spearman2.setUnit(unit);
-        spearman2.setPosition(35, 10);
-        unit.add(spearman2);
-        stage.addActor(spearman2);
-
-
-        AbstractWarrior spearman3 = new SpearMen("3", shapeRenderer, selectionController, meleeAttackTargetCalculator);
         Unit unit2 = new Unit();
         unit2.setTeam(Team.enemy);
-        spearman3.setUnit(unit2);
-        spearman3.setPosition(500, 500);
-        unit2.add(spearman3);
-        stage.addActor(spearman3);
-
-        AbstractWarrior spearman4 = new SpearMen("4", shapeRenderer, selectionController, meleeAttackTargetCalculator);
-        spearman4.setUnit(unit2);
-        spearman4.setPosition(535, 500);
-        unit2.add(spearman4);
-        stage.addActor(spearman4);
-
-        AbstractWarrior spearman5 = new SpearMen("5", shapeRenderer, selectionController, meleeAttackTargetCalculator);
-        spearman5.setUnit(unit);
-        spearman5.setPosition(80, 10);
-        unit.add(spearman5);
-        stage.addActor(spearman5);
 
 
+        for(int i = 0; i < 16; i++) {
+            for (int j = 0; j < 10; j++) {
+                createSpearmanUnit(unit, String.valueOf(i), 10 + i * 10, 10 + j * 10, battleMap);
+            }
+        }
+
+        for(int i = 0; i < 16; i++) {
+            for (int j = 0; j < 10; j++) {
+                createSpearmanUnit(unit2, String.valueOf(i), 500 + i * 10, 500 + j * 10, battleMap);
+            }
+        }
 
 
 
@@ -90,6 +72,15 @@ public class BattleScreen implements Screen {
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+    }
+
+    private void createSpearmanUnit(Unit unit, String s, int i, int i2, BattleMap battleMap) {
+        AbstractWarrior spearman2 = new SpearMen(s, shapeRenderer, selectionController, meleeAttackTargetCalculator);
+        spearman2.setUnit(unit);
+        spearman2.setPosition(i, i2);
+        unit.add(spearman2);
+        stage.addActor(spearman2);
+        battleMap.setObstacle(spearman2.getX(), spearman2.getY(), 1);
     }
 
     @Override

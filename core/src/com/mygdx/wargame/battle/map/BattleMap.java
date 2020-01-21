@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.map;
 
+import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Man;
 
 import java.util.*;
@@ -9,8 +10,7 @@ public class BattleMap {
     private int[][] map;
     private PathFinder pathFinder;
 
-    private Map<Man, List<Node>> paths = new HashMap<>();
-
+    private Map<AbstractWarrior, List<Node>> paths = new HashMap<>();
 
     public BattleMap(PathFinder pathFinder, int x, int y) {
         map = new int[x][y];
@@ -22,10 +22,18 @@ public class BattleMap {
         return pathFinder.findAStar(s, g);
     }
 
-    public void addPath(Man man, Collection<Node> path) {
+    public void addPath(AbstractWarrior man, Collection<Node> path) {
         paths.computeIfAbsent(man, value -> new ArrayList<>());
         paths.get(man).clear();
         paths.get(man).addAll(path);
+    }
+
+    public void setObstacle(float x, float y, int value) {
+        this.pathFinder.getObstacleMap()[(int)x][(int)y].setTile(value);
+    }
+
+    public List<Node> getPath(AbstractWarrior abstractWarrior) {
+        return paths.get(abstractWarrior);
     }
 
 }

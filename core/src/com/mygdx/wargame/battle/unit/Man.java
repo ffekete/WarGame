@@ -15,10 +15,10 @@ public interface Man {
 
     public default void draw(float x, float y, ShapeRenderer shapeRenderer, SelectionController selectionController) {
         shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.circle(x + 10, y + 10, 10);
+        shapeRenderer.circle(x, y, 5);
         if (selectionController.isSelected(this)) {
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle(x + 10, y + 10, 12);
+            shapeRenderer.circle(x, y, 6);
         }
     }
 
