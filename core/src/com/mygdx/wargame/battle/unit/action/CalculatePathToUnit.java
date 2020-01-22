@@ -50,16 +50,18 @@ public class CalculatePathToUnit extends Action {
 
                 Node s = new Node(0, (int) p[0], (int) p[1], 0, shapeRenderer);
                 Node g = new Node(0, target.getX(), target.getY(), 0, shapeRenderer);
-                List<Node> paths = battleMap.calculatePath(s, g, 50);
-                System.out.println("Found target : " + target.getName() + " for " + at.getName());
 
-                paths.remove(paths.size() - 1);
-                paths.remove(0);
+                new Thread(() -> {
+                    List<Node> paths = battleMap.calculatePath(s, g, 50);
 
-                // save paths
-                battleMap.addPath(at, paths);
+                    paths.remove(paths.size() - 1);
+                    paths.remove(0);
 
-                at.addAction(new MovementAction(battleMap, at, stage));
+                    // save paths
+                    battleMap.addPath(at, paths);
+
+                    at.addAction(new MovementAction(battleMap, at, stage));
+                }).start();
             }
         }
 
