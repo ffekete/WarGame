@@ -34,7 +34,7 @@ public class CalculatePathToUnit extends Action {
             calculated = true;
             for (AbstractWarrior at : attackers) {
 
-                // walk through attackers, find a free defender
+                // cycle through attackers, find a free defender
                 AbstractWarrior target = findNextFree(at, defenders, false);
 
                 if (target == null) {
@@ -46,21 +46,17 @@ public class CalculatePathToUnit extends Action {
                 }
 
                 // walk to the defender
-                //double[] p = battleMap.getPath(at).isEmpty() ? new double[]{at.getX(), at.getY()} : new double[]{battleMap.getPath(at).get(battleMap.getPath(at).size() - 1).getX(), battleMap.getPath(at).get(battleMap.getPath(at).size() - 1).getY()};
                 double[] p = new double[]{at.getX(), at.getY()};
 
                 Node s = new Node(0, (int) p[0], (int) p[1], 0, shapeRenderer);
                 Node g = new Node(0, target.getX(), target.getY(), 0, shapeRenderer);
-                List<Node> paths = battleMap.calculatePath(s, g);
+                List<Node> paths = battleMap.calculatePath(s, g, 50);
                 System.out.println("Found target : " + target.getName() + " for " + at.getName());
-
-                // save paths for later
-                System.out.println("paths size: " + paths.size());
 
                 paths.remove(paths.size() - 1);
                 paths.remove(0);
 
-                //paths.forEach(stage::addActor);
+                // save paths
                 battleMap.addPath(at, paths);
 
                 at.addAction(new MovementAction(battleMap, at, stage));

@@ -19,8 +19,8 @@ public class BattleMap {
         this.pathFinder.init(map);
     }
 
-    public List<Node> calculatePath(Node s, Node g) {
-        return pathFinder.findAStar(s, g);
+    public List<Node> calculatePath(Node s, Node g, int proximity) {
+        return pathFinder.findAStar(s, g, proximity);
     }
 
     public void addPath(AbstractWarrior man, Collection<Node> path) {

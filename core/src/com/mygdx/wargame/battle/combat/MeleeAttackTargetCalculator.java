@@ -9,31 +9,29 @@ import com.mygdx.wargame.battle.unit.Unit;
 import com.mygdx.wargame.battle.unit.action.CalculatePathToUnit;
 import com.mygdx.wargame.battle.unit.action.RotateUnit;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MeleeAttackTargetCalculator implements AttackCalculator {
 
     private BattleMap battleMap;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
+    private UnitSelectionUtils unitSelectionUtils;
 
-    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, ShapeRenderer shapeRenderer) {
+    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, ShapeRenderer shapeRenderer, UnitSelectionUtils unitSelectionUtils) {
         this.battleMap = battleMap;
         this.stage = stage;
         this.shapeRenderer = shapeRenderer;
+        this.unitSelectionUtils = unitSelectionUtils;
     }
 
     @Override
     public void calculate(Unit attacker, Unit defender) {
-        // list all defenders
         Set<AbstractWarrior> attackers = new HashSet<>(attacker.getAll());
-
         Set<AbstractWarrior> defenders = new HashSet<>(defender.getAll());
-        Set<AbstractWarrior> selected = new HashSet<>(); // this is empty
 
-        long startTime = System.currentTimeMillis();
-
-        // rotate
+        // rotate then move
         SequenceAction sequenceAction = new SequenceAction();
         sequenceAction.addAction(new RotateUnit(attacker, defender.getCenter(), battleMap, shapeRenderer, stage));
         sequenceAction.addAction(new CalculatePathToUnit(attackers, battleMap, defenders, shapeRenderer, stage));

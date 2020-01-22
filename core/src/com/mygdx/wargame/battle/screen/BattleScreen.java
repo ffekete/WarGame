@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.wargame.battle.combat.MeleeAttackTargetCalculator;
+import com.mygdx.wargame.battle.combat.UnitSelectionUtils;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.PathFinder;
@@ -42,10 +43,8 @@ public class BattleScreen implements Screen {
         stage = new Stage();
 
 
-
-
         BattleMap battleMap = new BattleMap(new PathFinder(1000, 1000, shapeRenderer), 1000, 1000);
-        meleeAttackTargetCalculator = new MeleeAttackTargetCalculator(battleMap, stage, shapeRenderer);
+        meleeAttackTargetCalculator = new MeleeAttackTargetCalculator(battleMap, stage, shapeRenderer, new UnitSelectionUtils());
 
         Unit unit = new Unit(16, 10);
         unit.setTeam(Team.own);
@@ -54,13 +53,13 @@ public class BattleScreen implements Screen {
         unit2.setTeam(Team.enemy);
 
 
-        for(int i = 0; i < 16; i++) {
+        for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
                 createSpearmanUnit(unit, String.valueOf(i), 50 + i * 10, 50 + j * 10, battleMap);
             }
         }
 
-        for(int i = 0; i < 16; i++) {
+        for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
                 createSpearmanUnit(unit2, String.valueOf(i), 500 + i * 10, 500 + j * 10, battleMap);
             }

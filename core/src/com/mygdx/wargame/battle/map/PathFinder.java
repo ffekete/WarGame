@@ -52,7 +52,7 @@ public class PathFinder {
         obstacleMap[x][y].setTile(value);
     }
 
-    public List<Node> findAStar(Node start, Node target) {
+    public List<Node> findAStar(Node start, Node target, int proximity) {
 
         Node[][] map = getObstacleMap();
         List<Node> openNodes = new ArrayList<>();
@@ -92,7 +92,7 @@ public class PathFinder {
             openNodes.remove(current);
             closedNodes.add(current);
 
-            if ((distance(current, new Node(0, target.getX(), target.getY(), 0.f, shapeRenderer)) < 30) ||
+            if ((distance(current, new Node(0, target.getX(), target.getY(), 0.f, shapeRenderer)) <= proximity) ||
                     map[(int)target.getX()][(int)target.getY()].getTile() == 1 && distance(current, new Node(0, target.getX(), target.getY(), 0.f, shapeRenderer)) < 10
             ) {
                 // hurra
@@ -183,7 +183,7 @@ public class PathFinder {
 
 
         long start = System.currentTimeMillis();
-        List<Node> path = pathFinder.findAStar(new Node(0, 0, 0, 0, null), new Node(0, 98, 99, 0, null));
+        List<Node> path = pathFinder.findAStar(new Node(0, 0, 0, 0, null), new Node(0, 98, 99, 0, null), 0);
         System.out.println(System.currentTimeMillis() - start);
 
         int i = 1;

@@ -12,12 +12,14 @@ public class Unit extends Actor {
     private Team team;
     private AbstractWarrior[][] layout;
     private int cx = 0, cy = 0;
-    private int widht, height;
+    private int width, height;
+
+    private int range;
 
     public Unit(int x, int y) {
         this.entities = new HashSet<>();
         this.layout = new AbstractWarrior[x][y];
-        this.widht = x;
+        this.width = x;
         this.height = y;
     }
 
@@ -32,7 +34,7 @@ public class Unit extends Actor {
         layout[cx][cy] = man;
 
         cx++;
-        if(cx >= widht) {
+        if(cx >= width) {
             cx = 0;
             cy++;
         }
@@ -94,5 +96,43 @@ public class Unit extends Actor {
                 return Double.compare(o2.getY(),o1.getY());
             }
         }).get().getY();
+    }
+
+    public void reform() {
+        // todo reform unit here
+    }
+
+    public int getUnitWidth() {
+        int max = 0;
+
+        for (int i = 0; i < height; i++) {
+            int length = 0;
+            for (int j = 0; j < width; j++) {
+                if(layout[j][i] != null)
+                    length++;
+            }
+            if (length > max)
+                max = length;
+        }
+        return max;
+    }
+
+    public int getUnitHeight() {
+        int max = 0;
+
+        for (int i = 0; i < width; i++) {
+            int length = 0;
+            for (int j = 0; j < height; j++) {
+                if(layout[i][j] != null)
+                    length++;
+            }
+            if (length > max)
+                max = length;
+        }
+        return max;
+    }
+
+    public int getRange() {
+        return range;
     }
 }

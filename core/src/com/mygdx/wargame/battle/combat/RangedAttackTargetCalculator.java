@@ -46,7 +46,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             // walk to the defender
             Node s = new Node(0, at.getX(), at.getY(), 0, shapeRenderer);
             Node g = new Node(0, target.getX(), target.getY(), 0, shapeRenderer);
-            List<Node> paths = battleMap.calculatePath(s, g);
+            List<Node> paths = battleMap.calculatePath(s, g, attacker.getRange());
             System.out.println("Found target : " + target.getName() + " for " + at.getName());
             System.out.println("Elapsed: " + (System.currentTimeMillis() - startTime));
 

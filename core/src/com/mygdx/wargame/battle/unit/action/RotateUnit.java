@@ -8,6 +8,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Unit;
+import com.mygdx.wargame.util.MathUtils;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -31,7 +32,7 @@ public class RotateUnit extends Action {
         this.shapeRenderer = shapeRenderer;
         this.stage = stage;
         double[] centre = unit.getCenter();
-        this.angle = getAngle(centre, target);
+        this.angle = MathUtils.getAngle(centre, target);
     }
 
     @Override
@@ -45,20 +46,16 @@ public class RotateUnit extends Action {
             for (int i = 0; i < unit.getLayout().length; i++) {
                 for (int j = 0; j < unit.getLayout()[0].length; j++) {
 
+                    // get warrior
                     AbstractWarrior man = unit.getLayout()[i][j];
-                    double[] pt = {man.getX(), man.getY()};
 
                     // find new position
-                    AffineTransform.getRotateInstance(Math.toRadians(angle), centre[0], centre[1])
-                            .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
-                    double newX = pt[0];
-                    double newY = pt[1];
+                    rotateToNewPosition(centre, man, new double[]{man.getX(), man.getY()});
 
-                    newCoord.put(man, new Point((int) newX, (int) newY));
-
-                    // calculate path to new position
+                    // calculate path to new rotated position
                     battleMap.addPath(man, battleMap.calculatePath(new Node(0, (int) man.getX(), (int) man.getY(), 0, shapeRenderer),
-                            new Node(0, (int) newX, (int) newY, 0, shapeRenderer)));
+                            new Node(0, newCoord.get(man).x, (int) newCoord.get(man).y, 0, shapeRenderer), 1));
+
                     man.addAction(new MovementAction(battleMap, man, stage));
                 }
             }
@@ -69,13 +66,12 @@ public class RotateUnit extends Action {
         return unit.getAll().stream().allMatch(u -> u.getActions().isEmpty());
     }
 
-    public float getAngle(double[] from, double[] target) {
-        float angle = (float) Math.toDegrees(Math.atan2(target[1] - from[1], target[0] - from[0]));
+    private void rotateToNewPosition(double[] centre, AbstractWarrior man, double[] pt) {
+        AffineTransform.getRotateInstance(Math.toRadians(angle), centre[0], centre[1])
+                .transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
 
-        if(angle < 0){
-            angle += 360;
-        }
-
-        return -1 * angle;
+        newCoord.put(man, new Point((int) pt[0], (int) pt[1]));
     }
+
+
 }
