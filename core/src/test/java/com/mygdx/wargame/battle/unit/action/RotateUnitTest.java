@@ -1,7 +1,6 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.PathFinder;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.SpearMen;
 import com.mygdx.wargame.battle.unit.Unit;
@@ -13,13 +12,13 @@ import static org.hamcrest.Matchers.is;
 public class RotateUnitTest {
 
     Unit unit = new Unit(16, 10);
-    BattleMap battleMap = new BattleMap(new PathFinder(1000, 1000, null), 1000, 1000);
+    BattleMap battleMap = new BattleMap(1000, 1000);
     private RotateUnit rotateUnit;
 
     @Test
     public void test() {
 
-         rotateUnit = new RotateUnit(unit, unit.getCenter(), battleMap, null, null);
+         rotateUnit = new RotateUnit(unit, unit.getCenter(), battleMap, null, null, null);
 
         for(int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
@@ -37,7 +36,7 @@ public class RotateUnitTest {
     public void test2() {
 
         unit = new Unit(2,2);
-        rotateUnit = new RotateUnit(unit, unit.getCenter(), battleMap, null, null);
+        rotateUnit = new RotateUnit(unit, unit.getCenter(), battleMap, null, null, null);
 
         createSpearmanUnit(unit, "", 10, 10, battleMap);
         createSpearmanUnit(unit, "", 180, 15, battleMap);

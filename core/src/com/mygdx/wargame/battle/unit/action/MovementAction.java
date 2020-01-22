@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.unit.action;
 
+import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.wargame.battle.map.BattleMap;
@@ -7,6 +8,7 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 
 import java.util.List;
+import java.util.Set;
 
 public class MovementAction extends Action {
 
@@ -37,10 +39,9 @@ public class MovementAction extends Action {
         if (nodes.isEmpty()) {
             return true;
         }
-        abstractWarrior.setPosition(nodes.get(nodes.size() - 1).getX(), nodes.get(nodes.size() - 1).getY());
 
-        //stage.getActors().removeValue(nodes.get(nodes.size() -1), true);
-        battleMap.getPath(abstractWarrior).remove(nodes.get(nodes.size() - 1));
+        Node nextNode = nodes.remove(0);
+        abstractWarrior.setPosition(nextNode.getX(), nextNode.getY());
         return false;
     }
 }

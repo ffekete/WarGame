@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Unit;
 import com.mygdx.wargame.battle.unit.action.CalculatePathToUnit;
@@ -18,12 +19,14 @@ public class MeleeAttackTargetCalculator implements AttackCalculator {
     private Stage stage;
     private ShapeRenderer shapeRenderer;
     private UnitSelectionUtils unitSelectionUtils;
+    private NodeGraph nodeGraph;
 
-    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, ShapeRenderer shapeRenderer, UnitSelectionUtils unitSelectionUtils) {
+    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, ShapeRenderer shapeRenderer, UnitSelectionUtils unitSelectionUtils, NodeGraph nodeGraph) {
         this.battleMap = battleMap;
         this.stage = stage;
         this.shapeRenderer = shapeRenderer;
         this.unitSelectionUtils = unitSelectionUtils;
+        this.nodeGraph = nodeGraph;
     }
 
     @Override
@@ -33,8 +36,8 @@ public class MeleeAttackTargetCalculator implements AttackCalculator {
 
         // rotate then move
         SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(new RotateUnit(attacker, defender.getCenter(), battleMap, shapeRenderer, stage));
-        sequenceAction.addAction(new CalculatePathToUnit(attackers, battleMap, defenders, shapeRenderer, stage));
+        sequenceAction.addAction(new RotateUnit(attacker, defender.getCenter(), battleMap, shapeRenderer, stage, nodeGraph));
+        sequenceAction.addAction(new CalculatePathToUnit(attackers, battleMap, defenders, shapeRenderer, stage, nodeGraph));
         attacker.addAction(sequenceAction);
     }
 }

@@ -3,16 +3,15 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Unit;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +24,14 @@ public class RotateUnit extends Action {
     private ShapeRenderer shapeRenderer;
     private Stage stage;
     private float angle;
+    private NodeGraph nodeGraph;
 
-    public RotateUnit(Unit unit, double[] target, BattleMap battleMap, ShapeRenderer shapeRenderer, Stage stage) {
+    public RotateUnit(Unit unit, double[] target, BattleMap battleMap, ShapeRenderer shapeRenderer, Stage stage, NodeGraph nodeGraph) {
         this.unit = unit;
         this.battleMap = battleMap;
         this.shapeRenderer = shapeRenderer;
         this.stage = stage;
+        this.nodeGraph = nodeGraph;
         double[] centre = unit.getCenter();
         this.angle = MathUtils.getAngle(centre, target);
     }
@@ -53,8 +54,8 @@ public class RotateUnit extends Action {
                     rotateToNewPosition(centre, man, new double[]{man.getX(), man.getY()});
 
                     // calculate path to new rotated position
-                    battleMap.addPath(man, battleMap.calculatePath(new Node(0, (int) man.getX(), (int) man.getY(), 0, shapeRenderer),
-                            new Node(0, newCoord.get(man).x, (int) newCoord.get(man).y, 0, shapeRenderer), 1));
+                    battleMap.addPath(man, battleMap.calculatePath(nodeGraph.getNodeWeb()[(int)man.getX()][(int)man.getY()],
+                            nodeGraph.getNodeWeb()[(int)newCoord.get(man).getX()][(int)newCoord.get(man).getY()], 0));
 
                     man.addAction(new MovementAction(battleMap, man, stage));
                 }

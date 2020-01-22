@@ -1,11 +1,12 @@
 package com.mygdx.wargame.battle.unit.action;
 
+import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 
 import java.util.*;
@@ -19,13 +20,15 @@ public class CalculatePathToUnit extends Action {
     private ShapeRenderer shapeRenderer;
     private Stage stage;
     private boolean calculated = false;
+    private NodeGraph nodeGraph;
 
-    public CalculatePathToUnit(Set<AbstractWarrior> attackers, BattleMap battleMap, Set<AbstractWarrior> defenders, ShapeRenderer shapeRenderer, Stage stage) {
+    public CalculatePathToUnit(Set<AbstractWarrior> attackers, BattleMap battleMap, Set<AbstractWarrior> defenders, ShapeRenderer shapeRenderer, Stage stage, NodeGraph nodeGraph) {
         this.attackers = attackers;
         this.battleMap = battleMap;
         this.defenders = defenders;
         this.shapeRenderer = shapeRenderer;
         this.stage = stage;
+        this.nodeGraph = nodeGraph;
     }
 
     @Override
@@ -48,14 +51,11 @@ public class CalculatePathToUnit extends Action {
                 // walk to the defender
                 double[] p = new double[]{at.getX(), at.getY()};
 
-                Node s = new Node(0, (int) p[0], (int) p[1], 0, shapeRenderer);
-                Node g = new Node(0, target.getX(), target.getY(), 0, shapeRenderer);
+                Node s = nodeGraph.getNodeWeb()[(int)p[0]][(int)p[1]];//new Node((float) p[0],(float) p[1]);
+                Node g = nodeGraph.getNodeWeb()[(int)target.getX()][(int)target.getY()];
 
                 new Thread(() -> {
-                    List<Node> paths = battleMap.calculatePath(s, g, 50);
-
-                    paths.remove(paths.size() - 1);
-                    paths.remove(0);
+                    GraphPath<Node> paths = battleMap.calculatePath(s, g, 50);
 
                     // save paths
                     battleMap.addPath(at, paths);
