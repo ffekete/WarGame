@@ -26,11 +26,13 @@ public class MovementAction extends Action {
     @Override
     public boolean act(float delta) {
         List<Node> nodes = battleMap.getPath(abstractWarrior);
-        if (nodes.isEmpty()) {
+        if (nodes.isEmpty() || abstractWarrior.getMovementPoints() <= 0) {
+            abstractWarrior.setMovementPoints(0);
             return true;
         }
 
         Node nextNode = nodes.remove(0);
+        abstractWarrior.consumeMovementPoint(1);
         abstractWarrior.setPosition(nextNode.getX(), nextNode.getY());
         return false;
     }

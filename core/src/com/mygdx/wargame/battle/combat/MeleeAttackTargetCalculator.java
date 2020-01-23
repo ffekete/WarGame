@@ -1,43 +1,33 @@
 package com.mygdx.wargame.battle.combat;
 
+import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
-import com.mygdx.wargame.battle.unit.Unit;
-import com.mygdx.wargame.battle.unit.action.CalculatePathToUnit;
-import com.mygdx.wargame.battle.unit.action.RotateUnit;
-
-import java.util.HashSet;
-import java.util.Set;
+import com.mygdx.wargame.battle.unit.action.MovementAction;
 
 public class MeleeAttackTargetCalculator implements AttackCalculator {
 
     private BattleMap battleMap;
     private Stage stage;
-    private ShapeRenderer shapeRenderer;
-    private UnitSelectionUtils unitSelectionUtils;
     private NodeGraph nodeGraph;
 
-    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, ShapeRenderer shapeRenderer, UnitSelectionUtils unitSelectionUtils, NodeGraph nodeGraph) {
+    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, NodeGraph nodeGraph) {
         this.battleMap = battleMap;
         this.stage = stage;
-        this.shapeRenderer = shapeRenderer;
-        this.unitSelectionUtils = unitSelectionUtils;
         this.nodeGraph = nodeGraph;
     }
 
     @Override
-    public void calculate(Unit attacker, Unit defender) {
-        Set<AbstractWarrior> attackers = new HashSet<>(attacker.getAll());
-        Set<AbstractWarrior> defenders = new HashSet<>(defender.getAll());
+    public void calculate(AbstractWarrior attacker, AbstractWarrior defender) {
 
-        // rotate then move
-        SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(new RotateUnit(attacker, defender.getCenter(), battleMap, shapeRenderer, stage, nodeGraph));
-        sequenceAction.addAction(new CalculatePathToUnit(attackers, battleMap, defenders, shapeRenderer, stage, nodeGraph));
-        attacker.addAction(sequenceAction);
+        Node start = nodeGraph.getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
+        Node end = nodeGraph.getNodeWeb()[(int) defender.getX()][(int) defender.getY()];
+        GraphPath<Node> paths = battleMap.calculatePath(start, end, 50);
+        battleMap.addPath(attacker, paths);
+        attacker.addAction(new MovementAction(battleMap, attacker, stage));
     }
 }

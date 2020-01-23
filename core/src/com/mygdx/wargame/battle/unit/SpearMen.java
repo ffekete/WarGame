@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.unit;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -13,11 +14,10 @@ public class SpearMen extends AbstractWarrior {
     private SelectionController selectionController;
     private String name;
 
-    public SpearMen(String name, ShapeRenderer shapeRenderer, SelectionController selectionController, MeleeAttackTargetCalculator meleeAttackTargetCalculator) {
+    public SpearMen(String name, ShapeRenderer shapeRenderer, SelectionController selectionController) {
         this.shapeRenderer = shapeRenderer;
-        this.selectionController =  selectionController;
+        this.selectionController = selectionController;
         this.name = name;
-        addListener(new ManInputListener(this, selectionController, meleeAttackTargetCalculator));
 
         setTouchable(Touchable.enabled);
         setSize(10, 10);

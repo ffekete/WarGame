@@ -17,10 +17,7 @@ public class GroundInputListener extends InputListener {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if(selectionController.isSelected(man))
-                selectionController.deselectUnit(man.getUnit());
-            else
-                selectionController.selectUnit(man.getUnit());
+
             return true;
         }
     }

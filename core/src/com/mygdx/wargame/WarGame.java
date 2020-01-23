@@ -12,7 +12,7 @@ public class WarGame extends Game {
 
 	@Override
 	public void create () {
-		SelectionController selectionController =  new SelectionController(new HashSet<>());
+		SelectionController selectionController =  new SelectionController(null);
 		battleScreen = new BattleScreen(selectionController);
 		this.setScreen(battleScreen);
 	}

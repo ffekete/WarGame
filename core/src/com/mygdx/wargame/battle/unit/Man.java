@@ -9,21 +9,14 @@ public interface Man {
 
     public void setHp(int hp);
 
-    void setUnit(Unit unit);
-
-    Unit getUnit();
-
-    public default void draw(float x, float y, ShapeRenderer shapeRenderer, SelectionController selectionController) {
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.circle(x, y, 5);
-        if (selectionController.isSelected(this)) {
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle(x, y, 6);
-        }
-    }
+    public void draw(float x, float y, ShapeRenderer shapeRenderer, SelectionController selectionController);
 
     public float getX();
     public float getY();
 
     public String getName();
+
+    Team getTeam();
+
+    void setTeam(Team team);
 }

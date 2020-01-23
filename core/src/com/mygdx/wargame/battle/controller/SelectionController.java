@@ -1,43 +1,35 @@
 package com.mygdx.wargame.battle.controller;
 
+import com.mygdx.wargame.battle.unit.AbstractWarrior;
 import com.mygdx.wargame.battle.unit.Man;
-import com.mygdx.wargame.battle.unit.Unit;
 
 import java.util.Set;
 
 public class SelectionController {
 
-    private Set<Man> selected;
+    private AbstractWarrior selected;
 
-    public SelectionController(Set<Man> selected) {
+    public SelectionController(AbstractWarrior selected) {
         this.selected = selected;
     }
 
-    public boolean isSelected(Man man) {
-        return selected.contains(man);
+    public boolean isSelected(AbstractWarrior man) {
+        if(selected == null)
+            return false;
+        return selected.equals(man);
     }
 
-    public void select(Man man) {
-        this.selected.add(man);
+    public void select(AbstractWarrior man) {
+        this.selected = man;
     }
 
-    public void deselect(Man man) {
-        this.selected.remove(man);
+    public AbstractWarrior getSelected() {
+        return this.selected;
     }
 
-    public void selectUnit(Unit unit) {
-        unit.getAll().forEach(this::select);
+    public void deselect() {
+        this.selected = null;
     }
 
-    public void deselectUnit(Unit unit) {
-        unit.getAll().forEach(this::deselect);
-    }
 
-    public void deselectAll() {
-        selected.clear();
-    }
-
-    public Unit selectedUnit() {
-        return selected.stream().findFirst().get().getUnit();
-    }
 }

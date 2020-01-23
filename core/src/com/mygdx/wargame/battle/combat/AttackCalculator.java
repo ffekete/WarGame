@@ -1,7 +1,7 @@
 package com.mygdx.wargame.battle.combat;
 
-import com.mygdx.wargame.battle.unit.Unit;
+import com.mygdx.wargame.battle.unit.AbstractWarrior;
 
 public interface AttackCalculator {
-    void calculate(Unit attacker, Unit defender);
+    void calculate(AbstractWarrior attacker, AbstractWarrior defender);
 }
