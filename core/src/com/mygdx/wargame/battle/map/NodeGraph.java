@@ -17,33 +17,38 @@ public class NodeGraph implements IndexedGraph<Node> {
     private Node[][] nodeWeb;
     ObjectMap<Node, Array<Connection<Node>>> streetsMap = new ObjectMap<>();
     private int lastNodeIndex = 0;
+    IndexedAStarPathFinder<Node> indexedAStarPathFinder;
 
     public NodeGraph(int width, int height) {
         this.width = width;
         this.height = height;
-         nodeWeb = new Node[width][height];
+        nodeWeb = new Node[width][height];
     }
 
-    public void addNode(Node node){
+    public void addNode(Node node) {
         node.setIndex(lastNodeIndex);
-        nodeWeb[(int)node.getX()][(int)node.getY()] = node;
+        nodeWeb[(int) node.getX()][(int) node.getY()] = node;
         lastNodeIndex++;
 
         nodes.add(node);
     }
 
-    public void connectCities(Node fromNode, Node toNode){
+    public void connectCities(Node fromNode, Node toNode) {
         Edge edge = new Edge(fromNode, toNode);
-        if(!streetsMap.containsKey(fromNode)){
+        if (!streetsMap.containsKey(fromNode)) {
             streetsMap.put(fromNode, new Array<Connection<Node>>());
         }
         streetsMap.get(fromNode).add(edge);
         edges.add(edge);
     }
 
-    public GraphPath<Node> findPath(Node startNode, Node toNode){
+    public GraphPath<Node> findPath(Node startNode, Node toNode) {
         GraphPath<Node> cityPath = new DefaultGraphPath<>();
-        new IndexedAStarPathFinder<>(this).searchNodePath(startNode, toNode, nodeHeuristic, cityPath);
+        if (indexedAStarPathFinder == null) {
+            indexedAStarPathFinder = new IndexedAStarPathFinder<>(this);
+        }
+
+        indexedAStarPathFinder.searchNodePath(startNode, toNode, nodeHeuristic, cityPath);
         return cityPath;
     }
 
@@ -59,7 +64,7 @@ public class NodeGraph implements IndexedGraph<Node> {
 
     @Override
     public Array<Connection<Node>> getConnections(Node fromNode) {
-        if(streetsMap.containsKey(fromNode)){
+        if (streetsMap.containsKey(fromNode)) {
             return streetsMap.get(fromNode);
         }
 

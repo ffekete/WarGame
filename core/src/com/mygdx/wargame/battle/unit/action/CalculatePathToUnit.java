@@ -1,7 +1,9 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.wargame.battle.map.BattleMap;
@@ -9,7 +11,10 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class CalculatePathToUnit extends Action {
 
@@ -33,8 +38,9 @@ public class CalculatePathToUnit extends Action {
 
     @Override
     public boolean act(float delta) {
-        if(!calculated) {
+        if (!calculated) {
             calculated = true;
+            long st = System.currentTimeMillis();
             for (AbstractWarrior at : attackers) {
 
                 // cycle through attackers, find a free defender
@@ -51,18 +57,19 @@ public class CalculatePathToUnit extends Action {
                 // walk to the defender
                 double[] p = new double[]{at.getX(), at.getY()};
 
-                Node s = nodeGraph.getNodeWeb()[(int)p[0]][(int)p[1]];//new Node((float) p[0],(float) p[1]);
-                Node g = nodeGraph.getNodeWeb()[(int)target.getX()][(int)target.getY()];
+                Node s = nodeGraph.getNodeWeb()[(int) p[0]][(int) p[1]];//new Node((float) p[0],(float) p[1]);
+                Node g = nodeGraph.getNodeWeb()[(int) target.getX()][(int) target.getY()];
 
-                new Thread(() -> {
-                    GraphPath<Node> paths = battleMap.calculatePath(s, g, 50);
+                GraphPath<Node> paths = battleMap.calculatePath(s, g, 50);
 
-                    // save paths
-                    battleMap.addPath(at, paths);
+                // save paths
+                battleMap.addPath(at, paths);
 
-                    at.addAction(new MovementAction(battleMap, at, stage));
-                }).start();
+                at.addAction(new MovementAction(battleMap, at, stage));
+
+
             }
+            System.out.println("Elapsed: " + (System.currentTimeMillis() - st));
         }
 
         return attackers.stream().allMatch(u -> u.getActions().isEmpty());

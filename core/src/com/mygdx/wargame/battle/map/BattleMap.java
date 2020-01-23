@@ -1,10 +1,7 @@
 package com.mygdx.wargame.battle.map;
 
-import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.mygdx.wargame.battle.unit.AbstractWarrior;
-import com.mygdx.wargame.battle.unit.Man;
-import com.sun.org.apache.xalan.internal.xsltc.dom.NodeSortRecord;
 
 import java.util.*;
 
@@ -12,35 +9,36 @@ public class BattleMap {
 
     int width, height;
 
-    NodeGraph nodeGraph;
+    NodeGraph nodeGraphLv1;
+
     private Map<AbstractWarrior, List<Node>> paths = new HashMap<>();
 
     public BattleMap(int x, int y) {
         this.width = x;
         this.height = y;
 
-        this.nodeGraph = new NodeGraph(width, height);
+        this.nodeGraphLv1 = new NodeGraph(width, height);
 
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 Node node;
 
-                if (nodeGraph.getNodeWeb()[i][j] == null) {
+                if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
                     node = new Node(i, j);
                 } else {
-                    node = nodeGraph.getNodeWeb()[i][j];
+                    node = nodeGraphLv1.getNodeWeb()[i][j];
                 }
 
-                nodeGraph.addNode(node);
+                nodeGraphLv1.addNode(node);
 
-                addNodeIfDoesntExisit(node, i - 1, j, nodeGraph);
-                addNodeIfDoesntExisit(node, i - 1, j - 1, nodeGraph);
-                addNodeIfDoesntExisit(node, i - 1, j + 1, nodeGraph);
-                addNodeIfDoesntExisit(node, i, j - 1, nodeGraph);
-                addNodeIfDoesntExisit(node, i, j + 1, nodeGraph);
-                addNodeIfDoesntExisit(node, i + 1, j, nodeGraph);
-                addNodeIfDoesntExisit(node, i + 1, j - 1, nodeGraph);
-                addNodeIfDoesntExisit(node, i + 1, j + 1, nodeGraph);
+                addNodeIfDoesntExisit(node, i - 1, j, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i - 1, j - 1, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i - 1, j + 1, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i, j - 1, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i, j + 1, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i + 1, j, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i + 1, j - 1, nodeGraphLv1);
+                addNodeIfDoesntExisit(node, i + 1, j + 1, nodeGraphLv1);
             }
         }
 
@@ -64,7 +62,7 @@ public class BattleMap {
     }
 
     public GraphPath<Node> calculatePath(Node s, Node g, int proximity) {
-        return nodeGraph.findPath(s, g);
+        return nodeGraphLv1.findPath(s, g);
     }
 
     public void addPath(AbstractWarrior man, GraphPath<Node> path) {
@@ -84,7 +82,7 @@ public class BattleMap {
         return paths.get(abstractWarrior);
     }
 
-    public NodeGraph getNodeGraph() {
-        return nodeGraph;
+    public NodeGraph getNodeGraphLv1() {
+        return nodeGraphLv1;
     }
 }

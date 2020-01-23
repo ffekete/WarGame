@@ -43,7 +43,7 @@ public class BattleScreen implements Screen {
 
 
         BattleMap battleMap = new BattleMap(1000, 1000);
-        meleeAttackTargetCalculator = new MeleeAttackTargetCalculator(battleMap, stage, shapeRenderer, new UnitSelectionUtils(), battleMap.getNodeGraph());
+        meleeAttackTargetCalculator = new MeleeAttackTargetCalculator(battleMap, stage, shapeRenderer, new UnitSelectionUtils(), battleMap.getNodeGraphLv1());
 
         Unit unit = new Unit(16, 10);
         unit.setTeam(Team.own);

@@ -25,16 +25,6 @@ public class MovementAction extends Action {
 
     @Override
     public boolean act(float delta) {
-
-        // check if 50% of the units get a path
-        if (notStartedYet && (float) (abstractWarrior.getUnit().getAll().stream()
-                .filter(warrior -> battleMap.getPath(warrior).isEmpty())
-                .count()) / ((float) abstractWarrior.getUnit().getAll().size()) > 0.8f) {
-            return false;
-        } else {
-            notStartedYet = false;
-        }
-
         List<Node> nodes = battleMap.getPath(abstractWarrior);
         if (nodes.isEmpty()) {
             return true;
