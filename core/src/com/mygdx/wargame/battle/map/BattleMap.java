@@ -1,23 +1,32 @@
 package com.mygdx.wargame.battle.map;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
-import com.mygdx.wargame.battle.unit.AbstractWarrior;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.mygdx.wargame.battle.controller.SelectionController;
+import com.mygdx.wargame.battle.unit.AbstractMech;
+import com.mygdx.wargame.input.GroundInputListener;
 
 import java.util.*;
 
 public class BattleMap {
 
     int width, height;
+    private NodeGraph nodeGraphLv1;
+    private SelectionController selectionController;
+    private Stage stage;
 
-    NodeGraph nodeGraphLv1;
+    private Map<AbstractMech, List<Node>> paths = new HashMap<>();
 
-    private Map<AbstractWarrior, List<Node>> paths = new HashMap<>();
-
-    public BattleMap(int x, int y) {
+    public BattleMap(int x, int y, SelectionController selectionController, Stage stage) {
         this.width = x;
         this.height = y;
+        this.selectionController = selectionController;
+        this.stage = stage;
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
+
+
 
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -25,6 +34,11 @@ public class BattleMap {
 
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
                     node = new Node(i, j);
+                    GroundInputListener groundInputListener = new GroundInputListener(this.selectionController,nodeGraphLv1, this, node);
+                    node.addListener(groundInputListener);
+                    node.setTouchable(Touchable.enabled);
+                    stage.addActor(node);
+                    node.setSize(1, 1);
                 } else {
                     node = nodeGraphLv1.getNodeWeb()[i][j];
                 }
@@ -52,6 +66,11 @@ public class BattleMap {
         Node newNode;
         if (nodeGraph.getNodeWeb()[i][j] == null) {
             newNode = new Node(i,j);
+            GroundInputListener groundInputListener = new GroundInputListener(this.selectionController,nodeGraphLv1, this, node);
+            node.addListener(groundInputListener);
+            node.setTouchable(Touchable.enabled);
+            stage.addActor(node);
+            node.setSize(1, 1);
         } else {
             newNode = nodeGraph.getNodeWeb()[i][j];
         }
@@ -65,7 +84,7 @@ public class BattleMap {
         return nodeGraphLv1.findPath(s, g);
     }
 
-    public void addPath(AbstractWarrior man, GraphPath<Node> path) {
+    public void addPath(AbstractMech man, GraphPath<Node> path) {
         Iterator<Node> it = path.iterator();
         paths.computeIfAbsent(man, v -> new LinkedList<>());
         while(it.hasNext()) {
@@ -78,8 +97,8 @@ public class BattleMap {
 
     }
 
-    public List<Node> getPath(AbstractWarrior abstractWarrior) {
-        return paths.get(abstractWarrior);
+    public List<Node> getPath(AbstractMech abstractMech) {
+        return paths.get(abstractMech);
     }
 
     public NodeGraph getNodeGraphLv1() {
