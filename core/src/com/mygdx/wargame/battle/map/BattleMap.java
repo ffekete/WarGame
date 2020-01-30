@@ -93,8 +93,8 @@ public class BattleMap {
 
     }
 
-    public void setObstacle(float x, float y, int value) {
-
+    public void setObstacle(float x, float y) {
+        nodeGraphLv1.disconnectCities(nodeGraphLv1.getNodeWeb()[(int)x][(int)y]);
     }
 
     public List<Node> getPath(AbstractMech abstractMech) {

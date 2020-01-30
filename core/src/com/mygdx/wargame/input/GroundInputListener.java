@@ -34,6 +34,9 @@ public class GroundInputListener extends InputListener {
             Node start = nodeGraph.getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
             Node end = nodeGraph.getNodeWeb()[(int) node.getX()][(int) node.getY()];
 
+            // reconnect so that attacker can move
+            nodeGraph.reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attacker.getX()][(int)attacker.getY()]);
+
             GraphPath<Node> paths = battleMap.calculatePath(start, end, 50);
             battleMap.addPath(attacker, paths);
             attacker.addAction(new MovementAction(battleMap, attacker));

@@ -6,15 +6,16 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.unit.AbstractMech;
+import com.mygdx.wargame.battle.unit.action.MoveAndAttackAction;
 import com.mygdx.wargame.battle.unit.action.MovementAction;
 
-public class MeleeAttackTargetCalculator implements AttackCalculator {
+public class RangedAttackTargetCalculator implements AttackCalculator {
 
     private BattleMap battleMap;
     private Stage stage;
     private NodeGraph nodeGraph;
 
-    public MeleeAttackTargetCalculator(BattleMap battleMap, Stage stage, NodeGraph nodeGraph) {
+    public RangedAttackTargetCalculator(BattleMap battleMap, Stage stage, NodeGraph nodeGraph) {
         this.battleMap = battleMap;
         this.stage = stage;
         this.nodeGraph = nodeGraph;
@@ -26,9 +27,13 @@ public class MeleeAttackTargetCalculator implements AttackCalculator {
         if (attacker != null && defender != null) {
             Node start = nodeGraph.getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
             Node end = nodeGraph.getNodeWeb()[(int) defender.getX()][(int) defender.getY()];
+
+            // reconnect so that attacker can move
+            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attacker.getX()][(int)attacker.getY()]);
+
             GraphPath<Node> paths = battleMap.calculatePath(start, end, 50);
             battleMap.addPath(attacker, paths);
-            attacker.addAction(new MovementAction(battleMap, attacker));
+            attacker.addAction(new MoveAndAttackAction(battleMap, attacker, defender));
         }
     }
 }

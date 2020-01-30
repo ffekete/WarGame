@@ -1,8 +1,6 @@
 package com.mygdx.wargame.battle.unit;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,12 +12,13 @@ public class AbstractMech extends Actor implements Man {
     private Team team;
     private int movementPoints;
     private int initiative;
+    private int step = 1;
+    private int slow = 0;
+    private State state = State.Idle;
+    private Direction direction = Direction.Left;
+    private float range = 15f;
 
-    public TextureRegion textureRegion;
-
-    public AbstractMech() {
-        this.textureRegion =  new TextureRegion(new Texture(Gdx.files.internal("Maverick.png")));
-    }
+    protected TextureRegion textureRegion;
 
     @Override
     public int getHp() {
@@ -29,6 +28,14 @@ public class AbstractMech extends Actor implements Man {
     @Override
     public void setHp(int hp) {
 
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 
     @Override
@@ -44,7 +51,22 @@ public class AbstractMech extends Actor implements Man {
     @Override
     public void draw(float x, float y, SpriteBatch spriteBatch, SelectionController selectionController, TextureRegion texture) {
         spriteBatch.setColor(Color.WHITE);
-        spriteBatch.draw(texture, x, y, 2, 2);
+
+        if(slow == 0) {
+            slow++;
+            step++;
+            if (step == 5) step = 1;
+        } else {
+            slow++;
+            if(slow == 5)
+                slow = 0;
+        }
+
+        texture.setRegion(step * 32, state.getCol() * 32, 32, 32);
+
+        texture
+                .flip(direction.isMirrored(), false);
+        spriteBatch.draw(texture, x - 0.5f, y, 2, 2);
     }
 
     public void setMovementPoints(int movementPoints) {
@@ -65,5 +87,17 @@ public class AbstractMech extends Actor implements Man {
 
     public void setInitiative(int initiative) {
         this.initiative = initiative;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public float getRange() {
+        return range;
     }
 }
