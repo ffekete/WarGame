@@ -31,7 +31,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             // reconnect so that attacker can move
             battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attacker.getX()][(int)attacker.getY()]);
 
-            GraphPath<Node> paths = battleMap.calculatePath(start, end, 50);
+            GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attacker, paths);
             attacker.addAction(new MoveAndAttackAction(battleMap, attacker, defender));
         }

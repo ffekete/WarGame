@@ -34,7 +34,7 @@ public class MovementAction extends Action {
             // no more nodes left to move
             if (nodes.isEmpty()) {
                 abstractMech.setState(State.Idle);
-                battleMap.setObstacle((int)abstractMech.getX(), (int)abstractMech.getY());
+                battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
                 return true;
             }
 
@@ -42,7 +42,7 @@ public class MovementAction extends Action {
             if (abstractMech.getMovementPoints() <= 0) {
                 abstractMech.setMovementPoints(0);
                 abstractMech.setState(State.Idle);
-            battleMap.setObstacle((int)abstractMech.getX(), (int)abstractMech.getY());
+                battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
                 return true;
             }
 

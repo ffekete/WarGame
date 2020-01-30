@@ -26,8 +26,6 @@ public class BattleMap {
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
-
-
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 Node node;
@@ -45,20 +43,20 @@ public class BattleMap {
 
                 nodeGraphLv1.addNode(node);
 
-                addNodeIfDoesntExisit(node, i - 1, j, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i - 1, j - 1, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i - 1, j + 1, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i, j - 1, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i, j + 1, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i + 1, j, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i + 1, j - 1, nodeGraphLv1);
-                addNodeIfDoesntExisit(node, i + 1, j + 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i - 1, j, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i - 1, j - 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i - 1, j + 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i, j - 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i, j + 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i + 1, j, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i + 1, j - 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i + 1, j + 1, nodeGraphLv1);
             }
         }
 
     }
 
-    private void addNodeIfDoesntExisit(Node node, int i, int j, NodeGraph nodeGraph) {
+    private void addNodeIfDoesntExists(Node node, int i, int j, NodeGraph nodeGraph) {
         if (i < 0 || i >= width || j < 0 || j >= height) {
             return;
         }
@@ -80,7 +78,7 @@ public class BattleMap {
         nodeGraph.connectCities(newNode, node);
     }
 
-    public GraphPath<Node> calculatePath(Node s, Node g, int proximity) {
+    public GraphPath<Node> calculatePath(Node s, Node g) {
         return nodeGraphLv1.findPath(s, g);
     }
 
@@ -90,10 +88,13 @@ public class BattleMap {
         while(it.hasNext()) {
             paths.get(man).add(it.next());
         }
-
     }
 
-    public void setObstacle(float x, float y) {
+    public void setPermanentObstacle(float x, float y) {
+        nodeGraphLv1.setImpassable(x, y);
+    }
+
+    public void setTemporaryObstacle(float x, float y) {
         nodeGraphLv1.disconnectCities(nodeGraphLv1.getNodeWeb()[(int)x][(int)y]);
     }
 

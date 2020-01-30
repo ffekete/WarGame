@@ -17,6 +17,7 @@ public class NodeGraph implements IndexedGraph<Node> {
     private Array<Node> nodes = new Array<>();
     private Array<Edge> edges = new Array<>();
     private Node[][] nodeWeb;
+    private boolean[][] impassable;
     private ObjectMap<Node, Array<Edge>> nodeEdges = new ObjectMap<>();
     ObjectMap<Node, Array<Connection<Node>>> streetsMap = new ObjectMap<>();
     private int lastNodeIndex = 0;
@@ -26,6 +27,7 @@ public class NodeGraph implements IndexedGraph<Node> {
         this.width = width;
         this.height = height;
         nodeWeb = new Node[width][height];
+        impassable = new boolean[width][height];
     }
 
     public void addNode(Node node) {
@@ -37,16 +39,16 @@ public class NodeGraph implements IndexedGraph<Node> {
     }
 
     public void reconnectCities(Node fromNode) {
-        int x = (int)fromNode.getX();
-        int y = (int)fromNode.getY();
+        int x = (int) fromNode.getX();
+        int y = (int) fromNode.getY();
 
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
 
-                if(i == 1 && j == 1)
+                if (i == 1 && j == 1)
                     continue;
 
-                if(x + i < 0 || y + j < 0 || x + i >= width || y + j >= height)
+                if (x + i < 0 || y + j < 0 || x + i >= width || y + j >= height)
                     continue;
 
                 connectCities(fromNode, nodeWeb[x + i][y + j]);
@@ -55,6 +57,9 @@ public class NodeGraph implements IndexedGraph<Node> {
     }
 
     public void connectCities(Node fromNode, Node toNode) {
+        if (impassable[(int) fromNode.getX()][(int) fromNode.getY()] && impassable[(int) toNode.getX()][(int) toNode.getY()])
+            return;
+
         Edge edge = new Edge(fromNode, toNode);
         if (!streetsMap.containsKey(fromNode)) {
             streetsMap.put(fromNode, new Array<Connection<Node>>());
@@ -62,7 +67,7 @@ public class NodeGraph implements IndexedGraph<Node> {
         streetsMap.get(fromNode).add(edge);
         edges.add(edge);
 
-        if(!nodeEdges.containsKey(fromNode)) {
+        if (!nodeEdges.containsKey(fromNode)) {
             nodeEdges.put(fromNode, new Array<>());
         }
         nodeEdges.get(fromNode).add(edge);
@@ -70,7 +75,7 @@ public class NodeGraph implements IndexedGraph<Node> {
 
     public void disconnectCities(Node fromNode) {
         streetsMap.get(fromNode).clear();
-        edges.removeAll(nodeEdges.get(fromNode),true);
+        edges.removeAll(nodeEdges.get(fromNode), true);
         nodeEdges.get(fromNode).clear();
     }
 
@@ -117,5 +122,10 @@ public class NodeGraph implements IndexedGraph<Node> {
 
     public ObjectMap<Node, Array<Edge>> getNodeEdges() {
         return nodeEdges;
+    }
+
+    public void setImpassable(float x, float y) {
+        impassable[(int) x][(int) y] = true;
+        disconnectCities(nodeWeb[(int) x][(int) y]);
     }
 }

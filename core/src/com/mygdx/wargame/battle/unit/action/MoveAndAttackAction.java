@@ -23,7 +23,7 @@ public class MoveAndAttackAction extends Action {
         this.battleMap = battleMap;
         this.attacker = attacker;
         this.defender = defender;
-        battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attacker.getX()][(int)attacker.getY()]);
+        battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()]);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MoveAndAttackAction extends Action {
             // no more nodes left to mov
             if (nodes.isEmpty() || MathUtils.getDistance(attacker.getX(), attacker.getY(), defender.getX(), defender.getY()) <= attacker.getRange()) {
                 attacker.setState(State.Idle);
-                battleMap.setObstacle((int)attacker.getX(), (int)attacker.getY());
+                battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
                 // todo add attack here
                 return true;
             }
@@ -46,7 +46,7 @@ public class MoveAndAttackAction extends Action {
             // no more movement points left to move
             if (attacker.getMovementPoints() <= 0) {
 
-                battleMap.setObstacle((int)attacker.getX(), (int)attacker.getY());
+                battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
                 attacker.setMovementPoints(0);
                 attacker.setState(State.Idle);
                 return true;

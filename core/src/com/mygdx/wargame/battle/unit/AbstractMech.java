@@ -8,7 +8,6 @@ import com.mygdx.wargame.battle.controller.SelectionController;
 
 public class AbstractMech extends Actor implements Man {
 
-    public static final int RADIUS = 2;
     private Team team;
     private int movementPoints;
     private int initiative;
@@ -50,22 +49,24 @@ public class AbstractMech extends Actor implements Man {
 
     @Override
     public void draw(float x, float y, SpriteBatch spriteBatch, SelectionController selectionController, TextureRegion texture) {
-        spriteBatch.setColor(Color.WHITE);
+        if (team == Team.enemy)
+            spriteBatch.setColor(Color.WHITE);
+        else
+            spriteBatch.setColor(Color.YELLOW);
 
-        if(slow == 0) {
+        if (slow == 0) {
             slow++;
             step++;
             if (step == 5) step = 1;
         } else {
             slow++;
-            if(slow == 5)
+            if (slow == 5)
                 slow = 0;
         }
 
         texture.setRegion(step * 32, state.getCol() * 32, 32, 32);
 
-        texture
-                .flip(direction.isMirrored(), false);
+        texture.flip(direction.isMirrored(), false);
         spriteBatch.draw(texture, x - 0.5f, y, 2, 2);
     }
 
@@ -78,7 +79,7 @@ public class AbstractMech extends Actor implements Man {
     }
 
     public void consumeMovementPoint(int amount) {
-        this.movementPoints--;
+        this.movementPoints-= amount;
     }
 
     public int getInitiative() {

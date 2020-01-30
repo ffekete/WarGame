@@ -68,21 +68,21 @@ public class BattleScreen implements Screen {
         unit3.setTeam(Team.own);
         unit3.setMovementPoints(300);
         unit3.addListener(new MechClickInputListener(unit3, selectionController, rangedAttackTargetCalculator));
-        battleMap.setObstacle(63, 30);
+        battleMap.setTemporaryObstacle(63, 30);
 
         Scout unit2 = new Scout("2", spriteBatch, selectionController, assetManager);
         unit2.setPosition(60, 30);
         unit2.setTeam(Team.own);
         unit2.setMovementPoints(300);
         unit2.addListener(new MechClickInputListener(unit2, selectionController, rangedAttackTargetCalculator));
-        battleMap.setObstacle(60, 30);
+        battleMap.setTemporaryObstacle(60, 30);
 
         Scout unit = new Scout("1", spriteBatch, selectionController, assetManager);
         unit.setPosition(10, 10);
         unit.setTeam(Team.enemy);
         unit.setMovementPoints(10);
         unit.addListener(new MechClickInputListener(unit, selectionController, rangedAttackTargetCalculator));
-        battleMap.setObstacle(10, 10);
+        battleMap.setTemporaryObstacle(10, 10);
 
         stage.addActor(unit2);
         stage.addActor(unit3);
