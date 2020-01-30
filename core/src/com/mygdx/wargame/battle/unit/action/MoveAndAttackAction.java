@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.AbstractMech;
@@ -18,17 +19,20 @@ public class MoveAndAttackAction extends Action {
     private AbstractMech attacker;
     private AbstractMech defender;
     private float counter = 0.0f;
+    private ActionLock actionLock;
 
-    public MoveAndAttackAction(BattleMap battleMap, AbstractMech attacker, AbstractMech defender) {
+    public MoveAndAttackAction(BattleMap battleMap, AbstractMech attacker, AbstractMech defender, ActionLock actionLock) {
         this.battleMap = battleMap;
         this.attacker = attacker;
         this.defender = defender;
+        this.actionLock = actionLock;
         battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()]);
     }
 
     @Override
     public boolean act(float delta) {
         counter += delta;
+        actionLock.setLocked(true);
 
         if (counter > 0.15f) {
             counter = 0.0f;
@@ -39,6 +43,7 @@ public class MoveAndAttackAction extends Action {
             if (nodes.isEmpty() || MathUtils.getDistance(attacker.getX(), attacker.getY(), defender.getX(), defender.getY()) <= attacker.getRange()) {
                 attacker.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
+                actionLock.setLocked(false);
                 // todo add attack here
                 return true;
             }
@@ -49,6 +54,7 @@ public class MoveAndAttackAction extends Action {
                 battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
                 attacker.setMovementPoints(0);
                 attacker.setState(State.Idle);
+                actionLock.setLocked(false);
                 return true;
             }
 

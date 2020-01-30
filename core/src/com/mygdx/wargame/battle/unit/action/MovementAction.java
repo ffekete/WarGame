@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.AbstractMech;
@@ -16,15 +17,18 @@ public class MovementAction extends Action {
     private BattleMap battleMap;
     private AbstractMech abstractMech;
     private float counter = 0.0f;
+    private ActionLock actionLock;
 
-    public MovementAction(BattleMap battleMap, AbstractMech abstractMech) {
+    public MovementAction(BattleMap battleMap, AbstractMech abstractMech, ActionLock actionLock) {
         this.battleMap = battleMap;
         this.abstractMech = abstractMech;
+        this.actionLock = actionLock;
     }
 
     @Override
     public boolean act(float delta) {
         counter += delta;
+        actionLock.setLocked(true);
 
         if (counter > 0.15f) {
             counter = 0.0f;
@@ -35,6 +39,7 @@ public class MovementAction extends Action {
             if (nodes.isEmpty()) {
                 abstractMech.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
+                actionLock.setLocked(false);
                 return true;
             }
 
@@ -42,6 +47,7 @@ public class MovementAction extends Action {
             if (abstractMech.getMovementPoints() <= 0) {
                 abstractMech.setMovementPoints(0);
                 abstractMech.setState(State.Idle);
+                actionLock.setLocked(false);
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
                 return true;
             }

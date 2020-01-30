@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.controller.SelectionController;
+import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.unit.Scout;
 import com.mygdx.wargame.battle.unit.Team;
@@ -31,11 +32,12 @@ public class BattleScreen implements Screen {
     private SelectionController selectionController;
     private RangedAttackTargetCalculator rangedAttackTargetCalculator;
     private SpriteBatch spriteBatch;
-    AssetManager assetManager;
-    Texture texture;
+    private AssetManager assetManager;
+    private ActionLock actionLock;
 
     public BattleScreen(SelectionController selectionController) {
         this.selectionController = selectionController;
+        this.actionLock = new ActionLock();
     }
 
     @Override
@@ -59,29 +61,29 @@ public class BattleScreen implements Screen {
 
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        BattleMap battleMap = new BattleMap(100, 100, selectionController, stage);
+        BattleMap battleMap = new BattleMap(100, 100, selectionController, stage, actionLock);
 
-        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, stage, battleMap.getNodeGraphLv1());
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, actionLock);
 
         Scout unit3 = new Scout("2", spriteBatch, selectionController, assetManager);
         unit3.setPosition(63, 30);
         unit3.setTeam(Team.own);
         unit3.setMovementPoints(300);
-        unit3.addListener(new MechClickInputListener(unit3, selectionController, rangedAttackTargetCalculator));
+        unit3.addListener(new MechClickInputListener(unit3, selectionController, rangedAttackTargetCalculator, actionLock));
         battleMap.setTemporaryObstacle(63, 30);
 
         Scout unit2 = new Scout("2", spriteBatch, selectionController, assetManager);
         unit2.setPosition(60, 30);
         unit2.setTeam(Team.own);
         unit2.setMovementPoints(300);
-        unit2.addListener(new MechClickInputListener(unit2, selectionController, rangedAttackTargetCalculator));
+        unit2.addListener(new MechClickInputListener(unit2, selectionController, rangedAttackTargetCalculator, actionLock));
         battleMap.setTemporaryObstacle(60, 30);
 
         Scout unit = new Scout("1", spriteBatch, selectionController, assetManager);
         unit.setPosition(10, 10);
         unit.setTeam(Team.enemy);
         unit.setMovementPoints(10);
-        unit.addListener(new MechClickInputListener(unit, selectionController, rangedAttackTargetCalculator));
+        unit.addListener(new MechClickInputListener(unit, selectionController, rangedAttackTargetCalculator, actionLock));
         battleMap.setTemporaryObstacle(10, 10);
 
         stage.addActor(unit2);
@@ -89,9 +91,6 @@ public class BattleScreen implements Screen {
         stage.addActor(unit);
 
         Gdx.input.setInputProcessor(stage);
-
-        texture = new Texture(Gdx.files.internal("Maverick.png"));
-
     }
 
     @Override
