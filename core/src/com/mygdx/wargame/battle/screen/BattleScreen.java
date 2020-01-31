@@ -16,9 +16,9 @@ import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.unit.Scout;
+import com.mygdx.wargame.mech.Scout;
 import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.input.MechClickInputListener;
+import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.util.DrawUtils;
 
 public class BattleScreen implements Screen {

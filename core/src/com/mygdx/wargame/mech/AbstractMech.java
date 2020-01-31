@@ -1,10 +1,13 @@
-package com.mygdx.wargame.battle.unit;
+package com.mygdx.wargame.mech;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.controller.SelectionController;
+import com.mygdx.wargame.battle.unit.Direction;
+import com.mygdx.wargame.battle.unit.State;
+import com.mygdx.wargame.battle.unit.Team;
 
 public class AbstractMech extends Actor implements Man {
 

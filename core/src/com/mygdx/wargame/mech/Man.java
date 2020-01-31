@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.unit;
+package com.mygdx.wargame.mech;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.wargame.battle.controller.SelectionController;
+import com.mygdx.wargame.battle.unit.Team;
 
 public interface Man {
     public int getHp();

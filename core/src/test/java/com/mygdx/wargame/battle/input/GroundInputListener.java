@@ -1,4 +1,4 @@
-package com.mygdx.wargame.input;
+package com.mygdx.wargame.battle.input;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -7,7 +7,7 @@ import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.battle.unit.AbstractMech;
+import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.action.MovementAction;
 
 public class GroundInputListener extends InputListener {

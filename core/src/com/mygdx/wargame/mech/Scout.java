@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.unit;
+package com.mygdx.wargame.mech;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +20,7 @@ public class Scout extends AbstractMech {
         this.name = name;
 
         setTouchable(Touchable.enabled);
-        setSize(4, 4);
+        setSize(1, 1);
         this.textureRegion = new TextureRegion(assetManager.get("Maverick.png", Texture.class), 32, 0, 32, 32);
     }
 

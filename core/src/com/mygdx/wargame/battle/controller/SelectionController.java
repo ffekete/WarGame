@@ -1,6 +1,6 @@
 package com.mygdx.wargame.battle.controller;
 
-import com.mygdx.wargame.battle.unit.AbstractMech;
+import com.mygdx.wargame.mech.AbstractMech;
 
 public class SelectionController {
 

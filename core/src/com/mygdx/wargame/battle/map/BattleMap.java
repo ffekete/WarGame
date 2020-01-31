@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.unit.AbstractMech;
-import com.mygdx.wargame.input.GroundInputListener;
+import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.battle.input.GroundInputListener;
 
 import java.util.HashMap;
 import java.util.Iterator;

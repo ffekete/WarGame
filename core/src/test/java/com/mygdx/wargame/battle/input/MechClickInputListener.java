@@ -1,11 +1,11 @@
-package com.mygdx.wargame.input;
+package com.mygdx.wargame.battle.input;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.unit.AbstractMech;
+import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.Team;
 
 public class MechClickInputListener extends InputListener {
