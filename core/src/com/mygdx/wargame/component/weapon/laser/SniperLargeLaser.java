@@ -3,6 +3,7 @@ package com.mygdx.wargame.component.weapon.laser;
 import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
+import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
@@ -59,7 +60,7 @@ public class SniperLargeLaser implements Weapon {
     }
 
     @Override
-    public int getAccuracy() {
+    public int getAccuracy(AbstractMech target) {
         return 10;
     }
 

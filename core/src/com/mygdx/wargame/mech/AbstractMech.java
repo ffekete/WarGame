@@ -19,6 +19,7 @@ public class AbstractMech extends Actor implements Man {
     private State state = State.Idle;
     private Direction direction = Direction.Left;
     private float range = 15f;
+    private int heatLevel;
 
     protected TextureRegion textureRegion;
 
@@ -103,5 +104,9 @@ public class AbstractMech extends Actor implements Man {
 
     public float getRange() {
         return range;
+    }
+
+    public int getHeatLevel() {
+        return heatLevel;
     }
 }

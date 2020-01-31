@@ -2,6 +2,7 @@ package com.mygdx.wargame.component.weapon.flamer;
 
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
+import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
@@ -63,7 +64,7 @@ public class Flamer implements Weapon {
     }
 
     @Override
-    public int getAccuracy() {
+    public int getAccuracy(AbstractMech target) {
         return 10;
     }
 

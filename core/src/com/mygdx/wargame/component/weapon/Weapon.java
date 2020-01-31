@@ -1,6 +1,7 @@
 package com.mygdx.wargame.component.weapon;
 
 import com.mygdx.wargame.component.Component;
+import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public interface Weapon extends Component {
 
     int getSlot();
 
-    int getAccuracy();
+    int getAccuracy(AbstractMech target);
 
     int getAdditionalHeatToEnemy();
 
