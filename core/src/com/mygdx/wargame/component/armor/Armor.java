@@ -7,5 +7,6 @@ public interface Armor extends Component {
     int getHitPoint();
     int getMaxHitpoint();
     int reduceHitPoint(int amount);
+    void resetHitpoints();
 
 }

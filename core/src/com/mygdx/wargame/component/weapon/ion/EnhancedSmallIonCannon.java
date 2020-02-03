@@ -119,4 +119,9 @@ public class EnhancedSmallIonCannon implements Weapon {
     public void resetAmmo() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

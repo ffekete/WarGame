@@ -20,6 +20,11 @@ public class CarbonFiberArmor implements Armor {
     }
 
     @Override
+    public void resetHitpoints() {
+        this.hp = MAX_HP;
+    }
+
+    @Override
     public float getRarity() {
         return 0.01f;
     }

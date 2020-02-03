@@ -119,4 +119,9 @@ public class TripleBarrelSmallLaser implements Weapon {
     public void resetAmmo() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

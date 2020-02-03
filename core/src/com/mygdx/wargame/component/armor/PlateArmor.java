@@ -16,6 +16,11 @@ public class PlateArmor implements Armor {
     }
 
     @Override
+    public void resetHitpoints() {
+        this.hp = MAX_HP;
+    }
+
+    @Override
     public int reduceHitPoint(int amount) {
         return hp - amount;
     }

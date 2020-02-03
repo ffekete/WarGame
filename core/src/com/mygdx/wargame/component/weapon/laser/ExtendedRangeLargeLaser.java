@@ -119,4 +119,9 @@ public class ExtendedRangeLargeLaser implements Weapon {
     public void resetAmmo() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

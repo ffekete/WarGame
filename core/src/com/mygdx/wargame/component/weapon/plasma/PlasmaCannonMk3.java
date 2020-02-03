@@ -121,4 +121,9 @@ public class PlasmaCannonMk3 implements Weapon {
     public int getPowerConsumption() {
         return 12;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

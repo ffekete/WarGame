@@ -121,4 +121,9 @@ public class LargeCannon implements Weapon {
     public int getPowerConsumption() {
         return 0;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

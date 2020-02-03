@@ -20,6 +20,11 @@ public class LightPlateArmor implements Armor {
     }
 
     @Override
+    public void resetHitpoints() {
+        this.hp = MAX_HP;
+    }
+
+    @Override
     public float getRarity() {
         return 1f;
     }

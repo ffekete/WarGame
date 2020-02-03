@@ -118,4 +118,9 @@ public class SniperLargeLaser implements Weapon {
     public void resetAmmo() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }

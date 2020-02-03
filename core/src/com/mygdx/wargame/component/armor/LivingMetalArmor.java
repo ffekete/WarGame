@@ -21,6 +21,11 @@ public class LivingMetalArmor implements Armor {
     }
 
     @Override
+    public void resetHitpoints() {
+        this.hp = MAX_HP;
+    }
+
+    @Override
     public float getRarity() {
         return 0.05f;
     }

@@ -122,4 +122,9 @@ public class SmallCannonMk3 implements Weapon {
     public int getPowerConsumption() {
         return 0;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

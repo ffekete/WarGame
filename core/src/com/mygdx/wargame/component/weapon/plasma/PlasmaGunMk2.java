@@ -121,4 +121,9 @@ public class PlasmaGunMk2 implements Weapon {
     public int getPowerConsumption() {
         return 8;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

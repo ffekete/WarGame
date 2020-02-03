@@ -59,6 +59,11 @@ public class GatlingGun implements Weapon {
     }
 
     @Override
+    public void update() {
+
+    }
+
+    @Override
     public int getSlotSize() {
         return 4;
     }

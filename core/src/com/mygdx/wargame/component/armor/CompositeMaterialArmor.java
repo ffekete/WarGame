@@ -25,6 +25,11 @@ public class CompositeMaterialArmor implements Armor {
     }
 
     @Override
+    public void resetHitpoints() {
+        this.hp = MAX_HP;
+    }
+
+    @Override
     public int getSlotSize() {
         return 1;
     }

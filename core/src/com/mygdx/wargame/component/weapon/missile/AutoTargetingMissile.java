@@ -121,4 +121,9 @@ public class AutoTargetingMissile implements Weapon {
     public int getPowerConsumption() {
         return 5;
     }
+
+    @Override
+    public void update() {
+
+    }
 }

@@ -119,4 +119,9 @@ public class ExtendedRangeLargeIonCannon implements Weapon {
     public void resetAmmo() {
 
     }
+
+    @Override
+    public void update() {
+
+    }
 }
