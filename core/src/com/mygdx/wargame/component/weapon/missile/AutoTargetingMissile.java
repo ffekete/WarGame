@@ -1,62 +1,63 @@
-package com.mygdx.wargame.component.weapon.laser;
+package com.mygdx.wargame.component.weapon.missile;
 
-import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
-@Item
-public class SniperLargeLaser implements Weapon {
+public class AutoTargetingMissile implements Weapon {
+    private static final int MAX_AMMO = 80;
+    private int ammo = MAX_AMMO;
+
     @Override
     public int getShieldDamage() {
-        return 6;
+        return 2;
     }
 
     @Override
     public int getArmorDamage() {
-        return 12;
+        return 2;
     }
 
     @Override
     public int getBodyDamage() {
-        return 12;
+        return 2;
     }
 
     @Override
     public int getRange() {
-        return 16;
+        return 7;
     }
 
     @Override
     public WeaponType getType() {
-        return WeaponType.Laser;
+        return WeaponType.Missile;
     }
 
     @Override
     public String getName() {
-        return "Sniper large laser";
+        return "Auto targeting missile";
     }
 
     @Override
     public int getPrice() {
-        return 6000;
+        return 4000;
     }
 
     @Override
     public int getHeat() {
-        return 20;
+        return 0;
     }
 
     @Override
     public int getWeight() {
-        return 28;
+        return 25;
     }
 
     @Override
     public int getSlot() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -66,56 +67,56 @@ public class SniperLargeLaser implements Weapon {
 
     @Override
     public int getAdditionalHeatToEnemy() {
-        return 15;
+        return 3;
     }
 
     @Override
     public int getStabilityHit() {
-        return 0;
+        return 3;
     }
 
     @Override
     public int getCriticalChance() {
-        return 6;
-    }
-
-    @Override
-    public int getDamageMultiplier() {
         return 1;
     }
 
     @Override
+    public int getDamageMultiplier() {
+        return 4;
+    }
+
+    @Override
     public boolean canTarget() {
-        return true;
-    }
-
-    @Override
-    public float getRarity() {
-        return 0.3f;
-    }
-
-    @Override
-    public int getPowerConsumption() {
-        return 18;
+        return false;
     }
 
     @Override
     public boolean requiresLineOfSight() {
-        return true;
+        return false;
     }
 
     @Override
     public Optional<Integer> getAmmo() {
-        return Optional.empty();
+        return Optional.of(ammo);
     }
 
     @Override
     public Optional<Integer> getMaxAmmo() {
-        return Optional.empty();
+        return Optional.of(MAX_AMMO);
     }
 
     @Override
     public void resetAmmo() {
+        this.ammo = MAX_AMMO;
+    }
 
+    @Override
+    public float getRarity() {
+        return 0.15f;
+    }
+
+    @Override
+    public int getPowerConsumption() {
+        return 5;
     }
 }

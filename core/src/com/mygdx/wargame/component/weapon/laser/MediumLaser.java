@@ -21,7 +21,7 @@ public class MediumLaser implements Weapon {
     }
 
     @Override
-    public int getStructuralDamage() {
+    public int getBodyDamage() {
         return 12;
     }
 

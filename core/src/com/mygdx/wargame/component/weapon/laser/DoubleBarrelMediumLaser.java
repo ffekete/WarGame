@@ -21,7 +21,7 @@ public class DoubleBarrelMediumLaser implements Weapon {
     }
 
     @Override
-    public int getStructuralDamage() {
+    public int getBodyDamage() {
         return 10;
     }
 

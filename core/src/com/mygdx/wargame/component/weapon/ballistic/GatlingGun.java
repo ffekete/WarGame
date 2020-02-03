@@ -22,7 +22,7 @@ public class GatlingGun implements Weapon {
     }
 
     @Override
-    public int getStructuralDamage() {
+    public int getBodyDamage() {
         return 1;
     }
 
@@ -48,7 +48,7 @@ public class GatlingGun implements Weapon {
 
     @Override
     public int getHeat() {
-        return 0;
+        return 3;
     }
 
     @Override
@@ -98,22 +98,22 @@ public class GatlingGun implements Weapon {
 
     @Override
     public Optional<Integer> getAmmo() {
-        return Optional.empty();
+        return Optional.of(ammo);
     }
 
     @Override
     public Optional<Integer> getMaxAmmo() {
-        return Optional.empty();
+        return Optional.of(MAX_AMMO);
     }
 
     @Override
     public void resetAmmo() {
-
+        this.ammo = MAX_AMMO;
     }
 
     @Override
     public float getRarity() {
-        return 0;
+        return .5f;
     }
 
     @Override

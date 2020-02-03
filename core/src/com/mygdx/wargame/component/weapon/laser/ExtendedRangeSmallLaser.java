@@ -20,7 +20,7 @@ public class ExtendedRangeSmallLaser implements Weapon {
     }
 
     @Override
-    public int getStructuralDamage() {
+    public int getBodyDamage() {
         return 10;
     }
 

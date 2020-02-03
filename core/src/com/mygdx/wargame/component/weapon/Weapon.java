@@ -11,7 +11,7 @@ public interface Weapon extends Component {
 
     int getArmorDamage();
 
-    int getStructuralDamage();
+    int getBodyDamage();
 
     int getRange();
 

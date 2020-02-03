@@ -24,7 +24,7 @@ public class Flamer implements Weapon {
     }
 
     @Override
-    public int getStructuralDamage() {
+    public int getBodyDamage() {
         return 5;
     }
 

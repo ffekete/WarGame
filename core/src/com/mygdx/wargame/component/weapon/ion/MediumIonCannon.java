@@ -19,7 +19,7 @@ public class MediumIonCannon implements Weapon {
     }
 
     @Override
-    public int getStructuralDamage() {
+    public int getBodyDamage() {
         return 0;
     }
 
