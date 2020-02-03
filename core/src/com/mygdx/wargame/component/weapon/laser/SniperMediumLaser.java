@@ -56,7 +56,7 @@ public class SniperMediumLaser implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 2;
     }
 

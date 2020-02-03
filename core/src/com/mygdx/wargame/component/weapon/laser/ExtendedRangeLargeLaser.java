@@ -56,7 +56,7 @@ public class ExtendedRangeLargeLaser implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 3;
     }
 

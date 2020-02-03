@@ -1,11 +1,13 @@
 package com.mygdx.wargame.component.weapon.ion;
 
+import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
+@Item
 public class ExtendedRangeLargeIonCannon implements Weapon {
 
     @Override
@@ -54,7 +56,7 @@ public class ExtendedRangeLargeIonCannon implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 3;
     }
 

@@ -1,11 +1,13 @@
 package com.mygdx.wargame.component.weapon.plasma;
 
+import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
+@Item
 public class PlasmaCannonMk2 implements Weapon {
     private static final int MAX_AMMO = 15;
     private int ammo = MAX_AMMO;
@@ -56,7 +58,7 @@ public class PlasmaCannonMk2 implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 3;
     }
 

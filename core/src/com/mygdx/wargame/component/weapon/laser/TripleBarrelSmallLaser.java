@@ -55,7 +55,7 @@ public class TripleBarrelSmallLaser implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 2;
     }
 

@@ -17,15 +17,7 @@ public interface Weapon extends Component {
 
     WeaponType getType();
 
-    String getName();
-
-    int getPrice();
-
     int getHeat();
-
-    int getWeight();
-
-    int getSlot();
 
     int getAccuracy(AbstractMech target);
 

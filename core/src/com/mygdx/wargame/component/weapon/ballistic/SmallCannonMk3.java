@@ -1,11 +1,13 @@
 package com.mygdx.wargame.component.weapon.ballistic;
 
+import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
+@Item
 public class SmallCannonMk3 implements Weapon {
     private static final int MAX_AMMO = 20;
     private int ammo = MAX_AMMO;
@@ -57,7 +59,7 @@ public class SmallCannonMk3 implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 2;
     }
 

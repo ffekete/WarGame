@@ -1,11 +1,13 @@
 package com.mygdx.wargame.component.weapon.ballistic;
 
+import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.AbstractMech;
 
 import java.util.Optional;
 
+@Item
 public class LargeGatlingGun implements Weapon {
 
     private static final int MAX_AMMO = 800;
@@ -57,7 +59,7 @@ public class LargeGatlingGun implements Weapon {
     }
 
     @Override
-    public int getSlot() {
+    public int getSlotSize() {
         return 6;
     }
 
