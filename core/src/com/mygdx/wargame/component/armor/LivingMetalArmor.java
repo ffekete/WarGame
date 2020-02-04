@@ -17,7 +17,8 @@ public class LivingMetalArmor implements Armor {
 
     @Override
     public int reduceHitPoint(int amount) {
-        return hp - amount;
+        hp -= amount;
+        return hp;
     }
 
     @Override

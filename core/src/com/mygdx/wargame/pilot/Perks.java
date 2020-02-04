@@ -8,7 +8,7 @@ public enum Perks {
     IonWeaponExpert("+5% to ion weapon hit chance", "Ion expert"),
     FlamerExpert("+5% to flamer hit chance", "Flamer expert"),
     LaserExpert("+5% to laser weapon hut chance", "Laser expert"),
-    Agile("+5% evasion against weapons", "Agile"),
+    Agile("+5 evasion against weapons", "Agile"),
     Robust("-5% weapon damage received for mech", "Robust"),
     ExpertPilot("+1 movement points for mech", "Expert pilot"),
     Cautious("-1 to morale saves,  +1 to all weapon ranges", "Cautious"),
@@ -17,11 +17,12 @@ public enum Perks {
     Lucky("+3%  to critical chances with weapons", "Lucky"),
     Leader("+1  to morale saves for the team", "Leader"),
     Hero("+2 to morale saves for the team", "Leader"),
+    Dreaded("-1 morale saving throws for enemies", "Dreaded"),
     RockSteady("-1 to stability hits received by mech","Rocksteady"),
-    JungleExpert("+1 movement speed on jungle maps", "Jungle expert"),
+    JungleExpert("+5 to evasion on jungle maps", "Jungle expert"),
     DesertExpert("+1 movement speed on desert maps", "Desert expert"),
-    SwampExpert("+1 movement speed on swamp maps", "Swamp expert"),
-    Engineer("-5 heat to me h during cooling phase", "Engineer");
+    SwampExpert("+5 to stability on swamp maps", "Swamp expert"),
+    Engineer("-5 heat to mech during cooling phase", "Engineer");
 
     String description;
     String name;

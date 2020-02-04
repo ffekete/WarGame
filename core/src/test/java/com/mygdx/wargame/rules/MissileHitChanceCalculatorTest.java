@@ -1,9 +1,12 @@
-package com.mygdx.wargame.pilot;
+package com.mygdx.wargame.rules;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mygdx.wargame.component.weapon.missile.MissileLauncher;
 import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.pilot.Perks;
+import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.pilot.Skill;
 import com.mygdx.wargame.rules.hitchance.MissileHitChanceCalculator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -14,7 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class PilotTest {
+public class MissileHitChanceCalculatorTest {
 
     @Mock
     Mech mech;
