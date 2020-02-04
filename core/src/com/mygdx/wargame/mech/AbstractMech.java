@@ -8,8 +8,12 @@ import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.component.Component;
 
-public class AbstractMech extends Actor implements Man {
+import java.util.HashSet;
+import java.util.Set;
+
+public class AbstractMech extends Actor implements Mech {
 
     private Team team;
     private int movementPoints;
@@ -20,6 +24,7 @@ public class AbstractMech extends Actor implements Man {
     private Direction direction = Direction.Left;
     private float range = 15f;
     private int heatLevel;
+    private Set<Component> components  = new HashSet<>();
 
     protected TextureRegion textureRegion;
 
@@ -49,6 +54,11 @@ public class AbstractMech extends Actor implements Man {
     @Override
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public Set<Component> getAllComponents() {
+        return null;
     }
 
     @Override
@@ -108,5 +118,10 @@ public class AbstractMech extends Actor implements Man {
 
     public int getHeatLevel() {
         return heatLevel;
+    }
+
+    @Override
+    public void setCoordinates(float x, float y) {
+        super.setPosition(x, y);
     }
 }

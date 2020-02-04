@@ -3,7 +3,7 @@ package com.mygdx.wargame.component.weapon.laser;
 import com.mygdx.wargame.component.weapon.Item;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
-import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.mech.Mech;
 
 import java.util.Optional;
 
@@ -61,7 +61,7 @@ public class GatlingSmallLaser implements Weapon {
 
 
     @Override
-    public int getAccuracy(AbstractMech target) {
+    public int getAccuracy(Mech target) {
         return -10;
     }
 
