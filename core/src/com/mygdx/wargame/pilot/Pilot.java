@@ -1,12 +1,8 @@
 package com.mygdx.wargame.pilot;
 
-import com.mygdx.wargame.component.targeting.TargetingModule;
-import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.Mech;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 public class Pilot {

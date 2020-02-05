@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules.hitchance;
+package com.mygdx.wargame.rules.calculator.hitchance;
 
 import com.mygdx.wargame.component.targeting.TargetingModule;
 import com.mygdx.wargame.component.weapon.Status;
@@ -12,12 +12,12 @@ import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Optional;
 
-public class PlasmaHitChanceCalculator implements HitChanceCalculator {
+public class MissileHitChanceCalculator implements HitChanceCalculator {
 
     @Override
     public int calculate(Pilot pilot, Mech mech, Mech target, Weapon weapon) {
 
-        int baseHitChance = pilot.getSkills().get(Skill.PlasmaWeapons) * 5;
+        int baseHitChance = pilot.getSkills().get(Skill.Missiles) * 5;
 
         int weaponModifier = weapon.getAccuracy(target);
         baseHitChance += weaponModifier;
@@ -27,14 +27,14 @@ public class PlasmaHitChanceCalculator implements HitChanceCalculator {
                 .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> TargetingModule.class.isAssignableFrom(c.getClass()))
                 .map(c -> (TargetingModule) c)
-                .map(c -> c.getAdditionalAccuracy(WeaponType.Plasma))
+                .map(c -> c.getAdditionalAccuracy(WeaponType.Missile))
                 .reduce(Integer::sum);
 
         if (targetingModuleModifiers.isPresent()) {
             baseHitChance += targetingModuleModifiers.get();
         }
 
-        if (pilot.hasPerk(Perks.PlasmaExpert)) {
+        if (pilot.hasPerk(Perks.MissileExpert)) {
             baseHitChance += 5;
         }
 

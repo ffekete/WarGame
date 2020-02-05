@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules.hitchance;
+package com.mygdx.wargame.rules.calculator.hitchance;
 
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.Mech;

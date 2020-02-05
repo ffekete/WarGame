@@ -155,6 +155,11 @@ public abstract class AbstractMech extends Actor implements Mech {
     }
 
     @Override
+    public void setHeatLevel(int amount) {
+        this.heatLevel = amount;
+    }
+
+    @Override
     public void setCoordinates(float x, float y) {
         super.setPosition(x, y);
     }

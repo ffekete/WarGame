@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules;
+package com.mygdx.wargame.rules.calculator;
 
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.Mech;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class RangeCalculator {
 
-    int calculate(Pilot pilot, Weapon weapon) {
+    public int calculate(Pilot pilot, Weapon weapon) {
         int baseRange = weapon.getRange();
 
         if(pilot.hasPerk(Perks.Cautious)) {
@@ -20,10 +20,10 @@ public class RangeCalculator {
         return baseRange;
     }
 
-    int calculateAllWeaponsRange(Pilot pilot, Mech mech) {
-        Optional<Integer> range = mech.getSelectedWeapons()
+    public int calculateAllWeaponsRange(Pilot targetingPilot, Mech TargetingMech) {
+        Optional<Integer> range = TargetingMech.getSelectedWeapons()
                 .stream()
-                .map(w -> calculate(pilot, w))
+                .map(w -> calculate(targetingPilot, w))
                 .min(new Comparator<Integer>() {
                     @Override
                     public int compare(Integer o1, Integer o2) {

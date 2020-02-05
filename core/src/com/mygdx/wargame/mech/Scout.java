@@ -13,6 +13,13 @@ import java.util.Map;
 
 public class Scout extends AbstractMech {
 
+    public static final int LEFT_HAND_HP = 10;
+    public static final int RIGHT_HAND_HP = 10;
+    public static final int LEFT_LEG_HP = 15;
+    public static final int RIGHT_LEG_HP = 15;
+    public static final int TORSO_HP = 30;
+    public static final int HEAD_HP = 10;
+
     private SpriteBatch spriteBatch;
     private SelectionController selectionController;
     private String name;
@@ -28,12 +35,12 @@ public class Scout extends AbstractMech {
             .build();
 
     private Map<BodyPart, Integer> hp = ImmutableMap.<BodyPart, Integer>builder()
-            .put(BodyPart.LeftHand, 10)
-            .put(BodyPart.RightHand, 10)
-            .put(BodyPart.LeftLeg, 15)
-            .put(BodyPart.RightLeg, 15)
-            .put(BodyPart.Torso, 30)
-            .put(BodyPart.Head, 10)
+            .put(BodyPart.LeftHand, LEFT_HAND_HP)
+            .put(BodyPart.RightHand, RIGHT_HAND_HP)
+            .put(BodyPart.LeftLeg, LEFT_LEG_HP)
+            .put(BodyPart.RightLeg, RIGHT_LEG_HP)
+            .put(BodyPart.Torso, TORSO_HP)
+            .put(BodyPart.Head, HEAD_HP)
             .build();
 
     public Scout(String name, SpriteBatch spriteBatch, SelectionController selectionController, AssetManager assetManager) {
@@ -67,7 +74,42 @@ public class Scout extends AbstractMech {
     }
 
     @Override
+    public int getStabilityResistance() {
+        return 0;
+    }
+
+    @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(getX(), getY(), spriteBatch, selectionController, textureRegion);
+    }
+
+    @Override
+    public int getLeftHandMaxHp() {
+        return LEFT_HAND_HP;
+    }
+
+    @Override
+    public int getRightHandMaxHp() {
+        return RIGHT_HAND_HP;
+    }
+
+    @Override
+    public int getLeftLegMaxHp() {
+        return LEFT_LEG_HP;
+    }
+
+    @Override
+    public int getRightLegMaxHp() {
+        return RIGHT_LEG_HP;
+    }
+
+    @Override
+    public int getTorsoMaxHp() {
+        return TORSO_HP;
+    }
+
+    @Override
+    public int getHeadMaxHp() {
+        return HEAD_HP;
     }
 }

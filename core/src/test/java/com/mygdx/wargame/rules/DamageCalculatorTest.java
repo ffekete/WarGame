@@ -14,6 +14,9 @@ import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.rules.calculator.BodyPartDestructionHandler;
+import com.mygdx.wargame.rules.calculator.CriticalHitChanceCalculator;
+import com.mygdx.wargame.rules.calculator.DamageCalculator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -189,7 +192,7 @@ public class DamageCalculatorTest {
         Pilot defender = new Pilot(new HashMap<>(), ImmutableSet.of());
 
         Mech defenderMech = mock(Mech.class);
-        when(defenderMech.getHp(BodyPart.Head)).thenReturn(11).thenReturn(1);
+        when(defenderMech.getHp(BodyPart.Head)).thenReturn(11).thenReturn(1).thenReturn(0);
 
         Mech attackerMech = mock(Mech.class);
         when(attackerMech.getHp(BodyPart.Head)).thenReturn(11);
@@ -206,7 +209,8 @@ public class DamageCalculatorTest {
 
         damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
 
-        verify(defenderMech).setHp(BodyPart.Head, -11);
+        verify(bodyPartDestructionHandler).destroy(defenderMech, BodyPart.Head);
+        verify(defenderMech).setHp(BodyPart.Head, -12);
     }
 
     @Test

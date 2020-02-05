@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules;
+package com.mygdx.wargame.rules.calculator;
 
 import com.mygdx.wargame.mech.Mech;
 

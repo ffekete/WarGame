@@ -31,6 +31,8 @@ public interface Mech {
 
     int getHeatLevel();
 
+    void setHeatLevel(int amount);
+
     void setCoordinates(float x, float y);
 
     int getRemainingMovementPoints();
@@ -48,4 +50,18 @@ public interface Mech {
     int getStability();
 
     void setStability(int amount);
+
+    int getStabilityResistance();
+
+    int getLeftHandMaxHp();
+
+    int getRightHandMaxHp();
+
+    int getLeftLegMaxHp();
+
+    int getRightLegMaxHp();
+
+    int getTorsoMaxHp();
+
+    int getHeadMaxHp();
 }

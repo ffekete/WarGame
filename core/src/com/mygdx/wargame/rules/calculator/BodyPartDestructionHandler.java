@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules;
+package com.mygdx.wargame.rules.calculator;
 
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.mech.BodyPart;

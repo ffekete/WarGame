@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules.hitchance;
+package com.mygdx.wargame.rules.calculator.hitchance;
 
 import com.mygdx.wargame.component.targeting.TargetingModule;
 import com.mygdx.wargame.component.weapon.Status;
@@ -12,12 +12,12 @@ import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Optional;
 
-public class BallsiticHitChanceCalculator implements HitChanceCalculator {
+public class LaserHitChanceCalculator implements HitChanceCalculator {
 
     @Override
     public int calculate(Pilot pilot, Mech mech, Mech target, Weapon weapon) {
 
-        int baseHitChance = pilot.getSkills().get(Skill.Ballistics) * 5;
+        int baseHitChance = pilot.getSkills().get(Skill.Lasers) * 5;
 
         int weaponModifier = weapon.getAccuracy(target);
         baseHitChance += weaponModifier;
@@ -27,14 +27,14 @@ public class BallsiticHitChanceCalculator implements HitChanceCalculator {
                 .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> TargetingModule.class.isAssignableFrom(c.getClass()))
                 .map(c -> (TargetingModule) c)
-                .map(c -> c.getAdditionalAccuracy(WeaponType.Ballistic))
+                .map(c -> c.getAdditionalAccuracy(WeaponType.Laser))
                 .reduce(Integer::sum);
 
         if (targetingModuleModifiers.isPresent()) {
             baseHitChance += targetingModuleModifiers.get();
         }
 
-        if (pilot.hasPerk(Perks.BallisticsExpert)) {
+        if (pilot.hasPerk(Perks.LaserExpert)) {
             baseHitChance += 5;
         }
 

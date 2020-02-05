@@ -1,9 +1,6 @@
 package com.mygdx.wargame.rules;
 
 import com.google.common.collect.ImmutableSet;
-import com.mygdx.wargame.component.Component;
-import com.mygdx.wargame.component.armor.CompositeMaterialArmor;
-import com.mygdx.wargame.component.targeting.MissileTargetingModuleMk2;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.laser.SniperLargeLaser;
 import com.mygdx.wargame.component.weapon.laser.SniperMediumLaser;
@@ -11,6 +8,7 @@ import com.mygdx.wargame.component.weapon.missile.MissileLauncher;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -20,7 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
 
 public class RangeCalculatorTest {
 

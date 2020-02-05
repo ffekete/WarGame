@@ -7,7 +7,7 @@ import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.pilot.Skill;
-import com.mygdx.wargame.rules.hitchance.MissileHitChanceCalculator;
+import com.mygdx.wargame.rules.calculator.hitchance.MissileHitChanceCalculator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeTest;

@@ -1,11 +1,11 @@
 package com.mygdx.wargame.battle.map;
 
 public enum TerrainType {
-    Jungle(-2, -5, 10),
-    Desert(-1, 0, 20),
-    Swamp(-2, -10, 5),
+    Jungle(-2, 5, -10),
+    Desert(-1, 0, -20),
+    Swamp(-2, 10, -5),
     Grassland(0, 0, 0),
-    Snow(-1, 0, -20);
+    Snow(-1, 0, 20);
 
     private int movementModifier;
     private int stabilityModifier;

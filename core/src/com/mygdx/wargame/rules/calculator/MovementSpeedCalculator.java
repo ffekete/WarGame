@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules;
+package com.mygdx.wargame.rules.calculator;
 
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.TerrainType;
@@ -6,6 +6,7 @@ import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.pilot.Skill;
 
 public class MovementSpeedCalculator {
 
@@ -34,6 +35,9 @@ public class MovementSpeedCalculator {
 
         // terrain
         baseSpeed += battleMap.getTerrainType().getMovementModifier();
+
+        // skills
+        baseSpeed += Math.ceil(pilot.getSkills().get(Skill.Piloting) * 0.05d);
 
         // damage
         if (mech.getHp(BodyPart.LeftLeg) <= 0 || mech.getHp(BodyPart.LeftLeg) <= 0) {

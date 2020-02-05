@@ -1,4 +1,4 @@
-package com.mygdx.wargame.rules;
+package com.mygdx.wargame.rules.calculator;
 
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
@@ -49,6 +49,10 @@ public class DamageCalculator {
             if (shieldedValue > 0) {
                 reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1));
             } else {
+
+                // add heat
+                targetMech.setHeatLevel(targetMech.getHeatLevel() + weapon.getAdditionalHeatToEnemy() * (critical ? 2 : 1));
+
                 // get armor damage
                 int armorValue = targetMech.getComponents(bodyPart).stream()
                         .filter(c -> c.getStatus() != Status.Destroyed)
@@ -62,33 +66,28 @@ public class DamageCalculator {
                     // get hp damage
                     int damage = weapon.getBodyDamage() * (critical ? 2 : 1);
 
-                    if(targetPilot.hasPerk(Perks.Robust)) {
-                        float reduction = damage * 0.05f;
-                        if(reduction < 1)
-                            damage -= 1;
-                        else {
-                            damage -= (int) reduction;
-                        }
+                    if (targetPilot.hasPerk(Perks.Robust)) {
+                        double reduction = Math.ceil(damage * 0.05f);
+                        damage -= (int) reduction;
                     }
 
                     targetMech.setHp(bodyPart, targetMech.getHp(bodyPart) - damage);
 
-                    // destroy body paert and all of its components
-                    if(targetMech.getHp(bodyPart) <= 0) {
+                    // destroy body part and all of its components
+                    if (targetMech.getHp(bodyPart) <= 0) {
                         bodyPartDestructionHandler.destroy(targetMech, bodyPart);
                     }
                 }
             }
         }
-
     }
 
     private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage) {
         int maxDamage = shieldDamage;
 
-        if(pilot.hasPerk(Perks.Robust)) {
+        if (pilot.hasPerk(Perks.Robust)) {
             float reduction = maxDamage * 0.05f;
-            if(reduction < 1)
+            if (reduction < 1)
                 maxDamage -= 1;
             else {
                 maxDamage -= (int) reduction;
@@ -117,9 +116,9 @@ public class DamageCalculator {
     private void reduceArmorValue(Pilot pilot, Mech mech, int shieldDamage, BodyPart bodyPart) {
         int maxDamage = shieldDamage;
 
-        if(pilot.hasPerk(Perks.Robust)) {
+        if (pilot.hasPerk(Perks.Robust)) {
             float reduction = maxDamage * 0.05f;
-            if(reduction < 1)
+            if (reduction < 1)
                 maxDamage -= 1;
             else {
                 maxDamage -= (int) reduction;
@@ -142,7 +141,7 @@ public class DamageCalculator {
                 maxDamage -= damage;
                 armor.reduceHitPoint(damage);
 
-                if(armor.getHitPoint() <= 0)
+                if (armor.getHitPoint() <= 0)
                     armor.setStatus(Status.Destroyed);
             }
         }
