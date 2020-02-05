@@ -5,21 +5,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.Component;
 import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.component.weapon.WeaponStatus;
+import com.mygdx.wargame.component.weapon.Status;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMech extends Actor implements Mech {
@@ -33,7 +30,7 @@ public abstract class AbstractMech extends Actor implements Mech {
     private Direction direction = Direction.Left;
     private float range = 15f;
     private int heatLevel;
-    private Map<Weapon, WeaponStatus> weapons;
+    private int stability;
 
     private Map<BodyPart, Integer> bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
             .put(BodyPart.LeftHand, 0)
@@ -164,7 +161,11 @@ public abstract class AbstractMech extends Actor implements Mech {
 
     @Override
     public Set<Weapon> getSelectedWeapons() {
-        return weapons.entrySet().stream().filter(w -> w.getValue().equals(WeaponStatus.Selected)).map(Map.Entry::getKey).collect(Collectors.toSet());
+        return components.entrySet().stream()
+                .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
+                .map(c -> (Weapon)c)
+                .filter(w -> w.getStatus().equals(Status.Selected))
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -177,5 +178,15 @@ public abstract class AbstractMech extends Actor implements Mech {
     @Override
     public Set<Component> getComponents(BodyPart bodyPart) {
         return components.get(bodyPart);
+    }
+
+    @Override
+    public int getStability() {
+        return stability;
+    }
+
+    @Override
+    public void setStability(int amount) {
+        this.stability = amount;
     }
 }

@@ -1,6 +1,11 @@
 package com.mygdx.wargame.component.heatsink;
 
+import com.mygdx.wargame.component.weapon.Status;
+
 public class PassiveHeatSinkMk2 implements HeatSink {
+
+    private Status status;
+
     @Override
     public int getHeatDissipation() {
         return 20;
@@ -39,5 +44,16 @@ public class PassiveHeatSinkMk2 implements HeatSink {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

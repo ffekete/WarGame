@@ -37,11 +37,15 @@ public interface Mech {
 
     int getMaxMovementPoints();
 
-    void resetMovementPoints();
+    void resetMovementPoints(int amount);
 
     Set<Weapon> getSelectedWeapons();
 
     void addComponent(BodyPart bodyPart, Component component);
 
     Set<Component> getComponents(BodyPart bodyPart);
+
+    int getStability();
+
+    void setStability(int amount);
 }

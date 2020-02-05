@@ -1,6 +1,7 @@
 package com.mygdx.wargame.component.weapon.missile;
 
 import com.mygdx.wargame.component.weapon.Item;
+import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.Mech;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class Devastator implements Weapon {
     private static final int MAX_AMMO = 80;
     private int ammo = MAX_AMMO;
+    private Status status;
 
     @Override
     public int getShieldDamage() {
@@ -125,5 +127,16 @@ public class Devastator implements Weapon {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

@@ -1,8 +1,11 @@
 package com.mygdx.wargame.component.armor;
 
+import com.mygdx.wargame.component.weapon.Status;
+
 public class CarbonFiberArmor implements Armor {
     private static final int MAX_HP = 25;
     private int hp = 25;
+    private Status status;
 
     @Override
     public int getHitPoint() {
@@ -58,5 +61,16 @@ public class CarbonFiberArmor implements Armor {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

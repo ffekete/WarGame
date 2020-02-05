@@ -21,15 +21,17 @@ public class BattleMap {
     private SelectionController selectionController;
     private Stage stage;
     private ActionLock actionLock;
+    private TerrainType terrainType;
 
     private Map<AbstractMech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, SelectionController selectionController, Stage stage, ActionLock actionLock) {
+    public BattleMap(int x, int y, SelectionController selectionController, Stage stage, ActionLock actionLock, TerrainType terrainType) {
         this.width = x;
         this.height = y;
         this.selectionController = selectionController;
         this.stage = stage;
         this.actionLock = actionLock;
+        this.terrainType = terrainType;
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
@@ -110,5 +112,9 @@ public class BattleMap {
 
     public NodeGraph getNodeGraphLv1() {
         return nodeGraphLv1;
+    }
+
+    public TerrainType getTerrainType() {
+        return terrainType;
     }
 }

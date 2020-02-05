@@ -19,9 +19,10 @@ public enum Perks {
     Hero("+2 to morale saves for the team", "Leader"),
     Dreaded("-1 morale saving throws for enemies", "Dreaded"),
     RockSteady("-1 to stability hits received by mech","Rocksteady"),
-    JungleExpert("+5 to evasion on jungle maps", "Jungle expert"),
+    JungleExpert("+5 to evasion and +1 to movement points on jungle maps", "Jungle expert"),
     DesertExpert("+1 movement speed on desert maps", "Desert expert"),
-    SwampExpert("+5 to stability on swamp maps", "Swamp expert"),
+    SwampExpert("+5 to stability and +1 to movement points on swamp maps", "Swamp expert"),
+    SnowExpert("+5 to stability on snow maps", "Snow expert"),
     Engineer("-5 heat to mech during cooling phase", "Engineer");
 
     String description;

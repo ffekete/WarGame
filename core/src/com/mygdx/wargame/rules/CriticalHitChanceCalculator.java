@@ -1,6 +1,7 @@
 package com.mygdx.wargame.rules;
 
 import com.mygdx.wargame.component.targeting.TargetingModule;
+import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
@@ -22,6 +23,7 @@ public class CriticalHitChanceCalculator {
         // Targeting modules
         Optional<Integer> additionalCriticalChance = mech.getAllComponents()
                 .stream()
+                .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> TargetingModule.class.isAssignableFrom(c.getClass()))
                 .map(c -> ((TargetingModule)c).getAdditionalCriticalChance())
                 .reduce(Integer::sum);

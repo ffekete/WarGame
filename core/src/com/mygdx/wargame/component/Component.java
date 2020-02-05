@@ -1,5 +1,7 @@
 package com.mygdx.wargame.component;
 
+import com.mygdx.wargame.component.weapon.Status;
+
 public interface Component {
 
     float getRarity();
@@ -17,4 +19,7 @@ public interface Component {
     // called periodically for special abilities
     void update();
 
+    Status getStatus();
+
+    void setStatus(Status status);
 }

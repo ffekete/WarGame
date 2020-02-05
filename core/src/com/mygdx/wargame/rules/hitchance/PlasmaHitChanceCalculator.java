@@ -1,6 +1,7 @@
 package com.mygdx.wargame.rules.hitchance;
 
 import com.mygdx.wargame.component.targeting.TargetingModule;
+import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.Mech;
@@ -23,6 +24,7 @@ public class PlasmaHitChanceCalculator implements HitChanceCalculator {
 
         Optional<Integer> targetingModuleModifiers = mech.getAllComponents()
                 .stream()
+                .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> TargetingModule.class.isAssignableFrom(c.getClass()))
                 .map(c -> (TargetingModule) c)
                 .map(c -> c.getAdditionalAccuracy(WeaponType.Plasma))

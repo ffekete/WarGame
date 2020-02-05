@@ -1,9 +1,12 @@
 package com.mygdx.wargame.component.reactor;
 
 import com.mygdx.wargame.component.weapon.Item;
+import com.mygdx.wargame.component.weapon.Status;
 
 @Item
 public class MediumFusionReactorMk3 implements Reactor {
+
+    private Status status;
 
     @Override
     public int getPowerLevel() {
@@ -43,5 +46,16 @@ public class MediumFusionReactorMk3 implements Reactor {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

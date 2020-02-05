@@ -16,6 +16,7 @@ import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.mech.Scout;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
@@ -61,7 +62,7 @@ public class BattleScreen implements Screen {
 
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        BattleMap battleMap = new BattleMap(100, 100, selectionController, stage, actionLock);
+        BattleMap battleMap = new BattleMap(100, 100, selectionController, stage, actionLock, TerrainType.Desert);
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, actionLock);
 

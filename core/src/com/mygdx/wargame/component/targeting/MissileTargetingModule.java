@@ -1,8 +1,11 @@
 package com.mygdx.wargame.component.targeting;
 
+import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.WeaponType;
 
 public class MissileTargetingModule implements TargetingModule {
+
+    private Status status;
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {
@@ -50,5 +53,16 @@ public class MissileTargetingModule implements TargetingModule {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

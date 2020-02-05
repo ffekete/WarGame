@@ -1,12 +1,15 @@
 package com.mygdx.wargame.component.shield;
 
 import com.mygdx.wargame.component.weapon.Item;
+import com.mygdx.wargame.component.weapon.Status;
 
 @Item
 public class SmallShieldModule implements Shield {
 
     private static final int MAX_VALUE = 10;
     private int value = MAX_VALUE;
+
+    private Status status;
 
     @Override
     public int getShieldValue() {
@@ -60,5 +63,15 @@ public class SmallShieldModule implements Shield {
         value += 1;
         if(value > MAX_VALUE)
             value = MAX_VALUE;
+    }
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

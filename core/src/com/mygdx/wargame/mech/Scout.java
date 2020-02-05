@@ -62,8 +62,8 @@ public class Scout extends AbstractMech {
     }
 
     @Override
-    public void resetMovementPoints() {
-        this.movementPoints = getMaxMovementPoints();
+    public void resetMovementPoints(int amount) {
+        this.movementPoints = amount;
     }
 
     @Override

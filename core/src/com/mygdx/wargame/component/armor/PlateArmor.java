@@ -1,9 +1,12 @@
 package com.mygdx.wargame.component.armor;
 
+import com.mygdx.wargame.component.weapon.Status;
+
 public class PlateArmor implements Armor {
 
     private static final int MAX_HP = 20;
     private int hp = 20;
+    private Status status;
 
     @Override
     public int getHitPoint() {
@@ -59,5 +62,16 @@ public class PlateArmor implements Armor {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

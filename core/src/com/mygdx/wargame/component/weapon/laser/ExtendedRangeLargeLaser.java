@@ -1,6 +1,7 @@
 package com.mygdx.wargame.component.weapon.laser;
 
 import com.mygdx.wargame.component.weapon.Item;
+import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.mech.Mech;
@@ -9,6 +10,9 @@ import java.util.Optional;
 
 @Item
 public class ExtendedRangeLargeLaser implements Weapon {
+
+    private Status status;
+
     @Override
     public int getShieldDamage() {
         return 6;
@@ -123,5 +127,16 @@ public class ExtendedRangeLargeLaser implements Weapon {
     @Override
     public void update() {
 
+    }
+
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
