@@ -41,6 +41,8 @@ public class MovementAction extends Action {
                 abstractMech.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
                 actionLock.setLocked(false);
+                abstractMech.setMoved(true);
+                abstractMech.setAttacked(true);// todo remove later
                 return true;
             }
 
@@ -49,6 +51,8 @@ public class MovementAction extends Action {
                 abstractMech.resetMovementPoints(0);
                 abstractMech.setState(State.Idle);
                 actionLock.setLocked(false);
+                abstractMech.setMoved(true);
+                abstractMech.setAttacked(true);// todo remove later
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
                 return true;
             }

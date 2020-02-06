@@ -133,7 +133,6 @@ public class Flamer implements Weapon {
 
     }
 
-
     @Override
     public Status getStatus() {
         return status;
@@ -142,5 +141,10 @@ public class Flamer implements Weapon {
     @Override
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public void reduceAmmo() {
+        ammo--;
     }
 }

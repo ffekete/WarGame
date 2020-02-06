@@ -14,14 +14,18 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
+import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.TerrainType;
-import com.mygdx.wargame.mech.Scout;
 import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.battle.input.MechClickInputListener;
+import com.mygdx.wargame.component.weapon.Status;
+import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
+import com.mygdx.wargame.mech.BodyPart;
+import com.mygdx.wargame.mech.Scout;
 import com.mygdx.wargame.pilot.PilotCreator;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
+import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
@@ -67,27 +71,36 @@ public class BattleScreen implements Screen {
 
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        Scout unit3 = new Scout("2", spriteBatch, turnProcessingFacade, assetManager);
+        Scout unit3 = new Scout("2", spriteBatch, assetManager);
         unit3.setPosition(63, 30);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
+        LargeCannon largeCannon = new LargeCannon();
+        largeCannon.setStatus(Status.Selected);
+        unit3.addComponent(BodyPart.LeftLeg, largeCannon);
         unit3.setActive(true);
         unit3.addListener(new MechClickInputListener(unit3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
         //battleMap.setTemporaryObstacle(63, 30);
 
-        Scout unit2 = new Scout("2", spriteBatch, turnProcessingFacade, assetManager);
+        Scout unit2 = new Scout("2", spriteBatch, assetManager);
         unit2.setPosition(60, 30);
         unit2.setTeam(Team.own);
         unit2.setActive(true);
         unit2.setStability(100);
+        LargeCannon largeCannon2 = new LargeCannon();
+        largeCannon2.setStatus(Status.Selected);
+        unit2.addComponent(BodyPart.LeftLeg, largeCannon2);
         unit2.addListener(new MechClickInputListener(unit2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
         //battleMap.setTemporaryObstacle(60, 30);
 
-        Scout unit = new Scout("1", spriteBatch, turnProcessingFacade, assetManager);
+        Scout unit = new Scout("1", spriteBatch, assetManager);
         unit.setPosition(10, 10);
         unit.setTeam(Team.enemy);
         unit.setActive(true);
         unit.setStability(100);
+        LargeCannon largeCannon3 = new LargeCannon();
+        largeCannon3.setStatus(Status.Selected);
+        unit.addComponent(BodyPart.LeftLeg, largeCannon3);
         unit.addListener(new MechClickInputListener(unit, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
         //battleMap.setTemporaryObstacle(10, 10);
 
@@ -100,18 +113,15 @@ public class BattleScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock,
-                new AttackFacade(),
+                new AttackFacade(stage, spriteBatch, assetManager),
                 new TargetingFacade(),
-                new MovementSpeedCalculator(),
-                ImmutableMap.of(unit2, pilotCreator.getPilot(), unit3, pilotCreator.getPilot()),
-                ImmutableMap.of(unit, pilotCreator.getPilot()));
+                new MovementSpeedCalculator(), ImmutableMap.of(unit2, pilotCreator.getPilot(), unit3, pilotCreator.getPilot()),
+                ImmutableMap.of(unit, pilotCreator.getPilot()), new RangeCalculator());
 
         battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade);
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, actionLock);
     }
-
-
 
     @Override
     public void render(float delta) {

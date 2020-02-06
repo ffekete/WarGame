@@ -10,9 +10,9 @@ import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.component.Component;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +28,6 @@ public class Scout extends AbstractMech {
     public static final int HEAD_HP = 10;
 
     private SpriteBatch spriteBatch;
-    private TurnProcessingFacade turnProcessingFacade;
     private String name;
     private int movementPoints;
 
@@ -41,14 +40,7 @@ public class Scout extends AbstractMech {
             .put(BodyPart.Head, 3)
             .build();
 
-    private Map<BodyPart, Integer> hp = ImmutableMap.<BodyPart, Integer>builder()
-            .put(BodyPart.LeftHand, LEFT_HAND_HP)
-            .put(BodyPart.RightHand, RIGHT_HAND_HP)
-            .put(BodyPart.LeftLeg, LEFT_LEG_HP)
-            .put(BodyPart.RightLeg, RIGHT_LEG_HP)
-            .put(BodyPart.Torso, TORSO_HP)
-            .put(BodyPart.Head, HEAD_HP)
-            .build();
+    private Map<BodyPart, Integer> hp = new HashMap<>();
 
     private Map<BodyPart, Set<Component>> components = ImmutableMap.<BodyPart, Set<Component>>builder()
             .put(BodyPart.LeftHand, new HashSet<>())
@@ -59,15 +51,22 @@ public class Scout extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public Scout(String name, SpriteBatch spriteBatch, TurnProcessingFacade turnProcessingFacade, AssetManager assetManager) {
+    public Scout(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
         super(10);
         this.spriteBatch = spriteBatch;
-        this.turnProcessingFacade = turnProcessingFacade;
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
         this.textureRegion = new TextureRegion(assetManager.get("Maverick.png", Texture.class), 32, 0, 32, 32);
+
+        hp.put(BodyPart.LeftHand, 3);
+        hp.put(BodyPart.RightHand, 3);
+        hp.put(BodyPart.LeftLeg, 5);
+        hp.put(BodyPart.RightLeg, 5);
+        hp.put(BodyPart.Torso, 3);
+        hp.put(BodyPart.Head, 3);
+
     }
 
     @Override
@@ -143,7 +142,7 @@ public class Scout extends AbstractMech {
 
     @Override
     public void addComponent(BodyPart bodyPart, Component component) {
-        if(this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
+        if (this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
             return;
         this.components.get(bodyPart).add(component);
     }
@@ -151,8 +150,9 @@ public class Scout extends AbstractMech {
     @Override
     public Set<Weapon> getSelectedWeapons() {
         return components.entrySet().stream()
+                .flatMap(bp -> bp.getValue().stream())
                 .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                .map(c -> (Weapon)c)
+                .map(c -> (Weapon) c)
                 .filter(w -> w.getStatus().equals(Status.Selected))
                 .collect(Collectors.toSet());
     }
@@ -177,5 +177,4 @@ public class Scout extends AbstractMech {
     public int getMovementPoints() {
         return this.movementPoints;
     }
-
 }

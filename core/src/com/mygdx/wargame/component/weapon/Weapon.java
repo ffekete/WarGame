@@ -38,4 +38,6 @@ public interface Weapon extends Component {
     Optional<Integer> getMaxAmmo();
 
     void resetAmmo();
+
+    void reduceAmmo();
 }

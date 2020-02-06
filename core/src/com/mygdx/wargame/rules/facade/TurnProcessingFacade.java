@@ -7,15 +7,19 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
+import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
-import com.mygdx.wargame.battle.unit.action.MovementAction;
+import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
+import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.target.Target;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
+import com.mygdx.wargame.util.MathUtils;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,10 +35,11 @@ public class TurnProcessingFacade {
     private Map<Mech, Pilot> team2;
     private Iterator<Map.Entry<Mech, Pilot>> iterator;
     Map.Entry<Mech, Pilot> next = null;
+    private RangeCalculator rangeCalculator;
 
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -42,6 +47,7 @@ public class TurnProcessingFacade {
 
         this.team1 = team1;
         this.team2 = team2;
+        this.rangeCalculator = rangeCalculator;
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -55,28 +61,39 @@ public class TurnProcessingFacade {
 
     public void process(BattleMap battleMap, Stage stage) {
 
-        if(actionLock.isLocked()) {
+        if (actionLock.isLocked()) {
+            return;
+        }
+
+        if (next != null && (!next.getKey().attacked() || !next.getKey().moved())) {
             return;
         }
 
         if (!iterator.hasNext()) {
             iterator = allSorted.entrySet().iterator();
+
+            // reset moved and attacked statuses
+            allSorted.keySet().forEach(mech -> {
+                mech.setMoved(false);
+                mech.setAttacked(false);
+            });
+
+            next = iterator.next();
+        } else {
+            next = iterator.next();
         }
 
-        if (!iterator.hasNext())
-            // todo end turn event!
-            return;
-
-        if(next != null && next.getKey().getMovementPoints() > 0) {
-            return;
-        }
-        next = iterator.next();
+        Mech selectedMech = next.getKey();
+        Pilot selectedPilot = next.getValue();
 
         battleMap.removePath(next.getKey());
 
-        if (!next.getKey().isActive()) {
-            // skip
-        } else if (team2.containsKey(next.getKey())) {
+        if (!selectedMech.isActive()) {
+            // skip, if deactivated
+            if (iterator.hasNext()) {
+                next = iterator.next();
+            }
+        } else if (team2.containsKey(selectedMech)) {
 
             SequenceAction sequenceAction = new SequenceAction();
 
@@ -84,25 +101,36 @@ public class TurnProcessingFacade {
             sequenceAction.addAction(new LockAction(actionLock));
 
             // find target
-            Target target = targetingFacade.findTarget(next.getValue(), next.getKey(), team1, battleMap);
+            Target target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
 
-            // move
-            int movementPoints = movementSpeedCalculator.calculate(next.getValue(), next.getKey(), battleMap);
+            // calculate movement points
+            int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
+            selectedMech.resetMovementPoints(movementPoints);
 
-            // reconnect graph so that attacker can move
-            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)next.getKey().getX()][(int)next.getKey().getY()]);
+            int minRange = selectedMech.getSelectedWeapons()
+                    .stream()
+                    .filter(w -> w.getAmmo().isPresent() && w.getAmmo().get() > 0)
+                    .map(w -> rangeCalculator.calculate(selectedPilot, w))
+                    .min(Comparator.naturalOrder()).orElse(0);
 
-            GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int)next.getKey().getX()][(int)next.getKey().getY()],
-                    battleMap.getNodeGraphLv1().getNodeWeb()[(int)target.getMech().getX()][(int)target.getMech().getY()]);
+            // move if target too far away
+            if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.getMech().getX(), target.getMech().getY()) > minRange) {
 
-            battleMap.addPath(next.getKey(), paths);
+                // reconnect graph so that attacker can move
+                battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 
-            next.getKey().resetMovementPoints(movementPoints);
+                // calculate path
+                GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                        battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.getMech().getX()][(int) target.getMech().getY()]);
 
-            sequenceAction.addAction(new MovementAction(battleMap, next.getKey(), actionLock));
+                battleMap.addPath(selectedMech, paths);
 
-            // attack
-            AttackAction attackAction = new AttackAction(attackFacade, next.getKey(), next.getValue(), target.getMech(), target.getPilot(), battleMap);
+                sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, target.getMech()));
+            }
+
+            // then attack
+            sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), rangeCalculator, selectedPilot));
+            AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, rangeCalculator);
             sequenceAction.addAction(attackAction);
 
             // unlock all actions
@@ -112,8 +140,8 @@ public class TurnProcessingFacade {
 
         } else {
             // wait for "next" button press
-            int movementPoints = movementSpeedCalculator.calculate(next.getValue(), next.getKey(), battleMap);
-            next.getKey().resetMovementPoints(movementPoints);
+            int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
+            selectedMech.resetMovementPoints(movementPoints);
         }
 
 

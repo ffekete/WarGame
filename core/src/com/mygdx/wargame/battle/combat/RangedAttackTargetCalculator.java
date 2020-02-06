@@ -5,7 +5,7 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.battle.unit.action.MoveAndAttackAction;
+import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
 
 public class RangedAttackTargetCalculator implements AttackCalculator {
 
@@ -29,7 +29,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
 
             GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attacker, paths);
-            attacker.addAction(new MoveAndAttackAction(battleMap, attacker, defender, actionLock));
+            attacker.addAction(new MoveIntoRangeAction(battleMap, attacker, defender));
         }
     }
 }

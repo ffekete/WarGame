@@ -140,4 +140,9 @@ public class SmallCannonMk2 implements Weapon {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    @Override
+    public void reduceAmmo() {
+        this.ammo--;
+    }
 }

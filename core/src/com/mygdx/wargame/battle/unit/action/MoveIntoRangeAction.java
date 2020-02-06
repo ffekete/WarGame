@@ -1,38 +1,34 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
+import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.List;
 
 import static com.mygdx.wargame.battle.unit.Direction.Right;
 
-public class MoveAndAttackAction extends Action {
+public class MoveIntoRangeAction extends Action {
 
     private BattleMap battleMap;
-    private AbstractMech attacker;
-    private AbstractMech defender;
+    private Mech attacker;
+    private Mech defender;
     private float counter = 0.0f;
-    private ActionLock actionLock;
 
-    public MoveAndAttackAction(BattleMap battleMap, AbstractMech attacker, AbstractMech defender, ActionLock actionLock) {
+    public MoveIntoRangeAction(BattleMap battleMap, Mech attacker, Mech defender) {
         this.battleMap = battleMap;
         this.attacker = attacker;
         this.defender = defender;
-        this.actionLock = actionLock;
         battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()]);
     }
 
     @Override
     public boolean act(float delta) {
         counter += delta;
-        actionLock.setLocked(true);
 
         if (counter > 0.15f) {
             counter = 0.0f;
@@ -43,8 +39,7 @@ public class MoveAndAttackAction extends Action {
             if (nodes.isEmpty() || MathUtils.getDistance(attacker.getX(), attacker.getY(), defender.getX(), defender.getY()) <= attacker.getRange()) {
                 attacker.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
-                actionLock.setLocked(false);
-                // todo add attack here
+                attacker.setMoved(true);
                 return true;
             }
 
@@ -54,7 +49,7 @@ public class MoveAndAttackAction extends Action {
                 battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
                 attacker.resetMovementPoints(0);
                 attacker.setState(State.Idle);
-                actionLock.setLocked(false);
+                attacker.setMoved(true);
                 return true;
             }
 

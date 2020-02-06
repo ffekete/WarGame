@@ -4,8 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 

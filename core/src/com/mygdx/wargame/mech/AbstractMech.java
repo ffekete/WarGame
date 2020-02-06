@@ -9,7 +9,8 @@ import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
-public abstract class AbstractMech extends Actor implements Mech {
+public abstract class
+AbstractMech extends Actor implements Mech {
 
     private Team team;
     private int initiative;
