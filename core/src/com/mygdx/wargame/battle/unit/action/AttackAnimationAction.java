@@ -16,24 +16,18 @@ public class AttackAnimationAction extends Action {
     private Mech defenderMech;
     private double counter = 0;
     private int duration = 0;
-    private RangeCalculator rangeCalculator;
+    private int minRange;
     private Pilot pilot;
 
-    public AttackAnimationAction(Mech attackerMech, Mech defenderMech, RangeCalculator rangeCalculator, Pilot attackerPilot) {
+    public AttackAnimationAction(Mech attackerMech, Mech defenderMech, int minRange, Pilot attackerPilot) {
+        this.minRange = minRange;
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
-        this.rangeCalculator = rangeCalculator;
         this.pilot = attackerPilot;
     }
 
     @Override
     public boolean act(float delta) {
-
-        int minRange = attackerMech.getSelectedWeapons()
-                .stream()
-                .filter(w -> w.getAmmo().isPresent() && w.getAmmo().get() > 0)
-                .map(w -> rangeCalculator.calculate(pilot, w))
-                .min(Comparator.naturalOrder()).orElse(0);
 
         if(MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) > minRange) {
             // not in range, can't do anything
@@ -48,7 +42,7 @@ public class AttackAnimationAction extends Action {
             attackerMech.setState(State.Attack);
         }
 
-        if(duration == 3) {
+        if(duration == 10) {
             attackerMech.setState(State.Idle);
             return true;
         }

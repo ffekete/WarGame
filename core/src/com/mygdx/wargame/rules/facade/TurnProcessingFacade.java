@@ -107,11 +107,7 @@ public class TurnProcessingFacade {
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
 
-            int minRange = selectedMech.getSelectedWeapons()
-                    .stream()
-                    .filter(w -> w.getAmmo().isPresent() && w.getAmmo().get() > 0)
-                    .map(w -> rangeCalculator.calculate(selectedPilot, w))
-                    .min(Comparator.naturalOrder()).orElse(0);
+            int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, target.getMech());
 
             // move if target too far away
             if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.getMech().getX(), target.getMech().getY()) > minRange) {
@@ -125,12 +121,12 @@ public class TurnProcessingFacade {
 
                 battleMap.addPath(selectedMech, paths);
 
-                sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, target.getMech()));
+                sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, selectedPilot, target.getMech(), rangeCalculator));
             }
 
             // then attack
-            sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), rangeCalculator, selectedPilot));
-            AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, rangeCalculator);
+            sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange, selectedPilot));
+            AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
             sequenceAction.addAction(attackAction);
 
             // unlock all actions

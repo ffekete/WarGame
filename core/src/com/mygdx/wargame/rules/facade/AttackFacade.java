@@ -72,13 +72,11 @@ public class AttackFacade {
                 if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
                     // hit!
                     damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart);
+                    int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
+                    defendingMech.setStability(stabilityAfterHit);
                 }
 
                 attackingMech.setHeatLevel(attackingMech.getHeatLevel() + weapon.getHeat());
-
-                int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
-
-                defendingMech.setStability(stabilityAfterHit);
             }
         });
 

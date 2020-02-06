@@ -54,7 +54,7 @@ AbstractMech extends Actor implements Mech {
         if (team == Team.enemy)
             spriteBatch.setColor(Color.WHITE);
         else
-            spriteBatch.setColor(Color.YELLOW);
+            spriteBatch.setColor(Color.WHITE);
 
         if (slow == 0) {
             slow++;
@@ -154,4 +154,6 @@ AbstractMech extends Actor implements Mech {
         }
         return Integer.compare(this.getInitiative(), m.getInitiative());
     }
+
+
 }

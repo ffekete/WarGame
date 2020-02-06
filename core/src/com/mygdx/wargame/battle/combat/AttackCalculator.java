@@ -1,7 +1,8 @@
 package com.mygdx.wargame.battle.combat;
 
 import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.pilot.Pilot;
 
 public interface AttackCalculator {
-    void calculate(AbstractMech attacker, AbstractMech defender);
+    void calculate(Pilot attackerPilot, AbstractMech attacker, AbstractMech defender, Pilot defenderPilot);
 }

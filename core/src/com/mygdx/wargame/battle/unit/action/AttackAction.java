@@ -18,26 +18,21 @@ public class AttackAction extends Action {
     private Mech defenderMech;
     private Pilot defenderPilot;
     private BattleMap battleMap;
-    private RangeCalculator rangeCalculator;
+    private int minRange;
 
-    public AttackAction(AttackFacade attackFacade, Mech attackerMech, Pilot attackingPilot, Mech defenderMech, Pilot defenderPilot, BattleMap battleMap, RangeCalculator rangeCalculator) {
+    public AttackAction(AttackFacade attackFacade, Mech attackerMech, Pilot attackingPilot, Mech defenderMech, Pilot defenderPilot, BattleMap battleMap, int minRange) {
         this.attackFacade = attackFacade;
         this.attackerMech = attackerMech;
         this.attackingPilot = attackingPilot;
         this.defenderMech = defenderMech;
         this.defenderPilot = defenderPilot;
         this.battleMap = battleMap;
-        this.rangeCalculator = rangeCalculator;
+        this.minRange = minRange;
     }
 
 
     @Override
     public boolean act(float delta) {
-
-        int minRange = attackerMech.getSelectedWeapons()
-                .stream()
-                .map(w -> rangeCalculator.calculate(attackingPilot, w))
-                .min(Comparator.naturalOrder()).orElse(0);
 
         attackerMech.setAttacked(true);
         attackerMech.setMoved(true);

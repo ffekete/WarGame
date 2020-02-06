@@ -18,11 +18,13 @@ import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.TerrainType;
+import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Scout;
+import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.pilot.PilotCreator;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
@@ -45,6 +47,8 @@ public class BattleScreen implements Screen {
     private ActionLock actionLock;
     private TurnProcessingFacade turnProcessingFacade;
     private BattleMap battleMap;
+    private RangeCalculator rangeCalculator = new RangeCalculator();
+    private SelectionMarker selectionMarker;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -62,16 +66,18 @@ public class BattleScreen implements Screen {
 
         assetManager = new AssetManager();
         assetManager.load("Maverick.png", Texture.class);
+        assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.finishLoading();
 
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         stage = new Stage(viewport, spriteBatch);
 
+        selectionMarker = new SelectionMarker(assetManager, spriteBatch);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        Scout unit3 = new Scout("2", spriteBatch, assetManager);
+        Scout unit3 = new Scout("3", spriteBatch, assetManager);
         unit3.setPosition(63, 30);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
@@ -79,8 +85,7 @@ public class BattleScreen implements Screen {
         largeCannon.setStatus(Status.Selected);
         unit3.addComponent(BodyPart.LeftLeg, largeCannon);
         unit3.setActive(true);
-        unit3.addListener(new MechClickInputListener(unit3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
-        //battleMap.setTemporaryObstacle(63, 30);
+
 
         Scout unit2 = new Scout("2", spriteBatch, assetManager);
         unit2.setPosition(60, 30);
@@ -90,8 +95,6 @@ public class BattleScreen implements Screen {
         LargeCannon largeCannon2 = new LargeCannon();
         largeCannon2.setStatus(Status.Selected);
         unit2.addComponent(BodyPart.LeftLeg, largeCannon2);
-        unit2.addListener(new MechClickInputListener(unit2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
-        //battleMap.setTemporaryObstacle(60, 30);
 
         Scout unit = new Scout("1", spriteBatch, assetManager);
         unit.setPosition(10, 10);
@@ -101,26 +104,39 @@ public class BattleScreen implements Screen {
         LargeCannon largeCannon3 = new LargeCannon();
         largeCannon3.setStatus(Status.Selected);
         unit.addComponent(BodyPart.LeftLeg, largeCannon3);
-        unit.addListener(new MechClickInputListener(unit, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
-        //battleMap.setTemporaryObstacle(10, 10);
-
-        stage.addActor(unit2);
-        stage.addActor(unit3);
-        stage.addActor(unit);
 
         PilotCreator pilotCreator = new PilotCreator();
 
         Gdx.input.setInputProcessor(stage);
 
-        this.turnProcessingFacade = new TurnProcessingFacade(actionLock,
-                new AttackFacade(stage, spriteBatch, assetManager),
+        Pilot p1 = pilotCreator.getPilot();
+        Pilot p2 = pilotCreator.getPilot();
+        Pilot p3 = pilotCreator.getPilot();
+
+        AttackFacade attackFacade = new AttackFacade(stage, spriteBatch, assetManager);
+
+        this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
-                new MovementSpeedCalculator(), ImmutableMap.of(unit2, pilotCreator.getPilot(), unit3, pilotCreator.getPilot()),
-                ImmutableMap.of(unit, pilotCreator.getPilot()), new RangeCalculator());
+                new MovementSpeedCalculator(), ImmutableMap.of(unit2, p2, unit3, p3),
+                ImmutableMap.of(unit, p1), rangeCalculator);
 
         battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade);
 
-        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, actionLock);
+        battleMap.setTemporaryObstacle(63, 30);
+        battleMap.setTemporaryObstacle(60, 30);
+        battleMap.setTemporaryObstacle(10, 10);
+
+        stage.addActor(selectionMarker);
+
+        stage.addActor(unit2);
+        stage.addActor(unit3);
+        stage.addActor(unit);
+
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock);
+
+        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
+        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
+        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock));
     }
 
     @Override
@@ -138,6 +154,14 @@ public class BattleScreen implements Screen {
 
         }
         shapeRenderer.end();
+
+        if(turnProcessingFacade.getNext() != null && !turnProcessingFacade.getNext().getKey().moved() && turnProcessingFacade.getNext().getKey().getState() == State.Idle) {
+            selectionMarker.setColor(Color.valueOf("FFFFFF66"));
+            selectionMarker.setPosition(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY());
+        }
+        else {
+            selectionMarker.setColor(Color.valueOf("FFFFFF00"));
+        }
 
         turnProcessingFacade.process(battleMap, stage);
 

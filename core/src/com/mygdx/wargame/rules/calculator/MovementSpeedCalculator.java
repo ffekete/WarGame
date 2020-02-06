@@ -56,6 +56,7 @@ public class MovementSpeedCalculator {
             baseSpeed *= 0.5f;
         }
 
+        System.out.println("Calculated for: " + mech.getName() + " value: " + baseSpeed);
         return baseSpeed;
     }
 }

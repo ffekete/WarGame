@@ -6,6 +6,8 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.List;
@@ -15,15 +17,21 @@ import static com.mygdx.wargame.battle.unit.Direction.Right;
 public class MoveIntoRangeAction extends Action {
 
     private BattleMap battleMap;
-    private Mech attacker;
+    private Mech attackerMech;
+    private Pilot attackerPilot;
     private Mech defender;
     private float counter = 0.0f;
+    private RangeCalculator rangeCalculator;
+    private int minRange;
 
-    public MoveIntoRangeAction(BattleMap battleMap, Mech attacker, Mech defender) {
+    public MoveIntoRangeAction(BattleMap battleMap, Mech attackerMech, Pilot attackerPilot, Mech defender, RangeCalculator rangeCalculator) {
         this.battleMap = battleMap;
-        this.attacker = attacker;
+        this.attackerMech = attackerMech;
+        this.attackerPilot = attackerPilot;
         this.defender = defender;
-        battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()]);
+        this.rangeCalculator = rangeCalculator;
+        battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attackerMech.getX()][(int) attackerMech.getY()]);
+        minRange = rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech);
     }
 
     @Override
@@ -32,33 +40,34 @@ public class MoveIntoRangeAction extends Action {
 
         if (counter > 0.15f) {
             counter = 0.0f;
-            attacker.setState(State.Walk);
-            List<Node> nodes = battleMap.getPath(attacker);
+            attackerMech.setState(State.Walk);
+            List<Node> nodes = battleMap.getPath(attackerMech);
 
-            // no more nodes left to mov
-            if (nodes.isEmpty() || MathUtils.getDistance(attacker.getX(), attacker.getY(), defender.getX(), defender.getY()) <= attacker.getRange()) {
-                attacker.setState(State.Idle);
-                battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
-                attacker.setMoved(true);
+
+            // no more nodes left to move
+            if (nodes.isEmpty() || MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defender.getX(), defender.getY()) <= minRange) {
+                attackerMech.setState(State.Idle);
+                battleMap.setTemporaryObstacle((int) attackerMech.getX(), (int) attackerMech.getY());
+                attackerMech.setMoved(true);
                 return true;
             }
 
             // no more movement points left to move
-            if (attacker.getMovementPoints() <= 0) {
+            if (attackerMech.getMovementPoints() <= 0) {
 
-                battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
-                attacker.resetMovementPoints(0);
-                attacker.setState(State.Idle);
-                attacker.setMoved(true);
+                battleMap.setTemporaryObstacle((int) attackerMech.getX(), (int) attackerMech.getY());
+                attackerMech.resetMovementPoints(0);
+                attackerMech.setState(State.Idle);
+                attackerMech.setMoved(true);
                 return true;
             }
 
             Node nextNode = nodes.remove(0);
-            if (nextNode.getX() != attacker.getX()) {
-                attacker.setDirection(nextNode.getX() < attacker.getX() ? Direction.Left : Right);
+            if (nextNode.getX() != attackerMech.getX()) {
+                attackerMech.setDirection(nextNode.getX() < attackerMech.getX() ? Direction.Left : Right);
             }
-            attacker.consumeMovementPoint(1);
-            attacker.setPosition(nextNode.getX(), nextNode.getY());
+            attackerMech.consumeMovementPoint(1);
+            attackerMech.setPosition(nextNode.getX(), nextNode.getY());
             return false;
         }
         return false;

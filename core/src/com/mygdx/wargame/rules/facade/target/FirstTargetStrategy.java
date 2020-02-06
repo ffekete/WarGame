@@ -9,7 +9,7 @@ import java.util.Map;
 public class FirstTargetStrategy implements TargetingStrategy {
     @Override
     public Target findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap) {
-        Map.Entry<Mech, Pilot> target = targets.entrySet().stream().findFirst().get();
+        Map.Entry<Mech, Pilot> target = targets.entrySet().stream().filter(m -> m.getKey().isActive()).findFirst().get();
         return new Target(target.getKey(), target.getValue());
     }
 }

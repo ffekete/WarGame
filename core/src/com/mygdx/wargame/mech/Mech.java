@@ -91,4 +91,6 @@ public interface Mech extends Comparable<Mech> {
     void consumeMovementPoint(int i);
 
     void setPosition(float x, float y);
+
+    State getState();
 }
