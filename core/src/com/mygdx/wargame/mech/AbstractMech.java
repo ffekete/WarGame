@@ -4,25 +4,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.google.common.collect.ImmutableMap;
-import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.component.Component;
-import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.component.weapon.Status;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 public abstract class AbstractMech extends Actor implements Mech {
 
     private Team team;
-    private int movementPoints;
     private int initiative;
     private int step = 1;
     private int slow = 0;
@@ -31,45 +20,14 @@ public abstract class AbstractMech extends Actor implements Mech {
     private float range = 15f;
     private int heatLevel;
     private int stability;
-
-    private Map<BodyPart, Integer> bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
-            .put(BodyPart.LeftHand, 0)
-            .put(BodyPart.RightHand, 0)
-            .put(BodyPart.LeftLeg, 0)
-            .put(BodyPart.RightLeg, 0)
-            .put(BodyPart.Torso, 0)
-            .put(BodyPart.Head, 0)
-            .build();
-
-    private Map<BodyPart, Integer> hp = ImmutableMap.<BodyPart, Integer>builder()
-            .put(BodyPart.LeftHand, 0)
-            .put(BodyPart.RightHand, 0)
-            .put(BodyPart.LeftLeg, 0)
-            .put(BodyPart.RightLeg, 0)
-            .put(BodyPart.Torso, 0)
-            .put(BodyPart.Head, 0)
-            .build();
-
-    private Map<BodyPart, Set<Component>> components = ImmutableMap.<BodyPart, Set<Component>>builder()
-            .put(BodyPart.LeftHand, new HashSet<>())
-            .put(BodyPart.RightHand, new HashSet<>())
-            .put(BodyPart.LeftLeg, new HashSet<>())
-            .put(BodyPart.RightLeg, new HashSet<>())
-            .put(BodyPart.Torso, new HashSet<>())
-            .put(BodyPart.Head, new HashSet<>())
-            .build();
+    private boolean attacked;
+    private boolean moved;
+    private boolean active;
 
     protected TextureRegion textureRegion;
 
-    @Override
-    public int getHp(BodyPart bodyPart) {
-        return hp.get(bodyPart);
-    }
-
-    @Override
-    public boolean setHp(BodyPart bodyPart, int hp) {
-        this.hp.put(bodyPart, hp);
-        return this.hp.get(bodyPart) <= 0;
+    public AbstractMech(int initiative) {
+        this.initiative = initiative;
     }
 
     public void setState(State state) {
@@ -91,12 +49,7 @@ public abstract class AbstractMech extends Actor implements Mech {
     }
 
     @Override
-    public Set<Component> getAllComponents() {
-        return components.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-    }
-
-    @Override
-    public void draw(float x, float y, SpriteBatch spriteBatch, SelectionController selectionController, TextureRegion texture) {
+    public void draw(float x, float y, SpriteBatch spriteBatch, TextureRegion texture) {
         if (team == Team.enemy)
             spriteBatch.setColor(Color.WHITE);
         else
@@ -116,18 +69,6 @@ public abstract class AbstractMech extends Actor implements Mech {
 
         texture.flip(direction.isMirrored(), false);
         spriteBatch.draw(texture, x - 0.5f, y, 2, 2);
-    }
-
-    public void setMovementPoints(int movementPoints) {
-        this.movementPoints = movementPoints;
-    }
-
-    public int getMovementPoints() {
-        return this.movementPoints;
-    }
-
-    public void consumeMovementPoint(int amount) {
-        this.movementPoints -= amount;
     }
 
     public int getInitiative() {
@@ -165,27 +106,6 @@ public abstract class AbstractMech extends Actor implements Mech {
     }
 
     @Override
-    public Set<Weapon> getSelectedWeapons() {
-        return components.entrySet().stream()
-                .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                .map(c -> (Weapon)c)
-                .filter(w -> w.getStatus().equals(Status.Selected))
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public void addComponent(BodyPart bodyPart, Component component) {
-        if(this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
-            return;
-        this.components.get(bodyPart).add(component);
-    }
-
-    @Override
-    public Set<Component> getComponents(BodyPart bodyPart) {
-        return components.get(bodyPart);
-    }
-
-    @Override
     public int getStability() {
         return stability;
     }
@@ -193,5 +113,44 @@ public abstract class AbstractMech extends Actor implements Mech {
     @Override
     public void setStability(int amount) {
         this.stability = amount;
+    }
+
+    @Override
+    public boolean moved() {
+        return moved;
+    }
+
+    @Override
+    public boolean attacked() {
+        return attacked;
+    }
+
+    @Override
+    public void setAttacked(boolean attacked) {
+        this.attacked = attacked;
+    }
+
+    @Override
+    public void setMoved(boolean moved) {
+        this.moved = moved;
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean value) {
+        this.active = value;
+    }
+
+    @Override
+    public int compareTo(Mech m) {
+
+        if (m.getInitiative() == this.getInitiative()) {
+            return 1;
+        }
+        return Integer.compare(this.getInitiative(), m.getInitiative());
     }
 }

@@ -9,7 +9,7 @@ import com.mygdx.wargame.pilot.Skill;
 
 public class EvasionCalculator {
 
-    int calculate(Pilot targetPilot, Mech targetMech, Pilot enemyPilot, BattleMap battleMap) {
+    public int calculate(Pilot targetPilot, Mech targetMech, Pilot enemyPilot, BattleMap battleMap) {
         int baseEvasion = targetMech.getRemainingMovementPoints();
 
         if(targetPilot.hasPerk(Perks.Agile)) {

@@ -52,7 +52,7 @@ public class MoveAndAttackAction extends Action {
             if (attacker.getMovementPoints() <= 0) {
 
                 battleMap.setTemporaryObstacle((int) attacker.getX(), (int) attacker.getY());
-                attacker.setMovementPoints(0);
+                attacker.resetMovementPoints(0);
                 attacker.setState(State.Idle);
                 actionLock.setLocked(false);
                 return true;

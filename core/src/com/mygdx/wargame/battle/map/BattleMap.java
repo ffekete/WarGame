@@ -3,12 +3,14 @@ package com.mygdx.wargame.battle.map;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.mygdx.wargame.battle.controller.SelectionController;
-import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.input.GroundInputListener;
+import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,20 +20,20 @@ public class BattleMap {
 
     int width, height;
     private NodeGraph nodeGraphLv1;
-    private SelectionController selectionController;
     private Stage stage;
     private ActionLock actionLock;
     private TerrainType terrainType;
+    private TurnProcessingFacade turnProcessingFacade;
 
-    private Map<AbstractMech, List<Node>> paths = new HashMap<>();
+    private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, SelectionController selectionController, Stage stage, ActionLock actionLock, TerrainType terrainType) {
+    public BattleMap(int x, int y, Stage stage, ActionLock actionLock, TerrainType terrainType, TurnProcessingFacade turnProcessingFacade, TurnProcessingFacade turnProcessingFacade1) {
         this.width = x;
         this.height = y;
-        this.selectionController = selectionController;
         this.stage = stage;
         this.actionLock = actionLock;
         this.terrainType = terrainType;
+        this.turnProcessingFacade = turnProcessingFacade1;
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
@@ -41,7 +43,7 @@ public class BattleMap {
 
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
                     node = new Node(i, j);
-                    GroundInputListener groundInputListener = new GroundInputListener(this.selectionController, this, node, actionLock);
+                    GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock);
                     node.addListener(groundInputListener);
                     node.setTouchable(Touchable.enabled);
                     stage.addActor(node);
@@ -72,7 +74,7 @@ public class BattleMap {
         Node newNode;
         if (nodeGraph.getNodeWeb()[i][j] == null) {
             newNode = new Node(i, j);
-            GroundInputListener groundInputListener = new GroundInputListener(this.selectionController, this, node, actionLock);
+            GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade,this, node, actionLock);
             node.addListener(groundInputListener);
             node.setTouchable(Touchable.enabled);
             stage.addActor(node);
@@ -90,7 +92,7 @@ public class BattleMap {
         return nodeGraphLv1.findPath(s, g);
     }
 
-    public void addPath(AbstractMech man, GraphPath<Node> path) {
+    public void addPath(Mech man, GraphPath<Node> path) {
         Iterator<Node> it = path.iterator();
         paths.computeIfAbsent(man, v -> new LinkedList<>());
         while (it.hasNext()) {
@@ -106,7 +108,7 @@ public class BattleMap {
         nodeGraphLv1.disconnectCities(nodeGraphLv1.getNodeWeb()[(int) x][(int) y]);
     }
 
-    public List<Node> getPath(AbstractMech abstractMech) {
+    public List<Node> getPath(Mech abstractMech) {
         return paths.get(abstractMech);
     }
 
@@ -116,5 +118,10 @@ public class BattleMap {
 
     public TerrainType getTerrainType() {
         return terrainType;
+    }
+
+    public void removePath(Mech key) {
+        paths.computeIfAbsent(key, v -> new ArrayList<>());
+        paths.get(key).clear();
     }
 }

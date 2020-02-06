@@ -1,10 +1,7 @@
 package com.mygdx.wargame;
 
 import com.badlogic.gdx.Game;
-import com.mygdx.wargame.battle.controller.SelectionController;
 import com.mygdx.wargame.battle.screen.BattleScreen;
-
-import java.util.HashSet;
 
 public class WarGame extends Game {
 
@@ -12,8 +9,8 @@ public class WarGame extends Game {
 
 	@Override
 	public void create () {
-		SelectionController selectionController =  new SelectionController(null);
-		battleScreen = new BattleScreen(selectionController);
+
+		battleScreen = new BattleScreen();
 		this.setScreen(battleScreen);
 	}
 

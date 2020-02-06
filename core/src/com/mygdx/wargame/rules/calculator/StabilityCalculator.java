@@ -18,7 +18,7 @@ public class StabilityCalculator {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
     }
 
-    int calculate(Pilot targetingPilot, Mech TargetingMech, Pilot targetPilot, Mech TargetMech, BattleMap battleMap, Weapon targetingWeapon) {
+    public int calculate(Pilot targetingPilot, Mech TargetingMech, Pilot targetPilot, Mech TargetMech, BattleMap battleMap, Weapon targetingWeapon) {
 
         boolean isCritical = new Random().nextInt(100) < criticalHitChanceCalculator.calculate(targetingPilot, TargetingMech, targetingWeapon);
 

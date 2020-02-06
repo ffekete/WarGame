@@ -7,6 +7,7 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
+import com.mygdx.wargame.mech.Mech;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ import static com.mygdx.wargame.battle.unit.Direction.Right;
 public class MovementAction extends Action {
 
     private BattleMap battleMap;
-    private AbstractMech abstractMech;
+    private Mech abstractMech;
     private float counter = 0.0f;
     private ActionLock actionLock;
 
-    public MovementAction(BattleMap battleMap, AbstractMech abstractMech, ActionLock actionLock) {
+    public MovementAction(BattleMap battleMap, Mech abstractMech, ActionLock actionLock) {
         this.battleMap = battleMap;
         this.abstractMech = abstractMech;
         this.actionLock = actionLock;
@@ -45,7 +46,7 @@ public class MovementAction extends Action {
 
             // no more movement points left to move
             if (abstractMech.getMovementPoints() <= 0) {
-                abstractMech.setMovementPoints(0);
+                abstractMech.resetMovementPoints(0);
                 abstractMech.setState(State.Idle);
                 actionLock.setLocked(false);
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());

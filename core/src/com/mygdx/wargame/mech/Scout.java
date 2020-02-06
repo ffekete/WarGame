@@ -7,9 +7,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableMap;
-import com.mygdx.wargame.battle.controller.SelectionController;
+import com.mygdx.wargame.component.Component;
+import com.mygdx.wargame.component.weapon.Status;
+import com.mygdx.wargame.component.weapon.Weapon;
+import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Scout extends AbstractMech {
 
@@ -21,7 +28,7 @@ public class Scout extends AbstractMech {
     public static final int HEAD_HP = 10;
 
     private SpriteBatch spriteBatch;
-    private SelectionController selectionController;
+    private TurnProcessingFacade turnProcessingFacade;
     private String name;
     private int movementPoints;
 
@@ -43,9 +50,19 @@ public class Scout extends AbstractMech {
             .put(BodyPart.Head, HEAD_HP)
             .build();
 
-    public Scout(String name, SpriteBatch spriteBatch, SelectionController selectionController, AssetManager assetManager) {
+    private Map<BodyPart, Set<Component>> components = ImmutableMap.<BodyPart, Set<Component>>builder()
+            .put(BodyPart.LeftHand, new HashSet<>())
+            .put(BodyPart.RightHand, new HashSet<>())
+            .put(BodyPart.LeftLeg, new HashSet<>())
+            .put(BodyPart.RightLeg, new HashSet<>())
+            .put(BodyPart.Torso, new HashSet<>())
+            .put(BodyPart.Head, new HashSet<>())
+            .build();
+
+    public Scout(String name, SpriteBatch spriteBatch, TurnProcessingFacade turnProcessingFacade, AssetManager assetManager) {
+        super(10);
         this.spriteBatch = spriteBatch;
-        this.selectionController = selectionController;
+        this.turnProcessingFacade = turnProcessingFacade;
         this.name = name;
 
         setTouchable(Touchable.enabled);
@@ -80,7 +97,7 @@ public class Scout extends AbstractMech {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(getX(), getY(), spriteBatch, selectionController, textureRegion);
+        super.draw(getX(), getY(), spriteBatch, textureRegion);
     }
 
     @Override
@@ -112,4 +129,53 @@ public class Scout extends AbstractMech {
     public int getHeadMaxHp() {
         return HEAD_HP;
     }
+
+    @Override
+    public int getHp(BodyPart bodyPart) {
+        return hp.get(bodyPart);
+    }
+
+    @Override
+    public boolean setHp(BodyPart bodyPart, int hp) {
+        this.hp.put(bodyPart, hp);
+        return this.hp.get(bodyPart) <= 0;
+    }
+
+    @Override
+    public void addComponent(BodyPart bodyPart, Component component) {
+        if(this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
+            return;
+        this.components.get(bodyPart).add(component);
+    }
+
+    @Override
+    public Set<Weapon> getSelectedWeapons() {
+        return components.entrySet().stream()
+                .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
+                .map(c -> (Weapon)c)
+                .filter(w -> w.getStatus().equals(Status.Selected))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Component> getAllComponents() {
+        return components.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Component> getComponents(BodyPart bodyPart) {
+        return components.get(bodyPart);
+    }
+
+
+    @Override
+    public void consumeMovementPoint(int amount) {
+        this.movementPoints -= amount;
+    }
+
+    @Override
+    public int getMovementPoints() {
+        return this.movementPoints;
+    }
+
 }
