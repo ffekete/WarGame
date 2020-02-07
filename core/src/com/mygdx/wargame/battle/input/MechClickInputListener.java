@@ -68,7 +68,6 @@ public class MechClickInputListener extends InputListener {
                         int ammo = w.getAmmo().orElse(-1);
                         screenElements.getMechInfoPanel().getIbTable().add(new Label(ammo < 0 ? "N/A" : "" + ammo, labelStyle));
                         screenElements.getMechInfoPanel().getIbTable().row();
-                        System.out.println("a");
                     });
 
         } else if (mec.getTeam().equals(Team.enemy)) {
