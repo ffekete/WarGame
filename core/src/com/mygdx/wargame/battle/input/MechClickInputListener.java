@@ -2,16 +2,17 @@ package com.mygdx.wargame.battle.input;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.screen.ScreenElements;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.component.weapon.Status;
+import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
-
-import java.util.Map;
 
 public class MechClickInputListener extends InputListener {
 
@@ -20,13 +21,17 @@ public class MechClickInputListener extends InputListener {
     private TurnProcessingFacade turnProcessingFacade;
     private RangedAttackTargetCalculator rangedAttackTargetCalculator;
     private ActionLock actionLock;
+    private ScreenElements screenElements;
+    private Label.LabelStyle labelStyle;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, ScreenElements screenElements, Label.LabelStyle labelStyle) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
         this.rangedAttackTargetCalculator = rangedAttackTargetCalculator;
         this.actionLock = actionLock;
+        this.screenElements = screenElements;
+        this.labelStyle = labelStyle;
     }
 
     @Override
@@ -35,8 +40,20 @@ public class MechClickInputListener extends InputListener {
             return true;
 
         if (mec.getTeam().equals(Team.own)) {
-
+            screenElements.getMechInfoPanel().setVisible(true);
+            screenElements.getMechInfoPanel().getIbTable().clear();
+            mec.getAllComponents().stream()
+                    .filter(c -> c.getStatus() != Status.Destroyed)
+                    .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
+                    .map(c ->  ((Weapon)c))
+                    .forEach(w -> {
+                        screenElements.getMechInfoPanel().getIbTable().add(new Label(w.getName() + "   ", labelStyle));
+                        int ammo = w.getAmmo().orElse(-1);
+                        screenElements.getMechInfoPanel().getIbTable().add(new Label(ammo < 0 ? "N/A" : "" + ammo, labelStyle));
+                        screenElements.getMechInfoPanel().getIbTable().row();
+                    });
         } else if (mec.getTeam().equals(Team.enemy)) {
+            screenElements.getMechInfoPanel().setVisible(false);
             // attack
             rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot);
         } else {

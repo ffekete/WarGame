@@ -69,6 +69,10 @@ public class AttackFacade {
                         break;
                 }
 
+                // reduce ammo of weapon
+                for(int i = 0; i < weapon.getDamageMultiplier(); i++)
+                    weapon.reduceAmmo();
+
                 if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
                     // hit!
                     damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart);
