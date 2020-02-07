@@ -1,9 +1,11 @@
 package com.mygdx.wargame.battle.input;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.ScreenElements;
@@ -14,6 +16,9 @@ import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MechClickInputListener extends InputListener {
 
@@ -50,7 +55,16 @@ public class MechClickInputListener extends InputListener {
                     .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
                     .map(c ->  ((Weapon)c))
                     .forEach(w -> {
-                        screenElements.getMechInfoPanel().getIbTable().add(new CheckBox(w.getName() + "   ", checkBoxStyle));
+                        CheckBox checkBox = new CheckBox("  " + w.getName(), checkBoxStyle);
+                        checkBox.setChecked(w.getStatus() == Status.Selected);
+                        checkBox.addListener(new ChangeListener() {
+                            @Override
+                            public void changed(ChangeEvent event, Actor actor) {
+                                w.setStatus(checkBox.isChecked() ? Status.Selected : Status.Active);
+                            }
+                        });
+                        screenElements.getMechInfoPanel().getIbTable().add(checkBox).padRight(20);
+
                         int ammo = w.getAmmo().orElse(-1);
                         screenElements.getMechInfoPanel().getIbTable().add(new Label(ammo < 0 ? "N/A" : "" + ammo, labelStyle));
                         screenElements.getMechInfoPanel().getIbTable().row();

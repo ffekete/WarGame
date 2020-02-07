@@ -3,13 +3,12 @@ package com.mygdx.wargame.battle.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class MechInfoPanel extends Actor {
@@ -18,18 +17,17 @@ public class MechInfoPanel extends Actor {
     private ScrollPane scrollPane;
     Container<ScrollPane> container;
 
-    public MechInfoPanel(BitmapFont font12) {
-        TextButton.TextButtonStyle imageButtonStyle = new TextButton.TextButtonStyle();
-        imageButtonStyle.up = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png")));
-        imageButtonStyle.down = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png")));
-        imageButtonStyle.font = font12;
-
+    public MechInfoPanel() {
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         scrollPaneStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png")));
-        scrollPaneStyle.vScrollKnob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBarKnob.png")));
-        scrollPaneStyle.vScroll = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBar.png")));
-        scrollPaneStyle.hScroll = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBar.png")));
-        scrollPaneStyle.hScrollKnob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBarKnob.png")));
+
+        Drawable scrollKnob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBarKnob.png")));
+        scrollPaneStyle.vScrollKnob = scrollKnob;
+
+        Drawable scrollBar = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBar.png")));
+        scrollPaneStyle.vScroll = scrollBar;
+        scrollPaneStyle.hScroll = scrollBar;
+        scrollPaneStyle.hScrollKnob = scrollKnob;
 
         scrollPane = new ScrollPane(ibTable, scrollPaneStyle);
         container = new Container<>(scrollPane);

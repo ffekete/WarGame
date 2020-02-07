@@ -196,21 +196,13 @@ public class BattleScreen implements Screen {
 
         CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = font;
-        checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
-        checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
+        checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
+        checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
-        MechInfoPanel mechInfoPanel = new MechInfoPanel(font);
+        MechInfoPanel mechInfoPanel = new MechInfoPanel();
         screenElements = new ScreenElements(mechInfoPanel, font);
 
         mechInfoPanel.setTouchable(Touchable.enabled);
-
-        mechInfoPanel.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.exit(-1);
-                return true;
-            }
-        });
 
         table.setTouchable(Touchable.enabled);
 
@@ -255,19 +247,6 @@ public class BattleScreen implements Screen {
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
-
-//        shapeRenderer.begin();
-//
-//        shapeRenderer.setColor(Color.DARK_GRAY);
-//
-//        for (int i = 0; i <= HEIGHT; i++) {
-//            for (int j = 0; j <= WIDTH; j++) {
-//                shapeRenderer.line(j, 0, j, HEIGHT);
-//            }
-//            shapeRenderer.line(0, i, WIDTH, i);
-//
-//        }
-//        shapeRenderer.end();
 
         hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamera.combined);
