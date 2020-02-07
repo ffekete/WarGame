@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
@@ -10,9 +11,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.common.collect.ImmutableMap;
@@ -108,7 +116,44 @@ public class BattleScreen implements Screen {
         unit2.setStability(100);
         LargeCannon largeCannon2 = new LargeCannon();
         largeCannon2.setStatus(Status.Selected);
+
+        LargeCannon largeCannon3 = new LargeCannon();
+        largeCannon3.setStatus(Status.Selected);
+
+        LargeCannon largeCannon4 = new LargeCannon();
+        largeCannon4.setStatus(Status.Selected);
+
+        LargeCannon largeCannon5 = new LargeCannon();
+        largeCannon5.setStatus(Status.Selected);
+
+        LargeCannon largeCannon6 = new LargeCannon();
+        largeCannon6.setStatus(Status.Selected);
+
+        LargeCannon largeCannon7 = new LargeCannon();
+        largeCannon7.setStatus(Status.Selected);
+
+        LargeCannon largeCannon8 = new LargeCannon();
+        largeCannon8.setStatus(Status.Selected);
+
+        LargeCannon largeCannon9 = new LargeCannon();
+        largeCannon9.setStatus(Status.Selected);
+
+        LargeCannon largeCannon10 = new LargeCannon();
+        largeCannon10.setStatus(Status.Selected);
+
+        LargeCannon largeCannon11 = new LargeCannon();
+        largeCannon11.setStatus(Status.Selected);
+
         unit2.addComponent(BodyPart.LeftLeg, largeCannon2);
+        unit2.addComponent(BodyPart.LeftLeg, largeCannon3);
+        unit2.addComponent(BodyPart.RightLeg, largeCannon4);
+        unit2.addComponent(BodyPart.RightLeg, largeCannon5);
+        unit2.addComponent(BodyPart.LeftLeg, largeCannon6);
+        unit2.addComponent(BodyPart.LeftLeg, largeCannon7);
+        unit2.addComponent(BodyPart.LeftLeg, largeCannon8);
+        unit2.addComponent(BodyPart.Torso, largeCannon9);
+        unit2.addComponent(BodyPart.Torso, largeCannon10);
+        unit2.addComponent(BodyPart.Torso, largeCannon11);
 
         Scout unit = new Scout("1", spriteBatch, assetManager);
         unit.setPosition(10, 10);
@@ -121,7 +166,11 @@ public class BattleScreen implements Screen {
 
         PilotCreator pilotCreator = new PilotCreator();
 
-        Gdx.input.setInputProcessor(stage);
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(hudStage);
+        inputMultiplexer.addProcessor(stage);
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
         Pilot p1 = pilotCreator.getPilot();
         Pilot p2 = pilotCreator.getPilot();
@@ -145,8 +194,27 @@ public class BattleScreen implements Screen {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
 
-        screenElements = new ScreenElements(new MechInfoPanel(labelStyle, font), font);
-        table.addActor(screenElements.getMechInfoPanel());
+        CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle();
+        checkBoxStyle.font = font;
+        checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
+        checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
+
+        MechInfoPanel mechInfoPanel = new MechInfoPanel(font);
+        screenElements = new ScreenElements(mechInfoPanel, font);
+
+        mechInfoPanel.setTouchable(Touchable.enabled);
+
+        mechInfoPanel.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.exit(-1);
+                return true;
+            }
+        });
+
+        table.setTouchable(Touchable.enabled);
+
+        table.addActor(mechInfoPanel.getContainer());//.pad(10);
         screenElements.getMechInfoPanel().setVisible(false);
 
         battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, screenElements, assetManager);
@@ -164,9 +232,9 @@ public class BattleScreen implements Screen {
         stage.addActor(selectionMarker);
 
         // listeners
-        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle));
-        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle));
-        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle));
+        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle));
+        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle));
+        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle));
     }
 
     @Override

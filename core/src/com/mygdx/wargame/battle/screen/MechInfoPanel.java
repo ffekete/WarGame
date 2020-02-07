@@ -6,38 +6,40 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class MechInfoPanel extends Actor {
 
-    private Button imageButton;
     private Table ibTable = new Table();
-    private Label.LabelStyle labelStyle;
+    private ScrollPane scrollPane;
+    Container<ScrollPane> container;
 
-    public MechInfoPanel(Label.LabelStyle labelStyle, BitmapFont font12) {
-        this.labelStyle = labelStyle;
+    public MechInfoPanel(BitmapFont font12) {
         TextButton.TextButtonStyle imageButtonStyle = new TextButton.TextButtonStyle();
         imageButtonStyle.up = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png")));
         imageButtonStyle.down = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png")));
         imageButtonStyle.font = font12;
 
-        Button imageButton = new Button(imageButtonStyle);
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPaneStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png")));
+        scrollPaneStyle.vScrollKnob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBarKnob.png")));
+        scrollPaneStyle.vScroll = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBar.png")));
+        scrollPaneStyle.hScroll = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBar.png")));
+        scrollPaneStyle.hScrollKnob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBarKnob.png")));
 
-        imageButton.setDebug(true);
-        imageButton.setHeight(200);
-        imageButton.setWidth(600);
-        imageButton.setY(-200);
-        imageButton.row();
+        scrollPane = new ScrollPane(ibTable, scrollPaneStyle);
+        container = new Container<>(scrollPane);
+        container.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png"))));
+        container.fillX().pad(20);
 
-        ibTable.left();
-
-        imageButton.add(ibTable);
-
-        this.imageButton = imageButton;
+        container.setDebug(true);
+        container.setSize(600, 200);
+        container.setY(-200);
+        scrollPane.setScrollbarsVisible(true);
     }
 
     public Table getIbTable() {
@@ -46,27 +48,31 @@ public class MechInfoPanel extends Actor {
 
     @Override
     public void act(float delta) {
-        imageButton.act(delta);
+        scrollPane.act(delta);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        imageButton.draw(batch, parentAlpha);
+        scrollPane.draw(batch, parentAlpha);
     }
 
     @Override
     public void setVisible(boolean visible) {
-        if(visible) {
+        if (visible) {
             MoveToAction moveToAction = new MoveToAction();
             moveToAction.setY(0);
             moveToAction.setDuration(0.5f);
-            imageButton.addAction(moveToAction);
+            container.addAction(moveToAction);
         } else {
             MoveToAction moveToAction = new MoveToAction();
             moveToAction.setY(-200);
             moveToAction.setDuration(0.25f);
-            imageButton.addAction(moveToAction);
+            container.addAction(moveToAction);
         }
         //super.setVisible(visible);
+    }
+
+    public Container getContainer() {
+        return container;
     }
 }

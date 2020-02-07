@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.input;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
@@ -23,8 +24,9 @@ public class MechClickInputListener extends InputListener {
     private ActionLock actionLock;
     private ScreenElements screenElements;
     private Label.LabelStyle labelStyle;
+    private CheckBox.CheckBoxStyle checkBoxStyle;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, ScreenElements screenElements, Label.LabelStyle labelStyle) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, ScreenElements screenElements, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -32,6 +34,7 @@ public class MechClickInputListener extends InputListener {
         this.actionLock = actionLock;
         this.screenElements = screenElements;
         this.labelStyle = labelStyle;
+        this.checkBoxStyle = checkBoxStyle;
     }
 
     @Override
@@ -47,11 +50,13 @@ public class MechClickInputListener extends InputListener {
                     .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
                     .map(c ->  ((Weapon)c))
                     .forEach(w -> {
-                        screenElements.getMechInfoPanel().getIbTable().add(new Label(w.getName() + "   ", labelStyle));
+                        screenElements.getMechInfoPanel().getIbTable().add(new CheckBox(w.getName() + "   ", checkBoxStyle));
                         int ammo = w.getAmmo().orElse(-1);
                         screenElements.getMechInfoPanel().getIbTable().add(new Label(ammo < 0 ? "N/A" : "" + ammo, labelStyle));
                         screenElements.getMechInfoPanel().getIbTable().row();
+                        System.out.println("a");
                     });
+
         } else if (mec.getTeam().equals(Team.enemy)) {
             screenElements.getMechInfoPanel().setVisible(false);
             // attack
