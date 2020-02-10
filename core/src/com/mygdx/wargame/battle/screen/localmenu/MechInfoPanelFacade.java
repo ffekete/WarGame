@@ -74,6 +74,9 @@ public class MechInfoPanelFacade extends Actor {
         detailsButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // hide all other panels
+                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
+                // show this one
                 bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, bigInfoPanelHidden);
                 return true;
             }
@@ -94,6 +97,9 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // hide all other panels
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, false);
+                // show this one
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
                 return true;
             }
@@ -107,6 +113,16 @@ public class MechInfoPanelFacade extends Actor {
 
         hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
         hideMenuButton.setSize(hideMenuButton.getWidth() * Config.UI_SCALING, hideMenuButton.getHeight() * Config.UI_SCALING);
+        hideMenuButton.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // hide all other panels
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, false);
+                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
+                hideLocalMenu();
+                return true;
+            }
+        });
 
         Image fireImage = new Image(new Texture(Gdx.files.internal("skin/fire.png")));
 

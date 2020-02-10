@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.battle.screen.ScreenElements;
+import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.action.MovementAction;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
@@ -17,20 +17,20 @@ public class GroundInputListener extends InputListener {
     private BattleMap battleMap;
     private Node node;
     private ActionLock actionLock;
-    private ScreenElements screenElements;
+    private MechInfoPanelFacade mechInfoPanelFacade;
 
-    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, Node node, ActionLock actionLock, ScreenElements screenElements) {
+    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, Node node, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade) {
         this.turnProcessingFacade = turnProcessingFacade;
         this.battleMap = battleMap;
         this.node = node;
         this.actionLock = actionLock;
-        this.screenElements = screenElements;
+        this.mechInfoPanelFacade = mechInfoPanelFacade;
     }
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-        screenElements.getMechInfoPanelFacade().hideLocalMenu();
+        mechInfoPanelFacade.hideLocalMenu();
 
         if (actionLock.isLocked())
             return true;

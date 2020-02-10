@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.mygdx.wargame.battle.input.GroundInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.screen.ScreenElements;
+import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
@@ -25,20 +25,20 @@ public class BattleMap {
     private ActionLock actionLock;
     private TerrainType terrainType;
     private TurnProcessingFacade turnProcessingFacade;
-    private ScreenElements screenElements;
     private AssetManager assetManager;
+    private MechInfoPanelFacade mechInfoPanelFacade;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, Stage stage, ActionLock actionLock, TerrainType terrainType, TurnProcessingFacade turnProcessingFacade, TurnProcessingFacade turnProcessingFacade1, ScreenElements screenElements, AssetManager assetManager) {
+    public BattleMap(int x, int y, Stage stage, ActionLock actionLock, TerrainType terrainType, TurnProcessingFacade turnProcessingFacade, TurnProcessingFacade turnProcessingFacade1, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade) {
         this.width = x;
         this.height = y;
         this.stage = stage;
         this.actionLock = actionLock;
         this.terrainType = terrainType;
         this.turnProcessingFacade = turnProcessingFacade1;
-        this.screenElements = screenElements;
         this.assetManager = assetManager;
+        this.mechInfoPanelFacade = mechInfoPanelFacade;
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
@@ -48,7 +48,7 @@ public class BattleMap {
 
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
                     node = new Node(i, j, assetManager);
-                    GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock, this.screenElements);
+                    GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock, this.mechInfoPanelFacade);
                     node.addListener(groundInputListener);
                     node.setTouchable(Touchable.enabled);
                     stage.addActor(node);
@@ -79,7 +79,7 @@ public class BattleMap {
         Node newNode;
         if (nodeGraph.getNodeWeb()[i][j] == null) {
             newNode = new Node(i, j, assetManager);
-            GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade,this, node, actionLock, screenElements);
+            GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade,this, node, actionLock, mechInfoPanelFacade);
             node.addListener(groundInputListener);
             node.setTouchable(Touchable.enabled);
             stage.addActor(node);
@@ -128,9 +128,5 @@ public class BattleMap {
     public void removePath(Mech key) {
         paths.computeIfAbsent(key, v -> new ArrayList<>());
         paths.get(key).clear();
-    }
-
-    public void setScreenElements(ScreenElements screenElements) {
-        this.screenElements = screenElements;
     }
 }

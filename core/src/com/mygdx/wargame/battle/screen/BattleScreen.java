@@ -64,7 +64,6 @@ public class BattleScreen implements Screen {
     private BattleMap battleMap;
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private SelectionMarker selectionMarker;
-    private ScreenElements screenElements;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -195,11 +194,10 @@ public class BattleScreen implements Screen {
         checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
         MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade();
-        screenElements = new ScreenElements(mechInfoPanelFacade, font);
 
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
-        battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, screenElements, assetManager);
+        battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock);
 
