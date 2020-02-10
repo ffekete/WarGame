@@ -6,16 +6,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 public class ScreenElements {
 
     private Label.LabelStyle infoLabelStyle;
-    private MechInfoPanel mechInfoPanel;
+    private MechInfoPanelFacade mechInfoPanelFacade;
 
-    public ScreenElements(MechInfoPanel mechInfoPanel, BitmapFont font12) {
-        this.mechInfoPanel = mechInfoPanel;
+    public ScreenElements(MechInfoPanelFacade mechInfoPanelFacade, BitmapFont font12) {
+        this.mechInfoPanelFacade = mechInfoPanelFacade;
         infoLabelStyle = new Label.LabelStyle();
         infoLabelStyle.font = font12;
     }
 
-    public MechInfoPanel getMechInfoPanel() {
-        return mechInfoPanel;
+    public MechInfoPanelFacade getMechInfoPanelFacade() {
+        return mechInfoPanelFacade;
     }
 
     public Label.LabelStyle getInfoLabelStyle() {

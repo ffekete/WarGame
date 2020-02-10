@@ -11,15 +11,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -45,6 +41,9 @@ import com.mygdx.wargame.rules.facade.AttackFacade;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.DrawUtils;
+
+import static com.mygdx.wargame.config.Config.SCREEN_SIZE_X;
+import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
 public class BattleScreen implements Screen {
 
@@ -79,7 +78,7 @@ public class BattleScreen implements Screen {
         viewport.apply();
 
         hudCamera = new OrthographicCamera();
-        hudViewport = new FitViewport(1920, 1080, hudCamera);
+        hudViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y, hudCamera);
 
         this.spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -187,7 +186,7 @@ public class BattleScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.top();
-        table.setDebug(true);
+        //table.setDebug(true);
         hudStage.addActor(table);
 
         BitmapFont font = FontCreator.getBitmapFont();
@@ -199,15 +198,16 @@ public class BattleScreen implements Screen {
         checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
         checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
-        MechInfoPanel mechInfoPanel = new MechInfoPanel();
-        screenElements = new ScreenElements(mechInfoPanel, font);
+        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade();
+        screenElements = new ScreenElements(mechInfoPanelFacade, font);
 
-        mechInfoPanel.setTouchable(Touchable.enabled);
+        mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
         table.setTouchable(Touchable.enabled);
 
-        table.addActor(mechInfoPanel.getContainer());//.pad(10);
-        screenElements.getMechInfoPanel().setVisible(false);
+        table.addActor(mechInfoPanelFacade.getWeaponSelectionContainer());//.pad(10);
+        table.addActor(mechInfoPanelFacade.getBigInfoPanelContainer());
+        screenElements.getMechInfoPanelFacade().setVisible(false);
 
         battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, screenElements, assetManager);
 
@@ -222,11 +222,13 @@ public class BattleScreen implements Screen {
         stage.addActor(unit);
 
         stage.addActor(selectionMarker);
+        mechInfoPanelFacade.getDetailsButton().setVisible(false);
+        hudStage.addActor(mechInfoPanelFacade.getDetailsButton());
 
         // listeners
-        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle));
-        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle));
-        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle));
+        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
     }
 
     @Override
