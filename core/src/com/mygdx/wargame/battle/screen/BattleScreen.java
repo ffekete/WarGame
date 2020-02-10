@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -25,6 +24,7 @@ import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.TerrainType;
+import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.weapon.Status;
@@ -183,11 +183,7 @@ public class BattleScreen implements Screen {
                 ImmutableMap.of(unit, p1), rangeCalculator);
 
         // display
-        Table table = new Table();
-        table.setFillParent(true);
-        table.top();
-        //table.setDebug(true);
-        hudStage.addActor(table);
+
 
         BitmapFont font = FontCreator.getBitmapFont();
         Label.LabelStyle labelStyle = new Label.LabelStyle();
@@ -203,12 +199,6 @@ public class BattleScreen implements Screen {
 
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
-        table.setTouchable(Touchable.enabled);
-
-        table.addActor(mechInfoPanelFacade.getWeaponSelectionContainer());//.pad(10);
-        table.addActor(mechInfoPanelFacade.getBigInfoPanelContainer());
-        screenElements.getMechInfoPanelFacade().setVisible(false);
-
         battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, screenElements, assetManager);
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock);
@@ -222,24 +212,27 @@ public class BattleScreen implements Screen {
         stage.addActor(unit);
 
         stage.addActor(selectionMarker);
+        mechInfoPanelFacade.getWeaponSelectionButton().setVisible(false);
         mechInfoPanelFacade.getDetailsButton().setVisible(false);
-        hudStage.addActor(mechInfoPanelFacade.getDetailsButton());
+        mechInfoPanelFacade.getHideMenuButton().setVisible(false);
+        mechInfoPanelFacade.getPilotButton().setVisible(false);
+
+        mechInfoPanelFacade.registerComponents(hudStage);
 
         // listeners
-        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
-        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
-        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, screenElements, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
     }
 
     @Override
     public void render(float delta) {
         DrawUtils.clearScreen();
 
-        if(turnProcessingFacade.getNext() != null && !turnProcessingFacade.getNext().getKey().moved() && turnProcessingFacade.getNext().getKey().getState() == State.Idle) {
+        if (turnProcessingFacade.getNext() != null && !turnProcessingFacade.getNext().getKey().moved() && turnProcessingFacade.getNext().getKey().getState() == State.Idle) {
             selectionMarker.setColor(Color.valueOf("FFFFFF66"));
             selectionMarker.setPosition(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY());
-        }
-        else {
+        } else {
             selectionMarker.setColor(Color.valueOf("FFFFFF00"));
         }
 

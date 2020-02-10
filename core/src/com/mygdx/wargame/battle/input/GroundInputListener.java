@@ -30,7 +30,7 @@ public class GroundInputListener extends InputListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-        screenElements.getMechInfoPanelFacade().setVisible(false);
+        screenElements.getMechInfoPanelFacade().hideLocalMenu();
 
         if (actionLock.isLocked())
             return true;

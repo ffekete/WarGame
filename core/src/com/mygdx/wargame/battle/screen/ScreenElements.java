@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.screen;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 
 public class ScreenElements {
 

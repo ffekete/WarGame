@@ -5,14 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.screen.MechInfoPanelFacade;
-import com.mygdx.wargame.battle.screen.ScreenElements;
+import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
@@ -32,7 +30,6 @@ public class MechClickInputListener extends InputListener {
     private TurnProcessingFacade turnProcessingFacade;
     private RangedAttackTargetCalculator rangedAttackTargetCalculator;
     private ActionLock actionLock;
-    private ScreenElements screenElements;
     private Label.LabelStyle labelStyle;
     private CheckBox.CheckBoxStyle checkBoxStyle;
     private Map<Weapon, CheckBox> checkBoxMap = new HashMap<>();
@@ -40,13 +37,12 @@ public class MechClickInputListener extends InputListener {
     private Stage hudStage;
     private Stage stage;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, ScreenElements screenElements, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
         this.rangedAttackTargetCalculator = rangedAttackTargetCalculator;
         this.actionLock = actionLock;
-        this.screenElements = screenElements;
         this.labelStyle = labelStyle;
         this.checkBoxStyle = checkBoxStyle;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
@@ -57,21 +53,31 @@ public class MechClickInputListener extends InputListener {
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-        if(actionLock.isLocked())
+        if (actionLock.isLocked())
             return true;
 
         if (mec.getTeam().equals(Team.own)) {
-            screenElements.getMechInfoPanelFacade().setVisible(true);
-            screenElements.getMechInfoPanelFacade().getIbTable().clear();
 
-            addSelectAllWeaponsCheckbox();
-            updateDetailsButton();
-            UpdateHeatBar();
-            addAllAvailableWeaponsToScrollPane();
+            if (!mechInfoPanelFacade.isLocalMenuVisible()) {
+
+                mechInfoPanelFacade.getIbTable().clear();
+
+                addSelectAllWeaponsCheckbox();
+                updateDetailsButton();
+                updateCloseMenuButton();
+                updatePilotButton();
+                updateWeaponSelectionButton();
+                mechInfoPanelFacade.showLocalMenu();
+
+                UpdateHeatBar();
+                addAllAvailableWeaponsToScrollPane();
+            } else {
+                mechInfoPanelFacade.hideLocalMenu();
+            }
 
         } else if (mec.getTeam().equals(Team.enemy)) {
-            screenElements.getMechInfoPanelFacade().setVisible(false);
             // attack
+            mechInfoPanelFacade.hideLocalMenu();
             rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot);
         } else {
             // ???
@@ -89,7 +95,7 @@ public class MechClickInputListener extends InputListener {
         mec.getAllComponents().stream()
                 .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                .map(c ->  ((Weapon)c))
+                .map(c -> ((Weapon) c))
                 .forEach(w -> {
                     CheckBox checkBox = new CheckBox("  " + w.getName(), checkBoxStyle);
                     checkBoxMap.put(w, checkBox);
@@ -100,17 +106,17 @@ public class MechClickInputListener extends InputListener {
                             w.setStatus(checkBox.isChecked() ? Status.Selected : Status.Active);
                         }
                     });
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(checkBox).padRight(20);
+                    mechInfoPanelFacade.getIbTable().add(checkBox).padRight(20);
 
                     int ammo = w.getAmmo().orElse(-1);
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15);
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(new Label("H: " + w.getHeat(), labelStyle)).padRight(15);
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(new Label("SD: " + w.getShieldDamage(), labelStyle)).padRight(15);
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(new Label("AD: " + w.getArmorDamage(), labelStyle)).padRight(15);
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(new Label("BD: " + w.getBodyDamage(), labelStyle)).padRight(15);
-                    screenElements.getMechInfoPanelFacade().getIbTable().add(new Label("x ( " + w.getDamageMultiplier() + " )", labelStyle));
+                    mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15);
+                    mechInfoPanelFacade.getIbTable().add(new Label("H: " + w.getHeat(), labelStyle)).padRight(15);
+                    mechInfoPanelFacade.getIbTable().add(new Label("SD: " + w.getShieldDamage(), labelStyle)).padRight(15);
+                    mechInfoPanelFacade.getIbTable().add(new Label("AD: " + w.getArmorDamage(), labelStyle)).padRight(15);
+                    mechInfoPanelFacade.getIbTable().add(new Label("BD: " + w.getBodyDamage(), labelStyle)).padRight(15);
+                    mechInfoPanelFacade.getIbTable().add(new Label("x ( " + w.getDamageMultiplier() + " )", labelStyle));
 
-                    screenElements.getMechInfoPanelFacade().getIbTable().row();
+                    mechInfoPanelFacade.getIbTable().row();
                 });
     }
 
@@ -121,15 +127,46 @@ public class MechClickInputListener extends InputListener {
         mechInfoPanelFacade.getDetailsButton().setX(newCoord.x);
         mechInfoPanelFacade.getDetailsButton().setY(newCoord.y);
 
-        MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount(-60, 0);
-        moveTo.setDuration(0.25f);
-        mechInfoPanelFacade.getDetailsButton().addAction(moveTo);
+        mechInfoPanelFacade.getBigInfoPanelContainer().setSize(0, 0);
+        mechInfoPanelFacade.getBigInfoPanelContainer().setPosition(mechInfoPanelFacade.getDetailsButton().getX(), mechInfoPanelFacade.getDetailsButton().getY());
+    }
+
+    private void updatePilotButton() {
+        mechInfoPanelFacade.getPilotButton().setVisible(true);
+        // Details button
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
+        mechInfoPanelFacade.getPilotButton().setX(newCoord.x);
+        mechInfoPanelFacade.getPilotButton().setY(newCoord.y);
+
+
+    }
+
+    private void updateCloseMenuButton() {
+        mechInfoPanelFacade.getHideMenuButton().setVisible(true);
+        // Details button
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
+        mechInfoPanelFacade.getHideMenuButton().setX(newCoord.x);
+        mechInfoPanelFacade.getHideMenuButton().setY(newCoord.y);
+
+
+    }
+
+    private void updateWeaponSelectionButton() {
+        mechInfoPanelFacade.getWeaponSelectionButton().setVisible(true);
+        // Details button
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
+        mechInfoPanelFacade.getWeaponSelectionButton().setX(newCoord.x);
+        mechInfoPanelFacade.getWeaponSelectionButton().setY(newCoord.y);
+
+        mechInfoPanelFacade.getWeaponSelectionContainer().setSize(0, 0);
+        mechInfoPanelFacade.getWeaponSelectionContainer().setPosition(mechInfoPanelFacade.getWeaponSelectionButton().getX(), mechInfoPanelFacade.getWeaponSelectionButton().getY());
+
+
     }
 
     private void addSelectAllWeaponsCheckbox() {
         CheckBox checkBoxSelectAll = new CheckBox("  Select all", checkBoxStyle);
-        screenElements.getMechInfoPanelFacade().getIbTable().add(checkBoxSelectAll).row();
+        mechInfoPanelFacade.getIbTable().add(checkBoxSelectAll).row();
         checkBoxSelectAll.setChecked(true);
         checkBoxSelectAll.addListener(new ChangeListener() {
             @Override
@@ -137,7 +174,7 @@ public class MechClickInputListener extends InputListener {
                 mec.getAllComponents().stream()
                         .filter(c -> c.getStatus() != Status.Destroyed)
                         .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                        .map(c ->  ((Weapon)c))
+                        .map(c -> ((Weapon) c))
                         .forEach(w -> {
                             w.setStatus(checkBoxSelectAll.isChecked() ? Status.Selected : Status.Active);
                             checkBoxMap.get(w).setChecked(checkBoxSelectAll.isChecked());
