@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
@@ -106,19 +107,20 @@ public class BulletAnimationAction extends Action {
                 } else {
                     bullet = new CannonBullet(assetManager);
                 }
-
+                
+                MoveToAction moveToAction = null;
+                MoveActorByBezierLine moveActorByBezierLine = null;
                 Vector2 start = StageUtils.convertBetweenStages(stage, hudStage, attackerMech.getX(), attackerMech.getY());
                 Vector2 end = StageUtils.convertBetweenStages(stage, hudStage, defenderMech.getX(), defenderMech.getY());
-
-                bullet.setPosition(start.x, start.y);
-                MoveToAction moveToAction = new MoveToAction();
-                moveToAction.setPosition(end.x, end.y);
-                moveToAction.setStartPosition(start.x, start.y);
-
-                if (weapon.getType() == WeaponType.Missile)
-                    moveToAction.setDuration(0.3f);
-                else
+                if(weapon.getType() == WeaponType.Missile) {
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y);
+                    moveActorByBezierLine.setDuration(0.3f);
+                } else {
+                    bullet.setPosition(start.x, start.y);
+                    moveToAction = new MoveToAction();
+                    moveToAction.setPosition(end.x, end.y);
                     moveToAction.setDuration(0.15f);
+                }
 
                 RotateToAction rotateToAction = new RotateToAction();
                 rotateToAction.setRotation(MathUtils.getAngle(new double[]{start.x, start.y}, new double[]{end.x, end.y}));
@@ -127,19 +129,26 @@ public class BulletAnimationAction extends Action {
                 VisibleAction hideAction = new VisibleAction();
                 hideAction.setVisible(false);
                 sequenceAction.addAction(hideAction);
-                sequenceAction.addAction(rotateToAction);
+
+                if(weapon.getType() != WeaponType.Missile)
+                    sequenceAction.addAction(rotateToAction);
+
                 sequenceAction.addAction(delayAction);
                 VisibleAction visibleAction = new VisibleAction();
                 visibleAction.setVisible(true);
                 sequenceAction.addAction(visibleAction);
-                sequenceAction.addAction(moveToAction);
+
+                if(weapon.getType() == WeaponType.Missile)
+                    sequenceAction.addAction(moveActorByBezierLine);
+                else
+                    sequenceAction.addAction(moveToAction);
 
                 boolean finished = false;
                 if (weapon.getType() == WeaponType.Missile) {
                     Explosion explosion = new Explosion(assetManager);
                     explosion.setPosition(defenderMech.getX(), defenderMech.getY());
                     SequenceAction sequenceAction1 = new SequenceAction();
-                    sequenceAction1.addAction(new DelayAction(0.25f * delay + 0.3f));
+                    sequenceAction1.addAction(new DelayAction(0.25f * delay + 0.5f));
                     sequenceAction1.addAction(new AddActorAction(group, explosion));
                     sequenceAction1.addAction(new DelayAction(0.5f));
                     sequenceAction1.addAction(new RemoveCustomActorAction(group, explosion));

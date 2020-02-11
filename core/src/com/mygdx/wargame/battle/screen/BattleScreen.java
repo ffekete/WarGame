@@ -115,7 +115,7 @@ public class BattleScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         Scout unit3 = new Scout("3", spriteBatch, assetManager);
-        unit3.setPosition(14, 10);
+        unit3.setPosition(10, 5);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
         SwarmMissile swarmMissile = new SwarmMissile();
@@ -140,7 +140,7 @@ public class BattleScreen implements Screen {
         MachineGun machineGun = new MachineGun();
         machineGun.setStatus(Status.Selected);
 
-        //unit3.addComponent(BodyPart.Torso, largeIonCannon);
+        unit3.addComponent(BodyPart.Torso, largeIonCannon);
         unit3.addComponent(BodyPart.Torso, machineGun);
 
         Scout unit2 = new Scout("2", spriteBatch, assetManager);
