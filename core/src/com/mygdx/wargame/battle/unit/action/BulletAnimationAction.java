@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -44,8 +45,9 @@ public class BulletAnimationAction extends Action {
     private ActionLock actionLock;
     private boolean done = false;
     private int minRange;
+    private Group group;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, Stage hudStage, AssetManager assetManager, ActionLock actionLock, int minRange) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, Stage hudStage, AssetManager assetManager, ActionLock actionLock, int minRange, Group group) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.stage = stage;
@@ -53,6 +55,7 @@ public class BulletAnimationAction extends Action {
         this.assetManager = assetManager;
         this.actionLock = actionLock;
         this.minRange = minRange;
+        this.group = group;
     }
 
     @Override
@@ -137,16 +140,16 @@ public class BulletAnimationAction extends Action {
                     explosion.setPosition(defenderMech.getX(), defenderMech.getY());
                     SequenceAction sequenceAction1 = new SequenceAction();
                     sequenceAction1.addAction(new DelayAction(0.25f * delay + 0.3f));
-                    sequenceAction1.addAction(new AddActorAction(stage, explosion));
+                    sequenceAction1.addAction(new AddActorAction(group, explosion));
                     sequenceAction1.addAction(new DelayAction(0.5f));
-                    sequenceAction1.addAction(new RemoveCustomActorAction(stage, explosion));
+                    sequenceAction1.addAction(new RemoveCustomActorAction(group, explosion));
 
                     if(i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() -1) {
                         sequenceAction1.addAction(new UnlockAction(actionLock));
                         finished = true;
                     }
 
-                    stage.addAction(sequenceAction1);
+                    group.addAction(sequenceAction1);
                 }
 
                 if(i == selectedWeapons.size() - 1 && !finished) {

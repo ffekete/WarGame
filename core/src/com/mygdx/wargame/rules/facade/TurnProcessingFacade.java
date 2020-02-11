@@ -7,12 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
-import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
@@ -40,9 +40,10 @@ public class TurnProcessingFacade {
     private Stage stage;
     private Stage hudStage;
     private AssetManager assetManager;
+    private StageStorage stageStorage;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageStorage stageStorage) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -54,6 +55,7 @@ public class TurnProcessingFacade {
         this.stage = stage;
         this.hudStage = hudStage;
         this.assetManager = assetManager;
+        this.stageStorage = stageStorage;
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -136,7 +138,7 @@ public class TurnProcessingFacade {
 
             // then attack
             sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange));
-            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, hudStage, assetManager, actionLock, minRange));
+            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, hudStage, assetManager, actionLock, minRange, stageStorage.airLevel));
             AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
             sequenceAction.addAction(attackAction);
 

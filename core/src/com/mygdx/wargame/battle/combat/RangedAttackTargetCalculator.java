@@ -8,12 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
-import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
@@ -28,8 +28,9 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
     private Stage stage;
     private Stage hudStage;
     private AssetManager assetManager;
+    private StageStorage stageStorage;
 
-    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager) {
+    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager, StageStorage stageStorage) {
         this.battleMap = battleMap;
         this.rangeCalculator = rangeCalculator;
         this.attackFacade = attackFacade;
@@ -37,6 +38,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
         this.stage = stage;
         this.hudStage = hudStage;
         this.assetManager = assetManager;
+        this.stageStorage = stageStorage;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             ParallelAction parallelAction = new ParallelAction();
 
             parallelAction.addAction(new AttackAnimationAction(attackerMech, defenderMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
-            parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, hudStage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
+            parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, hudStage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), stageStorage.airLevel));
 
             sequenceAction.addAction(parallelAction);
             sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));

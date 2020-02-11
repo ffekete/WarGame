@@ -3,8 +3,13 @@ package com.mygdx.wargame.rules.calculator;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.bullet.Explosion;
 import com.mygdx.wargame.battle.screen.StageStorage;
+import com.mygdx.wargame.battle.unit.action.AddActorAction;
 import com.mygdx.wargame.battle.unit.action.ExplosionAction;
+import com.mygdx.wargame.battle.unit.action.RemoveCustomActorAction;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
@@ -58,7 +63,6 @@ public class DamageCalculator {
                     .orElse(0);
 
             if (shieldedValue > 0) {
-                stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int)targetMech.getX(), (int)targetMech.getY()));
                 reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1));
             } else {
 
@@ -73,12 +77,16 @@ public class DamageCalculator {
                         .reduce((a, b) -> a + b)
                         .orElse(0);
                 if (armorValue > 0) {
-                    stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int) targetMech.getX(), (int) targetMech.getY()));
+                    //stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int) targetMech.getX(), (int) targetMech.getY()));
+
+                    addExplosion(targetMech);
+
                     reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1), bodyPart);
                 }
                 else {
                     // get hp damage
-                    stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int)targetMech.getX(), (int)targetMech.getY()));
+                    addExplosion(targetMech);
+
                     int damage = weapon.getBodyDamage() * (critical ? 2 : 1);
 
                     if (targetPilot.hasPerk(Perks.Robust)) {
@@ -95,6 +103,18 @@ public class DamageCalculator {
                 }
             }
         }
+    }
+
+    private void addExplosion(Mech target) {
+        SequenceAction sequenceAction = new SequenceAction();
+
+        Explosion explosion = new Explosion(assetManager);
+        explosion.setPosition(target.getX(), target.getY());
+        sequenceAction.addAction(new AddActorAction(stageStorage.airLevel, explosion));
+        sequenceAction.addAction(new DelayAction(1f));
+        sequenceAction.addAction(new RemoveCustomActorAction(stageStorage.airLevel, explosion));
+
+        stageStorage.airLevel.addAction(sequenceAction);
     }
 
     private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage) {

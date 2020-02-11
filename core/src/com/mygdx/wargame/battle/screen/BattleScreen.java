@@ -218,7 +218,7 @@ public class BattleScreen implements Screen {
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
                 new MovementSpeedCalculator(), ImmutableMap.of(unit2, p2, unit3, p3),
-                ImmutableMap.of(unit, p1), rangeCalculator, stage, hudStage, assetManager);
+                ImmutableMap.of(unit, p1), rangeCalculator, stage, hudStage, assetManager, stageStorage);
 
         // display
 
@@ -238,7 +238,7 @@ public class BattleScreen implements Screen {
 
         battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
 
-        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManager);
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManager, stageStorage);
 
         battleMap.setTemporaryObstacle(63, 30);
         battleMap.setTemporaryObstacle(60, 30);
@@ -247,6 +247,7 @@ public class BattleScreen implements Screen {
         stage.addActor(stageStorage.groundLevel);
         stage.addActor(stageStorage.mechLevel);
         stage.addActor(stageStorage.treeLevel);
+        stage.addActor(stageStorage.airLevel);
 
 
         stageStorage.mechLevel.addActor(unit);
