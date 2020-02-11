@@ -1,16 +1,20 @@
 package com.mygdx.wargame.battle.combat;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
+import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
+import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
@@ -21,12 +25,18 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
     private RangeCalculator rangeCalculator;
     private AttackFacade attackFacade;
     private ActionLock actionLock;
+    private Stage stage;
+    private Stage hudStage;
+    private AssetManager assetManager;
 
-    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock) {
+    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager) {
         this.battleMap = battleMap;
         this.rangeCalculator = rangeCalculator;
         this.attackFacade = attackFacade;
         this.actionLock = actionLock;
+        this.stage = stage;
+        this.hudStage = hudStage;
+        this.assetManager = assetManager;
     }
 
     @Override
@@ -37,7 +47,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int) defenderMech.getX()][(int) defenderMech.getY()];
 
             // reconnect so that attacker can move
-            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attackerMech.getX()][(int)attackerMech.getY()]);
+            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attackerMech.getX()][(int) attackerMech.getY()]);
 
             GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attackerMech, paths);
@@ -45,9 +55,15 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
 
             sequenceAction.addAction(new LockAction(actionLock));
             sequenceAction.addAction(new MoveIntoRangeAction(battleMap, attackerMech, attackerPilot, defenderMech, rangeCalculator));
-            sequenceAction.addAction(new AttackAnimationAction(attackerMech, defenderMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), attackerPilot));
+
+            ParallelAction parallelAction = new ParallelAction();
+
+            parallelAction.addAction(new AttackAnimationAction(attackerMech, defenderMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
+            parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, hudStage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
+
+            sequenceAction.addAction(parallelAction);
             sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
-            sequenceAction.addAction(new UnlockAction(actionLock));
+            //sequenceAction.addAction(new UnlockAction(actionLock));
             attackerMech.addAction(sequenceAction);
         }
     }

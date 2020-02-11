@@ -77,7 +77,7 @@ public class AttackFacade {
                     // hit!
                     damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart);
                     int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
-                    defendingMech.setStability(stabilityAfterHit);
+                    defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
                 }
 
                 attackingMech.setHeatLevel(attackingMech.getHeatLevel() + weapon.getHeat());

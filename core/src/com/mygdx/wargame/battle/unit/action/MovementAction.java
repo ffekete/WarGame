@@ -29,7 +29,6 @@ public class MovementAction extends Action {
     @Override
     public boolean act(float delta) {
         counter += delta;
-        actionLock.setLocked(true);
 
         if (counter > 0.15f) {
             counter = 0.0f;
@@ -40,7 +39,6 @@ public class MovementAction extends Action {
             if (nodes.isEmpty()) {
                 abstractMech.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
-                actionLock.setLocked(false);
                 abstractMech.setMoved(true);
                 abstractMech.setAttacked(true);// todo remove later
                 return true;
@@ -50,7 +48,6 @@ public class MovementAction extends Action {
             if (abstractMech.getMovementPoints() <= 0) {
                 abstractMech.resetMovementPoints(0);
                 abstractMech.setState(State.Idle);
-                actionLock.setLocked(false);
                 abstractMech.setMoved(true);
                 abstractMech.setAttacked(true);// todo remove later
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());

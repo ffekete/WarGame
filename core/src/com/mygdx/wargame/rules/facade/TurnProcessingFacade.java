@@ -1,6 +1,7 @@
 package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
@@ -8,6 +9,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
+import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
@@ -19,7 +21,6 @@ import com.mygdx.wargame.rules.facade.target.Target;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.MathUtils;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,10 +37,13 @@ public class TurnProcessingFacade {
     private Iterator<Map.Entry<Mech, Pilot>> iterator;
     Map.Entry<Mech, Pilot> next = null;
     private RangeCalculator rangeCalculator;
+    private Stage stage;
+    private Stage hudStage;
+    private AssetManager assetManager;
 
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -48,6 +52,9 @@ public class TurnProcessingFacade {
         this.team1 = team1;
         this.team2 = team2;
         this.rangeCalculator = rangeCalculator;
+        this.stage = stage;
+        this.hudStage = hudStage;
+        this.assetManager = assetManager;
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -65,7 +72,7 @@ public class TurnProcessingFacade {
             return;
         }
 
-        if (next != null && (!next.getKey().attacked() || !next.getKey().moved())) {
+        if (next != null && team1.containsKey(next.getKey()) && (!next.getKey().attacked() || !next.getKey().moved())) {
             return;
         }
 
@@ -89,11 +96,13 @@ public class TurnProcessingFacade {
         battleMap.removePath(next.getKey());
 
         if (!selectedMech.isActive()) {
+            System.out.println("Mech inactive" + selectedMech.getName());
             // skip, if deactivated
             if (iterator.hasNext()) {
                 next = iterator.next();
             }
         } else if (team2.containsKey(selectedMech)) {
+            System.out.println("Selected mech active " + selectedMech.getName());
 
             SequenceAction sequenceAction = new SequenceAction();
 
@@ -106,6 +115,8 @@ public class TurnProcessingFacade {
             // calculate movement points
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
+            System.out.println("Movement points for mech: " + movementPoints);
+            System.out.println("Stability for mech " + selectedMech.getStability());
 
             int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, target.getMech());
 
@@ -125,12 +136,13 @@ public class TurnProcessingFacade {
             }
 
             // then attack
-            sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange, selectedPilot));
+            sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange));
+            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, hudStage, assetManager, actionLock, minRange));
             AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
             sequenceAction.addAction(attackAction);
 
             // unlock all actions
-            sequenceAction.addAction(new UnlockAction(actionLock));
+            //sequenceAction.addAction(new UnlockAction(actionLock));
 
             stage.addAction(sequenceAction);
 

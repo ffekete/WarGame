@@ -6,13 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.wargame.config.Config;
-
-import java.awt.event.MouseEvent;
 
 public class BigInfoPanelMovementHandler {
 
-    public boolean moveBigInfoPanelToLocalButton(Actor detailsButton, Actor bigInfoPanelContainer, boolean bigInfoPanelHidden) {
+    public boolean moveBigInfoPanelToLocalButton(Actor detailsButton, Actor bigInfoPanelContainer, Table mechInfoTable, boolean bigInfoPanelHidden) {
         if (bigInfoPanelHidden) {
 
             ParallelAction parallelAction = new ParallelAction();
@@ -28,7 +27,9 @@ public class BigInfoPanelMovementHandler {
             parallelAction.addAction(moveToAction);
 
             bigInfoPanelContainer.addAction(parallelAction);
+            mechInfoTable.addAction(parallelAction);
             bigInfoPanelContainer.setVisible(true);
+            mechInfoTable.setVisible(true);
             return false;
         } else {
             SequenceAction sequenceAction = new SequenceAction();
@@ -54,6 +55,7 @@ public class BigInfoPanelMovementHandler {
             sequenceAction.addAction(visibleAction);
 
             bigInfoPanelContainer.addAction(sequenceAction);
+            mechInfoTable.setVisible(false);
             return true;
         }
     }

@@ -1,13 +1,16 @@
 package com.mygdx.wargame.mech;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.component.shield.Shield;
+import com.mygdx.wargame.component.weapon.Status;
 
 public abstract class
 AbstractMech extends Actor implements Mech {
@@ -24,11 +27,15 @@ AbstractMech extends Actor implements Mech {
     private boolean attacked;
     private boolean moved;
     private boolean active;
+    private AssetManager assetManager;
 
-    protected TextureRegion textureRegion;
+    protected TextureRegion mechTextureRegion;
+    private TextureRegion shieldTextureRegion;
 
-    public AbstractMech(int initiative) {
+    public AbstractMech(int initiative, AssetManager assetManager) {
         this.initiative = initiative;
+        this.assetManager = assetManager;
+        this.shieldTextureRegion = new TextureRegion(assetManager.get("Shield.png", Texture.class));
     }
 
     public void setState(State state) {
@@ -51,10 +58,6 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public void draw(float x, float y, SpriteBatch spriteBatch, TextureRegion texture) {
-        if (team == Team.enemy)
-            spriteBatch.setColor(Color.WHITE);
-        else
-            spriteBatch.setColor(Color.WHITE);
 
         if (slow == 0) {
             slow++;
@@ -70,6 +73,13 @@ AbstractMech extends Actor implements Mech {
 
         texture.flip(direction.isMirrored(), false);
         spriteBatch.draw(texture, x - 0.5f, y, 2, 2);
+
+        if(getShieldValue() > 0) {
+            spriteBatch.setColor(Color.valueOf("FFFFFF55"));
+            shieldTextureRegion.setRegion((step % 2) * 32, 0, 32, 32);
+            spriteBatch.draw(shieldTextureRegion, x-0.75f, y-0.5f, 2.75f, 2.5f);
+            spriteBatch.setColor(Color.WHITE);
+        }
     }
 
     public int getInitiative() {
@@ -155,5 +165,13 @@ AbstractMech extends Actor implements Mech {
         return Integer.compare(this.getInitiative(), m.getInitiative());
     }
 
-
+    @Override
+    public int getShieldValue() {
+        return getAllComponents().stream()
+                .filter(c -> c.getStatus() != Status.Destroyed)
+                .filter(c -> Shield.class.isAssignableFrom(c.getClass()))
+                .map(s -> ((Shield) s).getShieldValue())
+                .reduce((a, b) -> a + b)
+                .orElse(0);
+    }
 }

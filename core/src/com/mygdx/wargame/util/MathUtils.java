@@ -13,7 +13,7 @@ public class MathUtils {
             angle += 360;
         }
 
-        return -1 * angle;
+        return 1 * angle;
     }
 
 }

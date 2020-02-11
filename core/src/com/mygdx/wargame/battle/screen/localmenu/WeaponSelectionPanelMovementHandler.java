@@ -22,7 +22,7 @@ public class WeaponSelectionPanelMovementHandler {
             enlargeAndSetVisibleAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
-            moveToAction.setPosition(weaponSelectionButton.getX() - 560 * Config.UI_SCALING, weaponSelectionButton.getY() - 260 * Config.UI_SCALING);
+            moveToAction.setPosition(Math.max(weaponSelectionButton.getX() - 560 * Config.UI_SCALING, 0), Math.max(weaponSelectionButton.getY() - 260 * Config.UI_SCALING, 0));
             moveToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(moveToAction);
 

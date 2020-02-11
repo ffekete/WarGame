@@ -4,11 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
 import com.mygdx.wargame.util.MathUtils;
-
-import java.util.Comparator;
 
 public class AttackAction extends Action {
 

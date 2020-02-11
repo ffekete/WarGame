@@ -6,12 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -45,6 +41,8 @@ public class MechInfoPanelFacade extends Actor {
 
 
     public MechInfoPanelFacade() {
+        mechInfoTable = new Table();
+
         ScrollPane.ScrollPaneStyle weaponsListScrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         weaponsListScrollPaneStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png")));
 
@@ -77,7 +75,7 @@ public class MechInfoPanelFacade extends Actor {
                 // hide all other panels
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
                 // show this one
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, bigInfoPanelHidden);
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer,mechInfoTable, bigInfoPanelHidden);
                 return true;
             }
         });
@@ -98,7 +96,7 @@ public class MechInfoPanelFacade extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, false);
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, false);
                 // show this one
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
                 return true;
@@ -117,7 +115,7 @@ public class MechInfoPanelFacade extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, false);
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, false);
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
                 hideLocalMenu();
                 return true;
@@ -136,19 +134,17 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png"))));
         weaponSelectionContainer.fillX().pad(30 * Config.UI_SCALING);
 
-        //container.setDebug(true);
         weaponSelectionContainer.setSize(600 * Config.UI_SCALING, 200 * Config.UI_SCALING);
         weaponSelectionContainer.setY(-200 * Config.UI_SCALING);
         weaponSelectionScrollPane.setScrollbarsVisible(true);
 
         // Mech info
-        mechInfoTable = new Table();
+
         bigInfoPanelContainer = new Container<>(mechInfoTable);
         bigInfoPanelContainer.setSize(300 * Config.UI_SCALING, 300 * Config.UI_SCALING);
         bigInfoPanelContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/BigInfoPanel.png"))));
         bigInfoPanelContainer.setVisible(false);
-
-        mechInfoTable.background(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/StatusBackground.png"))));
+        //mechInfoTable.background(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/StatusBackground.png"))));
     }
 
 
@@ -284,5 +280,9 @@ public class MechInfoPanelFacade extends Actor {
         moveTo.setAmount(-60 * Config.UI_SCALING, 0);
         moveTo.setDuration(0.25f);
         detailsButton.addAction(moveTo);
+    }
+
+    public Table getMechInfoTable() {
+        return mechInfoTable;
     }
 }

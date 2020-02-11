@@ -15,6 +15,7 @@ import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
@@ -67,10 +68,29 @@ public class MechClickInputListener extends InputListener {
                 updateCloseMenuButton();
                 updatePilotButton();
                 updateWeaponSelectionButton();
-                mechInfoPanelFacade.showLocalMenu();
-
                 UpdateHeatBar();
                 addAllAvailableWeaponsToScrollPane();
+
+                mechInfoPanelFacade.getMechInfoTable().clear();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("H : "+ mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp(), labelStyle)).center().pad(5).row();
+
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftHand) + "/" + mec.getLeftHandMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightHand) + "/" + mec.getRightHandMaxHp(), labelStyle)).center().pad(5).row();
+
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("RL: " + mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp(), labelStyle)).pad(5).center();
+
+                mechInfoPanelFacade.showLocalMenu();
             } else {
                 mechInfoPanelFacade.hideLocalMenu();
             }

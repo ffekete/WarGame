@@ -52,20 +52,20 @@ public class Scout extends AbstractMech {
             .build();
 
     public Scout(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
-        super(10);
+        super(10, assetManager);
         this.spriteBatch = spriteBatch;
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.textureRegion = new TextureRegion(assetManager.get("Maverick.png", Texture.class), 32, 0, 32, 32);
+        this.mechTextureRegion = new TextureRegion(assetManager.get("Maverick.png", Texture.class), 32, 0, 32, 32);
 
-        hp.put(BodyPart.LeftHand, 3);
-        hp.put(BodyPart.RightHand, 3);
-        hp.put(BodyPart.LeftLeg, 5);
-        hp.put(BodyPart.RightLeg, 5);
-        hp.put(BodyPart.Torso, 3);
-        hp.put(BodyPart.Head, 3);
+        hp.put(BodyPart.LeftHand, getLeftHandMaxHp());
+        hp.put(BodyPart.RightHand, getRightHandMaxHp());
+        hp.put(BodyPart.LeftLeg, getLeftLegMaxHp());
+        hp.put(BodyPart.RightLeg, getRightLegMaxHp());
+        hp.put(BodyPart.Torso, getTorsoMaxHp());
+        hp.put(BodyPart.Head,getHeadMaxHp());
 
     }
 
@@ -96,7 +96,7 @@ public class Scout extends AbstractMech {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(getX(), getY(), spriteBatch, textureRegion);
+        super.draw(getX(), getY(), spriteBatch, mechTextureRegion);
     }
 
     @Override

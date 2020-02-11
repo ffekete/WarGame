@@ -93,4 +93,6 @@ public interface Mech extends Comparable<Mech> {
     void setPosition(float x, float y);
 
     State getState();
+
+    int getShieldValue();
 }
