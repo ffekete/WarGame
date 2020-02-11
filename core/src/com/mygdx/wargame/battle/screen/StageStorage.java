@@ -7,6 +7,6 @@ public class StageStorage {
     public Group groundLevel = new Group();
     public Group mechLevel = new Group();
     public Group treeLevel = new Group();
-
+    public Group airLevel = new Group();
 
 }

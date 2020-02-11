@@ -75,6 +75,8 @@ public class BattleScreen implements Screen {
 
     @Override
     public void show() {
+        StageStorage stageStorage = new StageStorage();
+
         camera = new OrthographicCamera();
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
         viewport.update(WIDTH, HEIGHT, true);
@@ -98,6 +100,8 @@ public class BattleScreen implements Screen {
         assetManager.load("Ion.png", Texture.class);
         assetManager.load("MachineGun.png", Texture.class);
         assetManager.load("Shield.png", Texture.class);
+        assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
+        assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
         assetManager.finishLoading();
 
         shapeRenderer = new ShapeRenderer();
@@ -209,7 +213,7 @@ public class BattleScreen implements Screen {
         Pilot p2 = pilotCreator.getPilot();
         Pilot p3 = pilotCreator.getPilot();
 
-        AttackFacade attackFacade = new AttackFacade(stage, spriteBatch, assetManager);
+        AttackFacade attackFacade = new AttackFacade(stageStorage, spriteBatch, assetManager);
 
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
@@ -240,17 +244,26 @@ public class BattleScreen implements Screen {
         battleMap.setTemporaryObstacle(60, 30);
         battleMap.setTemporaryObstacle(10, 10);
 
-        stage.addActor(unit2);
-        stage.addActor(unit3);
-        stage.addActor(unit);
+        stage.addActor(stageStorage.groundLevel);
+        stage.addActor(stageStorage.mechLevel);
+        stage.addActor(stageStorage.treeLevel);
+
+
+        stageStorage.mechLevel.addActor(unit);
+        stageStorage.mechLevel.addActor(unit2);
+        stageStorage.mechLevel.addActor(unit3);
 
         stage.addActor(selectionMarker);
         mechInfoPanelFacade.getWeaponSelectionButton().setVisible(false);
         mechInfoPanelFacade.getDetailsButton().setVisible(false);
         mechInfoPanelFacade.getHideMenuButton().setVisible(false);
         mechInfoPanelFacade.getPilotButton().setVisible(false);
-
         mechInfoPanelFacade.registerComponents(hudStage);
+
+        HudElementsFacade hudElementsFacade = new HudElementsFacade(assetManager, turnProcessingFacade, actionLock);
+        hudElementsFacade.registerComponents(hudStage);
+
+
 
         // listeners
         unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));

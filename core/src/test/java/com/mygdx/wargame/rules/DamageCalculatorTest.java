@@ -2,6 +2,7 @@ package com.mygdx.wargame.rules;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.collect.ImmutableSet;
+import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.armor.CompositeMaterialArmor;
 import com.mygdx.wargame.component.armor.LivingMetalArmor;
@@ -31,7 +32,7 @@ public class DamageCalculatorTest {
 
     private CriticalHitChanceCalculator criticalHitChanceCalculator = mock(CriticalHitChanceCalculator.class);
     private BodyPartDestructionHandler bodyPartDestructionHandler = mock(BodyPartDestructionHandler.class);
-    private final DamageCalculator damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, new Stage(), null, null);
+    private final DamageCalculator damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, new StageStorage(), null, null);
 
     @BeforeMethod
     public void setUp() {

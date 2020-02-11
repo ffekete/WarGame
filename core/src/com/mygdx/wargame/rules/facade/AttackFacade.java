@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
@@ -36,8 +37,8 @@ public class AttackFacade {
     private EvasionCalculator evasionCalculator = new EvasionCalculator();
     private StabilityCalculator stabilityCalculator = new StabilityCalculator(criticalHitChanceCalculator);
 
-    public AttackFacade(Stage stage, SpriteBatch spriteBatch, AssetManager assetManager) {
-        damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stage, spriteBatch, assetManager);
+    public AttackFacade(StageStorage stageStorage, SpriteBatch spriteBatch, AssetManager assetManager) {
+        damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageStorage, spriteBatch, assetManager);
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {

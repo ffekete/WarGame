@@ -3,6 +3,7 @@ package com.mygdx.wargame.rules.calculator;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.battle.unit.action.ExplosionAction;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
@@ -21,14 +22,14 @@ public class DamageCalculator {
 
     private CriticalHitChanceCalculator criticalHitChanceCalculator;
     private BodyPartDestructionHandler bodyPartDestructionHandler;
-    private Stage stage;
+    private StageStorage stageStorage;
     private SpriteBatch spriteBatch;
     private AssetManager assetManager;
 
-    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, Stage stage, SpriteBatch spriteBatch, AssetManager assetManager) {
+    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageStorage stageStorage, SpriteBatch spriteBatch, AssetManager assetManager) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
         this.bodyPartDestructionHandler = bodyPartDestructionHandler;
-        this.stage = stage;
+        this.stageStorage = stageStorage;
         this.spriteBatch = spriteBatch;
         this.assetManager = assetManager;
     }
@@ -57,7 +58,7 @@ public class DamageCalculator {
                     .orElse(0);
 
             if (shieldedValue > 0) {
-                stage.addActor(new ExplosionAction(spriteBatch, assetManager, (int)targetMech.getX(), (int)targetMech.getY()));
+                stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int)targetMech.getX(), (int)targetMech.getY()));
                 reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1));
             } else {
 
@@ -72,12 +73,12 @@ public class DamageCalculator {
                         .reduce((a, b) -> a + b)
                         .orElse(0);
                 if (armorValue > 0) {
-                    stage.addActor(new ExplosionAction(spriteBatch, assetManager, (int) targetMech.getX(), (int) targetMech.getY()));
+                    stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int) targetMech.getX(), (int) targetMech.getY()));
                     reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1), bodyPart);
                 }
                 else {
                     // get hp damage
-                    stage.addActor(new ExplosionAction(spriteBatch, assetManager, (int)targetMech.getX(), (int)targetMech.getY()));
+                    stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int)targetMech.getX(), (int)targetMech.getY()));
                     int damage = weapon.getBodyDamage() * (critical ? 2 : 1);
 
                     if (targetPilot.hasPerk(Perks.Robust)) {

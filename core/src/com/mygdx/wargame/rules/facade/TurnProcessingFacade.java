@@ -41,7 +41,6 @@ public class TurnProcessingFacade {
     private Stage hudStage;
     private AssetManager assetManager;
 
-
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
                                 Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager) {
         this.actionLock = actionLock;
@@ -153,6 +152,10 @@ public class TurnProcessingFacade {
         }
 
 
+    }
+
+    public boolean isNextPlayerControlled() {
+        return this.next != null && this.team1.containsKey(this.next.getKey());
     }
 
 }

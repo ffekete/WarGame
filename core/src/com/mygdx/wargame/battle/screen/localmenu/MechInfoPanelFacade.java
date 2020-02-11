@@ -205,6 +205,8 @@ public class MechInfoPanelFacade extends Actor {
 
     public void hideLocalMenu() {
         localMenuVisible = false;
+        bigInfoPanelHidden = true;
+        weaponSelectionContainerHidden = true;
 
         SequenceAction sequenceAction;
 

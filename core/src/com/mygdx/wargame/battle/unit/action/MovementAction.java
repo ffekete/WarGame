@@ -18,12 +18,10 @@ public class MovementAction extends Action {
     private BattleMap battleMap;
     private Mech abstractMech;
     private float counter = 0.0f;
-    private ActionLock actionLock;
 
-    public MovementAction(BattleMap battleMap, Mech abstractMech, ActionLock actionLock) {
+    public MovementAction(BattleMap battleMap, Mech abstractMech) {
         this.battleMap = battleMap;
         this.abstractMech = abstractMech;
-        this.actionLock = actionLock;
     }
 
     @Override
@@ -40,7 +38,6 @@ public class MovementAction extends Action {
                 abstractMech.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
                 abstractMech.setMoved(true);
-                abstractMech.setAttacked(true);// todo remove later
                 return true;
             }
 
@@ -49,8 +46,8 @@ public class MovementAction extends Action {
                 abstractMech.resetMovementPoints(0);
                 abstractMech.setState(State.Idle);
                 abstractMech.setMoved(true);
-                abstractMech.setAttacked(true);// todo remove later
                 battleMap.setTemporaryObstacle((int) abstractMech.getX(), (int) abstractMech.getY());
+
                 return true;
             }
 

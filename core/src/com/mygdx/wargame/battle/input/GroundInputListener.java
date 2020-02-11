@@ -47,7 +47,7 @@ public class GroundInputListener extends InputListener {
 
             GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attacker, paths);
-            attacker.addAction(new MovementAction(battleMap, attacker, actionLock));
+            attacker.addAction(new MovementAction(battleMap, attacker));
         }
 
         return true;
