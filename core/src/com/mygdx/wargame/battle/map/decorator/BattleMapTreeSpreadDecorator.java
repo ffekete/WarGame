@@ -1,22 +1,34 @@
-package com.mygdx.wargame.battle.map;
+package com.mygdx.wargame.battle.map.decorator;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.mygdx.wargame.battle.map.BattleMapConfig;
+import com.mygdx.wargame.battle.map.NodeGraph;
 
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
-public class BattleMapTreeSpreadDecorator {
-
-    private final static boolean DEBUG = false;
+public class BattleMapTreeSpreadDecorator implements Decorator {
 
     private int deathLimit = 5;
     private int birthLimit = 3;
     private float chanceToStartAlive = 45;
     private AssetManager assetManager;
 
+    private List<Texture> treeVariations;
+
+
     public BattleMapTreeSpreadDecorator(AssetManager assetManager) {
         this.assetManager = assetManager;
+        treeVariations = ImmutableList.<Texture>builder()
+                .add(assetManager.get("variation/Trees.png", Texture.class))
+                .add(assetManager.get("variation/Trees02.png", Texture.class))
+                .add(assetManager.get("variation/Trees03.png", Texture.class))
+                .add(assetManager.get("variation/Trees04.png", Texture.class))
+                .build();
     }
 
     public void decorate(int step, NodeGraph worldMap) {
@@ -26,13 +38,8 @@ public class BattleMapTreeSpreadDecorator {
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
                 if (newMap[i][j] == 1) {
-                    int rnd = new Random().nextInt(3);
-                    if(rnd == 0)
-                        worldMap.getNodeWeb()[i][j].setOverlay(assetManager.get("variation/Trees.png", Texture.class));
-                    else if(rnd == 1)
-                        worldMap.getNodeWeb()[i][j].setOverlay(assetManager.get("variation/Trees02.png", Texture.class));
-                    else if(rnd == 2)
-                        worldMap.getNodeWeb()[i][j].setOverlay(assetManager.get("variation/Trees03.png", Texture.class));
+                    int rnd = new Random().nextInt(treeVariations.size());
+                    worldMap.getNodeWeb()[i][j].setOverlay(treeVariations.get(rnd));
                 }
             }
         }

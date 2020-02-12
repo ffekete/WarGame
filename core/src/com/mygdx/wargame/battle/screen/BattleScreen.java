@@ -23,8 +23,9 @@ import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.BattleMapTreeSpreadDecorator;
+import com.mygdx.wargame.battle.map.decorator.BattleMapTreeSpreadDecorator;
 import com.mygdx.wargame.battle.map.TerrainType;
+import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
@@ -101,6 +102,7 @@ public class BattleScreen implements Screen {
         assetManager.load("variation/Trees.png", Texture.class);
         assetManager.load("variation/Trees03.png", Texture.class);
         assetManager.load("variation/Trees02.png", Texture.class);
+        assetManager.load("variation/Trees04.png", Texture.class);
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);
         assetManager.load("Missile.png", Texture.class);
@@ -247,10 +249,12 @@ public class BattleScreen implements Screen {
 
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
-        BattleMapTreeSpreadDecorator battleMapTreeSpreadDecorator = new BattleMapTreeSpreadDecorator(assetManager);
+        TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(assetManager);
         battleMap = new BattleMap(100, 100, stageStorage, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
 
-        battleMapTreeSpreadDecorator.decorate(3, battleMap.getNodeGraphLv1());
+        terrainTypeAwareBattleMapDecorator.decorate(battleMap);
+
+        //battleMapTreeSpreadDecorator.decorate(3, battleMap.getNodeGraphLv1());
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManager, stageStorage);
 
