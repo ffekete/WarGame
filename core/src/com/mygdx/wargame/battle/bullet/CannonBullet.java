@@ -27,6 +27,6 @@ public class CannonBullet extends AbstractBullet {
             }
         }
         texture.setRegion(col * 32,0, 32, 32);
-        batch.draw(texture, getX(), getY(), 32, 32);
+        batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 1f, 1f, getRotation());
     }
 }

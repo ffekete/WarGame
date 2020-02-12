@@ -61,7 +61,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             ParallelAction parallelAction = new ParallelAction();
 
             parallelAction.addAction(new AttackAnimationAction(attackerMech, defenderMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
-            parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, hudStage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), stageStorage, battleMap));
+            parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), stageStorage, battleMap));
 
             sequenceAction.addAction(parallelAction);
             sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));

@@ -18,8 +18,8 @@ public class MoveActorByBezierLine extends TemporalAction {
         float yPts;
         Vector2[] points = new Vector2[4];
 
-        points[0] = new Vector2(sx, sy - 100);
-        points[3] = new Vector2(ex, ey - 100);
+        points[0] = new Vector2(sx, sy - 3);
+        points[3] = new Vector2(ex, ey - 3);
 
         points[1] = new Vector2(sx, sy);
         points[2] = new Vector2(ex, ey);
@@ -40,18 +40,13 @@ public class MoveActorByBezierLine extends TemporalAction {
 
     @Override
     protected void update(float percent) {
-        float speed = 0.15f;
-        float current = 0;
+
         Vector2 out = new Vector2();
-        /*render()*/
 
-        current += Gdx.graphics.getDeltaTime() * speed;
-
-        if (current >= 1)
-            current -= 1;
 
         myCatmull.valueAt(out, percent < 1 ? percent : 0.99f);
         getActor().setPosition(out.x, out.y);
+        System.out.println(" Move to: "  + out.x + " " + out.y);
         myCatmull.derivativeAt(out, percent);
         getActor().setRotation(out.angle());
     }

@@ -140,7 +140,7 @@ public class TurnProcessingFacade {
 
             // then attack
             sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange));
-            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, hudStage, assetManager, actionLock, minRange, stageStorage, battleMap));
+            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, assetManager, actionLock, minRange, stageStorage, battleMap));
             AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
             sequenceAction.addAction(attackAction);
 

@@ -1,8 +1,6 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,14 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.mygdx.wargame.battle.action.SetOverlayAction;
-import com.mygdx.wargame.battle.bullet.AbstractBullet;
-import com.mygdx.wargame.battle.bullet.CannonBullet;
-import com.mygdx.wargame.battle.bullet.Explosion;
-import com.mygdx.wargame.battle.bullet.IonBullet;
-import com.mygdx.wargame.battle.bullet.LaserBullet;
-import com.mygdx.wargame.battle.bullet.MachineGunBullet;
-import com.mygdx.wargame.battle.bullet.MissileBullet;
-import com.mygdx.wargame.battle.bullet.PlasmaBullet;
+import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageStorage;
@@ -31,7 +22,6 @@ import com.mygdx.wargame.component.weapon.ballistic.MachineGunMk2;
 import com.mygdx.wargame.component.weapon.ballistic.MachineGunMk3;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.util.MathUtils;
-import com.mygdx.wargame.util.StageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,23 +30,16 @@ public class BulletAnimationAction extends Action {
 
     private Mech attackerMech;
     private Mech defenderMech;
-    private double counter = 0;
-    private int duration = 0;
-    private Stage stage;
-    private Stage hudStage;
     private AssetManager assetManager;
-    private boolean firstStart = true;
     private ActionLock actionLock;
     private boolean done = false;
     private int minRange;
     private StageStorage stageStorage;
     private BattleMap battleMap;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, Stage hudStage, AssetManager assetManager, ActionLock actionLock, int minRange, StageStorage stageStorage, BattleMap battleMap) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageStorage stageStorage, BattleMap battleMap) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
-        this.stage = stage;
-        this.hudStage = hudStage;
         this.assetManager = assetManager;
         this.actionLock = actionLock;
         this.minRange = minRange;
@@ -73,7 +56,7 @@ public class BulletAnimationAction extends Action {
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) <= minRange) {
             startBullet(attackerMech);
         } else {
-            stage.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range"));
+            stageStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range"));
         }
         done = true;
 
@@ -118,8 +101,9 @@ public class BulletAnimationAction extends Action {
 
                 MoveToAction moveToAction = null;
                 MoveActorByBezierLine moveActorByBezierLine = null;
-                Vector2 start = StageUtils.convertBetweenStages(stage, hudStage, attackerMech.getX(), attackerMech.getY());
-                Vector2 end = StageUtils.convertBetweenStages(stage, hudStage, defenderMech.getX(), defenderMech.getY());
+                Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
+                Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
+
                 if (weapon.getType() == WeaponType.Missile) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y);
                     moveActorByBezierLine.setDuration(0.3f);
@@ -159,7 +143,7 @@ public class BulletAnimationAction extends Action {
                     explosionAction.addAction(new AddActorAction(stageStorage.airLevel, explosion));
                     explosionAction.addAction(new DelayAction(0.5f));
                     if (!craterCreated) {
-                        explosionAction.addAction(new SetOverlayAction(battleMap, (int)defenderMech.getX(),(int)defenderMech.getY(), assetManager));
+                        explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), assetManager));
                         craterCreated = true;
                     }
                     explosionAction.addAction(new RemoveCustomActorAction(stageStorage.airLevel, explosion));
@@ -179,7 +163,7 @@ public class BulletAnimationAction extends Action {
                 sequenceAction.addAction(new RemoveActorAction());
                 bullet.addAction(sequenceAction);
 
-                hudStage.addActor(bullet);
+                stageStorage.airLevel.addActor(bullet);
             }
         }
     }

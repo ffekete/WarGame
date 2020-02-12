@@ -16,6 +16,6 @@ public class MachineGunBullet extends AbstractBullet {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         texture.setRegion(0,0, 32, 32);
-        batch.draw(texture, getX(), getY(), 16, 16, 32, 32, 1f, 1f, getRotation());
+        batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 1f, 1f, getRotation());
     }
 }
