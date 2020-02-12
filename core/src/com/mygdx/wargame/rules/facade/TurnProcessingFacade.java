@@ -2,7 +2,6 @@ package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
@@ -141,7 +140,7 @@ public class TurnProcessingFacade {
 
             // then attack
             sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange));
-            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, hudStage, assetManager, actionLock, minRange, stageStorage.airLevel));
+            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, hudStage, assetManager, actionLock, minRange, stageStorage, battleMap));
             AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
             sequenceAction.addAction(attackAction);
 

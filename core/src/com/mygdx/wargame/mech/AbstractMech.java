@@ -72,12 +72,12 @@ AbstractMech extends Actor implements Mech {
         texture.setRegion(step * 32, state.getCol() * 32, 32, 32);
 
         texture.flip(direction.isMirrored(), false);
-        spriteBatch.draw(texture, x - 0.5f, y, 2, 2);
+        spriteBatch.draw(texture, x, y, 1, 1);
 
         if(getShieldValue() > 0) {
             spriteBatch.setColor(Color.valueOf("FFFFFF55"));
             shieldTextureRegion.setRegion((step % 2) * 32, 0, 32, 32);
-            spriteBatch.draw(shieldTextureRegion, x-0.75f, y-0.5f, 2.75f, 2.5f);
+            spriteBatch.draw(shieldTextureRegion, x-0.1f, y-0.3f, 1.2f, 1.2f);
             spriteBatch.setColor(Color.WHITE);
         }
     }

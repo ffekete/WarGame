@@ -52,8 +52,8 @@ import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
 public class BattleScreen implements Screen {
 
-    public static final int WIDTH = 45 * 1;
-    public static final int HEIGHT = 28 * 1;
+    public static final int WIDTH = (int)(45 * 0.5);
+    public static final int HEIGHT = (int)(28 * 0.5);
     private Camera camera;
     private Camera hudCamera;
     private Viewport viewport;
@@ -97,7 +97,10 @@ public class BattleScreen implements Screen {
         assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.load("DesertTile.png", Texture.class);
         assetManager.load("Grassland.png", Texture.class);
+        assetManager.load("objects/Crater.png", Texture.class);
         assetManager.load("variation/Trees.png", Texture.class);
+        assetManager.load("variation/Trees03.png", Texture.class);
+        assetManager.load("variation/Trees02.png", Texture.class);
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);
         assetManager.load("Missile.png", Texture.class);
@@ -245,7 +248,7 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
         BattleMapTreeSpreadDecorator battleMapTreeSpreadDecorator = new BattleMapTreeSpreadDecorator(assetManager);
-        battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
+        battleMap = new BattleMap(100, 100, stageStorage, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
 
         battleMapTreeSpreadDecorator.decorate(3, battleMap.getNodeGraphLv1());
 

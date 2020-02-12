@@ -26,7 +26,13 @@ public class BattleMapTreeSpreadDecorator {
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
                 if (newMap[i][j] == 1) {
-                    worldMap.getNodeWeb()[i][j].setOverlay(new TextureRegion(assetManager.get("variation/Trees.png", Texture.class)));
+                    int rnd = new Random().nextInt(3);
+                    if(rnd == 0)
+                        worldMap.getNodeWeb()[i][j].setOverlay(assetManager.get("variation/Trees.png", Texture.class));
+                    else if(rnd == 1)
+                        worldMap.getNodeWeb()[i][j].setOverlay(assetManager.get("variation/Trees02.png", Texture.class));
+                    else if(rnd == 2)
+                        worldMap.getNodeWeb()[i][j].setOverlay(assetManager.get("variation/Trees03.png", Texture.class));
                 }
             }
         }

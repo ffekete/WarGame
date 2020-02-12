@@ -13,7 +13,7 @@ public class Node extends Actor {
 
     private int index;
     private TextureRegion texture;
-    private TextureRegion overlay;
+    private Texture overlay;
 
     public Node(float x, float y, AssetManager assetManager) {
         this.setX(x);
@@ -42,7 +42,7 @@ public class Node extends Actor {
         }
     }
 
-    public void setOverlay(TextureRegion overlay) {
+    public void setOverlay(Texture overlay) {
         this.overlay = overlay;
     }
 }

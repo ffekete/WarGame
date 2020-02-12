@@ -27,6 +27,6 @@ public class Explosion extends Actor {
             }
         }
         texture.setRegion(col * 96, 0, 96, 96);
-        batch.draw(texture, getX()-1, getY()-1, 3, 3);
+        batch.draw(texture, getX() - 0.25f, getY() - 0.25f, 1.5f, 1.5f);
     }
 }
