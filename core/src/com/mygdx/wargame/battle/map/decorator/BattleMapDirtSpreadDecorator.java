@@ -2,7 +2,6 @@ package com.mygdx.wargame.battle.map.decorator;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.map.Overlay;
@@ -11,7 +10,7 @@ import com.mygdx.wargame.battle.map.TileOverlayType;
 import java.util.List;
 import java.util.Random;
 
-public class BattleMapTreeSpreadDecorator implements Decorator {
+public class BattleMapDirtSpreadDecorator implements Decorator {
 
     private int deathLimit = 5;
     private int birthLimit = 3;
@@ -20,15 +19,8 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
 
     private List<Texture> treeVariations;
 
-
-    public BattleMapTreeSpreadDecorator(AssetManager assetManager) {
+    public BattleMapDirtSpreadDecorator(AssetManager assetManager) {
         this.assetManager = assetManager;
-        treeVariations = ImmutableList.<Texture>builder()
-                .add(assetManager.get("variation/Trees.png", Texture.class))
-                .add(assetManager.get("variation/Trees02.png", Texture.class))
-                .add(assetManager.get("variation/Trees03.png", Texture.class))
-                .add(assetManager.get("variation/Trees04.png", Texture.class))
-                .build();
     }
 
     public void decorate(int step, NodeGraph worldMap) {
@@ -38,8 +30,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
                 if (newMap[i][j] == 1) {
-                    int rnd = new Random().nextInt(treeVariations.size());
-                    worldMap.getNodeWeb()[i][j].setDecorationOverlay(new Overlay(treeVariations.get(rnd), TileOverlayType.Trees));
+                    worldMap.getNodeWeb()[i][j].setGroundOverlay(new Overlay(assetManager.get("tileset/Dirt.png", Texture.class), TileOverlayType.Dirt));
                 }
             }
         }

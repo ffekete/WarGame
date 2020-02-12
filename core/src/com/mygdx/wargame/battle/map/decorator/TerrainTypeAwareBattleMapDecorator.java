@@ -20,11 +20,12 @@ public class TerrainTypeAwareBattleMapDecorator {
     public TerrainTypeAwareBattleMapDecorator(AssetManager assetManager) {
         this.assetManager = assetManager;
         decorators = ImmutableMap.<TerrainType, List<Decorator>>builder()
-                .put(TerrainType.Grassland, ImmutableList.of(new BattleMapTreeSpreadDecorator(assetManager)))
+                .put(TerrainType.Grassland, ImmutableList.of(new BattleMapTreeSpreadDecorator(assetManager), new BattleMapDirtSpreadDecorator(assetManager)))
                 .build();
 
         stepsConfig = ImmutableMap.<Class<? extends Decorator>, Integer>builder()
                 .put(BattleMapTreeSpreadDecorator.class, 3)
+                .put(BattleMapDirtSpreadDecorator.class, 3)
                 .build();
     }
 

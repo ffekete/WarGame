@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.Overlay;
+import com.mygdx.wargame.battle.map.TileOverlayType;
 
 public class SetOverlayAction extends Action {
 
@@ -21,7 +23,7 @@ public class SetOverlayAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        battleMap.getNodeGraphLv1().getNodeWeb()[x][y].setOverlay(assetManager.get("objects/Crater.png", Texture.class));
+        battleMap.getNodeGraphLv1().getNodeWeb()[x][y].setDecorationOverlay(new Overlay(assetManager.get("objects/Crater.png", Texture.class), TileOverlayType.Trees));
         return true;
     }
 }

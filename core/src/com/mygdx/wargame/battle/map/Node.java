@@ -13,11 +13,16 @@ public class Node extends Actor {
 
     private int index;
     private TextureRegion texture;
-    private Texture overlay;
+    private Overlay decorationOverlay;
+    private Overlay groundOverlay;
+    private GroundOverlayConfig groundOverlayConfig;
+    private NodeGraph nodeGraph;
 
-    public Node(float x, float y, AssetManager assetManager) {
+    public Node(float x, float y, AssetManager assetManager, NodeGraph nodeGraph) {
+        this.nodeGraph = nodeGraph;
         this.setX(x);
         this.setY(y);
+        groundOverlayConfig = new GroundOverlayConfig(assetManager);
 
         this.texture = new TextureRegion(assetManager.get("Grassland.png", Texture.class));
 
@@ -37,12 +42,25 @@ public class Node extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
         batch.draw(texture, getX(), getY(), 1 ,1);
-        if(overlay != null) {
-            batch.draw(overlay, getX(), getY(), 1 ,1);
+
+        if(groundOverlay != null) {
+            batch.draw(groundOverlayConfig.getFor(groundOverlay.getTileOverlayType()).getFor(nodeGraph, (int)getX(), (int)getY(), 1), getX(), getY(), 1 ,1);
+        }
+
+        if(decorationOverlay != null) {
+            batch.draw(decorationOverlay.getOverlay(), getX(), getY(), 1 ,1);
         }
     }
 
-    public void setOverlay(Texture overlay) {
-        this.overlay = overlay;
+    public void setDecorationOverlay(Overlay decorationOverlay) {
+        this.decorationOverlay = decorationOverlay;
+    }
+
+    public void setGroundOverlay(Overlay groundOverlay) {
+        this.groundOverlay = groundOverlay;
+    }
+
+    public Overlay getGroundOverlay() {
+        return groundOverlay;
     }
 }

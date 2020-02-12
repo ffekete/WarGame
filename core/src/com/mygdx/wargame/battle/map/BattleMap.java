@@ -47,7 +47,7 @@ public class BattleMap {
                 Node node;
 
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
-                    node = new Node(i, j, assetManager);
+                    node = new Node(i, j, assetManager, getNodeGraphLv1());
                     GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock, this.mechInfoPanelFacade);
                     node.addListener(groundInputListener);
                     node.setTouchable(Touchable.enabled);
@@ -78,7 +78,7 @@ public class BattleMap {
 
         Node newNode;
         if (nodeGraph.getNodeWeb()[i][j] == null) {
-            newNode = new Node(i, j, assetManager);
+            newNode = new Node(i, j, assetManager, nodeGraph);
             GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock, mechInfoPanelFacade);
             node.addListener(groundInputListener);
             node.setTouchable(Touchable.enabled);
