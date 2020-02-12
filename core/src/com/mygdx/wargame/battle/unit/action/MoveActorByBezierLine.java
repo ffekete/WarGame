@@ -18,12 +18,11 @@ public class MoveActorByBezierLine extends TemporalAction {
         float yPts;
         Vector2[] points = new Vector2[4];
 
-
-        points[0] = new Vector2(sx - 100, sy - 100);
+        points[0] = new Vector2(sx, sy - 100);
+        points[3] = new Vector2(ex, ey - 100);
 
         points[1] = new Vector2(sx, sy);
         points[2] = new Vector2(ex, ey);
-        points[3] = new Vector2(ex - 100, ey - 100);
 
 
         myCatmull = new CatmullRomSpline<Vector2>(points, false);

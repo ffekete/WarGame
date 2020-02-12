@@ -128,4 +128,12 @@ public class NodeGraph implements IndexedGraph<Node> {
         impassable[(int) x][(int) y] = true;
         disconnectCities(nodeWeb[(int) x][(int) y]);
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

@@ -68,7 +68,7 @@ public class BulletAnimationAction extends Action {
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) <= minRange){
             startBullet(attackerMech);
         } else {
-            stage.addAction(new UnlockAction(actionLock));
+            stage.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range" ));
         }
         done = true;
 
@@ -80,6 +80,8 @@ public class BulletAnimationAction extends Action {
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
 
         int delay = -1;
+
+        boolean finishedByExplosion = false;
 
         for (int i = 0; i < selectedWeapons.size(); i++) {
 
@@ -107,7 +109,7 @@ public class BulletAnimationAction extends Action {
                 } else {
                     bullet = new CannonBullet(assetManager);
                 }
-                
+
                 MoveToAction moveToAction = null;
                 MoveActorByBezierLine moveActorByBezierLine = null;
                 Vector2 start = StageUtils.convertBetweenStages(stage, hudStage, attackerMech.getX(), attackerMech.getY());
@@ -143,26 +145,25 @@ public class BulletAnimationAction extends Action {
                 else
                     sequenceAction.addAction(moveToAction);
 
-                boolean finished = false;
                 if (weapon.getType() == WeaponType.Missile) {
                     Explosion explosion = new Explosion(assetManager);
                     explosion.setPosition(defenderMech.getX(), defenderMech.getY());
-                    SequenceAction sequenceAction1 = new SequenceAction();
-                    sequenceAction1.addAction(new DelayAction(0.25f * delay + 0.5f));
-                    sequenceAction1.addAction(new AddActorAction(group, explosion));
-                    sequenceAction1.addAction(new DelayAction(0.5f));
-                    sequenceAction1.addAction(new RemoveCustomActorAction(group, explosion));
+                    SequenceAction explosionAction = new SequenceAction();
+                    explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
+                    explosionAction.addAction(new AddActorAction(group, explosion));
+                    explosionAction.addAction(new DelayAction(0.5f));
+                    explosionAction.addAction(new RemoveCustomActorAction(group, explosion));
 
                     if(i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() -1) {
-                        sequenceAction1.addAction(new UnlockAction(actionLock));
-                        finished = true;
+                        explosionAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof explosion"));
+                        finishedByExplosion = true;
                     }
 
-                    group.addAction(sequenceAction1);
+                    group.addAction(explosionAction);
                 }
 
-                if(i == selectedWeapons.size() - 1 && !finished) {
-                    sequenceAction.addAction(new UnlockAction(actionLock));
+                if(i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() -1 && !finishedByExplosion) {
+                    sequenceAction.addAction(new UnlockAction(actionLock,attackerMech.getName() + "eof normal attack"));
                 }
 
                 sequenceAction.addAction(new RemoveActorAction());

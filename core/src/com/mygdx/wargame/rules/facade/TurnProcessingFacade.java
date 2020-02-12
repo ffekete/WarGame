@@ -2,8 +2,10 @@ package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -87,9 +89,14 @@ public class TurnProcessingFacade {
             });
 
             next = iterator.next();
+
+            centerCameraOnNext(stage);
         } else {
             next = iterator.next();
+            centerCameraOnNext(stage);
         }
+
+
 
         Mech selectedMech = next.getKey();
         Pilot selectedPilot = next.getValue();
@@ -97,13 +104,11 @@ public class TurnProcessingFacade {
         battleMap.removePath(next.getKey());
 
         if (!selectedMech.isActive()) {
-            System.out.println("Mech inactive" + selectedMech.getName());
             // skip, if deactivated
             if (iterator.hasNext()) {
                 next = iterator.next();
             }
         } else if (team2.containsKey(selectedMech)) {
-            System.out.println("Selected mech active " + selectedMech.getName());
 
             SequenceAction sequenceAction = new SequenceAction();
 
@@ -116,8 +121,6 @@ public class TurnProcessingFacade {
             // calculate movement points
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
-            System.out.println("Movement points for mech: " + movementPoints);
-            System.out.println("Stability for mech " + selectedMech.getStability());
 
             int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, target.getMech());
 
@@ -152,8 +155,14 @@ public class TurnProcessingFacade {
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
         }
+    }
 
-
+    private void centerCameraOnNext(Stage stage) {
+        CenterCameraAction centerCameraAction = new CenterCameraAction(stage.getCamera());
+        centerCameraAction.setStartPosition(stage.getCamera().position.x, stage.getCamera().position.y);
+        centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
+        centerCameraAction.setDuration(1);
+        stage.addAction(centerCameraAction);
     }
 
     public boolean isNextPlayerControlled() {

@@ -23,6 +23,7 @@ import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.BattleMapTreeSpreadDecorator;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
@@ -51,8 +52,8 @@ import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
 public class BattleScreen implements Screen {
 
-    public static final int WIDTH = 90;
-    public static final int HEIGHT = 54;
+    public static final int WIDTH = 45 * 1;
+    public static final int HEIGHT = 28 * 1;
     private Camera camera;
     private Camera hudCamera;
     private Viewport viewport;
@@ -68,6 +69,7 @@ public class BattleScreen implements Screen {
     private BattleMap battleMap;
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private SelectionMarker selectionMarker;
+    private ScreenConfiguration screenConfiguration;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -76,6 +78,8 @@ public class BattleScreen implements Screen {
     @Override
     public void show() {
         StageStorage stageStorage = new StageStorage();
+
+        screenConfiguration = new ScreenConfiguration(0, 0, 0);
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
@@ -92,6 +96,8 @@ public class BattleScreen implements Screen {
         assetManager.load("Maverick.png", Texture.class);
         assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.load("DesertTile.png", Texture.class);
+        assetManager.load("Grassland.png", Texture.class);
+        assetManager.load("variation/Trees.png", Texture.class);
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);
         assetManager.load("Missile.png", Texture.class);
@@ -115,7 +121,7 @@ public class BattleScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
         Scout unit3 = new Scout("3", spriteBatch, assetManager);
-        unit3.setPosition(10, 5);
+        unit3.setPosition(60, 45);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
         SwarmMissile swarmMissile = new SwarmMissile();
@@ -190,7 +196,7 @@ public class BattleScreen implements Screen {
         unit2.addComponent(BodyPart.Torso, largeCannon11);
 
         Scout unit = new Scout("1", spriteBatch, assetManager);
-        unit.setPosition(10, 10);
+        unit.setPosition(65, 45);
         unit.setTeam(Team.enemy);
         unit.setActive(true);
         unit.setStability(100);
@@ -204,6 +210,9 @@ public class BattleScreen implements Screen {
         PilotCreator pilotCreator = new PilotCreator();
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
+
+        inputMultiplexer.addProcessor(new BasicMouseHandlingInputAdapter(screenConfiguration));
+
         inputMultiplexer.addProcessor(hudStage);
         inputMultiplexer.addProcessor(stage);
 
@@ -222,7 +231,6 @@ public class BattleScreen implements Screen {
 
         // display
 
-
         BitmapFont font = FontCreator.getBitmapFont();
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
@@ -236,7 +244,10 @@ public class BattleScreen implements Screen {
 
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
-        battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Desert, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
+        BattleMapTreeSpreadDecorator battleMapTreeSpreadDecorator = new BattleMapTreeSpreadDecorator(assetManager);
+        battleMap = new BattleMap(100, 100, stage, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
+
+        battleMapTreeSpreadDecorator.decorate(3, battleMap.getNodeGraphLv1());
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManager, stageStorage);
 
@@ -274,9 +285,13 @@ public class BattleScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
+        camera.position.x += screenConfiguration.scrollX;
+        camera.position.y += screenConfiguration.scrollY;
+
         DrawUtils.clearScreen();
 
-        if (turnProcessingFacade.getNext() != null && !turnProcessingFacade.getNext().getKey().moved() && turnProcessingFacade.getNext().getKey().getState() == State.Idle) {
+        if (turnProcessingFacade.getNext() != null && !turnProcessingFacade.getNext().getKey().attacked() && turnProcessingFacade.getNext().getKey().getState() == State.Idle) {
             selectionMarker.setColor(Color.valueOf("FFFFFF66"));
             selectionMarker.setPosition(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY());
         } else {
