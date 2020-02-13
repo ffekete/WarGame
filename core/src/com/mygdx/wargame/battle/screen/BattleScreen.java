@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -24,7 +23,6 @@ import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.decorator.BattleMapTreeSpreadDecorator;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
@@ -319,6 +317,8 @@ public class BattleScreen implements Screen {
         spriteBatch.setColor(Color.WHITE);
         hudStage.act();
         hudStage.draw();
+
+        System.out.println(Gdx.graphics.getFramesPerSecond());
     }
 
     @Override

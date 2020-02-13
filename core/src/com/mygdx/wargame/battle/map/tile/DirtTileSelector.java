@@ -23,7 +23,7 @@ public class DirtTileSelector implements Selector {
         int mask = MapUtils.bitmask4bitForTile(map, x,y, TileOverlayType.Dirt, skip);
 
         // rock
-        textureRegion.setRegion((mask % 4) * 16, (mask / 4) * 16, 16, 16);
+        textureRegion.setRegion((mask % 4) * 32, (mask / 4) * 32, 32, 32);
         return textureRegion;
     }
 
