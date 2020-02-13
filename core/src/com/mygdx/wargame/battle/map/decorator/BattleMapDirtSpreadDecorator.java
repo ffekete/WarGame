@@ -2,7 +2,12 @@ package com.mygdx.wargame.battle.map.decorator;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
+import com.mygdx.wargame.battle.map.GroundOverlayConfig;
 import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.map.Overlay;
 import com.mygdx.wargame.battle.map.TileOverlayType;
@@ -16,21 +21,38 @@ public class BattleMapDirtSpreadDecorator implements Decorator {
     private int birthLimit = 3;
     private float chanceToStartAlive = 45;
     private AssetManager assetManager;
+    GroundOverlayConfig groundOverlayConfig;
 
     private List<Texture> treeVariations;
 
     public BattleMapDirtSpreadDecorator(AssetManager assetManager) {
         this.assetManager = assetManager;
+        groundOverlayConfig = new GroundOverlayConfig(assetManager);
     }
 
-    public void decorate(int step, NodeGraph worldMap) {
+    public void decorate(int step, BattleMap worldMap) {
 
         int[][] newMap = create(step);
 
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
                 if (newMap[i][j] == 1) {
-                    worldMap.getNodeWeb()[i][j].setGroundOverlay(new Overlay(assetManager.get("tileset/Dirt.png", Texture.class), TileOverlayType.Dirt));
+                    worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setGroundOverlay(new Overlay(TileOverlayType.Dirt));
+                }
+            }
+        }
+
+        for (int i = 0; i < newMap.length; i++) {
+            for (int j = 0; j < newMap[0].length; j++) {
+                if (newMap[i][j] == 1) {
+
+                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
+                    groundOverlayConfig.getFor(TileOverlayType.Dirt).getFor(worldMap.getNodeGraphLv1(), i, j, 1);
+
+                    cell.setTile(new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Dirt).getFor(worldMap.getNodeGraphLv1(), i, j, 1))));
+
+                    worldMap.getLayer(1).setCell(i,j, cell);
                 }
             }
         }

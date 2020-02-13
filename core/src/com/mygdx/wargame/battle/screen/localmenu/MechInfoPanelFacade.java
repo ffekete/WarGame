@@ -3,21 +3,18 @@ package com.mygdx.wargame.battle.screen.localmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.wargame.battle.screen.FontCreator;
 import com.mygdx.wargame.config.Config;
 
 public class MechInfoPanelFacade extends Actor {
@@ -38,10 +35,21 @@ public class MechInfoPanelFacade extends Actor {
     private boolean localMenuVisible = false;
     private BigInfoPanelMovementHandler bigInfoPanelMovementHandler = new BigInfoPanelMovementHandler();
     private WeaponSelectionPanelMovementHandler weaponSelectionPanelMovementHandler = new WeaponSelectionPanelMovementHandler();
-
+    private CheckBox.CheckBoxStyle checkBoxStyle;
+    private BitmapFont font;
+    Label.LabelStyle labelStyle;
 
     public MechInfoPanelFacade() {
         mechInfoTable = new Table();
+
+        font = FontCreator.getBitmapFont();
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font = font;
+
+        checkBoxStyle = new CheckBox.CheckBoxStyle();
+        checkBoxStyle.font = font;
+        checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
+        checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
         ScrollPane.ScrollPaneStyle weaponsListScrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         weaponsListScrollPaneStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png")));
@@ -286,5 +294,17 @@ public class MechInfoPanelFacade extends Actor {
 
     public Table getMechInfoTable() {
         return mechInfoTable;
+    }
+
+    public CheckBox.CheckBoxStyle getCheckBoxStyle() {
+        return checkBoxStyle;
+    }
+
+    public BitmapFont getFont() {
+        return font;
+    }
+
+    public Label.LabelStyle getLabelStyle() {
+        return labelStyle;
     }
 }

@@ -32,7 +32,7 @@ public class TerrainTypeAwareBattleMapDecorator {
     public void decorate(BattleMap battleMap) {
         decorators.get(battleMap.getTerrainType()).forEach(decorator -> {
             int step = stepsConfig.get(decorator.getClass());
-            decorator.decorate(step, battleMap.getNodeGraphLv1());
+            decorator.decorate(step, battleMap);
         });
     }
 }

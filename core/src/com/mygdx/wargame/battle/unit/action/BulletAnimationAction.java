@@ -14,6 +14,7 @@ import com.mygdx.wargame.battle.action.SetOverlayAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
@@ -143,7 +144,7 @@ public class BulletAnimationAction extends Action {
                     explosionAction.addAction(new AddActorAction(stageStorage.airLevel, explosion));
                     explosionAction.addAction(new DelayAction(0.5f));
                     if (!craterCreated) {
-                        explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), assetManager));
+                        explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager));
                         craterCreated = true;
                     }
                     explosionAction.addAction(new RemoveCustomActorAction(stageStorage.airLevel, explosion));

@@ -11,16 +11,16 @@ public class NodeGraphTest {
     public void testConnection() {
         NodeGraph nodeGraph = new NodeGraph(5, 5);
 
-        Node n1 = new Node(1, 1, null, nodeGraph);
+        Node n1 = new Node(1, 1);
         nodeGraph.addNode(n1);
 
-        Node n2 = new Node(2, 1, null, nodeGraph);
+        Node n2 = new Node(2, 1);
         nodeGraph.addNode(n2);
 
-        Node n3 = new Node(1, 2, null, nodeGraph);
+        Node n3 = new Node(1, 2);
         nodeGraph.addNode(n3);
 
-        Node n4 = new Node(2, 2, null, nodeGraph);
+        Node n4 = new Node(2, 2);
         nodeGraph.addNode(n4);
 
         nodeGraph.connectCities(n1, n2);
@@ -54,31 +54,31 @@ public class NodeGraphTest {
     public void reconnect() {
         NodeGraph nodeGraph = new NodeGraph(5, 5);
 
-        Node n1 = new Node(1, 1, null, nodeGraph);
+        Node n1 = new Node(1, 1);
         nodeGraph.addNode(n1);
 
-        Node n2 = new Node(0, 1, null, nodeGraph);
+        Node n2 = new Node(0, 1);
         nodeGraph.addNode(n2);
 
-        Node n3 = new Node(1, 0, null, nodeGraph);
+        Node n3 = new Node(1, 0);
         nodeGraph.addNode(n3);
 
-        Node n4 = new Node(0, 0, null, nodeGraph);
+        Node n4 = new Node(0, 0);
         nodeGraph.addNode(n4);
 
-        Node n5 = new Node(2, 0, null, nodeGraph);
+        Node n5 = new Node(2, 0);
         nodeGraph.addNode(n5);
 
-        Node n6 = new Node(0, 2, null, nodeGraph);
+        Node n6 = new Node(0, 2);
         nodeGraph.addNode(n6);
 
-        Node n7 = new Node(2, 2, null, nodeGraph);
+        Node n7 = new Node(2, 2);
         nodeGraph.addNode(n7);
 
-        Node n8 = new Node(2, 1, null, nodeGraph);
+        Node n8 = new Node(2, 1);
         nodeGraph.addNode(n8);
 
-        Node n9 = new Node(1, 2, null, nodeGraph);
+        Node n9 = new Node(1, 2);
         nodeGraph.addNode(n9);
 
         nodeGraph.connectCities(n1, n2);

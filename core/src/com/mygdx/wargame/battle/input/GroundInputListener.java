@@ -15,14 +15,13 @@ public class GroundInputListener extends InputListener {
 
     private TurnProcessingFacade turnProcessingFacade;
     private BattleMap battleMap;
-    private Node node;
     private ActionLock actionLock;
     private MechInfoPanelFacade mechInfoPanelFacade;
 
-    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, Node node, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade) {
+    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade) {
         this.turnProcessingFacade = turnProcessingFacade;
         this.battleMap = battleMap;
-        this.node = node;
+
         this.actionLock = actionLock;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
     }
@@ -32,15 +31,17 @@ public class GroundInputListener extends InputListener {
 
         mechInfoPanelFacade.hideLocalMenu();
 
-        if (actionLock.isLocked())
+        if (actionLock.isLocked()) {
+            event.stop();
             return true;
+        }
 
         AbstractMech attacker = (AbstractMech) turnProcessingFacade.getNext().getKey();
 
         if (attacker != null) {
 
             Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
-            Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int) node.getX()][(int) node.getY()];
+            Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int)x][(int)y];
 
             // reconnect so that attacker can move
             battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attacker.getX()][(int)attacker.getY()]);
@@ -50,6 +51,7 @@ public class GroundInputListener extends InputListener {
             attacker.addAction(new MovementAction(battleMap, attacker));
         }
 
+        event.stop();
         return true;
     }
 }

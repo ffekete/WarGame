@@ -2,10 +2,13 @@ package com.mygdx.wargame.battle.map;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.mygdx.wargame.battle.input.GroundInputListener;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.screen.StageStorage;
 import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
@@ -21,24 +24,30 @@ public class BattleMap {
 
     int width, height;
     private NodeGraph nodeGraphLv1;
-    private StageStorage stageStorage;
     private ActionLock actionLock;
     private TerrainType terrainType;
     private TurnProcessingFacade turnProcessingFacade;
     private AssetManager assetManager;
     private MechInfoPanelFacade mechInfoPanelFacade;
+    private TiledMap tiledMap;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, StageStorage stageStorage, ActionLock actionLock, TerrainType terrainType, TurnProcessingFacade turnProcessingFacade, TurnProcessingFacade turnProcessingFacade1, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade) {
+    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, TurnProcessingFacade turnProcessingFacade, TurnProcessingFacade turnProcessingFacade1, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade) {
         this.width = x;
         this.height = y;
-        this.stageStorage = stageStorage;
         this.actionLock = actionLock;
         this.terrainType = terrainType;
         this.turnProcessingFacade = turnProcessingFacade1;
         this.assetManager = assetManager;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
+
+        tiledMap = new TiledMap();
+        MapLayers layers = tiledMap.getLayers();
+
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, 32, 32));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, 32, 32));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, 32, 32));
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
@@ -47,12 +56,11 @@ public class BattleMap {
                 Node node;
 
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
-                    node = new Node(i, j, assetManager, getNodeGraphLv1());
-                    GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock, this.mechInfoPanelFacade);
-                    node.addListener(groundInputListener);
-                    node.setTouchable(Touchable.enabled);
-                    stageStorage.groundLevel.addActor(node);
-                    node.setSize(1, 1);
+                    node = new Node(i, j);
+                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+                    cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("Grassland.png", Texture.class))));
+                    getLayer(0).setCell(i, j, cell);
+
                 } else {
                     node = nodeGraphLv1.getNodeWeb()[i][j];
                 }
@@ -78,12 +86,11 @@ public class BattleMap {
 
         Node newNode;
         if (nodeGraph.getNodeWeb()[i][j] == null) {
-            newNode = new Node(i, j, assetManager, nodeGraph);
-            GroundInputListener groundInputListener = new GroundInputListener(turnProcessingFacade, this, node, actionLock, mechInfoPanelFacade);
-            node.addListener(groundInputListener);
-            node.setTouchable(Touchable.enabled);
-            stageStorage.groundLevel.addActor(node);
-            node.setSize(1, 1);
+            newNode = new Node(i, j);
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("Grassland.png", Texture.class))));
+            TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+            layer.setCell(i, j, cell);
         } else {
             newNode = nodeGraph.getNodeWeb()[i][j];
         }
@@ -128,5 +135,13 @@ public class BattleMap {
     public void removePath(Mech key) {
         paths.computeIfAbsent(key, v -> new ArrayList<>());
         paths.get(key).clear();
+    }
+
+    public TiledMap getTiledMap() {
+        return tiledMap;
+    }
+
+    public TiledMapTileLayer getLayer(int index) {
+        return (TiledMapTileLayer) tiledMap.getLayers().get(index);
     }
 }

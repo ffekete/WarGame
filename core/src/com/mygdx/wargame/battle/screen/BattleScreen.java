@@ -8,38 +8,25 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.Map;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.google.common.collect.ImmutableMap;
+import com.mygdx.wargame.GlobalState;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
+import com.mygdx.wargame.battle.input.GroundInputListener;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
-import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.component.shield.SmallShieldModule;
-import com.mygdx.wargame.component.weapon.Status;
-import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
-import com.mygdx.wargame.component.weapon.ballistic.MachineGun;
-import com.mygdx.wargame.component.weapon.ion.LargeIonCannon;
-import com.mygdx.wargame.component.weapon.laser.LargeLaser;
-import com.mygdx.wargame.component.weapon.missile.SwarmMissile;
-import com.mygdx.wargame.component.weapon.plasma.PlasmaCannon;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.mech.Scout;
-import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.pilot.PilotCreator;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
@@ -54,11 +41,10 @@ public class BattleScreen implements Screen {
 
     public static final int WIDTH = (int)(45 * 0.5);
     public static final int HEIGHT = (int)(28 * 0.5);
-    private Camera camera;
+    private OrthographicCamera camera;
     private Camera hudCamera;
     private Viewport viewport;
     private Viewport hudViewport;
-    private ShapeRenderer shapeRenderer;
     private Stage stage;
     private Stage hudStage;
     private RangedAttackTargetCalculator rangedAttackTargetCalculator;
@@ -70,10 +56,13 @@ public class BattleScreen implements Screen {
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private SelectionMarker selectionMarker;
     private ScreenConfiguration screenConfiguration;
+    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
     }
+
+    public Map tiledMap;
 
     @Override
     public void show() {
@@ -91,6 +80,7 @@ public class BattleScreen implements Screen {
 
         this.spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
+        //spriteBatch.maxSpritesInBatch = 10;
 
         assetManager = new AssetManager();
         assetManager.load("Maverick.png", Texture.class);
@@ -115,104 +105,16 @@ public class BattleScreen implements Screen {
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
         assetManager.finishLoading();
 
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setAutoShapeType(true);
         stage = new Stage(viewport, spriteBatch);
 
         hudStage = new Stage(hudViewport, spriteBatch);
 
         selectionMarker = new SelectionMarker(assetManager, spriteBatch);
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
+        BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
+        BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, assetManager);
 
-        Scout unit3 = new Scout("3", spriteBatch, assetManager);
-        unit3.setPosition(60, 45);
-        unit3.setTeam(Team.own);
-        unit3.setStability(100);
-        SwarmMissile swarmMissile = new SwarmMissile();
-        swarmMissile.setStatus(Status.Selected);
-        LargeLaser largeLaser = new LargeLaser();
-        largeLaser.setStatus(Status.Selected);
-        LargeLaser largeLaser4 = new LargeLaser();
-        largeLaser4.setStatus(Status.Selected);
-        unit3.addComponent(BodyPart.LeftLeg, swarmMissile);
-        unit3.addComponent(BodyPart.RightHand, largeLaser);
-        unit3.addComponent(BodyPart.Torso, largeLaser4);
-        unit3.setActive(true);
-        unit3.addComponent(BodyPart.Torso, new SmallShieldModule());
-
-        PlasmaCannon plasmaCannon = new PlasmaCannon();
-        plasmaCannon.setStatus(Status.Active);
-        unit3.addComponent(BodyPart.LeftLeg, plasmaCannon);
-
-        LargeIonCannon largeIonCannon = new LargeIonCannon();
-        largeIonCannon.setStatus(Status.Selected);
-
-        MachineGun machineGun = new MachineGun();
-        machineGun.setStatus(Status.Selected);
-
-        unit3.addComponent(BodyPart.Torso, largeIonCannon);
-        unit3.addComponent(BodyPart.Torso, machineGun);
-
-        Scout unit2 = new Scout("2", spriteBatch, assetManager);
-        unit2.setPosition(30, 30);
-        unit2.setTeam(Team.own);
-        unit2.setActive(true);
-        unit2.setStability(100);
-        LargeCannon largeCannon2 = new LargeCannon();
-        largeCannon2.setStatus(Status.Selected);
-
-        LargeCannon largeCannon3 = new LargeCannon();
-        largeCannon3.setStatus(Status.Selected);
-
-        LargeCannon largeCannon4 = new LargeCannon();
-        largeCannon4.setStatus(Status.Selected);
-
-        LargeCannon largeCannon5 = new LargeCannon();
-        largeCannon5.setStatus(Status.Selected);
-
-        LargeCannon largeCannon6 = new LargeCannon();
-        largeCannon6.setStatus(Status.Selected);
-
-        LargeCannon largeCannon7 = new LargeCannon();
-        largeCannon7.setStatus(Status.Selected);
-
-        LargeCannon largeCannon8 = new LargeCannon();
-        largeCannon8.setStatus(Status.Selected);
-
-        LargeCannon largeCannon9 = new LargeCannon();
-        largeCannon9.setStatus(Status.Selected);
-
-        LargeCannon largeCannon10 = new LargeCannon();
-        largeCannon10.setStatus(Status.Selected);
-
-        LargeCannon largeCannon11 = new LargeCannon();
-        largeCannon11.setStatus(Status.Selected);
-
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon2);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon3);
-        unit2.addComponent(BodyPart.RightLeg, largeCannon4);
-        unit2.addComponent(BodyPart.RightLeg, largeCannon5);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon6);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon7);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon8);
-        unit2.addComponent(BodyPart.Torso, largeCannon9);
-        unit2.addComponent(BodyPart.Torso, largeCannon10);
-        unit2.addComponent(BodyPart.Torso, largeCannon11);
-
-        Scout unit = new Scout("1", spriteBatch, assetManager);
-        unit.setPosition(65, 45);
-        unit.setTeam(Team.enemy);
-        unit.setActive(true);
-        unit.setStability(100);
-        LargeLaser largeLaser2 = new LargeLaser();
-        largeLaser2.setStatus(Status.Selected);
-        LargeLaser largeLaser3 = new LargeLaser();
-        largeLaser3.setStatus(Status.Selected);
-        unit.addComponent(BodyPart.LeftLeg, largeLaser2);
-        unit.addComponent(BodyPart.Torso, largeLaser3);
-
-        PilotCreator pilotCreator = new PilotCreator();
+        battleScreenInputDataStubber.stub(battleScreenInputData);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
@@ -220,57 +122,48 @@ public class BattleScreen implements Screen {
 
         inputMultiplexer.addProcessor(hudStage);
         inputMultiplexer.addProcessor(stage);
-
         Gdx.input.setInputProcessor(inputMultiplexer);
-
-        Pilot p1 = pilotCreator.getPilot();
-        Pilot p2 = pilotCreator.getPilot();
-        Pilot p3 = pilotCreator.getPilot();
 
         AttackFacade attackFacade = new AttackFacade(stageStorage, spriteBatch, assetManager);
 
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
-                new MovementSpeedCalculator(), ImmutableMap.of(unit2, p2, unit3, p3),
-                ImmutableMap.of(unit, p1), rangeCalculator, stage, hudStage, assetManager, stageStorage);
+                new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, assetManager, stageStorage);
 
         // display
 
-        BitmapFont font = FontCreator.getBitmapFont();
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = font;
-
-        CheckBox.CheckBoxStyle checkBoxStyle = new CheckBox.CheckBoxStyle();
-        checkBoxStyle.font = font;
-        checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
-        checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
         MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade();
-
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
         TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(assetManager);
-        battleMap = new BattleMap(100, 100, stageStorage, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
+        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
-        //battleMapTreeSpreadDecorator.decorate(3, battleMap.getNodeGraphLv1());
-
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManager, stageStorage);
 
-        battleMap.setTemporaryObstacle(63, 30);
-        battleMap.setTemporaryObstacle(60, 30);
-        battleMap.setTemporaryObstacle(10, 10);
+        battleMap.setTemporaryObstacle(1, 1);
+        battleMap.setTemporaryObstacle(5, 2);
+        battleMap.setTemporaryObstacle(6, 5);
 
         stage.addActor(stageStorage.groundLevel);
         stage.addActor(stageStorage.mechLevel);
         stage.addActor(stageStorage.treeLevel);
         stage.addActor(stageStorage.airLevel);
 
+        stage.addListener( new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade));
 
-        stageStorage.mechLevel.addActor(unit);
-        stageStorage.mechLevel.addActor(unit2);
-        stageStorage.mechLevel.addActor(unit3);
+        battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
+            stageStorage.mechLevel.addActor((Actor) entry.getKey());
+            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage));
+        }));
+
+        battleScreenInputData.getGroup2().entrySet().forEach((entry -> {
+            stageStorage.mechLevel.addActor((Actor) entry.getKey());
+            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage));
+        }));
 
         stage.addActor(selectionMarker);
         mechInfoPanelFacade.getWeaponSelectionButton().setVisible(false);
@@ -282,17 +175,21 @@ public class BattleScreen implements Screen {
         HudElementsFacade hudElementsFacade = new HudElementsFacade(assetManager, turnProcessingFacade, actionLock);
         hudElementsFacade.registerComponents(hudStage);
 
-
-
         // listeners
-        unit2.addListener(new MechClickInputListener(unit2, p2, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
-        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
-        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+
+
+//        unit2.addListener();
+//        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+//        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
+
+        float unitScale = 1 / 32f;
+        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
+
     }
 
     @Override
     public void render(float delta) {
-
+        GlobalState.i = 0;
         camera.position.x += screenConfiguration.scrollX;
         camera.position.y += screenConfiguration.scrollY;
 
@@ -308,6 +205,11 @@ public class BattleScreen implements Screen {
         turnProcessingFacade.process(battleMap, stage);
 
         viewport.apply();
+
+        orthogonalTiledMapRenderer.setView(camera);
+        orthogonalTiledMapRenderer.render();
+
+
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
@@ -319,6 +221,8 @@ public class BattleScreen implements Screen {
         hudStage.draw();
 
         System.out.println(Gdx.graphics.getFramesPerSecond());
+        System.out.println(GlobalState.i);
+        System.out.println(spriteBatch.renderCalls);
     }
 
     @Override

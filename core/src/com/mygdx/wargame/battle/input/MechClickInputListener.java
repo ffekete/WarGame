@@ -103,6 +103,7 @@ public class MechClickInputListener extends InputListener {
             // ???
         }
 
+        event.stop();
         return true;
     }
 
