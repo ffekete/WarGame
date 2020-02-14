@@ -44,6 +44,10 @@ public class DamageCalculator {
 
     public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart) {
         BodyPart bodyPart;
+
+        if(messageQue.getActions().size > 0) {
+            System.out.println("Why???");
+        }
         messageQue.reset();
 
         for (int i = 0; i < weapon.getDamageMultiplier(); i++) {

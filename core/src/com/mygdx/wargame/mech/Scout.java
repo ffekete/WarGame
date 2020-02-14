@@ -58,7 +58,7 @@ public class Scout extends AbstractMech {
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.mechTextureRegion = new TextureRegion(assetManager.get("Marauder.png", Texture.class), 0, 0, 48, 48);
+        this.mechTextureRegion = new TextureRegion(assetManager.get("Marauder.png", Texture.class), 0, 0, 64, 64);
 
         hp.put(BodyPart.LeftHand, getLeftHandMaxHp());
         hp.put(BodyPart.RightHand, getRightHandMaxHp());

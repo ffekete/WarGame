@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ActionLock {
 
     private boolean isLocked = false;
-    private List<Object> waitForObject = new CopyOnWriteArrayList<>();
+    private List<Object> waitForObject = new ArrayList<>();
 
     public boolean isLocked() {
         //System.out.println("wfo: " + waitForObject.size());

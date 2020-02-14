@@ -59,25 +59,33 @@ AbstractMech extends Actor implements Mech {
     @Override
     public void draw(float x, float y, SpriteBatch spriteBatch, TextureRegion texture) {
 
+        if (step < state.getStart())
+            step = state.getStart();
+
+        if (step > state.getEnd())
+            step = state.getStart();
+
         if (slow == 0) {
             slow++;
             step++;
-            if (step == 5) step = 1;
+            if (step >= state.getEnd()) step = state.getStart();
+            if (step < state.getStart())
+                step = state.getStart();
         } else {
             slow++;
             if (slow == 5)
                 slow = 0;
         }
 
-        texture.setRegion( 0,  0, 48, 48);
+        texture.setRegion(step * 64, 0, 64, 64);
 
         texture.flip(direction.isMirrored(), false);
         spriteBatch.draw(texture, x, y, 1, 1);
 
-        if(getShieldValue() > 0) {
+        if (getShieldValue() > 0) {
             spriteBatch.setColor(Color.valueOf("FFFFFF55"));
             shieldTextureRegion.setRegion((step % 2) * 32, 0, 32, 32);
-            spriteBatch.draw(shieldTextureRegion, x-0.1f, y-0.3f, 1.2f, 1.2f);
+            spriteBatch.draw(shieldTextureRegion, x - 0.1f, y - 0.3f, 1.2f, 1.2f);
             spriteBatch.setColor(Color.WHITE);
         }
     }

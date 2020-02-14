@@ -29,7 +29,7 @@ public class MovementAction extends Action {
     public boolean act(float delta) {
         counter += delta;
 
-        if (counter > 0.15f) {
+        if (counter > 0.5f) {
             counter = 0.0f;
             abstractMech.setState(State.Walk);
             List<Node> nodes = battleMap.getPath(abstractMech);
