@@ -69,7 +69,7 @@ AbstractMech extends Actor implements Mech {
                 slow = 0;
         }
 
-        texture.setRegion(step * 32, state.getCol() * 32, 32, 32);
+        texture.setRegion( 0,  0, 48, 48);
 
         texture.flip(direction.isMirrored(), false);
         spriteBatch.draw(texture, x, y, 1, 1);

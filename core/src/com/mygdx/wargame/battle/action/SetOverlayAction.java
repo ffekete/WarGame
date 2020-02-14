@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.Overlay;
 import com.mygdx.wargame.battle.map.TileOverlayType;
 
@@ -17,13 +18,15 @@ public class SetOverlayAction extends Action {
     private int y;
     private TileOverlayType tileOverlayType;
     private AssetManager assetManager;
+    private LayerIndex layerIndex;
 
-    public SetOverlayAction(BattleMap battleMap, int x, int y, TileOverlayType tileOverlayType, AssetManager assetManager) {
+    public SetOverlayAction(BattleMap battleMap, int x, int y, TileOverlayType tileOverlayType, AssetManager assetManager, LayerIndex layerIndex) {
         this.battleMap = battleMap;
         this.x = x;
         this.y = y;
         this.tileOverlayType = tileOverlayType;
         this.assetManager = assetManager;
+        this.layerIndex = layerIndex;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class SetOverlayAction extends Action {
 
         cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("objects/Crater.png", Texture.class))));
 
-        battleMap.getLayer(2).setCell(x, y, cell);
+        battleMap.getLayer(layerIndex).setCell(x, y, cell);
         return true;
     }
 }

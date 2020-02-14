@@ -8,7 +8,7 @@ import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.battle.screen.StageStorage;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
@@ -41,10 +41,10 @@ public class TurnProcessingFacade {
     private Stage stage;
     private Stage hudStage;
     private AssetManager assetManager;
-    private StageStorage stageStorage;
+    private StageElementsStorage stageElementsStorage;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageStorage stageStorage) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -56,7 +56,7 @@ public class TurnProcessingFacade {
         this.stage = stage;
         this.hudStage = hudStage;
         this.assetManager = assetManager;
-        this.stageStorage = stageStorage;
+        this.stageElementsStorage = stageElementsStorage;
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -140,7 +140,7 @@ public class TurnProcessingFacade {
 
             // then attack
             sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange));
-            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, assetManager, actionLock, minRange, stageStorage, battleMap));
+            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
             AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
             sequenceAction.addAction(attackAction);
 
@@ -157,7 +157,7 @@ public class TurnProcessingFacade {
     }
 
     private void centerCameraOnNext(Stage stage) {
-        CenterCameraAction centerCameraAction = new CenterCameraAction(stage.getCamera());
+        CenterCameraAction centerCameraAction = new CenterCameraAction(stage.getCamera(), actionLock);
         centerCameraAction.setStartPosition(stage.getCamera().position.x, stage.getCamera().position.y);
         centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
         centerCameraAction.setDuration(1);

@@ -3,11 +3,9 @@ package com.mygdx.wargame.battle.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.wargame.GlobalState;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.input.GroundInputListener;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
@@ -25,7 +22,10 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
-import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.screen.input.BasicMouseHandlingInputAdapter;
+import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
+import com.mygdx.wargame.battle.screen.ui.SelectionMarker;
+import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
@@ -49,7 +49,6 @@ public class BattleScreen implements Screen {
     private Stage hudStage;
     private RangedAttackTargetCalculator rangedAttackTargetCalculator;
     private SpriteBatch spriteBatch;
-    private AssetManager assetManager;
     private ActionLock actionLock;
     private TurnProcessingFacade turnProcessingFacade;
     private BattleMap battleMap;
@@ -66,7 +65,7 @@ public class BattleScreen implements Screen {
 
     @Override
     public void show() {
-        StageStorage stageStorage = new StageStorage();
+        StageElementsStorage stageElementsStorage = new StageElementsStorage();
 
         screenConfiguration = new ScreenConfiguration(0, 0, 0);
 
@@ -82,86 +81,69 @@ public class BattleScreen implements Screen {
         spriteBatch.setProjectionMatrix(camera.combined);
         //spriteBatch.maxSpritesInBatch = 10;
 
-        assetManager = new AssetManager();
-        assetManager.load("Maverick.png", Texture.class);
-        assetManager.load("tileset/Dirt.png", Texture.class);
-        assetManager.load("SelectionMarker.png", Texture.class);
-        assetManager.load("DesertTile.png", Texture.class);
-        assetManager.load("Grassland.png", Texture.class);
-        assetManager.load("objects/Crater.png", Texture.class);
-        assetManager.load("variation/Trees.png", Texture.class);
-        assetManager.load("variation/Trees03.png", Texture.class);
-        assetManager.load("variation/Trees02.png", Texture.class);
-        assetManager.load("variation/Trees04.png", Texture.class);
-        assetManager.load("PlasmaBullet.png", Texture.class);
-        assetManager.load("CannonBullet.png", Texture.class);
-        assetManager.load("Missile.png", Texture.class);
-        assetManager.load("Explosion.png", Texture.class);
-        assetManager.load("Laser.png", Texture.class);
-        assetManager.load("Ion.png", Texture.class);
-        assetManager.load("MachineGun.png", Texture.class);
-        assetManager.load("Shield.png", Texture.class);
-        assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
-        assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
-        assetManager.finishLoading();
+        ScreenLoader screenLoader = new ScreenLoader();
+        screenLoader.load();
 
         stage = new Stage(viewport, spriteBatch);
 
         hudStage = new Stage(hudViewport, spriteBatch);
 
-        selectionMarker = new SelectionMarker(assetManager, spriteBatch);
+        stageElementsStorage.stage = stage;
+        stageElementsStorage.hudStage = hudStage;
+
+        selectionMarker = new SelectionMarker(screenLoader.getAssetManager(), spriteBatch);
 
         BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
-        BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, assetManager);
+        BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, screenLoader.getAssetManager());
 
         battleScreenInputDataStubber.stub(battleScreenInputData);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
-        inputMultiplexer.addProcessor(new BasicMouseHandlingInputAdapter(screenConfiguration));
+        inputMultiplexer.addProcessor(new BasicMouseHandlingInputAdapter(screenConfiguration, actionLock));
 
         inputMultiplexer.addProcessor(hudStage);
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        AttackFacade attackFacade = new AttackFacade(stageStorage, spriteBatch, assetManager);
+        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade();
+
+        AttackFacade attackFacade = new AttackFacade(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
 
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
                 new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
-                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, assetManager, stageStorage);
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage);
 
         // display
 
-
-        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade();
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
-        TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(assetManager);
-        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, assetManager, mechInfoPanelFacade);
+        TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(screenLoader.getAssetManager());
+        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, screenLoader.getAssetManager(), mechInfoPanelFacade);
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
-        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManager, stageStorage);
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage);
 
         battleMap.setTemporaryObstacle(1, 1);
         battleMap.setTemporaryObstacle(5, 2);
         battleMap.setTemporaryObstacle(6, 5);
 
-        stage.addActor(stageStorage.groundLevel);
-        stage.addActor(stageStorage.mechLevel);
-        stage.addActor(stageStorage.treeLevel);
-        stage.addActor(stageStorage.airLevel);
+        stage.addActor(stageElementsStorage.groundLevel);
+        stage.addActor(stageElementsStorage.mechLevel);
+        stage.addActor(stageElementsStorage.treeLevel);
+        stage.addActor(stageElementsStorage.airLevel);
 
         stage.addListener( new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade));
 
         battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
-            stageStorage.mechLevel.addActor((Actor) entry.getKey());
+            stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
             ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage));
         }));
 
         battleScreenInputData.getGroup2().entrySet().forEach((entry -> {
-            stageStorage.mechLevel.addActor((Actor) entry.getKey());
+            stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
             ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage));
         }));
 
@@ -172,15 +154,8 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.getPilotButton().setVisible(false);
         mechInfoPanelFacade.registerComponents(hudStage);
 
-        HudElementsFacade hudElementsFacade = new HudElementsFacade(assetManager, turnProcessingFacade, actionLock);
+        HudElementsFacade hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
         hudElementsFacade.registerComponents(hudStage);
-
-        // listeners
-
-
-//        unit2.addListener();
-//        unit3.addListener(new MechClickInputListener(unit3, p3, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
-//        unit.addListener(new MechClickInputListener(unit, p1, turnProcessingFacade, rangedAttackTargetCalculator, actionLock, labelStyle, checkBoxStyle, mechInfoPanelFacade, hudStage, stage));
 
         float unitScale = 1 / 32f;
         orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
@@ -189,7 +164,6 @@ public class BattleScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        GlobalState.i = 0;
         camera.position.x += screenConfiguration.scrollX;
         camera.position.y += screenConfiguration.scrollY;
 
@@ -221,7 +195,6 @@ public class BattleScreen implements Screen {
         hudStage.draw();
 
         System.out.println(Gdx.graphics.getFramesPerSecond());
-        System.out.println(GlobalState.i);
         System.out.println(spriteBatch.renderCalls);
     }
 

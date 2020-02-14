@@ -1,14 +1,14 @@
 package com.mygdx.wargame.rules.calculator;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.ShowMessageActor;
 import com.mygdx.wargame.battle.bullet.Explosion;
-import com.mygdx.wargame.battle.screen.StageStorage;
+import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.AddActorAction;
-import com.mygdx.wargame.battle.unit.action.ExplosionAction;
 import com.mygdx.wargame.battle.unit.action.RemoveCustomActorAction;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
@@ -27,20 +27,24 @@ public class DamageCalculator {
 
     private CriticalHitChanceCalculator criticalHitChanceCalculator;
     private BodyPartDestructionHandler bodyPartDestructionHandler;
-    private StageStorage stageStorage;
-    private SpriteBatch spriteBatch;
+    private StageElementsStorage stageElementsStorage;
     private AssetManager assetManager;
+    private MechInfoPanelFacade mechInfoPanelFacade;
+    private ActionLock actionLock;
+    private SequenceAction messageQue = new SequenceAction();
 
-    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageStorage stageStorage, SpriteBatch spriteBatch, AssetManager assetManager) {
+    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
         this.bodyPartDestructionHandler = bodyPartDestructionHandler;
-        this.stageStorage = stageStorage;
-        this.spriteBatch = spriteBatch;
+        this.stageElementsStorage = stageElementsStorage;
         this.assetManager = assetManager;
+        this.mechInfoPanelFacade = mechInfoPanelFacade;
+        this.actionLock = actionLock;
     }
 
     public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart) {
         BodyPart bodyPart;
+        messageQue.reset();
 
         for (int i = 0; i < weapon.getDamageMultiplier(); i++) {
 
@@ -81,6 +85,7 @@ public class DamageCalculator {
 
                     addExplosion(targetMech);
 
+                    showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1));
                     reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1), bodyPart);
                 }
                 else {
@@ -94,15 +99,25 @@ public class DamageCalculator {
                         damage -= (int) reduction;
                     }
 
+                    showMessage(targetMech, "Body damaged: " + damage);
+
                     targetMech.setHp(bodyPart, targetMech.getHp(bodyPart) - damage);
 
                     // destroy body part and all of its components
                     if (targetMech.getHp(bodyPart) <= 0) {
+                        showMessage(targetMech, "Destroyed: " + bodyPart);
                         bodyPartDestructionHandler.destroy(targetMech, bodyPart);
                     }
                 }
             }
         }
+        stageElementsStorage.airLevel.addAction(messageQue);
+    }
+
+    private void showMessage(Mech targetMech, String message) {
+        ShowMessageActor showMessageActor = new ShowMessageActor(mechInfoPanelFacade.getSmallLabelStyle(), targetMech.getX(),targetMech.getY(), message, stageElementsStorage, actionLock);
+        showMessageActor.setDuration(1.5f);
+        messageQue.addAction(showMessageActor);
     }
 
     private void addExplosion(Mech target) {
@@ -110,11 +125,11 @@ public class DamageCalculator {
 
         Explosion explosion = new Explosion(assetManager);
         explosion.setPosition(target.getX(), target.getY());
-        sequenceAction.addAction(new AddActorAction(stageStorage.airLevel, explosion));
+        sequenceAction.addAction(new AddActorAction(stageElementsStorage.airLevel, explosion));
         sequenceAction.addAction(new DelayAction(1f));
-        sequenceAction.addAction(new RemoveCustomActorAction(stageStorage.airLevel, explosion));
+        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
 
-        stageStorage.airLevel.addAction(sequenceAction);
+        stageElementsStorage.airLevel.addAction(sequenceAction);
     }
 
     private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage) {

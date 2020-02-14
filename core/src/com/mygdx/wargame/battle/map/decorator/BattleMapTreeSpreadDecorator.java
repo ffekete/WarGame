@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
+import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.Overlay;
 import com.mygdx.wargame.battle.map.TileOverlayType;
 
@@ -46,7 +47,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                     cell.setTile(new StaticTiledMapTile(new TextureRegion(treeVariations.get(rnd))));
 
-                    worldMap.getLayer(2).setCell(i,j, cell);
+                    worldMap.getLayer(LayerIndex.Decoration).setCell(i,j, cell);
 
                     worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setDecorationOverlay(new Overlay(TileOverlayType.Trees));
                 }

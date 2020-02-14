@@ -21,7 +21,7 @@ public class ExplosionAction extends Actor {
     public ExplosionAction(SpriteBatch spriteBatch, AssetManager assetManager, int x, int y) {
         this.spriteBatch = spriteBatch;
         this.assetManager = assetManager;
-        this.textureRegion = new TextureRegion(this.assetManager.get("Maverick.png", Texture.class), 32, 0, 32, 32);
+        this.textureRegion = new TextureRegion(this.assetManager.get("Marauder.png", Texture.class), 32, 0, 32, 32);
         this.x = x;
         this.y = y;
     }

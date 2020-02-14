@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.GroundOverlayConfig;
+import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.NodeGraph;
 import com.mygdx.wargame.battle.map.Overlay;
 import com.mygdx.wargame.battle.map.TileOverlayType;
@@ -52,7 +53,7 @@ public class BattleMapDirtSpreadDecorator implements Decorator {
 
                     cell.setTile(new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Dirt).getFor(worldMap.getNodeGraphLv1(), i, j, 1))));
 
-                    worldMap.getLayer(1).setCell(i,j, cell);
+                    worldMap.getLayer(LayerIndex.Tiles).setCell(i,j, cell);
                 }
             }
         }

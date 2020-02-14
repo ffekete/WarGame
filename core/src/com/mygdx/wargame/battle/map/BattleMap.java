@@ -9,7 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
@@ -59,7 +59,7 @@ public class BattleMap {
                     node = new Node(i, j);
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
                     cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("Grassland.png", Texture.class))));
-                    getLayer(0).setCell(i, j, cell);
+                    getLayer(LayerIndex.Ground).setCell(i, j, cell);
 
                 } else {
                     node = nodeGraphLv1.getNodeWeb()[i][j];
@@ -89,7 +89,7 @@ public class BattleMap {
             newNode = new Node(i, j);
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
             cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("Grassland.png", Texture.class))));
-            TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+            TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(LayerIndex.Ground.getIndex());
             layer.setCell(i, j, cell);
         } else {
             newNode = nodeGraph.getNodeWeb()[i][j];
@@ -141,7 +141,7 @@ public class BattleMap {
         return tiledMap;
     }
 
-    public TiledMapTileLayer getLayer(int index) {
-        return (TiledMapTileLayer) tiledMap.getLayers().get(index);
+    public TiledMapTileLayer getLayer(LayerIndex layerIndex) {
+        return (TiledMapTileLayer) tiledMap.getLayers().get(layerIndex.getIndex());
     }
 }

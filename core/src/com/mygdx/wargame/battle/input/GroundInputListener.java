@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.battle.screen.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.battle.unit.action.MovementAction;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;

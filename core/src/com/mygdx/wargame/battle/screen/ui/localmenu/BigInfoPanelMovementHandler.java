@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.screen.localmenu;
+package com.mygdx.wargame.battle.screen.ui.localmenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;

@@ -14,8 +14,9 @@ import com.mygdx.wargame.battle.action.SetOverlayAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.TileOverlayType;
-import com.mygdx.wargame.battle.screen.StageStorage;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
 import com.mygdx.wargame.component.weapon.ballistic.MachineGun;
@@ -35,16 +36,16 @@ public class BulletAnimationAction extends Action {
     private ActionLock actionLock;
     private boolean done = false;
     private int minRange;
-    private StageStorage stageStorage;
+    private StageElementsStorage stageElementsStorage;
     private BattleMap battleMap;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageStorage stageStorage, BattleMap battleMap) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
         this.actionLock = actionLock;
         this.minRange = minRange;
-        this.stageStorage = stageStorage;
+        this.stageElementsStorage = stageElementsStorage;
         this.battleMap = battleMap;
     }
 
@@ -57,7 +58,7 @@ public class BulletAnimationAction extends Action {
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) <= minRange) {
             startBullet(attackerMech);
         } else {
-            stageStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range"));
+            stageElementsStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range"));
         }
         done = true;
 
@@ -141,20 +142,20 @@ public class BulletAnimationAction extends Action {
                     explosion.setPosition(defenderMech.getX(), defenderMech.getY());
                     SequenceAction explosionAction = new SequenceAction();
                     explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
-                    explosionAction.addAction(new AddActorAction(stageStorage.airLevel, explosion));
+                    explosionAction.addAction(new AddActorAction(stageElementsStorage.airLevel, explosion));
                     explosionAction.addAction(new DelayAction(0.5f));
                     if (!craterCreated) {
-                        explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager));
+                        explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager, LayerIndex.Decoration));
                         craterCreated = true;
                     }
-                    explosionAction.addAction(new RemoveCustomActorAction(stageStorage.airLevel, explosion));
+                    explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
 
                     if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {
                         explosionAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof explosion"));
                         finishedByExplosion = true;
                     }
 
-                    stageStorage.airLevel.addAction(explosionAction);
+                    stageElementsStorage.airLevel.addAction(explosionAction);
                 }
 
                 if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1 && !finishedByExplosion) {
@@ -164,7 +165,7 @@ public class BulletAnimationAction extends Action {
                 sequenceAction.addAction(new RemoveActorAction());
                 bullet.addAction(sequenceAction);
 
-                stageStorage.airLevel.addActor(bullet);
+                stageElementsStorage.airLevel.addActor(bullet);
             }
         }
     }

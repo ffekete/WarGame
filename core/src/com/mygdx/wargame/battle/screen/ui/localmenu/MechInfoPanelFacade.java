@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.screen.localmenu;
+package com.mygdx.wargame.battle.screen.ui.localmenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.mygdx.wargame.battle.screen.FontCreator;
+import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.config.Config;
 
 public class MechInfoPanelFacade extends Actor {
@@ -38,6 +38,7 @@ public class MechInfoPanelFacade extends Actor {
     private CheckBox.CheckBoxStyle checkBoxStyle;
     private BitmapFont font;
     Label.LabelStyle labelStyle;
+    Label.LabelStyle smallLabelStyle;
 
     public MechInfoPanelFacade() {
         mechInfoTable = new Table();
@@ -45,6 +46,9 @@ public class MechInfoPanelFacade extends Actor {
         font = FontCreator.getBitmapFont();
         labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
+
+        smallLabelStyle = new Label.LabelStyle();
+        smallLabelStyle.font = FontCreator.getBitmapFont(20);
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = font;
@@ -306,5 +310,9 @@ public class MechInfoPanelFacade extends Actor {
 
     public Label.LabelStyle getLabelStyle() {
         return labelStyle;
+    }
+
+    public Label.LabelStyle getSmallLabelStyle() {
+        return smallLabelStyle;
     }
 }

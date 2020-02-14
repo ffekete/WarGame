@@ -1,10 +1,10 @@
 package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.screen.StageStorage;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
@@ -36,9 +36,13 @@ public class AttackFacade {
     private DamageCalculator damageCalculator;
     private EvasionCalculator evasionCalculator = new EvasionCalculator();
     private StabilityCalculator stabilityCalculator = new StabilityCalculator(criticalHitChanceCalculator);
+    private MechInfoPanelFacade mechInfoPanelFacade;
+    private ActionLock actionLock;
 
-    public AttackFacade(StageStorage stageStorage, SpriteBatch spriteBatch, AssetManager assetManager) {
-        damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageStorage, spriteBatch, assetManager);
+    public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
+        this.mechInfoPanelFacade = mechInfoPanelFacade;
+        this.actionLock = actionLock;
+        damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageElementsStorage, assetManager, mechInfoPanelFacade, this.actionLock);
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
