@@ -9,9 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,21 +24,19 @@ public class BattleMap {
     private NodeGraph nodeGraphLv1;
     private ActionLock actionLock;
     private TerrainType terrainType;
-    private TurnProcessingFacade turnProcessingFacade;
     private AssetManager assetManager;
-    private MechInfoPanelFacade mechInfoPanelFacade;
     private TiledMap tiledMap;
+    private TextureRegionSelector textureRegionSelector;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, TurnProcessingFacade turnProcessingFacade, TurnProcessingFacade turnProcessingFacade1, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade) {
+    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector) {
         this.width = x;
         this.height = y;
         this.actionLock = actionLock;
         this.terrainType = terrainType;
-        this.turnProcessingFacade = turnProcessingFacade1;
         this.assetManager = assetManager;
-        this.mechInfoPanelFacade = mechInfoPanelFacade;
+        this.textureRegionSelector = textureRegionSelector;
 
         tiledMap = new TiledMap();
         MapLayers layers = tiledMap.getLayers();
@@ -58,7 +54,7 @@ public class BattleMap {
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
                     node = new Node(i, j);
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("Grassland.png", Texture.class))));
+                    cell.setTile(new StaticTiledMapTile(this.textureRegionSelector.select(terrainType)));
                     getLayer(LayerIndex.Ground).setCell(i, j, cell);
 
                 } else {
@@ -77,6 +73,7 @@ public class BattleMap {
                 addNodeIfDoesntExists(node, i + 1, j + 1, nodeGraphLv1);
             }
         }
+        //System.out.println("Done.");
     }
 
     private void addNodeIfDoesntExists(Node node, int i, int j, NodeGraph nodeGraph) {
@@ -88,16 +85,16 @@ public class BattleMap {
         if (nodeGraph.getNodeWeb()[i][j] == null) {
             newNode = new Node(i, j);
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-            cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("Grassland.png", Texture.class))));
+            cell.setTile(new StaticTiledMapTile(textureRegionSelector.select(terrainType)));
             TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(LayerIndex.Ground.getIndex());
             layer.setCell(i, j, cell);
+            nodeGraph.addNode(newNode);
         } else {
             newNode = nodeGraph.getNodeWeb()[i][j];
         }
 
-        nodeGraph.addNode(newNode);
         nodeGraph.connectCities(node, newNode);
-        nodeGraph.connectCities(newNode, node);
+        //nodeGraph.connectCities(newNode, node);
     }
 
     public GraphPath<Node> calculatePath(Node s, Node g) {
@@ -143,5 +140,20 @@ public class BattleMap {
 
     public TiledMapTileLayer getLayer(LayerIndex layerIndex) {
         return (TiledMapTileLayer) tiledMap.getLayers().get(layerIndex.getIndex());
+    }
+
+    public static class TextureRegionSelector {
+
+        private AssetManager assetManager;
+
+        public TextureRegionSelector(AssetManager assetManager) {
+            this.assetManager = assetManager;
+        }
+
+        public TextureRegion select(TerrainType terrainType) {
+            return new TextureRegion(assetManager.get("Grassland.png", Texture.class));
+        }
+
+
     }
 }

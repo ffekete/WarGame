@@ -13,7 +13,9 @@ import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
+import com.mygdx.wargame.battle.unit.action.MoveIntoFlankingRangeAction;
 import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
+import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
@@ -24,6 +26,7 @@ import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 public class TurnProcessingFacade {
@@ -88,14 +91,11 @@ public class TurnProcessingFacade {
             });
 
             next = iterator.next();
-
             centerCameraOnNext(stage);
         } else {
             next = iterator.next();
             centerCameraOnNext(stage);
         }
-
-
 
         Mech selectedMech = next.getKey();
         Pilot selectedPilot = next.getValue();
@@ -114,46 +114,64 @@ public class TurnProcessingFacade {
             // lock all actions
             sequenceAction.addAction(new LockAction(actionLock));
 
-            // find target
-            Target target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
+            // reconnect graph so that attacker can move
+            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 
             // calculate movement points
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
 
-            int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, target.getMech());
+            // find target
+            Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
+
+            int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech);
 
             // move if target too far away
-            if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.getMech().getX(), target.getMech().getY()) > minRange) {
+            if (target.isPresent()) {
+                if (target.get().getTargetNode() != null) {
 
-                // reconnect graph so that attacker can move
-                battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+                    // calculate path
+                    GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                            battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.get().getTargetNode().getX()][(int) target.get().getTargetNode().getY()]);
 
-                // calculate path
-                GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
-                        battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.getMech().getX()][(int) target.getMech().getY()]);
+                    battleMap.addPath(selectedMech, paths);
 
-                battleMap.addPath(selectedMech, paths);
+                    sequenceAction.addAction(new MoveIntoFlankingRangeAction(battleMap, selectedMech, selectedPilot, target.get().getTargetNode().getX(), target.get().getTargetNode().getY(), rangeCalculator));
 
-                sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, selectedPilot, target.getMech(), rangeCalculator));
+                } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
+
+                    // reconnect graph so that attacker can move
+                    battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+
+                    // calculate path
+                    GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                            battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.get().getMech().getX()][(int) target.get().getMech().getY()]);
+
+                    battleMap.addPath(selectedMech, paths);
+
+                    sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, selectedPilot, target.get().getMech().getX(), target.get().getMech().getY(), rangeCalculator));
+
+                } else {
+                    // obstacle again, no movement
+                    battleMap.setPermanentObstacle(selectedMech.getX(), selectedMech.getY());
+                }
+
+                // then attack
+                sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
+                sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
+                AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange);
+                sequenceAction.addAction(attackAction);
+
+                stage.addAction(sequenceAction);
             }
 
-            // then attack
-            sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.getMech(), minRange));
-            sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
-            AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.getMech(), target.getPilot(), battleMap, minRange);
-            sequenceAction.addAction(attackAction);
-
-            // unlock all actions
-            //sequenceAction.addAction(new UnlockAction(actionLock));
-
-            stage.addAction(sequenceAction);
 
         } else {
             // wait for "next" button press
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
         }
+
     }
 
     private void centerCameraOnNext(Stage stage) {

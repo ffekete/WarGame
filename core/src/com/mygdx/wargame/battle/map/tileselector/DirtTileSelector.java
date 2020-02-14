@@ -1,12 +1,11 @@
-package com.mygdx.wargame.battle.map.tile;
+package com.mygdx.wargame.battle.map.tileselector;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.wargame.battle.map.MapUtils;
 import com.mygdx.wargame.battle.map.NodeGraph;
-import com.mygdx.wargame.battle.map.Selector;
-import com.mygdx.wargame.battle.map.TileOverlayType;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 
 public class DirtTileSelector implements Selector {
 

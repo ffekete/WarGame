@@ -64,13 +64,15 @@ public class NodeGraph implements IndexedGraph<Node> {
         if (!streetsMap.containsKey(fromNode)) {
             streetsMap.put(fromNode, new Array<Connection<Node>>());
         }
-        streetsMap.get(fromNode).add(edge);
-        edges.add(edge);
+        if(!streetsMap.get(fromNode).contains(edge, false)) {
+            streetsMap.get(fromNode).add(edge);
+            edges.add(edge);
 
-        if (!nodeEdges.containsKey(fromNode)) {
-            nodeEdges.put(fromNode, new Array<>());
+            if (!nodeEdges.containsKey(fromNode)) {
+                nodeEdges.put(fromNode, new Array<>());
+            }
+            nodeEdges.get(fromNode).add(edge);
         }
-        nodeEdges.get(fromNode).add(edge);
     }
 
     public void disconnectCities(Node fromNode) {

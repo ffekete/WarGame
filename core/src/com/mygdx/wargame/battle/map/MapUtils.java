@@ -1,5 +1,7 @@
 package com.mygdx.wargame.battle.map;
 
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
+
 public class MapUtils {
 
     public static int bitmask4bitForTile(NodeGraph map, int x, int y, TileOverlayType tile, int skip) {

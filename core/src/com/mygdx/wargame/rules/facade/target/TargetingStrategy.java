@@ -5,7 +5,8 @@ import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface TargetingStrategy {
-    Target findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap);
+    Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap, TargetingStrategy additionalStrategy);
 }

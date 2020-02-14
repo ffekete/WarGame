@@ -46,7 +46,7 @@ public class MoveActorByBezierLine extends TemporalAction {
 
         myCatmull.valueAt(out, percent < 1 ? percent : 0.99f);
         getActor().setPosition(out.x, out.y);
-        System.out.println(" Move to: "  + out.x + " " + out.y);
+        //System.out.println(" Move to: "  + out.x + " " + out.y);
         myCatmull.derivativeAt(out, percent);
         getActor().setRotation(out.angle());
     }

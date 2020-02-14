@@ -120,7 +120,10 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
         TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(screenLoader.getAssetManager());
-        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, turnProcessingFacade, turnProcessingFacade, screenLoader.getAssetManager(), mechInfoPanelFacade);
+
+        BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
+
+        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector);
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
@@ -194,8 +197,8 @@ public class BattleScreen implements Screen {
         hudStage.act();
         hudStage.draw();
 
-        System.out.println(Gdx.graphics.getFramesPerSecond());
-        System.out.println(spriteBatch.renderCalls);
+        //System.out.println(Gdx.graphics.getFramesPerSecond());
+        //System.out.println(spriteBatch.renderCalls);
     }
 
     @Override

@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.LayerIndex;
-import com.mygdx.wargame.battle.map.Overlay;
-import com.mygdx.wargame.battle.map.TileOverlayType;
+import com.mygdx.wargame.battle.map.overlay.Overlay;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 
 import java.util.List;
 import java.util.Random;

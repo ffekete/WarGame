@@ -15,7 +15,7 @@ import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.LayerIndex;
-import com.mygdx.wargame.battle.map.TileOverlayType;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.component.weapon.WeaponType;
@@ -58,7 +58,7 @@ public class BulletAnimationAction extends Action {
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) <= minRange) {
             startBullet(attackerMech);
         } else {
-            stageElementsStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range"));
+            stageElementsStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range (" + minRange + ")"));
         }
         done = true;
 

@@ -1,10 +1,8 @@
 package com.mygdx.wargame.battle.map;
 
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import java.util.Random;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.NumberUtils;
+import com.mygdx.wargame.battle.map.overlay.Overlay;
 
 public class Node {
 

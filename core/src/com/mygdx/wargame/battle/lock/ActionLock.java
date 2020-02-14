@@ -12,7 +12,7 @@ public class ActionLock {
     private List<Object> waitForObject = new CopyOnWriteArrayList<>();
 
     public boolean isLocked() {
-        System.out.println("wfo: " + waitForObject.size());
+        //System.out.println("wfo: " + waitForObject.size());
         waitForObject.stream().forEach(o -> System.out.println("    " +((Label)o).getText()));
         return isLocked || isWaitForObject();
     }

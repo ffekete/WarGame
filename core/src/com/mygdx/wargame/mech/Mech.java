@@ -95,4 +95,6 @@ public interface Mech extends Comparable<Mech> {
     State getState();
 
     int getShieldValue();
+
+    Direction getDirection();
 }

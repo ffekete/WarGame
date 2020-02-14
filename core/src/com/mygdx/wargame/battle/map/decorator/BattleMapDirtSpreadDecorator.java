@@ -7,11 +7,10 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
-import com.mygdx.wargame.battle.map.GroundOverlayConfig;
+import com.mygdx.wargame.battle.map.overlay.GroundOverlayConfig;
 import com.mygdx.wargame.battle.map.LayerIndex;
-import com.mygdx.wargame.battle.map.NodeGraph;
-import com.mygdx.wargame.battle.map.Overlay;
-import com.mygdx.wargame.battle.map.TileOverlayType;
+import com.mygdx.wargame.battle.map.overlay.Overlay;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 
 import java.util.List;
 import java.util.Random;

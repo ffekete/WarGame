@@ -36,7 +36,7 @@ public class ShowMessageActor extends TemporalAction {
     public boolean act(float delta) {
         super.act(delta);
         if (isComplete()) {
-            System.out.println("Completed: " + label.getText());
+            //System.out.println("Completed: " + label.getText());
             actionLock.removeWaitingObject(label);
             stageElementsStorage.hudStage.getActors().removeValue(label, true);
         }
@@ -45,14 +45,14 @@ public class ShowMessageActor extends TemporalAction {
 
     @Override
     protected void update(float percent) {
-        System.out.println(this.getActor().toString());
-        System.out.println("percent: " + percent);
+        //System.out.println(this.getActor().toString());
+        //System.out.println("percent: " + percent);
         if (firstRun) {
             stageElementsStorage.hudStage.addActor(label);
-            System.out.println("Created: " + label.getText());
+            //System.out.println("Created: " + label.getText());
             firstRun = false;
         }
-        System.out.println(" ----------------------------- ");
+        //System.out.println(" ----------------------------- ");
         label.setY(label.getY() + percent);
     }
 }

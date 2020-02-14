@@ -8,13 +8,12 @@ import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.util.MathUtils;
 
 import java.util.List;
 
 import static com.mygdx.wargame.battle.unit.Direction.Right;
 
-public class MoveIntoRangeAction extends Action {
+public class MoveIntoFlankingRangeAction extends Action {
 
     private BattleMap battleMap;
     private Mech attackerMech;
@@ -24,7 +23,7 @@ public class MoveIntoRangeAction extends Action {
     private RangeCalculator rangeCalculator;
     private int minRange;
 
-    public MoveIntoRangeAction(BattleMap battleMap, Mech attackerMech, Pilot attackerPilot,float tx, float ty, RangeCalculator rangeCalculator) {
+    public MoveIntoFlankingRangeAction(BattleMap battleMap, Mech attackerMech, Pilot attackerPilot, float tx, float ty, RangeCalculator rangeCalculator) {
         this.battleMap = battleMap;
         this.attackerMech = attackerMech;
         this.attackerPilot = attackerPilot;
@@ -46,7 +45,7 @@ public class MoveIntoRangeAction extends Action {
 
 
             // no more nodes left to move
-            if (nodes.isEmpty() || MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), tx, ty) <= minRange) {
+            if (nodes.isEmpty()) {
                 attackerMech.setState(State.Idle);
                 battleMap.setTemporaryObstacle((int) attackerMech.getX(), (int) attackerMech.getY());
                 attackerMech.setMoved(true);

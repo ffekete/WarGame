@@ -8,8 +8,8 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.LayerIndex;
-import com.mygdx.wargame.battle.map.Overlay;
-import com.mygdx.wargame.battle.map.TileOverlayType;
+import com.mygdx.wargame.battle.map.overlay.Overlay;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 
 public class SetOverlayAction extends Action {
 

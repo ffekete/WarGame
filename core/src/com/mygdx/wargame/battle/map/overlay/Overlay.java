@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.map;
+package com.mygdx.wargame.battle.map.overlay;
 
 public class Overlay {
     private TileOverlayType tileOverlayType;

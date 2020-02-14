@@ -56,7 +56,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             SequenceAction sequenceAction = new SequenceAction();
 
             sequenceAction.addAction(new LockAction(actionLock));
-            sequenceAction.addAction(new MoveIntoRangeAction(battleMap, attackerMech, attackerPilot, defenderMech, rangeCalculator));
+            sequenceAction.addAction(new MoveIntoRangeAction(battleMap, attackerMech, attackerPilot, defenderMech.getX(), defenderMech.getY(), rangeCalculator));
 
             ParallelAction parallelAction = new ParallelAction();
 

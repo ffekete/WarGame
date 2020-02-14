@@ -8,7 +8,7 @@ public class BodyPartDestructionHandler {
 
     public void destroy(Mech mech, BodyPart bodyPart) {
 
-        System.out.println("Destroyed " + mech.getName() + " " + bodyPart);
+        //System.out.println("Destroyed " + mech.getName() + " " + bodyPart);
 
         mech.getComponents(bodyPart).forEach(b -> {
             b.setStatus(Status.Destroyed);
