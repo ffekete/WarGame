@@ -1,5 +1,6 @@
 package com.mygdx.wargame.rules;
 
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.google.common.collect.ImmutableSet;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
@@ -51,7 +52,7 @@ public class DamageCalculatorTest {
         Mech attackerMech = mock(Mech.class);
         when(attackerMech.getHp(BodyPart.Head)).thenReturn(11);
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         verify(defenderMech).setHp(BodyPart.Head, -1);
     }
@@ -70,7 +71,7 @@ public class DamageCalculatorTest {
         Mech attackerMech = mock(Mech.class);
         when(attackerMech.getHp(BodyPart.Head)).thenReturn(11);
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         verify(defenderMech).setHp(BodyPart.Head, -13);
     }
@@ -91,7 +92,7 @@ public class DamageCalculatorTest {
 
         assertThat(((Shield) defenderMech.getAllComponents().stream().findFirst().get()).getShieldValue(), is(10));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(((Shield) defenderMech.getAllComponents().stream().findFirst().get()).getShieldValue(), is(4));
     }
@@ -113,7 +114,7 @@ public class DamageCalculatorTest {
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(20));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(8));
     }
@@ -136,7 +137,7 @@ public class DamageCalculatorTest {
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(20));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new SmallLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new SmallLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(0));
     }
@@ -158,7 +159,7 @@ public class DamageCalculatorTest {
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(10));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(0));
     }
@@ -180,7 +181,7 @@ public class DamageCalculatorTest {
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(10));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(0));
 
@@ -203,13 +204,13 @@ public class DamageCalculatorTest {
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(10));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(0));
 
         verify(defenderMech).setHp(BodyPart.Head, 1);
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         verify(bodyPartDestructionHandler).destroy(defenderMech, BodyPart.Head);
         verify(defenderMech).setHp(BodyPart.Head, -12);
@@ -231,7 +232,7 @@ public class DamageCalculatorTest {
 
         assertThat((defenderMech.getAllComponents().stream().map(c -> ((Shield) c).getShieldValue()).reduce((a, b) -> a + b)).get(), is(20));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new LargeLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 4), is(true));
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 10), is(true));
@@ -255,8 +256,8 @@ public class DamageCalculatorTest {
         assertThat((defenderMech.getAllComponents().stream().map(c -> ((Shield) c).getShieldValue()).reduce((a, b) -> a + b)).get(), is(10));
         assertThat(((Armor) defenderMech.getComponents(BodyPart.Head).stream().findFirst().get()).getHitPoint(), is(10));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head);
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head, new SequenceAction());
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new DoubleBarrelMediumLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(defenderMech.getAllComponents().stream().filter(c -> ((Shield) c).getShieldValue() == 0).count(), is(1L));
         assertThat(defenderMech.getComponents(BodyPart.Head).stream().filter(c -> ((Armor) c).getHitPoint() == 0).count(), is(1L));
@@ -279,7 +280,7 @@ public class DamageCalculatorTest {
 
         assertThat((defenderMech.getAllComponents().stream().map(c -> ((Shield) c).getShieldValue()).reduce((a, b) -> a + b)).get(), is(20));
 
-        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new TripleBarrelSmallLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new TripleBarrelSmallLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 0), is(true));
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 5), is(true));
@@ -301,7 +302,7 @@ public class DamageCalculatorTest {
 
         assertThat((defenderMech.getAllComponents().stream().map(c -> ((Shield) c).getShieldValue()).reduce((a, b) -> a + b)).get(), is(20));
 
-        damageCalculator.calculate(attacker,attackerMech,defender, defenderMech, new TripleBarrelSmallLaser(), BodyPart.Head);
+        damageCalculator.calculate(attacker,attackerMech,defender, defenderMech, new TripleBarrelSmallLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 0), is(true));
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 8), is(true));

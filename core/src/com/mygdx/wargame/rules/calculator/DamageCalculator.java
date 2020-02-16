@@ -31,7 +31,6 @@ public class DamageCalculator {
     private AssetManager assetManager;
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
-    private SequenceAction messageQue = new SequenceAction();
 
     public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
@@ -42,13 +41,8 @@ public class DamageCalculator {
         this.actionLock = actionLock;
     }
 
-    public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart) {
+    public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart, SequenceAction messageQue) {
         BodyPart bodyPart;
-
-        if(messageQue.getActions().size > 0) {
-            System.out.println("Why???");
-        }
-        messageQue.reset();
 
         for (int i = 0; i < weapon.getDamageMultiplier(); i++) {
 
@@ -89,7 +83,7 @@ public class DamageCalculator {
 
                     addExplosion(targetMech);
 
-                    showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1));
+                    showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1), messageQue);
                     reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1), bodyPart);
                 }
                 else {
@@ -103,13 +97,13 @@ public class DamageCalculator {
                         damage -= (int) reduction;
                     }
 
-                    showMessage(targetMech, "Body damaged: " + damage);
+                    showMessage(targetMech, "Body damaged: " + damage, messageQue);
 
                     targetMech.setHp(bodyPart, targetMech.getHp(bodyPart) - damage);
 
                     // destroy body part and all of its components
                     if (targetMech.getHp(bodyPart) <= 0) {
-                        showMessage(targetMech, "Destroyed: " + bodyPart);
+                        showMessage(targetMech, "Destroyed: " + bodyPart, messageQue);
                         bodyPartDestructionHandler.destroy(targetMech, bodyPart);
                     }
                 }
@@ -118,7 +112,7 @@ public class DamageCalculator {
         stageElementsStorage.airLevel.addAction(messageQue);
     }
 
-    private void showMessage(Mech targetMech, String message) {
+    private void showMessage(Mech targetMech, String message,SequenceAction messageQue) {
         ShowMessageActor showMessageActor = new ShowMessageActor(mechInfoPanelFacade.getSmallLabelStyle(), targetMech.getX(),targetMech.getY(), message, stageElementsStorage, actionLock);
         showMessageActor.setDuration(1.5f);
         messageQue.addAction(showMessageActor);

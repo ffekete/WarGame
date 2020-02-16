@@ -1,6 +1,7 @@
 package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
@@ -38,6 +39,7 @@ public class AttackFacade {
     private StabilityCalculator stabilityCalculator = new StabilityCalculator(criticalHitChanceCalculator);
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
+    SequenceAction messageQue = new SequenceAction();
 
     public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
         this.mechInfoPanelFacade = mechInfoPanelFacade;
@@ -46,6 +48,8 @@ public class AttackFacade {
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
+
+        messageQue.reset();
 
         attackingMech.getSelectedWeapons().forEach(weapon -> {
 
@@ -80,7 +84,7 @@ public class AttackFacade {
 
                 if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
                     // hit!
-                    damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart);
+                    damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart, messageQue);
                     int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
                     defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
                 }

@@ -73,7 +73,7 @@ AbstractMech extends Actor implements Mech {
                 step = state.getStart();
         } else {
             slow++;
-            if (slow == 5)
+            if (slow == 9)
                 slow = 0;
         }
 

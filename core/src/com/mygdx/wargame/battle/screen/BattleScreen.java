@@ -39,8 +39,8 @@ import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
 public class BattleScreen implements Screen {
 
-    public static final int WIDTH = (int)(45 * 0.5);
-    public static final int HEIGHT = (int)(28 * 0.5);
+    public static final int WIDTH = (int)(27);
+    public static final int HEIGHT = (int)(15);
     private OrthographicCamera camera;
     private Camera hudCamera;
     private Viewport viewport;
@@ -60,8 +60,6 @@ public class BattleScreen implements Screen {
     public BattleScreen() {
         this.actionLock = new ActionLock();
     }
-
-    public Map tiledMap;
 
     @Override
     public void show() {
