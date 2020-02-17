@@ -2,7 +2,9 @@ package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
@@ -13,9 +15,8 @@ import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
-import com.mygdx.wargame.battle.unit.action.MoveIntoFlankingRangeAction;
-import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
-import com.mygdx.wargame.battle.unit.action.UnlockAction;
+import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionCreator;
+import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
@@ -111,8 +112,15 @@ public class TurnProcessingFacade {
 
             SequenceAction sequenceAction = new SequenceAction();
 
+            sequenceAction.reset();
+
             // lock all actions
+            actionLock.setLocked(true);
+
             sequenceAction.addAction(new LockAction(actionLock));
+
+            sequenceAction.addAction(centerCameraOnNext(stage));
+
 
             // reconnect graph so that attacker can move
             battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
@@ -136,7 +144,8 @@ public class TurnProcessingFacade {
 
                     battleMap.addPath(selectedMech, paths);
 
-                    sequenceAction.addAction(new MoveIntoFlankingRangeAction(battleMap, selectedMech, selectedPilot, target.get().getTargetNode().getX(), target.get().getTargetNode().getY(), rangeCalculator));
+                    sequenceAction.addAction(new MoveActorAlongPathActionCreator(paths, (AbstractMech) selectedMech, 1).act());
+                    //sequenceAction.addAction(new MoveIntoFlankingRangeAction(battleMap, selectedMech, selectedPilot, target.get().getTargetNode().getX(), target.get().getTargetNode().getY(), rangeCalculator));
 
                 } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
 
@@ -149,7 +158,8 @@ public class TurnProcessingFacade {
 
                     battleMap.addPath(selectedMech, paths);
 
-                    sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, selectedPilot, target.get().getMech().getX(), target.get().getMech().getY(), rangeCalculator));
+                    sequenceAction.addAction(new MoveActorAlongPathActionCreator(paths, (AbstractMech) selectedMech, 0).act());
+                    //sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, selectedPilot, target.get().getMech().getX(), target.get().getMech().getY(), rangeCalculator));
 
                 } else {
                     // obstacle again, no movement
@@ -157,12 +167,14 @@ public class TurnProcessingFacade {
                 }
 
                 // then attack
-                sequenceAction.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                sequenceAction.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
+                ParallelAction attackActions = new ParallelAction();
+                attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
+                attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
                 AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange);
+                sequenceAction.addAction(attackActions);
                 sequenceAction.addAction(attackAction);
 
-                stage.addAction(sequenceAction);
+                ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
 
 
@@ -170,16 +182,17 @@ public class TurnProcessingFacade {
             // wait for "next" button press
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
+            ((AbstractMech)selectedMech).addAction(centerCameraOnNext(stage));
         }
 
     }
 
-    private void centerCameraOnNext(Stage stage) {
+    private Action centerCameraOnNext(Stage stage) {
         CenterCameraAction centerCameraAction = new CenterCameraAction(stage.getCamera(), actionLock);
         centerCameraAction.setStartPosition(stage.getCamera().position.x, stage.getCamera().position.y);
         centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
         centerCameraAction.setDuration(1);
-        stage.addAction(centerCameraAction);
+        return centerCameraAction;
     }
 
     public boolean isNextPlayerControlled() {

@@ -18,8 +18,8 @@ public class MoveActorByBezierLine extends TemporalAction {
         float yPts;
         Vector2[] points = new Vector2[4];
 
-        points[0] = new Vector2(sx, sy - 3);
-        points[3] = new Vector2(ex, ey - 3);
+        points[0] = new Vector2(sx, sy - 10);
+        points[3] = new Vector2(ex, ey - 10);
 
         points[1] = new Vector2(sx, sy);
         points[2] = new Vector2(ex, ey);

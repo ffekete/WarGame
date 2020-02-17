@@ -7,8 +7,8 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionCreator;
 import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.battle.unit.action.MovementAction;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 public class GroundInputListener extends InputListener {
@@ -48,10 +48,14 @@ public class GroundInputListener extends InputListener {
 
             GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attacker, paths);
-            attacker.addAction(new MovementAction(battleMap, attacker));
+
+            attacker.addAction(new MoveActorAlongPathActionCreator(paths, attacker, 0).act());
+            // attacker.addAction(new MovementAction(battleMap, attacker));
         }
 
         event.stop();
         return true;
     }
+
+
 }

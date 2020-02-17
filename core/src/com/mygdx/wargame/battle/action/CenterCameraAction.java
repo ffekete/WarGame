@@ -26,12 +26,12 @@ public class CenterCameraAction extends TemporalAction {
         if (firstRun) {
             x = startX;
             y = startY;
-            actionLock.setLocked(true);
+            //actionLock.setLocked(true);
             firstRun = false;
         } else if (percent >= 0.999999 && !finished) {
             x = endX;
             y = endY;
-            actionLock.setLocked(false);
+            //actionLock.setLocked(false);
             finished = true;
         } else {
             x = startX + (endX - startX) * percent;
