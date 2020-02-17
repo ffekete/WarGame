@@ -18,11 +18,20 @@ public class ChangeDirectionAction extends Action {
     @Override
     public boolean act(float delta) {
         float dx = Math.abs(tx - target.getX());
+        float dy = Math.abs(ty - target.getY());
 
-        if(tx < target.getX()) {
-            target.setDirection(Direction.Left);
+        if (dx >= dy) {
+            if (tx < target.getX()) {
+                target.setDirection(Direction.Left);
+            } else {
+                target.setDirection(Direction.Right);
+            }
         } else {
-            target.setDirection(Direction.Right);
+            if (ty < target.getY()) {
+                target.setDirection(Direction.Down);
+            } else {
+                target.setDirection(Direction.Up);
+            }
         }
 
         return true;

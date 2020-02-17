@@ -14,6 +14,7 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
+import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionCreator;
 import com.mygdx.wargame.mech.AbstractMech;
@@ -144,7 +145,7 @@ public class TurnProcessingFacade {
 
                     battleMap.addPath(selectedMech, paths);
 
-                    sequenceAction.addAction(new MoveActorAlongPathActionCreator(paths, (AbstractMech) selectedMech, 1).act());
+                    sequenceAction.addAction(new MoveActorAlongPathActionCreator(paths, (AbstractMech) selectedMech, 1, battleMap).act());
                     //sequenceAction.addAction(new MoveIntoFlankingRangeAction(battleMap, selectedMech, selectedPilot, target.get().getTargetNode().getX(), target.get().getTargetNode().getY(), rangeCalculator));
 
                 } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
@@ -158,7 +159,7 @@ public class TurnProcessingFacade {
 
                     battleMap.addPath(selectedMech, paths);
 
-                    sequenceAction.addAction(new MoveActorAlongPathActionCreator(paths, (AbstractMech) selectedMech, 0).act());
+                    sequenceAction.addAction(new MoveActorAlongPathActionCreator(paths, (AbstractMech) selectedMech, 0, battleMap).act());
                     //sequenceAction.addAction(new MoveIntoRangeAction(battleMap, selectedMech, selectedPilot, target.get().getMech().getX(), target.get().getMech().getY(), rangeCalculator));
 
                 } else {
@@ -168,6 +169,7 @@ public class TurnProcessingFacade {
 
                 // then attack
                 ParallelAction attackActions = new ParallelAction();
+                attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                 attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
                 attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
                 AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange);

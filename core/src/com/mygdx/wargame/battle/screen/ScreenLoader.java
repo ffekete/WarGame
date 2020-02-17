@@ -14,6 +14,7 @@ public class ScreenLoader {
     public void load() {
         assetManager = new AssetManager();
         assetManager.load("Marauder.png", Texture.class);
+        assetManager.load("Mech01.png", Texture.class);
         assetManager.load("tileset/Dirt.png", Texture.class);
         assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.load("DesertTile.png", Texture.class);

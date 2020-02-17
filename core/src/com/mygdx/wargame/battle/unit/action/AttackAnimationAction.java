@@ -26,13 +26,6 @@ public class AttackAnimationAction extends Action {
 
     @Override
     public boolean act(float delta) {
-
-        if (attackerMech.getX() < defenderMech.getX())
-            attackerMech.setDirection(Direction.Right);
-        else {
-            attackerMech.setDirection(Direction.Left);
-        }
-
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) > minRange) {
             // not in range, can't do anything
             return true;

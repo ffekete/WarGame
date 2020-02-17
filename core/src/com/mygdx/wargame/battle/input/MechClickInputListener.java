@@ -155,7 +155,7 @@ public class MechClickInputListener extends InputListener {
     private void updatePilotButton() {
         mechInfoPanelFacade.getPilotButton().setVisible(true);
         // Details button
-        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.5f, mec.getY());
         mechInfoPanelFacade.getPilotButton().setX(newCoord.x);
         mechInfoPanelFacade.getPilotButton().setY(newCoord.y);
 
@@ -165,7 +165,7 @@ public class MechClickInputListener extends InputListener {
     private void updateCloseMenuButton() {
         mechInfoPanelFacade.getHideMenuButton().setVisible(true);
         // Details button
-        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
         mechInfoPanelFacade.getHideMenuButton().setX(newCoord.x);
         mechInfoPanelFacade.getHideMenuButton().setY(newCoord.y);
 
@@ -175,7 +175,7 @@ public class MechClickInputListener extends InputListener {
     private void updateWeaponSelectionButton() {
         mechInfoPanelFacade.getWeaponSelectionButton().setVisible(true);
         // Details button
-        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY());
         mechInfoPanelFacade.getWeaponSelectionButton().setX(newCoord.x);
         mechInfoPanelFacade.getWeaponSelectionButton().setY(newCoord.y);
 

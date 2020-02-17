@@ -134,7 +134,7 @@ public class MechInfoPanelFacade extends Actor {
             }
         });
 
-        Image fireImage = new Image(new Texture(Gdx.files.internal("skin/fire.png")));
+        Image fireImage = new Image(new Texture(Gdx.files.internal("skin/Fire.png")));
 
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
         Table weaponSelectionOuterTable = new Table();
