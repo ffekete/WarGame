@@ -2,6 +2,10 @@ package com.mygdx.wargame.battle.screen;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.wargame.battle.ui.MovementMarker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StageElementsStorage {
 
@@ -12,5 +16,7 @@ public class StageElementsStorage {
 
     public Stage stage;
     public Stage hudStage;
+
+    public List<MovementMarker> movementMarkerList = new ArrayList<>();
 
 }

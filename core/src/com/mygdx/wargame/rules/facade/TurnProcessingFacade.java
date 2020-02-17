@@ -6,11 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.ui.MovementMarker;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
@@ -24,9 +26,12 @@ import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.target.Target;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
+import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -47,6 +52,13 @@ public class TurnProcessingFacade {
     private Stage hudStage;
     private AssetManager assetManager;
     private StageElementsStorage stageElementsStorage;
+
+    private Pool<MovementMarker> movementMarkerPool = new Pool<MovementMarker>() {
+        @Override
+        protected MovementMarker newObject() {
+            return new MovementMarker(assetManager);
+        }
+    };
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
                                 Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage) {
@@ -93,10 +105,10 @@ public class TurnProcessingFacade {
             });
 
             next = iterator.next();
-            centerCameraOnNext(stage);
+            //centerCameraOnNext(stage);
         } else {
             next = iterator.next();
-            centerCameraOnNext(stage);
+            //centerCameraOnNext(stage);
         }
 
         Mech selectedMech = next.getKey();
@@ -179,12 +191,25 @@ public class TurnProcessingFacade {
                 ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
 
-
         } else {
             // wait for "next" button press
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
-            ((AbstractMech)selectedMech).addAction(centerCameraOnNext(stage));
+
+            stageElementsStorage.movementMarkerList.forEach(movementMarker -> stageElementsStorage.groundLevel.removeActor(movementMarker));
+
+            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+
+            List<Node> availableNodes = new MapUtils().getAllAvailable(battleMap, selectedMech);
+            System.out.println(availableNodes.size());
+            availableNodes.forEach(node -> {
+                MovementMarker movementMarker = movementMarkerPool.obtain();
+                movementMarker.setPosition(node.getX(), node.getY());
+                stageElementsStorage.groundLevel.addActor(movementMarker);
+                stageElementsStorage.movementMarkerList.add(movementMarker);
+            });
+
+            ((AbstractMech) selectedMech).addAction(centerCameraOnNext(stage));
         }
 
     }

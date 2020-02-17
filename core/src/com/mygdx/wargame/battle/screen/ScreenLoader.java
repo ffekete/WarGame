@@ -32,6 +32,7 @@ public class ScreenLoader {
         assetManager.load("Ion.png", Texture.class);
         assetManager.load("MachineGun.png", Texture.class);
         assetManager.load("Shield.png", Texture.class);
+        assetManager.load("MovementMarker.png", Texture.class);
         assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
         assetManager.finishLoading();

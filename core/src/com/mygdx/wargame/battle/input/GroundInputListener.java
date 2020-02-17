@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionCreator;
 import com.mygdx.wargame.mech.AbstractMech;
@@ -17,13 +18,16 @@ public class GroundInputListener extends InputListener {
     private BattleMap battleMap;
     private ActionLock actionLock;
     private MechInfoPanelFacade mechInfoPanelFacade;
+    private StageElementsStorage stageElementsStorage;
 
-    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade) {
+
+    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade, StageElementsStorage stageElementsStorage) {
         this.turnProcessingFacade = turnProcessingFacade;
         this.battleMap = battleMap;
 
         this.actionLock = actionLock;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
+        this.stageElementsStorage = stageElementsStorage;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class GroundInputListener extends InputListener {
         AbstractMech attacker = (AbstractMech) turnProcessingFacade.getNext().getKey();
 
         if (attacker != null) {
-
+            stageElementsStorage.movementMarkerList.forEach(movementMarker -> stageElementsStorage.groundLevel.removeActor(movementMarker));
             Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
             Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int)x][(int)y];
 
