@@ -58,6 +58,7 @@ public class BulletAnimationAction extends Action {
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) <= minRange) {
             startBullet(attackerMech);
         } else {
+            System.out.println("Calculated: "+MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()));
             stageElementsStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " out of range (" + minRange + ")"));
         }
         done = true;

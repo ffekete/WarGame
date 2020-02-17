@@ -3,12 +3,16 @@ package com.mygdx.wargame.battle.input;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
-import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionCreator;
+import com.mygdx.wargame.battle.unit.action.LockAction;
+import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionFactory;
+import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
@@ -19,15 +23,19 @@ public class GroundInputListener extends InputListener {
     private ActionLock actionLock;
     private MechInfoPanelFacade mechInfoPanelFacade;
     private StageElementsStorage stageElementsStorage;
+    private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
+    private MovementMarkerFactory movementMarkerFactory;
 
 
-    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade, StageElementsStorage stageElementsStorage) {
+    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory) {
         this.turnProcessingFacade = turnProcessingFacade;
         this.battleMap = battleMap;
 
         this.actionLock = actionLock;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
         this.stageElementsStorage = stageElementsStorage;
+        this.movementMarkerFactory = movementMarkerFactory;
+        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory);
     }
 
     @Override
@@ -53,7 +61,11 @@ public class GroundInputListener extends InputListener {
             GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attacker, paths);
 
-            attacker.addAction(new MoveActorAlongPathActionCreator(paths, attacker, 0, battleMap).act());
+            SequenceAction sequenceAction = new SequenceAction();
+            sequenceAction.addAction(new LockAction(actionLock));
+            sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, attacker, 0, battleMap));
+            sequenceAction.addAction(new UnlockAction(actionLock, ""));
+            attacker.addAction(sequenceAction);
             // attacker.addAction(new MovementAction(battleMap, attacker));
         }
 

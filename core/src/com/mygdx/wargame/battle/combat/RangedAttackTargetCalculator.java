@@ -8,13 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.unit.action.AttackAction;
-import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
-import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
-import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
-import com.mygdx.wargame.battle.unit.action.LockAction;
-import com.mygdx.wargame.battle.unit.action.MoveIntoRangeAction;
+import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
@@ -30,8 +26,10 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
     private Stage hudStage;
     private AssetManager assetManager;
     private StageElementsStorage stageElementsStorage;
+    private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
+    private MovementMarkerFactory movementMarkerFactory;
 
-    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage) {
+    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory) {
         this.battleMap = battleMap;
         this.rangeCalculator = rangeCalculator;
         this.attackFacade = attackFacade;
@@ -40,6 +38,8 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
         this.hudStage = hudStage;
         this.assetManager = assetManager;
         this.stageElementsStorage = stageElementsStorage;
+        this.movementMarkerFactory = movementMarkerFactory;
+        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory);
     }
 
     @Override
@@ -58,7 +58,8 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
 
             sequenceAction.addAction(new LockAction(actionLock));
             sequenceAction.addAction(new ChangeDirectionAction(defenderMech.getX(), defenderMech.getY(), attackerMech));
-            sequenceAction.addAction(new MoveIntoRangeAction(battleMap, attackerMech, attackerPilot, defenderMech.getX(), defenderMech.getY(), rangeCalculator));
+            //sequenceAction.addAction(new MoveIntoRangeAction(battleMap, attackerMech, attackerPilot, defenderMech.getX(), defenderMech.getY(), rangeCalculator));
+            sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, attackerMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), battleMap));
 
             ParallelAction parallelAction = new ParallelAction();
 
