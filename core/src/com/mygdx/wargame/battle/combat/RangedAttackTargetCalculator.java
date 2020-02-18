@@ -10,6 +10,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.ui.WayPoint;
 import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.pilot.Pilot;
@@ -57,6 +58,15 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             SequenceAction sequenceAction = new SequenceAction();
 
             sequenceAction.addAction(new LockAction(actionLock));
+
+
+            for(int i = 1; i < paths.getCount(); i++) {
+                WayPoint wayPoint = new WayPoint(assetManager, stageElementsStorage);
+                wayPoint.setPosition(paths.get(i).getX(), paths.get(i).getY());
+
+                sequenceAction.addAction(new AddWayPointAction(stageElementsStorage, wayPoint));
+            }
+
             sequenceAction.addAction(new ChangeDirectionAction(defenderMech.getX(), defenderMech.getY(), attackerMech));
             //sequenceAction.addAction(new MoveIntoRangeAction(battleMap, attackerMech, attackerPilot, defenderMech.getX(), defenderMech.getY(), rangeCalculator));
             sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, attackerMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), battleMap));
@@ -71,6 +81,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             sequenceAction.addAction(parallelAction);
             sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
             //sequenceAction.addAction(new UnlockAction(actionLock));
+            sequenceAction.addAction(new RemoveWayPointAction(stageElementsStorage));
             attackerMech.addAction(sequenceAction);
         }
     }

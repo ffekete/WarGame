@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.screen;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.wargame.battle.ui.MovementMarker;
+import com.mygdx.wargame.battle.ui.WayPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,5 +20,6 @@ public class StageElementsStorage {
     public Stage textStage;
 
     public List<MovementMarker> movementMarkerList = new ArrayList<>();
+    public List<WayPoint> wayPoints = new ArrayList<>();
 
 }

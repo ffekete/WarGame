@@ -16,7 +16,8 @@ public class ScreenLoader {
 
         assetManager.load("HeatProgressBarBg.png", Texture.class);
         assetManager.load("HeatProgressBarKnob.png", Texture.class);
-
+        assetManager.load("WayPoint.png", Texture.class);
+        assetManager.load("WayPointEnd.png", Texture.class);
         assetManager.load("Marauder.png", Texture.class);
         assetManager.load("Marauder.png", Texture.class);
         assetManager.load("WreckingBall.png", Texture.class);

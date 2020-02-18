@@ -33,6 +33,9 @@ public class MoveActorAlongPathActionFactory {
             Node latest = paths.get(i - 1);
             node = paths.get(i);
 
+            float nx = node.getX();
+            float ny = node.getY();
+
             if (attacker.getMovementPoints() > 0 && MathUtils.getDistance(latest.getX(), latest.getY(), last.getX(), last.getY()) > range) {
                 attacker.consumeMovementPoint(1);
 
@@ -41,6 +44,8 @@ public class MoveActorAlongPathActionFactory {
                 moveToActionStep.setPosition(node.getX(), node.getY());
                 moveToActionStep.setDuration(1f);
                 moveToAction.addAction(moveToActionStep);
+
+                moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx , ny));
 
                 if (MathUtils.getDistance(node.getX(), node.getY(), last.getX(), last.getY()) <= range)
                     break;

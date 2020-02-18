@@ -145,7 +145,7 @@ public class BattleScreen implements Screen {
         stage.addActor(stageElementsStorage.treeLevel);
         stage.addActor(stageElementsStorage.airLevel);
 
-        stage.addListener( new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory));
+        stage.addListener( new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager()));
 
         battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
             stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
