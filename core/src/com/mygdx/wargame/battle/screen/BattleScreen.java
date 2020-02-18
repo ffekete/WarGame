@@ -28,6 +28,7 @@ import com.mygdx.wargame.battle.screen.ui.SelectionMarker;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.config.Config;
+import com.mygdx.wargame.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
@@ -119,7 +120,7 @@ public class BattleScreen implements Screen {
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
                 new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
-                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory);
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade);
 
         // display
 

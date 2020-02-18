@@ -39,6 +39,8 @@ public class MechInfoPanelFacade extends Actor {
     private BitmapFont font;
     Label.LabelStyle labelStyle;
     Label.LabelStyle smallLabelStyle;
+    ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
+    ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
 
     public MechInfoPanelFacade() {
         mechInfoTable = new Table();
@@ -66,11 +68,16 @@ public class MechInfoPanelFacade extends Actor {
         weaponsListScrollPaneStyle.hScroll = weaponSelectionScrollBar;
         weaponsListScrollPaneStyle.hScrollKnob = scrollKnob;
 
-        ProgressBar.ProgressBarStyle heatInfoProgressBarStyle = new ProgressBar.ProgressBarStyle();
+        heatInfoProgressBarStyle = new ProgressBar.ProgressBarStyle();
         heatInfoProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ProgressBar.png")));
         heatInfoProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatKnob.png")));
-        heatInfoProgressBarStyle.knobBefore = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatBefore.png")));
-        heatInfoProgressBarStyle.knobAfter = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatAfter.png")));
+        //heatInfoProgressBarStyle.knobBefore = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatBefore.png")));
+        //heatInfoProgressBarStyle.knobAfter = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatAfter.png")));
+
+        smallHeatInfoProgressBarStyle = new ProgressBar.ProgressBarStyle();
+        smallHeatInfoProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("HeatProgressBarBg.png")));
+        smallHeatInfoProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("HeatProgressBarKnob.png")));
+
 
         heatProgressBar = new ProgressBar(0, 100, 1, false, heatInfoProgressBarStyle);
         heatProgressBar.setValue(50);
@@ -314,5 +321,13 @@ public class MechInfoPanelFacade extends Actor {
 
     public Label.LabelStyle getSmallLabelStyle() {
         return smallLabelStyle;
+    }
+
+    public ProgressBar.ProgressBarStyle getHeatInfoProgressBarStyle() {
+        return heatInfoProgressBarStyle;
+    }
+
+    public ProgressBar.ProgressBarStyle getSmallHeatInfoProgressBarStyle() {
+        return smallHeatInfoProgressBarStyle;
     }
 }

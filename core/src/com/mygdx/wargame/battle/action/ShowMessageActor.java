@@ -27,7 +27,7 @@ public class ShowMessageActor extends TemporalAction {
 
         label = new Label(message, labelStyle);
 
-        Vector2 newCoordinates = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.hudStage, initialX, initialY);
+        Vector2 newCoordinates = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.textStage, initialX -0.5f, initialY);
         label.setPosition(newCoordinates.x, newCoordinates.y);
 
         actionLock.setWaitForObject(label);
@@ -38,7 +38,7 @@ public class ShowMessageActor extends TemporalAction {
         if (isComplete()) {
             //System.out.println("Completed: " + label.getText());
             actionLock.removeWaitingObject(label);
-            stageElementsStorage.hudStage.getActors().removeValue(label, true);
+            stageElementsStorage.textStage.getActors().removeValue(label, true);
         }
         return isComplete();
     }
@@ -48,7 +48,7 @@ public class ShowMessageActor extends TemporalAction {
         //System.out.println(this.getActor().toString());
         //System.out.println("percent: " + percent);
         if (firstRun) {
-            stageElementsStorage.hudStage.addActor(label);
+            stageElementsStorage.textStage.addActor(label);
             //System.out.println("Created: " + label.getText());
             firstRun = false;
         }

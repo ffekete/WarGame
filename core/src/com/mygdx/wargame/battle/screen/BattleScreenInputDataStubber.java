@@ -43,6 +43,7 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeLaser4);
         unit3.setActive(true);
         unit3.addComponent(BodyPart.Torso, new SmallShieldModule());
+        unit3.setHeatLevel(100);
 
         PlasmaCannon plasmaCannon = new PlasmaCannon();
         plasmaCannon.setStatus(Status.Active);

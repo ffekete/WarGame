@@ -13,6 +13,10 @@ public class ScreenLoader {
 
     public void load() {
         assetManager = new AssetManager();
+
+        assetManager.load("HeatProgressBarBg.png", Texture.class);
+        assetManager.load("HeatProgressBarKnob.png", Texture.class);
+
         assetManager.load("Marauder.png", Texture.class);
         assetManager.load("Marauder.png", Texture.class);
         assetManager.load("WreckingBall.png", Texture.class);

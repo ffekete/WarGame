@@ -2,25 +2,31 @@ package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
+import com.mygdx.wargame.battle.action.ShowReduceHeatAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.target.Target;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.MathUtils;
+import com.mygdx.wargame.util.StageUtils;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -45,9 +51,11 @@ public class TurnProcessingFacade {
     private StageElementsStorage stageElementsStorage;
     private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
     private MovementMarkerFactory movementMarkerFactory;
+    private HeatCalculator heatCalculator;
+    private MechInfoPanelFacade mechInfoPanelFacade;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -61,6 +69,8 @@ public class TurnProcessingFacade {
         this.assetManager = assetManager;
         this.stageElementsStorage = stageElementsStorage;
         this.movementMarkerFactory = movementMarkerFactory;
+        this.heatCalculator = heatCalculator;
+        this.mechInfoPanelFacade = mechInfoPanelFacade;
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -131,6 +141,8 @@ public class TurnProcessingFacade {
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
 
+            sequenceAction.addAction(reduceHeatLevel(stageElementsStorage, mechInfoPanelFacade, selectedPilot, selectedMech, battleMap));
+
             // find target
             Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
 
@@ -190,6 +202,7 @@ public class TurnProcessingFacade {
             sequenceAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
             sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, selectedMech));
             sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
+            sequenceAction.addAction(reduceHeatLevel(stageElementsStorage, mechInfoPanelFacade, selectedPilot, selectedMech, battleMap));
             sequenceAction.addAction(new UnlockAction(actionLock, ""));
             ((AbstractMech) selectedMech).addAction(sequenceAction);
         }
@@ -203,6 +216,20 @@ public class TurnProcessingFacade {
         centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
         centerCameraAction.setDuration(1);
         return centerCameraAction;
+    }
+
+    private Action reduceHeatLevel(StageElementsStorage stageElementsStorage, MechInfoPanelFacade mechInfoPanelFacade, Pilot pilot, Mech mech, BattleMap battleMap) {
+        int reduceAmount = heatCalculator.calculateCooling(pilot, mech, battleMap);
+        ProgressBar progressBar = new ProgressBar(0, 100, 1f, false, mechInfoPanelFacade.getSmallHeatInfoProgressBarStyle());
+        Vector2 newCoord = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.textStage, mech.getX(), mech.getY() + 1f);
+        progressBar.setPosition(newCoord.x, newCoord.y);
+        progressBar.setSize(64, 64);
+        mech.setHeatLevel(Math.max(mech.getHeatLevel() - reduceAmount, 0));
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(new AddActorAction(stageElementsStorage.textStage, progressBar));
+        sequenceAction.addAction(new ShowReduceHeatAction(mech.getHeatLevel(), Math.max(mech.getHeatLevel() - reduceAmount, 0f), progressBar));
+        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.textStage, progressBar));
+        return sequenceAction;
     }
 
     public boolean isNextPlayerControlled() {
