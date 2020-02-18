@@ -6,23 +6,22 @@ import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.mech.Mech;
 
-public class AddMovementMarkersAction extends Action {
+public class RemoveMovementMarkersAction extends Action {
 
     private StageElementsStorage stageElementsStorage;
     private MovementMarkerFactory movementMarkerFactory;
-    private BattleMap battleMap;
-    private Mech mech;
 
-    public AddMovementMarkersAction(StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, BattleMap battleMap, Mech mech) {
+    public RemoveMovementMarkersAction(StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory) {
         this.stageElementsStorage = stageElementsStorage;
         this.movementMarkerFactory = movementMarkerFactory;
-        this.battleMap = battleMap;
-        this.mech = mech;
     }
 
     @Override
     public boolean act(float delta) {
-        movementMarkerFactory.createMovementMarkers(battleMap, mech);
+        stageElementsStorage.movementMarkerList.forEach(movementMarker -> {
+            movementMarkerFactory.remove(movementMarker);
+        });
+        stageElementsStorage.movementMarkerList.clear();
         return true;
     }
 }

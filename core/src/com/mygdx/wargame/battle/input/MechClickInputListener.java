@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
@@ -38,9 +39,8 @@ public class MechClickInputListener extends InputListener {
     private MechInfoPanelFacade mechInfoPanelFacade;
     private Stage hudStage;
     private Stage stage;
-    private StageElementsStorage stageElementsStorage;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -52,7 +52,6 @@ public class MechClickInputListener extends InputListener {
         this.hudStage = hudStage;
 
         this.stage = stage;
-        this.stageElementsStorage = stageElementsStorage;
     }
 
     @Override
@@ -99,7 +98,6 @@ public class MechClickInputListener extends InputListener {
             }
 
         } else if (mec.getTeam().equals(Team.enemy)) {
-            stageElementsStorage.movementMarkerList.forEach(movementMarker -> stageElementsStorage.groundLevel.removeActor(movementMarker));
             // attack
             mechInfoPanelFacade.hideLocalMenu();
             rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot);

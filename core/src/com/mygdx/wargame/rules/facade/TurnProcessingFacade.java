@@ -12,13 +12,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.unit.action.AttackAction;
-import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
-import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
-import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
-import com.mygdx.wargame.battle.unit.action.LockAction;
-import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionFactory;
-import com.mygdx.wargame.battle.unit.action.UnlockAction;
+import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
@@ -127,7 +121,7 @@ public class TurnProcessingFacade {
 
             sequenceAction.addAction(new LockAction(actionLock));
 
-            sequenceAction.addAction(centerCameraOnNext(stage));
+            sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
 
 
             // reconnect graph so that attacker can move
@@ -191,19 +185,21 @@ public class TurnProcessingFacade {
             int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
             selectedMech.resetMovementPoints(movementPoints);
 
-            movementMarkerFactory.createMovementMarkers(battleMap, selectedMech);
             SequenceAction sequenceAction = new SequenceAction();
             sequenceAction.addAction(new LockAction(actionLock));
-            sequenceAction.addAction(centerCameraOnNext(stage));
+            sequenceAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
+            sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, selectedMech));
+            sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
             sequenceAction.addAction(new UnlockAction(actionLock, ""));
             ((AbstractMech) selectedMech).addAction(sequenceAction);
         }
 
     }
 
-    private Action centerCameraOnNext(Stage stage) {
-        CenterCameraAction centerCameraAction = new CenterCameraAction(stage.getCamera(), actionLock);
-        centerCameraAction.setStartPosition(stage.getCamera().position.x, stage.getCamera().position.y);
+    private Action centerCameraOnNext(StageElementsStorage stageElementsStorage) {
+        CenterCameraAction centerCameraAction = new CenterCameraAction(stageElementsStorage, actionLock);
+        centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
+        centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
         centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
         centerCameraAction.setDuration(1);
         return centerCameraAction;

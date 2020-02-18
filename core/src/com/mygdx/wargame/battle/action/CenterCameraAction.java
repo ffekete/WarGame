@@ -1,8 +1,12 @@
 package com.mygdx.wargame.battle.action;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.config.Config;
+
+import static com.mygdx.wargame.config.Config.SCREEN_SIZE_X;
+import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
 public class CenterCameraAction extends TemporalAction {
 
@@ -10,14 +14,13 @@ public class CenterCameraAction extends TemporalAction {
     private float startY;
     private float endX;
     private float endY;
-    private Camera camera;
-    private ActionLock actionLock;
+    private StageElementsStorage stageElementsStorage;
+
     private boolean firstRun = true;
     private boolean finished = false;
 
-    public CenterCameraAction(Camera camera, ActionLock actionLock) {
-        this.camera = camera;
-        this.actionLock = actionLock;
+    public CenterCameraAction(StageElementsStorage stageElementsStorage, ActionLock actionLock) {
+        this.stageElementsStorage = stageElementsStorage;
     }
 
     @Override
@@ -37,8 +40,11 @@ public class CenterCameraAction extends TemporalAction {
             x = startX + (endX - startX) * percent;
             y = startY + (endY - startY) * percent;
         }
-        camera.position.x = x;
-        camera.position.y = y;
+        stageElementsStorage.stage.getCamera().position.x = x;
+        stageElementsStorage.stage.getCamera().position.y = y;
+
+        stageElementsStorage.textStage.getCamera().position.x = x  * SCREEN_SIZE_X / Config.VIEWPORT_WIDTH;
+        stageElementsStorage.textStage.getCamera().position.y = y * SCREEN_SIZE_Y / Config.VIEWPORT_HEIGHT;
     }
 
     public void setStartPosition(float x, float y) {

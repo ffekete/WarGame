@@ -2,7 +2,6 @@ package com.mygdx.wargame.battle.screen;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.shield.SmallShieldModule;
 import com.mygdx.wargame.component.weapon.Status;
@@ -13,7 +12,8 @@ import com.mygdx.wargame.component.weapon.laser.LargeLaser;
 import com.mygdx.wargame.component.weapon.missile.SwarmMissile;
 import com.mygdx.wargame.component.weapon.plasma.PlasmaCannon;
 import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.mech.Scout;
+import com.mygdx.wargame.mech.Marauder;
+import com.mygdx.wargame.mech.WreckingBall;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.pilot.PilotCreator;
 
@@ -28,7 +28,7 @@ public class BattleScreenInputDataStubber {
     }
 
     public void stub(BattleScreenInputData battleScreenInputData) {
-        Scout unit3 = new Scout("3", spriteBatch, assetManager);
+        WreckingBall unit3 = new WreckingBall("3", spriteBatch, assetManager);
         unit3.setPosition(6, 5);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
@@ -57,7 +57,7 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeIonCannon);
         unit3.addComponent(BodyPart.Torso, machineGun);
 
-        Scout unit2 = new Scout("2", spriteBatch, assetManager);
+        Marauder unit2 = new Marauder("2", spriteBatch, assetManager);
         unit2.setPosition(1, 1);
         unit2.setTeam(Team.own);
         unit2.setActive(true);
@@ -103,7 +103,7 @@ public class BattleScreenInputDataStubber {
         unit2.addComponent(BodyPart.Torso, largeCannon10);
         unit2.addComponent(BodyPart.Torso, largeCannon11);
 
-        Scout unit = new Scout("1", spriteBatch, assetManager);
+        Marauder unit = new Marauder("1", spriteBatch, assetManager);
         unit.setPosition(5, 2);
         unit.setTeam(Team.enemy);
         unit.setActive(true);

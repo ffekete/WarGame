@@ -10,6 +10,7 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.unit.action.AddMovementMarkersAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
@@ -51,7 +52,7 @@ public class GroundInputListener extends InputListener {
         AbstractMech attacker = (AbstractMech) turnProcessingFacade.getNext().getKey();
 
         if (attacker != null) {
-            stageElementsStorage.movementMarkerList.forEach(movementMarker -> stageElementsStorage.groundLevel.removeActor(movementMarker));
+
             Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
             Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int)x][(int)y];
 
@@ -64,6 +65,7 @@ public class GroundInputListener extends InputListener {
             SequenceAction sequenceAction = new SequenceAction();
             sequenceAction.addAction(new LockAction(actionLock));
             sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, attacker, 0, battleMap));
+            sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, attacker));
             sequenceAction.addAction(new UnlockAction(actionLock, ""));
             attacker.addAction(sequenceAction);
             // attacker.addAction(new MovementAction(battleMap, attacker));

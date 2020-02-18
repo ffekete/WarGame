@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Scout extends AbstractMech {
+public class Marauder extends AbstractMech {
 
     public static final int LEFT_HAND_HP = 10;
     public static final int RIGHT_HAND_HP = 10;
@@ -51,14 +51,14 @@ public class Scout extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public Scout(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
+    public Marauder(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
         super(10, assetManager);
         this.spriteBatch = spriteBatch;
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.mechTextureRegion = new TextureRegion(assetManager.get("Mech01.png", Texture.class), 0, 0, 48, 48);
+        this.mechTextureRegion = new TextureRegion(assetManager.get("Marauder.png", Texture.class), 0, 0, 48, 48);
 
         hp.put(BodyPart.LeftHand, getLeftHandMaxHp());
         hp.put(BodyPart.RightHand, getRightHandMaxHp());

@@ -26,7 +26,7 @@ public class MoveActorAlongPathActionFactory {
         SequenceAction moveToAction = new SequenceAction();
         moveToAction.reset();
         moveToAction.addAction(new SetStateAction(attacker, State.Walk));
-
+        moveToAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
         Node last = paths.get(paths.getCount() - 1);
         Node node = null;
         for (int i = 1; i < paths.getCount(); i++) {
@@ -47,7 +47,6 @@ public class MoveActorAlongPathActionFactory {
             }
         }
         moveToAction.addAction(new SetStateAction(attacker, State.Idle));
-        moveToAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, attacker));
         if (node != null)
             moveToAction.addAction(new SetTemporaryObstacleAction(battleMap, (int) node.getX(), (int) node.getY()));
         return moveToAction;
