@@ -43,13 +43,10 @@ public class BattleScreen implements Screen {
 
     private OrthographicCamera camera;
     private Camera hudCamera;
-    private Camera textCamera;
     private Viewport viewport;
     private Viewport hudViewport;
-    private Viewport textViewport;
     private Stage stage;
     private Stage hudStage;
-    private Stage textStage;
     private RangedAttackTargetCalculator rangedAttackTargetCalculator;
     private SpriteBatch spriteBatch;
     private ActionLock actionLock;
@@ -76,10 +73,7 @@ public class BattleScreen implements Screen {
         viewport.apply();
 
         hudCamera = new OrthographicCamera();
-        hudViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y, hudCamera);
-
-        textCamera = new OrthographicCamera();
-        textViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y, textCamera);
+        hudViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y , hudCamera);
 
         this.spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -90,11 +84,9 @@ public class BattleScreen implements Screen {
 
         stage = new Stage(viewport, spriteBatch);
         hudStage = new Stage(hudViewport, spriteBatch);
-        textStage = new Stage(textViewport, spriteBatch);
 
         stageElementsStorage.stage = stage;
         stageElementsStorage.hudStage = hudStage;
-        stageElementsStorage.textStage = textStage;
 
         selectionMarker = new SelectionMarker(screenLoader.getAssetManager(), spriteBatch);
 
@@ -130,7 +122,7 @@ public class BattleScreen implements Screen {
 
         BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
 
-        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector);
+        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, 32);
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
@@ -177,9 +169,6 @@ public class BattleScreen implements Screen {
         camera.position.x += screenConfiguration.scrollX;
         camera.position.y += screenConfiguration.scrollY;
 
-        textCamera.position.x += screenConfiguration.scrollX * SCREEN_SIZE_X / Config.VIEWPORT_WIDTH;
-        textCamera.position.y += screenConfiguration.scrollY * SCREEN_SIZE_Y / Config.VIEWPORT_HEIGHT;
-
         DrawUtils.clearScreen();
 
         if (turnProcessingFacade.getNext() != null && !turnProcessingFacade.getNext().getKey().attacked() && turnProcessingFacade.getNext().getKey().getState() == State.Idle) {
@@ -200,12 +189,6 @@ public class BattleScreen implements Screen {
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
-
-        textViewport.apply();
-        spriteBatch.setProjectionMatrix(textCamera.combined);
-        textStage.act();
-        textStage.draw();
-
 
         hudViewport.apply();
         spriteBatch.setProjectionMatrix(hudCamera.combined);

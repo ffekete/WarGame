@@ -24,7 +24,7 @@ public class ScreenLoader {
         assetManager.load("tileset/Dirt.png", Texture.class);
         assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.load("DesertTile.png", Texture.class);
-        assetManager.load("Grassland.png", Texture.class);
+        assetManager.load("Grass.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
         assetManager.load("variation/Trees.png", Texture.class);
         assetManager.load("variation/Trees03.png", Texture.class);

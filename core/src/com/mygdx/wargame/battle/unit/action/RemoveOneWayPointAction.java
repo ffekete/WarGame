@@ -4,11 +4,12 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.ui.WayPoint;
 
+import java.util.Optional;
+
 public class RemoveOneWayPointAction extends Action {
 
     private StageElementsStorage stageElementsStorage;
-    private WayPoint wayPoint;
-private float nx, ny;
+    private float nx, ny;
 
     public RemoveOneWayPointAction(StageElementsStorage stageElementsStorage, float nx, float ny) {
         this.stageElementsStorage = stageElementsStorage;
@@ -18,9 +19,11 @@ private float nx, ny;
 
     @Override
     public boolean act(float delta) {
-        wayPoint = stageElementsStorage.wayPoints.stream().filter(wayPoint -> wayPoint.getX() == nx && wayPoint.getY() == ny).findFirst().get();
-        stageElementsStorage.groundLevel.removeActor(wayPoint);
-        stageElementsStorage.wayPoints.remove(wayPoint);
+        Optional<WayPoint> wayPointOptional = stageElementsStorage.wayPoints.stream().filter(wayPoint -> wayPoint.getX() == nx && wayPoint.getY() == ny).findFirst();
+        if (wayPointOptional.isPresent()) {
+            stageElementsStorage.groundLevel.removeActor(wayPointOptional.get());
+            stageElementsStorage.wayPoints.remove(wayPointOptional.get());
+        }
         return true;
     }
 }

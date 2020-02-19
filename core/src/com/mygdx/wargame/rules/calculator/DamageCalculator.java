@@ -114,7 +114,7 @@ public class DamageCalculator {
 
     private void showMessage(Mech targetMech, String message,SequenceAction messageQue) {
         ShowMessageActor showMessageActor = new ShowMessageActor(mechInfoPanelFacade.getSmallLabelStyle(), targetMech.getX(),targetMech.getY(), message, stageElementsStorage, actionLock);
-        showMessageActor.setDuration(1.5f);
+        showMessageActor.setDuration(2f);
         messageQue.addAction(showMessageActor);
     }
 

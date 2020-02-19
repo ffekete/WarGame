@@ -17,7 +17,6 @@ public class StageElementsStorage {
 
     public Stage stage;
     public Stage hudStage;
-    public Stage textStage;
 
     public List<MovementMarker> movementMarkerList = new ArrayList<>();
     public List<WayPoint> wayPoints = new ArrayList<>();

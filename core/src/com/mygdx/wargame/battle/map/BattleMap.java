@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,23 +28,25 @@ public class BattleMap {
     private AssetManager assetManager;
     private TiledMap tiledMap;
     private TextureRegionSelector textureRegionSelector;
+    private int unitSize;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector) {
+    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize) {
         this.width = x;
         this.height = y;
         this.actionLock = actionLock;
         this.terrainType = terrainType;
         this.assetManager = assetManager;
         this.textureRegionSelector = textureRegionSelector;
+        this.unitSize = unitSize;
 
         tiledMap = new TiledMap();
         MapLayers layers = tiledMap.getLayers();
 
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, 32, 32));
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, 32, 32));
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, 32, 32));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSize, unitSize));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSize, unitSize));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSize, unitSize));
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
@@ -151,7 +154,7 @@ public class BattleMap {
         }
 
         public TextureRegion select(TerrainType terrainType) {
-            return new TextureRegion(assetManager.get("Grassland.png", Texture.class));
+            return new TextureRegion(assetManager.get("Grass.png", Texture.class));
         }
 
 

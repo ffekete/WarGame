@@ -15,6 +15,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.ScalableProgressBar;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.mech.AbstractMech;
@@ -220,15 +221,13 @@ public class TurnProcessingFacade {
 
     private Action reduceHeatLevel(StageElementsStorage stageElementsStorage, MechInfoPanelFacade mechInfoPanelFacade, Pilot pilot, Mech mech, BattleMap battleMap) {
         int reduceAmount = heatCalculator.calculateCooling(pilot, mech, battleMap);
-        ProgressBar progressBar = new ProgressBar(0, 100, 1f, false, mechInfoPanelFacade.getSmallHeatInfoProgressBarStyle());
-        Vector2 newCoord = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.textStage, mech.getX(), mech.getY() + 1f);
-        progressBar.setPosition(newCoord.x, newCoord.y);
-        progressBar.setSize(64, 64);
+        ProgressBar progressBar = new ScalableProgressBar(0, 100, 1f, false, mechInfoPanelFacade.getSmallHeatInfoProgressBarStyle(), 0.01f, mech.getX(), mech.getY() + 1f);
+        //progressBar.setSize(64, 64);
         mech.setHeatLevel(Math.max(mech.getHeatLevel() - reduceAmount, 0));
         SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(new AddActorAction(stageElementsStorage.textStage, progressBar));
+        sequenceAction.addAction(new AddActorAction(stageElementsStorage.stage, progressBar));
         sequenceAction.addAction(new ShowReduceHeatAction(mech.getHeatLevel(), Math.max(mech.getHeatLevel() - reduceAmount, 0f), progressBar));
-        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.textStage, progressBar));
+        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.stage, progressBar));
         return sequenceAction;
     }
 

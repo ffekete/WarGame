@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.config.Config;
 
 public class WayPointEnd extends WayPoint {
     private AssetManager assetManager;
@@ -23,7 +24,7 @@ public class WayPointEnd extends WayPoint {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.valueOf("FFFFFF55"));
-        batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 0.5f, 0.5f, getRotation(), 0, 0, 32, 32, false, false);
+        batch.draw(texture, getX(), getY() - 0.3f * Config.UI_SCALING, 0.5f, 0.5f, 1, 1, 0.5f, 0.5f, getRotation(), 0, 0, 48, 48, false, false);
         batch.setColor(Color.WHITE);
     }
 

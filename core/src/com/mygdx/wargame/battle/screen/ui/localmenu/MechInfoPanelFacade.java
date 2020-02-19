@@ -144,6 +144,7 @@ public class MechInfoPanelFacade extends Actor {
         Image fireImage = new Image(new Texture(Gdx.files.internal("skin/Fire.png")));
 
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
+        weaponSelectionScrollPane.setDebug(true);
         Table weaponSelectionOuterTable = new Table();
         weaponSelectionOuterTable.add(fireImage).padRight(10);
         weaponSelectionOuterTable.add(heatProgressBar).width(400 * Config.UI_SCALING).padRight(10).row();

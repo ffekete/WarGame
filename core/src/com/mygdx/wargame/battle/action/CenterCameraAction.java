@@ -42,9 +42,6 @@ public class CenterCameraAction extends TemporalAction {
         }
         stageElementsStorage.stage.getCamera().position.x = x;
         stageElementsStorage.stage.getCamera().position.y = y;
-
-        stageElementsStorage.textStage.getCamera().position.x = x  * SCREEN_SIZE_X / Config.VIEWPORT_WIDTH;
-        stageElementsStorage.textStage.getCamera().position.y = y * SCREEN_SIZE_Y / Config.VIEWPORT_HEIGHT;
     }
 
     public void setStartPosition(float x, float y) {

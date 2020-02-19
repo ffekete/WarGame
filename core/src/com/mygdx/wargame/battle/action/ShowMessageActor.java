@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.ScalableLabel;
 import com.mygdx.wargame.util.StageUtils;
 
 public class ShowMessageActor extends TemporalAction {
@@ -25,9 +26,9 @@ public class ShowMessageActor extends TemporalAction {
         this.stageElementsStorage = stageElementsStorage;
         this.actionLock = actionLock;
 
-        label = new Label(message, labelStyle);
+        label = new ScalableLabel(message, labelStyle, 0.02f);
 
-        Vector2 newCoordinates = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.textStage, initialX -0.5f, initialY);
+        Vector2 newCoordinates = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.stage, initialX -0.5f, initialY);
         label.setPosition(newCoordinates.x, newCoordinates.y);
 
         actionLock.setWaitForObject(label);
@@ -36,23 +37,18 @@ public class ShowMessageActor extends TemporalAction {
     public boolean act(float delta) {
         super.act(delta);
         if (isComplete()) {
-            //System.out.println("Completed: " + label.getText());
             actionLock.removeWaitingObject(label);
-            stageElementsStorage.textStage.getActors().removeValue(label, true);
+            stageElementsStorage.groundLevel.removeActor(label);
         }
         return isComplete();
     }
 
     @Override
     protected void update(float percent) {
-        //System.out.println(this.getActor().toString());
-        //System.out.println("percent: " + percent);
         if (firstRun) {
-            stageElementsStorage.textStage.addActor(label);
-            //System.out.println("Created: " + label.getText());
+            stageElementsStorage.groundLevel.addActor(label);
             firstRun = false;
         }
-        //System.out.println(" ----------------------------- ");
-        label.setY(label.getY() + percent);
+        label.setY(label.getY() + percent / 40f);
     }
 }
