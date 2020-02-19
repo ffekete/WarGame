@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.bullet;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,6 +28,7 @@ public class Explosion extends Actor {
             }
         }
         texture.setRegion(col * 96, 0, 96, 96);
+        batch.setColor(Color.WHITE);
         batch.draw(texture, getX() - 0.25f, getY() - 0.25f, 1.5f, 1.5f);
     }
 }

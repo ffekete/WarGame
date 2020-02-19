@@ -5,12 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.overlay.Overlay;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 
 import java.util.List;
 import java.util.Random;
@@ -21,18 +23,17 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
     private int birthLimit = 3;
     private float chanceToStartAlive = 45;
     private AssetManager assetManager;
+    private StageElementsStorage stageElementsStorage;
 
     private List<Texture> treeVariations;
 
 
-    public BattleMapTreeSpreadDecorator(AssetManager assetManager) {
+    public BattleMapTreeSpreadDecorator(AssetManager assetManager, StageElementsStorage stageElementsStorage) {
         this.assetManager = assetManager;
         treeVariations = ImmutableList.<Texture>builder()
-                .add(assetManager.get("variation/Trees.png", Texture.class))
-                .add(assetManager.get("variation/Trees02.png", Texture.class))
-                .add(assetManager.get("variation/Trees03.png", Texture.class))
-                .add(assetManager.get("variation/Trees04.png", Texture.class))
+                .add(assetManager.get("variation/Tree01.png", Texture.class))
                 .build();
+        this.stageElementsStorage = stageElementsStorage;
     }
 
     public void decorate(int step, BattleMap worldMap) {
@@ -44,12 +45,17 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                 if (newMap[i][j] == 1) {
                     int rnd = new Random().nextInt(treeVariations.size());
 
-                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(new TextureRegion(treeVariations.get(rnd))));
+                    Image tree = new Image(treeVariations.get(0));
+                    tree.setPosition(i, j);
+                    tree.setSize(1, 1);
+                    stageElementsStorage.mechLevel.addActor(tree);
 
-                    worldMap.getLayer(LayerIndex.Decoration).setCell(i,j, cell);
+//                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+//                    cell.setTile(new StaticTiledMapTile(new TextureRegion(treeVariations.get(rnd))));
 
-                    worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setDecorationOverlay(new Overlay(TileOverlayType.Trees));
+//                    worldMap.getLayer(LayerIndex.Decoration).setCell(i,j, cell);
+//
+//                    worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setDecorationOverlay(new Overlay(TileOverlayType.Trees));
                 }
             }
         }

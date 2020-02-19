@@ -20,6 +20,7 @@ public class ScreenLoader {
         assetManager.load("StabilityProgressBarKnob.png", Texture.class);
         assetManager.load("WayPoint.png", Texture.class);
         assetManager.load("WayPointEnd.png", Texture.class);
+        assetManager.load("HealthOverlay.png", Texture.class);
         assetManager.load("Marauder.png", Texture.class);
         assetManager.load("Marauder.png", Texture.class);
         assetManager.load("WreckingBall.png", Texture.class);
@@ -28,10 +29,7 @@ public class ScreenLoader {
         assetManager.load("DesertTile.png", Texture.class);
         assetManager.load("Grass.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
-        assetManager.load("variation/Trees.png", Texture.class);
-        assetManager.load("variation/Trees03.png", Texture.class);
-        assetManager.load("variation/Trees02.png", Texture.class);
-        assetManager.load("variation/Trees04.png", Texture.class);
+        assetManager.load("variation/Tree01.png", Texture.class);
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);
         assetManager.load("Missile.png", Texture.class);
@@ -40,6 +38,8 @@ public class ScreenLoader {
         assetManager.load("Ion.png", Texture.class);
         assetManager.load("MachineGun.png", Texture.class);
         assetManager.load("Shield.png", Texture.class);
+        assetManager.load("FriendlyMarker.png", Texture.class);
+        assetManager.load("EnemyMarker.png", Texture.class);
         assetManager.load("MovementMarker.png", Texture.class);
         assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);

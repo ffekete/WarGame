@@ -40,6 +40,7 @@ public class SelectionMarker extends Actor {
         textureRegion.setRegion(col * 32, 0, 32, 32);
         spriteBatch.setColor(color);
         spriteBatch.draw(textureRegion, getX() -1f, getY() + 1f, 3,3);
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override

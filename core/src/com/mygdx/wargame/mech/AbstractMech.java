@@ -12,6 +12,8 @@ import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
 
+import java.security.acl.Owner;
+
 public abstract class
 AbstractMech extends Actor implements Mech {
 
@@ -31,6 +33,7 @@ AbstractMech extends Actor implements Mech {
 
     protected TextureRegion mechTextureRegion;
     private TextureRegion shieldTextureRegion;
+    private TextureRegion selectionTexture;
 
     public AbstractMech(int initiative, AssetManager assetManager) {
         this.initiative = initiative;
@@ -54,6 +57,7 @@ AbstractMech extends Actor implements Mech {
     @Override
     public void setTeam(Team team) {
         this.team = team;
+        this.selectionTexture = new TextureRegion(team == Team.own ? assetManager.get("FriendlyMarker.png", Texture.class) : assetManager.get("EnemyMarker.png", Texture.class) );
     }
 
     @Override
@@ -80,7 +84,10 @@ AbstractMech extends Actor implements Mech {
         texture.setRegion(direction.getOffset() * 48 + step * 48, 0, 48, 48);
 
         texture.flip(direction.isMirrored(), false);
+        spriteBatch.setColor(Color.valueOf("FFFFFF"));
         spriteBatch.draw(texture, x, y, 1, 1);
+        spriteBatch.setColor(Color.valueOf("FFFFFF55"));
+        spriteBatch.draw(selectionTexture, x, y, 1, 1);
 
         if (getShieldValue() > 0) {
             spriteBatch.setColor(Color.valueOf("FFFFFF55"));

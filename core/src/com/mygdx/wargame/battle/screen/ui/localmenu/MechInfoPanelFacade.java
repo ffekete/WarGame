@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
+import com.mygdx.wargame.battle.ui.HealthOverlay;
 import com.mygdx.wargame.config.Config;
 
 public class MechInfoPanelFacade extends Actor {
@@ -42,6 +45,7 @@ public class MechInfoPanelFacade extends Actor {
     ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
+    private HealthOverlay healthOverlayImage;
 
     public MechInfoPanelFacade() {
         mechInfoTable = new Table();
@@ -49,6 +53,9 @@ public class MechInfoPanelFacade extends Actor {
         font = FontCreator.getBitmapFont();
         labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
+
+        healthOverlayImage = new HealthOverlay("1", labelStyle, new TextureRegion(new Texture(Gdx.files.internal("HealthOverlay.png"))));
+        healthOverlayImage.setTouchable(Touchable.disabled);
 
         smallLabelStyle = new Label.LabelStyle();
         smallLabelStyle.font = FontCreator.getBitmapFont(20);
@@ -340,5 +347,9 @@ public class MechInfoPanelFacade extends Actor {
 
     public ProgressBar.ProgressBarStyle getStabilityProgressBarStyle() {
         return stabilityProgressBarStyle;
+    }
+
+    public HealthOverlay getHealthOverlayImage() {
+        return healthOverlayImage;
     }
 }

@@ -1,18 +1,20 @@
 package com.mygdx.wargame.battle.input;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.ui.HealthOverlay;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
@@ -39,8 +41,11 @@ public class MechClickInputListener extends InputListener {
     private MechInfoPanelFacade mechInfoPanelFacade;
     private Stage hudStage;
     private Stage stage;
+    private StageElementsStorage stageElementsStorage;
+    private HealthOverlay healthOverlay;
+    boolean overlayShown = false;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -52,7 +57,37 @@ public class MechClickInputListener extends InputListener {
         this.hudStage = hudStage;
 
         this.stage = stage;
+        this.stageElementsStorage = stageElementsStorage;
+        healthOverlay = mechInfoPanelFacade.getHealthOverlayImage();
     }
+
+    @Override
+    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if(!actionLock.isLocked() && !overlayShown && !mechInfoPanelFacade.isLocalMenuVisible()) {
+            healthOverlay.setPosition(mec.getX() - 0.5f, mec.getY() - 0.5f);
+            healthOverlay.setHeadHealth("" + mec.getHp(BodyPart.Head));
+            healthOverlay.setLeftArmHealth("" + mec.getHp(BodyPart.LeftHand));
+            healthOverlay.setLeftLegHealth("" + mec.getHp(BodyPart.LeftLeg));
+            healthOverlay.setRightArmHealth("" + mec.getHp(BodyPart.RightHand));
+            healthOverlay.setRightLegHealth("" + mec.getHp(BodyPart.RightLeg));
+            healthOverlay.setTorsoHealth("" + mec.getHp(BodyPart.Torso));
+            stageElementsStorage.airLevel.addActor(healthOverlay);
+            this.overlayShown = true;
+            event.stop();
+        }
+    }
+
+    @Override
+    public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if(overlayShown) {
+            healthOverlay.setSize(0f, 0f);
+            stageElementsStorage.airLevel.removeActor(healthOverlay);
+            overlayShown = false;
+            event.stop();
+        }
+    }
+
+
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
