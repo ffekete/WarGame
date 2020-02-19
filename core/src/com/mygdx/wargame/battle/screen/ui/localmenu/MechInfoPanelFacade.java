@@ -41,6 +41,7 @@ public class MechInfoPanelFacade extends Actor {
     Label.LabelStyle smallLabelStyle;
     ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
+    ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
 
     public MechInfoPanelFacade() {
         mechInfoTable = new Table();
@@ -77,6 +78,11 @@ public class MechInfoPanelFacade extends Actor {
         smallHeatInfoProgressBarStyle = new ProgressBar.ProgressBarStyle();
         smallHeatInfoProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("HeatProgressBarBg.png")));
         smallHeatInfoProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("HeatProgressBarKnob.png")));
+
+        stabilityProgressBarStyle = new ProgressBar.ProgressBarStyle();
+        stabilityProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarBg.png")));
+        stabilityProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarKnob.png")));
+
 
 
         heatProgressBar = new ProgressBar(0, 100, 1, false, heatInfoProgressBarStyle);
@@ -330,5 +336,9 @@ public class MechInfoPanelFacade extends Actor {
 
     public ProgressBar.ProgressBarStyle getSmallHeatInfoProgressBarStyle() {
         return smallHeatInfoProgressBarStyle;
+    }
+
+    public ProgressBar.ProgressBarStyle getStabilityProgressBarStyle() {
+        return stabilityProgressBarStyle;
     }
 }

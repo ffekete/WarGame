@@ -2,14 +2,14 @@ package com.mygdx.wargame.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
-import com.mygdx.wargame.battle.action.ShowReduceHeatAction;
+import com.mygdx.wargame.battle.action.ShowReduceValueAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -27,7 +27,6 @@ import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.target.Target;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.MathUtils;
-import com.mygdx.wargame.util.StageUtils;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -143,6 +142,8 @@ public class TurnProcessingFacade {
             selectedMech.resetMovementPoints(movementPoints);
 
             sequenceAction.addAction(reduceHeatLevel(stageElementsStorage, mechInfoPanelFacade, selectedPilot, selectedMech, battleMap));
+            sequenceAction.addAction(new DelayAction(0.5f));
+            sequenceAction.addAction(reduceStabilityLevel(stageElementsStorage, mechInfoPanelFacade, selectedMech));
 
             // find target
             Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
@@ -204,6 +205,8 @@ public class TurnProcessingFacade {
             sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, selectedMech));
             sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
             sequenceAction.addAction(reduceHeatLevel(stageElementsStorage, mechInfoPanelFacade, selectedPilot, selectedMech, battleMap));
+            sequenceAction.addAction(new DelayAction(0.5f));
+            sequenceAction.addAction(reduceStabilityLevel(stageElementsStorage, mechInfoPanelFacade, selectedMech));
             sequenceAction.addAction(new UnlockAction(actionLock, ""));
             ((AbstractMech) selectedMech).addAction(sequenceAction);
         }
@@ -221,12 +224,24 @@ public class TurnProcessingFacade {
 
     private Action reduceHeatLevel(StageElementsStorage stageElementsStorage, MechInfoPanelFacade mechInfoPanelFacade, Pilot pilot, Mech mech, BattleMap battleMap) {
         int reduceAmount = heatCalculator.calculateCooling(pilot, mech, battleMap);
-        ProgressBar progressBar = new ScalableProgressBar(0, 100, 1f, false, mechInfoPanelFacade.getSmallHeatInfoProgressBarStyle(), 0.01f, mech.getX(), mech.getY() + 1f);
-        //progressBar.setSize(64, 64);
+        ProgressBar progressBar = new ScalableProgressBar(0, 100, 1f, false, mechInfoPanelFacade.getSmallHeatInfoProgressBarStyle(), 0.0125f, mech.getX() - 0.125f, mech.getY() + 0.75f);
+        progressBar.setSize(100, 100);
         mech.setHeatLevel(Math.max(mech.getHeatLevel() - reduceAmount, 0));
         SequenceAction sequenceAction = new SequenceAction();
         sequenceAction.addAction(new AddActorAction(stageElementsStorage.stage, progressBar));
-        sequenceAction.addAction(new ShowReduceHeatAction(mech.getHeatLevel(), Math.max(mech.getHeatLevel() - reduceAmount, 0f), progressBar));
+        sequenceAction.addAction(new ShowReduceValueAction(mech.getHeatLevel(), Math.max(mech.getHeatLevel() - reduceAmount, 0f), progressBar));
+        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.stage, progressBar));
+        return sequenceAction;
+    }
+
+    private Action reduceStabilityLevel(StageElementsStorage stageElementsStorage, MechInfoPanelFacade mechInfoPanelFacade, Mech mech) {
+
+        ProgressBar progressBar = new ScalableProgressBar(0, 100, 1f, false, mechInfoPanelFacade.getStabilityProgressBarStyle(), 0.0125f, mech.getX() - 0.125f, mech.getY() + 0.75f);
+        progressBar.setSize(100f, 100f);
+        mech.setStability(Math.min(mech.getStability() + 50, 100));
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(new AddActorAction(stageElementsStorage.stage, progressBar));
+        sequenceAction.addAction(new ShowReduceValueAction(Math.min(mech.getStability() + 50, 100f), mech.getStability(), progressBar));
         sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.stage, progressBar));
         return sequenceAction;
     }
