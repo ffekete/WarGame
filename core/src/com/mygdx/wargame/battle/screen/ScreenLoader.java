@@ -30,7 +30,12 @@ public class ScreenLoader {
         assetManager.load("DesertTile.png", Texture.class);
         assetManager.load("Grass.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
+
         assetManager.load("variation/Tree01.png", Texture.class);
+        assetManager.load("variation/Tree02.png", Texture.class);
+        assetManager.load("variation/Tree03.png", Texture.class);
+        assetManager.load("variation/Tree04.png", Texture.class);
+
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);
         assetManager.load("Missile.png", Texture.class);

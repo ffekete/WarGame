@@ -112,7 +112,7 @@ public class BattleScreen implements Screen {
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
                 new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
-                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade);
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera);
 
         // display
 

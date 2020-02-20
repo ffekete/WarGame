@@ -13,6 +13,7 @@ import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.overlay.Overlay;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.config.Config;
 
 import java.util.List;
 import java.util.Random;
@@ -32,6 +33,9 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
         this.assetManager = assetManager;
         treeVariations = ImmutableList.<Texture>builder()
                 .add(assetManager.get("variation/Tree01.png", Texture.class))
+                .add(assetManager.get("variation/Tree02.png", Texture.class))
+                .add(assetManager.get("variation/Tree03.png", Texture.class))
+                .add(assetManager.get("variation/Tree04.png", Texture.class))
                 .build();
         this.stageElementsStorage = stageElementsStorage;
     }
@@ -43,19 +47,15 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
                 if (newMap[i][j] == 1) {
-                    int rnd = new Random().nextInt(treeVariations.size());
 
-                    Image tree = new Image(treeVariations.get(0));
-                    tree.setPosition(i, j);
-                    tree.setSize(1, 1);
-                    stageElementsStorage.mechLevel.addActor(tree);
+                    for(int k = 0; k < new Random().nextInt(Config.treeSpread); k++) {
+                        int rnd = new Random().nextInt(treeVariations.size());
 
-//                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-//                    cell.setTile(new StaticTiledMapTile(new TextureRegion(treeVariations.get(rnd))));
-
-//                    worldMap.getLayer(LayerIndex.Decoration).setCell(i,j, cell);
-//
-//                    worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setDecorationOverlay(new Overlay(TileOverlayType.Trees));
+                        Image tree = new Image(treeVariations.get(rnd));
+                        tree.setPosition(i + new Random().nextFloat(), j+ new Random().nextFloat());
+                        tree.setSize(1, 1);
+                        stageElementsStorage.mechLevel.addActor(tree);
+                    }
                 }
             }
         }

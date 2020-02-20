@@ -1,7 +1,10 @@
 package com.mygdx.wargame.rules.facade;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
@@ -53,9 +56,10 @@ public class TurnProcessingFacade {
     private MovementMarkerFactory movementMarkerFactory;
     private HeatCalculator heatCalculator;
     private MechInfoPanelFacade mechInfoPanelFacade;
+    private Camera camera;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -71,6 +75,8 @@ public class TurnProcessingFacade {
         this.movementMarkerFactory = movementMarkerFactory;
         this.heatCalculator = heatCalculator;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
+        this.camera = camera;
+
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -85,6 +91,10 @@ public class TurnProcessingFacade {
     }
 
     public void process(BattleMap battleMap, Stage stage) {
+
+        //stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x-1, camera.position.y -1,camera.position.x + 1, camera.position.y + 1));
+
+        System.out.println(Gdx.graphics.getFramesPerSecond());
 
         if (actionLock.isLocked()) {
             return;

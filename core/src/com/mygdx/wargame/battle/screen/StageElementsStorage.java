@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.ui.MovementMarker;
 import com.mygdx.wargame.battle.ui.WayPoint;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,26 +30,19 @@ public class StageElementsStorage {
     public static class SortedGroup extends Group {
 
         @Override
-        protected void childrenChanged() {
-            getChildren().sort(new Comparator<Actor>() {
-                @Override
-                public int compare(Actor o1, Actor o2) {
-                    return Float.compare(o2.getY(), o1.getY());
-                }
-            });
-        }
-
-        @Override
         protected void drawChildren (Batch batch, float parentAlpha) {
             parentAlpha *= super.getColor().a;
             SnapshotArray<Actor> children = this.getChildren();
 
+            long st = System.currentTimeMillis();
             children.sort(new Comparator<Actor>() {
                 @Override
                 public int compare(Actor o1, Actor o2) {
                     return Float.compare(o2.getY(), o1.getY());
                 }
             });
+
+            System.out.println("Elapsed: " + (System.currentTimeMillis() - st));
 
             Actor[] actors = children.begin();
             Rectangle cullingArea = this.getCullingArea();
