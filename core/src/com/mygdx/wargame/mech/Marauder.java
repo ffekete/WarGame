@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 
 public class Marauder extends AbstractMech {
 
-    public static final int LEFT_HAND_HP = 10;
-    public static final int RIGHT_HAND_HP = 10;
-    public static final int LEFT_LEG_HP = 15;
-    public static final int RIGHT_LEG_HP = 15;
-    public static final int TORSO_HP = 30;
-    public static final int HEAD_HP = 10;
+    public static final int LEFT_HAND_HP = 15;
+    public static final int RIGHT_HAND_HP = 15;
+    public static final int LEFT_LEG_HP = 20;
+    public static final int RIGHT_LEG_HP = 20;
+    public static final int TORSO_HP = 40;
+    public static final int HEAD_HP = 15;
 
     private SpriteBatch spriteBatch;
     private String name;

@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.component.armor.CompositeMaterialArmor;
 import com.mygdx.wargame.component.shield.SmallShieldModule;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
@@ -13,6 +14,8 @@ import com.mygdx.wargame.component.weapon.missile.SwarmMissile;
 import com.mygdx.wargame.component.weapon.plasma.PlasmaCannon;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Marauder;
+import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.mech.Scout;
 import com.mygdx.wargame.mech.WreckingBall;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.pilot.PilotCreator;
@@ -28,7 +31,7 @@ public class BattleScreenInputDataStubber {
     }
 
     public void stub(BattleScreenInputData battleScreenInputData) {
-        WreckingBall unit3 = new WreckingBall("3", spriteBatch, assetManager);
+        Mech unit3 = new Scout("3", spriteBatch, assetManager);
         unit3.setPosition(6, 5);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
@@ -104,11 +107,14 @@ public class BattleScreenInputDataStubber {
         unit2.addComponent(BodyPart.Torso, largeCannon10);
         unit2.addComponent(BodyPart.Torso, largeCannon11);
 
-        Marauder unit = new Marauder("1", spriteBatch, assetManager);
+        Mech unit = new WreckingBall("1", spriteBatch, assetManager);
         unit.setPosition(5, 2);
         unit.setTeam(Team.enemy);
         unit.setActive(true);
-        unit.setStability(100);
+        unit.setStability(50);
+        unit.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
+        unit.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
+        unit.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
         LargeLaser largeLaser2 = new LargeLaser();
         largeLaser2.setStatus(Status.Selected);
         LargeLaser largeLaser3 = new LargeLaser();

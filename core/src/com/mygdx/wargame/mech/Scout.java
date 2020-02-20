@@ -18,14 +18,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class WreckingBall extends AbstractMech {
+public class Scout extends AbstractMech {
 
-    public static final int LEFT_HAND_HP = 20;
-    public static final int RIGHT_HAND_HP = 20;
-    public static final int LEFT_LEG_HP = 30;
-    public static final int RIGHT_LEG_HP = 30;
-    public static final int TORSO_HP = 60;
-    public static final int HEAD_HP = 20;
+    public static final int LEFT_HAND_HP = 10;
+    public static final int RIGHT_HAND_HP = 10;
+    public static final int LEFT_LEG_HP = 15;
+    public static final int RIGHT_LEG_HP = 15;
+    public static final int TORSO_HP = 30;
+    public static final int HEAD_HP = 10;
 
     private SpriteBatch spriteBatch;
     private String name;
@@ -51,14 +51,14 @@ public class WreckingBall extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public WreckingBall(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
+    public Scout(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
         super(5, assetManager);
         this.spriteBatch = spriteBatch;
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.mechTextureRegion = new TextureRegion(assetManager.get("WreckingBall.png", Texture.class), 0, 0, 48, 48);
+        this.mechTextureRegion = new TextureRegion(assetManager.get("Scout.png", Texture.class), 0, 0, 48, 48);
 
         hp.put(BodyPart.LeftHand, getLeftHandMaxHp());
         hp.put(BodyPart.RightHand, getRightHandMaxHp());
@@ -68,6 +68,8 @@ public class WreckingBall extends AbstractMech {
         hp.put(BodyPart.Head,getHeadMaxHp());
 
     }
+
+
 
     @Override
     public String getName() {
@@ -81,7 +83,7 @@ public class WreckingBall extends AbstractMech {
 
     @Override
     public int getMaxMovementPoints() {
-        return 15;
+        return 7;
     }
 
     @Override

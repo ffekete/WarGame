@@ -38,7 +38,7 @@ public class ShowMessageActor extends TemporalAction {
         super.act(delta);
         if (isComplete()) {
             actionLock.removeWaitingObject(label);
-            stageElementsStorage.groundLevel.removeActor(label);
+            stageElementsStorage.airLevel.removeActor(label);
         }
         return isComplete();
     }
@@ -46,7 +46,7 @@ public class ShowMessageActor extends TemporalAction {
     @Override
     protected void update(float percent) {
         if (firstRun) {
-            stageElementsStorage.groundLevel.addActor(label);
+            stageElementsStorage.airLevel.addActor(label);
             firstRun = false;
         }
         label.setY(label.getY() + percent / 40f);

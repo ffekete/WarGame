@@ -16,6 +16,7 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.ui.HealthOverlay;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.AbstractMech;
@@ -64,13 +65,21 @@ public class MechClickInputListener extends InputListener {
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
         if(!actionLock.isLocked() && !overlayShown && !mechInfoPanelFacade.isLocalMenuVisible()) {
-            healthOverlay.setPosition(mec.getX() - 0.5f, mec.getY() - 0.5f);
+            healthOverlay.setPosition(mec.getX() - 0.9f, mec.getY() - 0.5f);
             healthOverlay.setHeadHealth("" + mec.getHp(BodyPart.Head));
             healthOverlay.setLeftArmHealth("" + mec.getHp(BodyPart.LeftHand));
             healthOverlay.setLeftLegHealth("" + mec.getHp(BodyPart.LeftLeg));
             healthOverlay.setRightArmHealth("" + mec.getHp(BodyPart.RightHand));
             healthOverlay.setRightLegHealth("" + mec.getHp(BodyPart.RightLeg));
             healthOverlay.setTorsoHealth("" + mec.getHp(BodyPart.Torso));
+
+            healthOverlay.setHeadArmor("" + mec.getComponents(BodyPart.Head).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+            healthOverlay.setLeftLegArmor("" + mec.getComponents(BodyPart.LeftLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+            healthOverlay.setRightLegArmor("" + mec.getComponents(BodyPart.RightLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+            healthOverlay.setLeftArmArmor("" + mec.getComponents(BodyPart.LeftHand).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+            healthOverlay.setRightArmArmor("" + mec.getComponents(BodyPart.RightHand).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+            healthOverlay.setTorsoArmor("" + mec.getComponents(BodyPart.Torso).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+
             stageElementsStorage.airLevel.addActor(healthOverlay);
             this.overlayShown = true;
             event.stop();

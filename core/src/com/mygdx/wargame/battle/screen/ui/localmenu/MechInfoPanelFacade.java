@@ -54,11 +54,11 @@ public class MechInfoPanelFacade extends Actor {
         labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
 
-        healthOverlayImage = new HealthOverlay("1", labelStyle, new TextureRegion(new Texture(Gdx.files.internal("HealthOverlay.png"))));
-        healthOverlayImage.setTouchable(Touchable.disabled);
-
         smallLabelStyle = new Label.LabelStyle();
-        smallLabelStyle.font = FontCreator.getBitmapFont(20);
+        smallLabelStyle.font = FontCreator.getBitmapFont(15);
+
+        healthOverlayImage = new HealthOverlay("1", smallLabelStyle, new TextureRegion(new Texture(Gdx.files.internal("HealthOverlay.png"))));
+        healthOverlayImage.setTouchable(Touchable.disabled);
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = font;
