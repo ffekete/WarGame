@@ -25,13 +25,14 @@ public class HealthOverlay extends Image {
     private String leftArmArmor;
     private String rightArmArmor;
 
+    private String shieldValue;
+
     private Label.LabelStyle labelStyle;
     private TextureRegion textureRegion;
     private int step = 0;
     private float delay = 0;
 
-    public HealthOverlay(String headHealth, Label.LabelStyle labelStyle, TextureRegion textureRegion) {
-        this.headHealth = headHealth;
+    public HealthOverlay( Label.LabelStyle labelStyle, TextureRegion textureRegion) {
         this.labelStyle = labelStyle;
         this.textureRegion = textureRegion;
     }
@@ -43,12 +44,12 @@ public class HealthOverlay extends Image {
 
         if (delay > 0.1f) {
             delay = 0;
-            step = (step + 1) % 24;
+            //step = (step + 1) % 1;
         }
 
-        textureRegion.setRegion(step * 48, 0, 48, 48);
+        textureRegion.setRegion(step * 96, 0, 96, 96);
         batch.setColor(Color.valueOf("FFFFFF99"));
-        batch.draw(textureRegion, getX(), getY(), 2.8f, 2);
+        batch.draw(textureRegion, getX(), getY(), 3.5f, 2f);
 
         Matrix4 originalMatrix = batch.getProjectionMatrix().cpy(); // cpy() needed to properly set afterwards because calling set() seems to modify kept matrix, not replaces it
         float scaleX = 0.02f;
@@ -58,34 +59,37 @@ public class HealthOverlay extends Image {
         Color old = labelStyle.font.getColor();
 
         labelStyle.font.setColor(Color.valueOf("00FF0099"));
-        labelStyle.font.draw(batch, headHealth, (getX() + 0.37f)* (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
+        labelStyle.font.draw(batch, headHealth, (getX() + 0.47f)* (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
         labelStyle.font.setColor(Color.valueOf("C0C0C099"));
-        labelStyle.font.draw(batch, headArmor, (getX() + 0.17f)* (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
+        labelStyle.font.draw(batch, headArmor, (getX() + 0.22f)* (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
 
         labelStyle.font.setColor(Color.valueOf("00FF0099"));
-        labelStyle.font.draw(batch, leftArmHealth, (getX() + 0.37f) * (1 / scaleX), (getY() + 1.15f) * (1 / scaleY));
+        labelStyle.font.draw(batch, leftArmHealth, (getX() + 0.47f) * (1 / scaleX), (getY() + 1.12f) * (1 / scaleY));
         labelStyle.font.setColor(Color.valueOf("C0C0C099"));
-        labelStyle.font.draw(batch, leftArmArmor, (getX() + 0.17f)* (1 / scaleX), (getY() + 1.15f) * (1 / scaleY));
+        labelStyle.font.draw(batch, leftArmArmor, (getX() + 0.22f)* (1 / scaleX), (getY() + 1.12f) * (1 / scaleY));
 
         labelStyle.font.setColor(Color.valueOf("00FF0099"));
-        labelStyle.font.draw(batch, rightArmHealth, (getX() + 2.45f) * (1 / scaleX), (getY() + 1.15f) * (1 / scaleY));
+        labelStyle.font.draw(batch, rightArmHealth, (getX() + 3.1f) * (1 / scaleX), (getY() + 1.12f) * (1 / scaleY));
         labelStyle.font.setColor(Color.valueOf("C0C0C099"));
-        labelStyle.font.draw(batch, rightArmArmor, (getX() + 2.15f)* (1 / scaleX), (getY() + 1.15f) * (1 / scaleY));
+        labelStyle.font.draw(batch, rightArmArmor, (getX() + 2.8f)* (1 / scaleX), (getY() + 1.12f) * (1 / scaleY));
 
         labelStyle.font.setColor(Color.valueOf("00FF0099"));
-        labelStyle.font.draw(batch, leftLegHealth, (getX() + 0.37f) * (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
+        labelStyle.font.draw(batch, leftLegHealth, (getX() + 0.47f) * (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
         labelStyle.font.setColor(Color.valueOf("C0C0C099"));
-        labelStyle.font.draw(batch, leftLegArmor, (getX() + 0.17f)* (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
+        labelStyle.font.draw(batch, leftLegArmor, (getX() + 0.22f)* (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
 
         labelStyle.font.setColor(Color.valueOf("00FF0099"));
-        labelStyle.font.draw(batch, rightLegHealth, (getX() + 2.45f) * (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
+        labelStyle.font.draw(batch, rightLegHealth, (getX() + 3.1f) * (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
         labelStyle.font.setColor(Color.valueOf("C0C0C099"));
-        labelStyle.font.draw(batch, rightLegArmor, (getX() + 2.15f)* (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
+        labelStyle.font.draw(batch, rightLegArmor, (getX() + 2.8f)* (1 / scaleX), (getY() + 0.5f) * (1 / scaleY));
 
         labelStyle.font.setColor(Color.valueOf("00FF0099"));
-        labelStyle.font.draw(batch, torsoHealth, (getX() + 2.45f) * (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
+        labelStyle.font.draw(batch, torsoHealth, (getX() + 3.1f) * (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
         labelStyle.font.setColor(Color.valueOf("C0C0C099"));
-        labelStyle.font.draw(batch, torsoArmor, (getX() + 2.15f)* (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
+        labelStyle.font.draw(batch, torsoArmor, (getX() + 2.8f)* (1 / scaleX), (getY() + 1.9f) * (1 / scaleY));
+
+        labelStyle.font.setColor(Color.valueOf("FFFF0099"));
+        labelStyle.font.draw(batch, shieldValue, (getX() + 1.65f) * (1 / scaleX), (getY() + 1.93f) * (1 / scaleY));
 
         labelStyle.font.setColor(old);
         batch.setProjectionMatrix(originalMatrix);
@@ -138,5 +142,9 @@ public class HealthOverlay extends Image {
 
     public void setRightArmArmor(String rightArmArmor) {
         this.rightArmArmor = rightArmArmor;
+    }
+
+    public void setShieldValue(String shieldValue) {
+        this.shieldValue = shieldValue;
     }
 }

@@ -65,13 +65,14 @@ public class MechClickInputListener extends InputListener {
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
         if(!actionLock.isLocked() && !overlayShown && !mechInfoPanelFacade.isLocalMenuVisible()) {
-            healthOverlay.setPosition(mec.getX() - 0.9f, mec.getY() - 0.5f);
+            healthOverlay.setPosition(mec.getX() -1.25f, mec.getY() - 0.5f);
             healthOverlay.setHeadHealth("" + mec.getHp(BodyPart.Head));
             healthOverlay.setLeftArmHealth("" + mec.getHp(BodyPart.LeftHand));
             healthOverlay.setLeftLegHealth("" + mec.getHp(BodyPart.LeftLeg));
             healthOverlay.setRightArmHealth("" + mec.getHp(BodyPart.RightHand));
             healthOverlay.setRightLegHealth("" + mec.getHp(BodyPart.RightLeg));
             healthOverlay.setTorsoHealth("" + mec.getHp(BodyPart.Torso));
+            healthOverlay.setShieldValue("" + mec.getShieldValue());
 
             healthOverlay.setHeadArmor("" + mec.getComponents(BodyPart.Head).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
             healthOverlay.setLeftLegArmor("" + mec.getComponents(BodyPart.LeftLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
@@ -100,6 +101,9 @@ public class MechClickInputListener extends InputListener {
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+        overlayShown = false;
+        healthOverlay.setSize(0f, 0f);
+
         if (actionLock.isLocked())
             return true;
 

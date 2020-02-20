@@ -40,6 +40,7 @@ public class MechInfoPanelFacade extends Actor {
     private WeaponSelectionPanelMovementHandler weaponSelectionPanelMovementHandler = new WeaponSelectionPanelMovementHandler();
     private CheckBox.CheckBoxStyle checkBoxStyle;
     private BitmapFont font;
+    private BitmapFont smallFont;
     Label.LabelStyle labelStyle;
     Label.LabelStyle smallLabelStyle;
     ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
@@ -51,17 +52,19 @@ public class MechInfoPanelFacade extends Actor {
         mechInfoTable = new Table();
 
         font = FontCreator.getBitmapFont();
+        smallFont = FontCreator.getBitmapFont(13);
+
         labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
 
         smallLabelStyle = new Label.LabelStyle();
-        smallLabelStyle.font = FontCreator.getBitmapFont(15);
+        smallLabelStyle.font = smallFont;
 
-        healthOverlayImage = new HealthOverlay("1", smallLabelStyle, new TextureRegion(new Texture(Gdx.files.internal("HealthOverlay.png"))));
+        healthOverlayImage = new HealthOverlay(smallLabelStyle, new TextureRegion(new Texture(Gdx.files.internal("HealthOverlay.png"))));
         healthOverlayImage.setTouchable(Touchable.disabled);
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
-        checkBoxStyle.font = font;
+        checkBoxStyle.font = smallFont;
         checkBoxStyle.checkboxOn = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxChecked.png")));
         checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
@@ -89,8 +92,6 @@ public class MechInfoPanelFacade extends Actor {
         stabilityProgressBarStyle = new ProgressBar.ProgressBarStyle();
         stabilityProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarBg.png")));
         stabilityProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarKnob.png")));
-
-
 
         heatProgressBar = new ProgressBar(0, 100, 1, false, heatInfoProgressBarStyle);
         heatProgressBar.setValue(50);
