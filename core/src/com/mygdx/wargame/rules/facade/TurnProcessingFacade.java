@@ -163,6 +163,7 @@ public class TurnProcessingFacade {
             // move if target too far away
             if (target.isPresent()) {
                 if (target.get().getTargetNode() != null) {
+                    System.out.println("Found target node");
 
                     // calculate path
                     GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
@@ -170,11 +171,10 @@ public class TurnProcessingFacade {
 
                     battleMap.addPath(selectedMech, paths);
 
-                    sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, (AbstractMech) selectedMech, 1, battleMap));
+                    sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, (AbstractMech) selectedMech, 0, battleMap));
                     //sequenceAction.addAction(new MoveIntoFlankingRangeAction(battleMap, selectedMech, selectedPilot, target.get().getTargetNode().getX(), target.get().getTargetNode().getY(), rangeCalculator));
 
                 } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
-
                     // reconnect graph so that attacker can move
                     battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 

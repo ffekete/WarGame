@@ -3,6 +3,8 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.FollowCameraAction;
+import com.mygdx.wargame.battle.action.RemoveFollowCameraAction;
 import com.mygdx.wargame.battle.action.SetTemporaryObstacleAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -25,6 +27,9 @@ public class MoveActorAlongPathActionFactory {
     public SequenceAction act(GraphPath<Node> paths, AbstractMech attacker, int range, BattleMap battleMap) {
         SequenceAction moveToAction = new SequenceAction();
         moveToAction.reset();
+
+        attacker.addAction(new FollowCameraAction(stageElementsStorage, attacker));
+
         moveToAction.addAction(new SetStateAction(attacker, State.Walk));
         moveToAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
         Node last = paths.get(paths.getCount() - 1);
@@ -46,12 +51,10 @@ public class MoveActorAlongPathActionFactory {
                 moveToAction.addAction(moveToActionStep);
 
                 moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx , ny));
-
-                if (MathUtils.getDistance(node.getX(), node.getY(), last.getX(), last.getY()) <= range)
-                    break;
             }
         }
         moveToAction.addAction(new SetStateAction(attacker, State.Idle));
+        moveToAction.addAction(new RemoveFollowCameraAction(attacker));
         if (node != null)
             moveToAction.addAction(new SetTemporaryObstacleAction(battleMap, (int) node.getX(), (int) node.getY()));
         return moveToAction;

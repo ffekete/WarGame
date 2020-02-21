@@ -30,15 +30,13 @@ public class FlankingTargetStrategy implements TargetingStrategy {
 
             int minRange = rangeCalculator.calculateAllWeaponsRange(pilot, mech);
 
+            Node start = new Node(mech.getX(), mech.getY());
+
             Optional<Node> flankingNode = Optional.of(availableNodes.stream()
                     .filter(node -> flankingCalculator.isFlankedFromPosition(node.getX(), node.getY(), target.get().getMech()))
-                    .filter(node -> MathUtils.getDistance(node.getX(), node.getY(), mech.getX(), mech.getY()) <= minRange)
-                    .max(new Comparator<Node>() {
-                        @Override
-                        public int compare(Node o1, Node o2) {
-                            return Integer.compare((int) MathUtils.getDistance(o1.getX(), o1.getY(), mech.getX(), mech.getY()), (int) MathUtils.getDistance(o2.getX(), o2.getY(), mech.getX(), mech.getY()));
-                        }
-                    })).get();
+                    .filter(node -> MathUtils.getDistance(node.getX(), node.getY(), target.get().getMech().getX(), target.get().getMech().getY()) <= minRange)
+                    .filter(node -> battleMap.getNodeGraphLv1().findPath(start, node).getCount() -1 <= mech.getMovementPoints())
+                    .max(Comparator.comparingInt(o -> (int) MathUtils.getDistance(o.getX(), o.getY(), mech.getX(), mech.getY())))).get();
 
             if (flankingNode.isPresent()) {
                 target.get().setTargetNode(flankingNode.get());

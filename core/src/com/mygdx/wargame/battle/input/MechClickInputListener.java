@@ -109,6 +109,8 @@ public class MechClickInputListener extends InputListener {
         overlayShown = false;
         healthOverlay.setSize(0f, 0f);
 
+        targetingPanelFacade.hide();
+
         if (actionLock.isLocked())
             return true;
 
@@ -151,6 +153,7 @@ public class MechClickInputListener extends InputListener {
             }
 
         } else if (mec.getTeam().equals(Team.enemy)) {
+
             // attack
             //mechInfoPanelFacade.hideLocalMenu();
             //rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot, null);

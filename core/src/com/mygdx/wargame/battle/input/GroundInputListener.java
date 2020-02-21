@@ -10,9 +10,11 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.movement.WayPoint;
 import com.mygdx.wargame.battle.screen.ui.movement.WayPointEnd;
+import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.action.AddMovementMarkersAction;
 import com.mygdx.wargame.battle.unit.action.AddWayPointAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
@@ -33,9 +35,11 @@ public class GroundInputListener extends InputListener {
     private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
     private MovementMarkerFactory movementMarkerFactory;
     private AssetManager assetManager;
+    private TargetingPanelFacade targetingPanelFacade;
+    private EnemyMechInfoPanelFacade enemyMechInfoPanelFacade;
 
 
-    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, AssetManager assetManager) {
+    public GroundInputListener(TurnProcessingFacade turnProcessingFacade, BattleMap battleMap, ActionLock actionLock, MechInfoPanelFacade mechInfoPanelFacade, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, AssetManager assetManager, TargetingPanelFacade targetingPanelFacade, EnemyMechInfoPanelFacade enemyMechInfoPanelFacade) {
         this.turnProcessingFacade = turnProcessingFacade;
         this.battleMap = battleMap;
 
@@ -45,12 +49,15 @@ public class GroundInputListener extends InputListener {
         this.movementMarkerFactory = movementMarkerFactory;
         this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory);
         this.assetManager = assetManager;
+        this.targetingPanelFacade = targetingPanelFacade;
+        this.enemyMechInfoPanelFacade = enemyMechInfoPanelFacade;
     }
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+        targetingPanelFacade.hide();
         mechInfoPanelFacade.hideLocalMenu();
+        enemyMechInfoPanelFacade.hideLocalMenu();
 
         if (actionLock.isLocked()) {
             event.stop();

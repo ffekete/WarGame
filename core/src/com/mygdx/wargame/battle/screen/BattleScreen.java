@@ -146,7 +146,7 @@ public class BattleScreen implements Screen {
 
         stage.addActor(mechInfoPanelFacade);
 
-        stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager()));
+        stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager(), targetingPanelFacade, enemyMechInfoPanelFacade));
 
         battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
             stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -78,7 +79,11 @@ public class EnemyMechInfoPanelFacade {
         });
 
 
-        aimedAttackButton = new ImageButton(hideMenuButtonsSelectionStyle);
+        ImageButton.ImageButtonStyle calledShotButtonStyle = new ImageButton.ImageButtonStyle();
+        calledShotButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CalledShotUp.png")));
+        calledShotButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CalledShotDown.png")));
+
+        aimedAttackButton = new ImageButton(calledShotButtonStyle);
         aimedAttackButton.setSize(aimedAttackButton.getWidth() * Config.UI_SCALING, aimedAttackButton.getHeight() * Config.UI_SCALING);
 
         aimedAttackButton.addListener(new ClickListener() {
@@ -87,8 +92,8 @@ public class EnemyMechInfoPanelFacade {
                 // hide all other panels
                 hideLocalMenu();
                 stageElementsStorage.hudStage.addActor(targetingPanelFacade.getPanel(attackingPilot, attackingMech, defendingPilot, defendingMech));
-                targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250, 0), Config.SCREEN_SIZE_X),Math.min(Math.max(aimedAttackButton.getY() - 100, 0), Config.SCREEN_SIZE_Y));
-                targetingPanelFacade.getPanel().setSize(200,200);
+                targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250, 0), Config.SCREEN_SIZE_X), Math.min(Math.max(aimedAttackButton.getY() - 100, 0), Config.SCREEN_SIZE_Y));
+                targetingPanelFacade.getPanel().setSize(200, 200);
                 targetingPanelFacade.getPanel().setVisible(true);
                 //EnemyMechInfoPanelFacade.this.rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) defendingMech, defendingPilot, null);
                 return true;
@@ -117,7 +122,7 @@ public class EnemyMechInfoPanelFacade {
 
         MoveByAction moveTo = new MoveByAction();
 
-        moveTo.setAmount( 0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 * Config.UI_SCALING);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -164,7 +169,7 @@ public class EnemyMechInfoPanelFacade {
     public void showLocalMenu() {
         localMenuVisible = true;
         MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount( 0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 * Config.UI_SCALING);
         moveTo.setDuration(0.25f);
         attackButton.addAction(moveTo);
 
