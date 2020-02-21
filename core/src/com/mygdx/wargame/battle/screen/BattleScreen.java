@@ -177,8 +177,8 @@ public class BattleScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        camera.position.x += screenConfiguration.scrollX;
-        camera.position.y += screenConfiguration.scrollY;
+        camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
+        camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
 
         DrawUtils.clearScreen();
 
