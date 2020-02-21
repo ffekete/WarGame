@@ -26,12 +26,7 @@ import java.util.Random;
 
 public class AttackFacade {
 
-    private MissileHitChanceCalculator missileHitChanceCalculator = new MissileHitChanceCalculator();
-    private LaserHitChanceCalculator laserHitChanceCalculator = new LaserHitChanceCalculator();
-    private BallisticHitChanceCalculator ballisticHitChanceCalculator = new BallisticHitChanceCalculator();
-    private FlamerHitChanceCalculator flamerHitChanceCalculator = new FlamerHitChanceCalculator();
-    private IonHitChanceCalculator ionHitChanceCalculator = new IonHitChanceCalculator();
-    private PlasmaHitChanceCalculator plasmaHitChanceCalculator = new PlasmaHitChanceCalculator();
+    private HitChanceCalculatorFacade hitChanceCalculatorFacade = new HitChanceCalculatorFacade();
     private CriticalHitChanceCalculator criticalHitChanceCalculator = new CriticalHitChanceCalculator();
     private BodyPartDestructionHandler bodyPartDestructionHandler = new BodyPartDestructionHandler();
     private DamageCalculator damageCalculator;
@@ -48,37 +43,13 @@ public class AttackFacade {
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
-
-        System.out.println("Targeting: " + bodyPart);
-
         messageQue.reset();
 
         attackingMech.getSelectedWeapons().forEach(weapon -> {
 
             if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), defendingMech.getX(), defendingMech.getY()) <= weapon.getRange()) {
 
-                int chance = 0;
-
-                switch (weapon.getType()) {
-                    case Ballistic:
-                        chance = ballisticHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
-                        break;
-                    case Missile:
-                        chance = missileHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
-                        break;
-                    case Laser:
-                        chance = laserHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
-                        break;
-                    case Plasma:
-                        chance = plasmaHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
-                        break;
-                    case Ion:
-                        chance = ionHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
-                        break;
-                    case Flamer:
-                        chance = flamerHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
-                        break;
-                }
+                int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
 
                 // reduce ammo of weapon
                 for(int i = 0; i < weapon.getDamageMultiplier(); i++)

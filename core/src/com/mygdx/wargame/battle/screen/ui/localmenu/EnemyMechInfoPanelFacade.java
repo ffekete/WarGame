@@ -20,7 +20,6 @@ import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.util.StageUtils;
 
 public class EnemyMechInfoPanelFacade {
 
@@ -174,15 +173,15 @@ public class EnemyMechInfoPanelFacade {
         moveTo.setDuration(0.25f);
         hideMenuButton.addAction(moveTo);
 
-//        moveTo = new MoveByAction();
-//        moveTo.setAmount(60 * Config.UI_SCALING, 0);
-//        moveTo.setDuration(0.25f);
-//        pilotButton.addAction(moveTo);
+        moveTo = new MoveByAction();
+        moveTo.setAmount(60 * Config.UI_SCALING, 0);
+        moveTo.setDuration(0.25f);
+        aimedAttackButton.addAction(moveTo);
 //
 //        moveTo = new MoveByAction();
 //        moveTo.setAmount(-60 * Config.UI_SCALING, 0);
 //        moveTo.setDuration(0.25f);
-//        detailsButton.addAction(moveTo);
+//        aimedAttackButton.addAction(moveTo);
 //
     }
 

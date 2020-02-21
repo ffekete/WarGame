@@ -6,16 +6,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
+import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.rules.facade.HitChanceCalculatorFacade;
 import com.mygdx.wargame.util.MathUtils;
 
 public class TargetingPanelFacade {
@@ -27,18 +31,19 @@ public class TargetingPanelFacade {
     private ColoredImageButton rightLegImage;
     private ColoredImageButton leftArmImage;
     private ColoredImageButton rightArmImage;
-    private RangedAttackTargetCalculator rangedAttackTargetCalculator;
-    private RangeCalculator rangeCalculator;
-    private TurnProcessingFacade turnProcessingFacade;
 
-    private Mech  attackingMech;
+    private Mech attackingMech;
     private Pilot attackingPilot;
     private Pilot targetPilot;
     private Mech targetMech;
 
     private Table panel;
 
-    public TargetingPanelFacade(AssetManager assetManager, RangedAttackTargetCalculator rangedAttackTargetCalculator, RangeCalculator rangeCalculator, TurnProcessingFacade turnProcessingFacade) {
+    Label.LabelStyle labelStyle;
+
+    private HitChanceCalculatorFacade hitChanceCalculatorFacade = new HitChanceCalculatorFacade();
+
+    public TargetingPanelFacade(AssetManager assetManager, RangedAttackTargetCalculator rangedAttackTargetCalculator, RangeCalculator rangeCalculator) {
         panelImage = new Image(assetManager.get("skin/BigInfoPanel.png", Texture.class));
 
         this.headImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetHead.png", 96, 96));
@@ -47,9 +52,6 @@ public class TargetingPanelFacade {
         this.leftLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetLeftLeg.png", 48, 96));
         this.rightArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetRightArm.png", 48, 96));
         this.rightLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetRightLeg.png", 48, 96));
-        this.rangedAttackTargetCalculator = rangedAttackTargetCalculator;
-        this.rangeCalculator = rangeCalculator;
-        this.turnProcessingFacade = turnProcessingFacade;
 
         headImage.setClip(true);
 
@@ -91,7 +93,7 @@ public class TargetingPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int minRange = rangeCalculator.calculateAllWeaponsRange(attackingPilot, attackingMech);
 
-                if(MathUtils.getDistance(attackingMech.getX(),  attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
                     rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) targetMech, targetPilot, BodyPart.Head);
                 }
 
@@ -104,7 +106,7 @@ public class TargetingPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int minRange = rangeCalculator.calculateAllWeaponsRange(attackingPilot, attackingMech);
 
-                if(MathUtils.getDistance(attackingMech.getX(),  attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
                     rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) targetMech, targetPilot, BodyPart.Torso);
                 }
 
@@ -117,7 +119,7 @@ public class TargetingPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int minRange = rangeCalculator.calculateAllWeaponsRange(attackingPilot, attackingMech);
 
-                if(MathUtils.getDistance(attackingMech.getX(),  attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
                     rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) targetMech, targetPilot, BodyPart.LeftLeg);
                 }
 
@@ -130,7 +132,7 @@ public class TargetingPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int minRange = rangeCalculator.calculateAllWeaponsRange(attackingPilot, attackingMech);
 
-                if(MathUtils.getDistance(attackingMech.getX(),  attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
                     rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) targetMech, targetPilot, BodyPart.RightLeg);
                 }
 
@@ -143,7 +145,7 @@ public class TargetingPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int minRange = rangeCalculator.calculateAllWeaponsRange(attackingPilot, attackingMech);
 
-                if(MathUtils.getDistance(attackingMech.getX(),  attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
                     rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) targetMech, targetPilot, BodyPart.LeftArm);
                 }
 
@@ -156,13 +158,16 @@ public class TargetingPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 int minRange = rangeCalculator.calculateAllWeaponsRange(attackingPilot, attackingMech);
 
-                if(MathUtils.getDistance(attackingMech.getX(),  attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), targetMech.getX(), targetMech.getY()) <= minRange) {
                     rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) targetMech, targetPilot, BodyPart.RightArm);
                 }
 
                 return true;
             }
         });
+
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font = FontCreator.getBitmapFont(12);
     }
 
     private ImageButton.ImageButtonStyle getImageButtonStyle(AssetManager assetManager, String path, float minWidth, float minHeight) {
@@ -185,7 +190,33 @@ public class TargetingPanelFacade {
         this.attackingMech = attackingMech;
         this.attackingPilot = attackingPilot;
         this.targetPilot = targetPilot;
+
+        addTooltip(BodyPart.Head, headImage);
+        addTooltip(BodyPart.Torso, torsoImage);
+        addTooltip(BodyPart.LeftLeg, leftLegImage);
+        addTooltip(BodyPart.LeftArm, leftArmImage);
+        addTooltip(BodyPart.RightLeg, rightLegImage);
+        addTooltip(BodyPart.RightArm, rightArmImage);
+
         return panel;
+    }
+
+    public void addTooltip(BodyPart bodyPart, ImageButton imageButton) {
+        Table tooltipContent = new Table();
+        Container<Table> container = new Container<>(tooltipContent);
+
+        tooltipContent.pad(20, 20, 20, 20);
+
+        Tooltip<Container> tooltip = new Tooltip<>(container);
+        tooltipContent.background(panelImage.getDrawable());
+        tooltip.setInstant(true);
+
+        attackingMech.getSelectedWeapons().stream().forEach(w -> {
+            tooltipContent.add(new Label(w.getName() + " to hit:", labelStyle)).padRight(20).left();
+            tooltipContent.add(new Label("" + hitChanceCalculatorFacade.getHitChance(w, attackingPilot, attackingMech, targetMech, bodyPart) + "%", labelStyle)).left()
+                    .row();
+        });
+        imageButton.addListener(tooltip);
     }
 
     public Table getPanel() {
@@ -212,5 +243,4 @@ public class TargetingPanelFacade {
             coloredImageButton.setColor(Color.valueOf("FFFFFF22"));
         }
     }
-
 }
