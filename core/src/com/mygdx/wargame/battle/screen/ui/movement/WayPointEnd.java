@@ -1,11 +1,9 @@
-package com.mygdx.wargame.battle.ui;
+package com.mygdx.wargame.battle.screen.ui.movement;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.config.Config;
 

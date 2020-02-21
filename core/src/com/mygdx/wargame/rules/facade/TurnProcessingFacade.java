@@ -94,7 +94,7 @@ public class TurnProcessingFacade {
 
         //stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x-1, camera.position.y -1,camera.position.x + 1, camera.position.y + 1));
 
-        System.out.println(Gdx.graphics.getFramesPerSecond());
+        //System.out.println(Gdx.graphics.getFramesPerSecond());
 
         if (actionLock.isLocked()) {
             return;
@@ -197,7 +197,7 @@ public class TurnProcessingFacade {
                 attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                 attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
                 attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
-                AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange);
+                AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                 sequenceAction.addAction(attackActions);
                 sequenceAction.addAction(attackAction);
 

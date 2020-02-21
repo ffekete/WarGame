@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.AttackFacade;
@@ -16,8 +17,9 @@ public class AttackAction extends Action {
     private Pilot defenderPilot;
     private BattleMap battleMap;
     private int minRange;
+    private BodyPart bodyPart;
 
-    public AttackAction(AttackFacade attackFacade, Mech attackerMech, Pilot attackingPilot, Mech defenderMech, Pilot defenderPilot, BattleMap battleMap, int minRange) {
+    public AttackAction(AttackFacade attackFacade, Mech attackerMech, Pilot attackingPilot, Mech defenderMech, Pilot defenderPilot, BattleMap battleMap, int minRange, BodyPart bodyPart) {
         this.attackFacade = attackFacade;
         this.attackerMech = attackerMech;
         this.attackingPilot = attackingPilot;
@@ -25,6 +27,7 @@ public class AttackAction extends Action {
         this.defenderPilot = defenderPilot;
         this.battleMap = battleMap;
         this.minRange = minRange;
+        this.bodyPart = bodyPart;
     }
 
 
@@ -39,7 +42,7 @@ public class AttackAction extends Action {
             return true;
         }
 
-        attackFacade.attack(attackingPilot, attackerMech, defenderPilot, defenderMech, battleMap, null);
+        attackFacade.attack(attackingPilot, attackerMech, defenderPilot, defenderMech, battleMap, bodyPart);
         return true;
     }
 }

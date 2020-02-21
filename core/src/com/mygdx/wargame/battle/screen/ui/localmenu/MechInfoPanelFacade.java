@@ -16,8 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
-import com.mygdx.wargame.battle.ui.HealthOverlay;
+import com.mygdx.wargame.battle.screen.ui.HealthOverlay;
+import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.config.Config;
 
 public class MechInfoPanelFacade extends Actor {
@@ -48,7 +51,12 @@ public class MechInfoPanelFacade extends Actor {
     ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
     private HealthOverlay healthOverlayImage;
 
-    public MechInfoPanelFacade() {
+    private StageElementsStorage stageElementsStorage;
+    private ActionLock actionLock;
+
+    public MechInfoPanelFacade(StageElementsStorage stageElementsStorage, ActionLock actionLock) {
+        this.stageElementsStorage = stageElementsStorage;
+        this.actionLock = actionLock;
         mechInfoTable = new Table();
 
         font = FontCreator.getBitmapFont();
@@ -119,6 +127,15 @@ public class MechInfoPanelFacade extends Actor {
         pilotButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PilotButtonDown.png")));
         pilotButton = new ImageButton(pilotButtonStyle);
         pilotButton.setSize(pilotButton.getWidth() * Config.UI_SCALING, pilotButton.getHeight() * Config.UI_SCALING);
+        pilotButton.addListener(new ClickListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                hideLocalMenu();
+                return true;
+            }
+        });
+
 
         ImageButton.ImageButtonStyle weaponSelectionButtonStyle = new ImageButton.ImageButtonStyle();
         weaponSelectionButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/WeaponSelectionButtonUp.png")));
@@ -181,10 +198,6 @@ public class MechInfoPanelFacade extends Actor {
         //mechInfoTable.background(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/StatusBackground.png"))));
     }
 
-
-
-
-
     public Table getIbTable() {
         return ibTable;
     }
@@ -196,7 +209,7 @@ public class MechInfoPanelFacade extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        weaponSelectionScrollPane.draw(batch, parentAlpha);
+        //weaponSelectionScrollPane.draw(batch, parentAlpha);
     }
 
     public Container getWeaponSelectionContainer() {

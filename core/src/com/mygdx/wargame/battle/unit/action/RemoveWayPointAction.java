@@ -2,7 +2,6 @@ package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.ui.WayPoint;
 
 public class RemoveWayPointAction extends Action {
 

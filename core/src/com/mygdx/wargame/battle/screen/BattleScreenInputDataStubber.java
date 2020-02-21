@@ -42,7 +42,7 @@ public class BattleScreenInputDataStubber {
         LargeLaser largeLaser4 = new LargeLaser();
         largeLaser4.setStatus(Status.Selected);
         unit3.addComponent(BodyPart.LeftLeg, swarmMissile);
-        unit3.addComponent(BodyPart.RightHand, largeLaser);
+        unit3.addComponent(BodyPart.RightArm, largeLaser);
         unit3.addComponent(BodyPart.Torso, largeLaser4);
         unit3.setActive(true);
         unit3.addComponent(BodyPart.Torso, new SmallShieldModule());

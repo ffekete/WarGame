@@ -32,8 +32,8 @@ public class WreckingBall extends AbstractMech {
     private int movementPoints;
 
     private Map<BodyPart, Integer> bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
-            .put(BodyPart.LeftHand, 3)
-            .put(BodyPart.RightHand, 3)
+            .put(BodyPart.LeftArm, 3)
+            .put(BodyPart.RightArm, 3)
             .put(BodyPart.LeftLeg, 5)
             .put(BodyPart.RightLeg, 5)
             .put(BodyPart.Torso, 3)
@@ -43,8 +43,8 @@ public class WreckingBall extends AbstractMech {
     private Map<BodyPart, Integer> hp = new HashMap<>();
 
     private Map<BodyPart, Set<Component>> components = ImmutableMap.<BodyPart, Set<Component>>builder()
-            .put(BodyPart.LeftHand, new HashSet<>())
-            .put(BodyPart.RightHand, new HashSet<>())
+            .put(BodyPart.LeftArm, new HashSet<>())
+            .put(BodyPart.RightArm, new HashSet<>())
             .put(BodyPart.LeftLeg, new HashSet<>())
             .put(BodyPart.RightLeg, new HashSet<>())
             .put(BodyPart.Torso, new HashSet<>())
@@ -60,8 +60,8 @@ public class WreckingBall extends AbstractMech {
         setSize(1, 1);
         this.mechTextureRegion = new TextureRegion(assetManager.get("WreckingBall.png", Texture.class), 0, 0, 48, 48);
 
-        hp.put(BodyPart.LeftHand, getLeftHandMaxHp());
-        hp.put(BodyPart.RightHand, getRightHandMaxHp());
+        hp.put(BodyPart.LeftArm, getLeftHandMaxHp());
+        hp.put(BodyPart.RightArm, getRightHandMaxHp());
         hp.put(BodyPart.LeftLeg, getLeftLegMaxHp());
         hp.put(BodyPart.RightLeg, getRightLegMaxHp());
         hp.put(BodyPart.Torso, getTorsoMaxHp());

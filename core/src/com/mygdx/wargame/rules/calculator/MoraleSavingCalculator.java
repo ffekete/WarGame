@@ -19,9 +19,9 @@ public class MoraleSavingCalculator {
 
         int remainingHp = targetMech.getHp(BodyPart.Head)
                 + targetMech.getHp(BodyPart.Torso)
-                + targetMech.getHp(BodyPart.LeftHand)
+                + targetMech.getHp(BodyPart.LeftArm)
                 + targetMech.getHp(BodyPart.LeftLeg)
-                + targetMech.getHp(BodyPart.RightHand)
+                + targetMech.getHp(BodyPart.RightArm)
                 + targetMech.getHp(BodyPart.RightLeg);
 
         int maxHp = targetMech.getLeftHandMaxHp()

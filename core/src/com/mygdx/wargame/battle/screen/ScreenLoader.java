@@ -31,6 +31,13 @@ public class ScreenLoader {
         assetManager.load("Grass.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
 
+        assetManager.load("targeting/TargetHead.png", Texture.class);
+        assetManager.load("targeting/TargetTorso.png", Texture.class);
+        assetManager.load("targeting/TargetLeftArm.png", Texture.class);
+        assetManager.load("targeting/TargetRightArm.png", Texture.class);
+        assetManager.load("targeting/TargetLeftLeg.png", Texture.class);
+        assetManager.load("targeting/TargetRightLeg.png", Texture.class);
+
         assetManager.load("variation/Tree01.png", Texture.class);
         assetManager.load("variation/Tree02.png", Texture.class);
         assetManager.load("variation/Tree03.png", Texture.class);
@@ -47,8 +54,10 @@ public class ScreenLoader {
         assetManager.load("FriendlyMarker.png", Texture.class);
         assetManager.load("EnemyMarker.png", Texture.class);
         assetManager.load("MovementMarker.png", Texture.class);
+
         assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
+        assetManager.load("skin/BigInfoPanel.png", Texture.class);
         assetManager.finishLoading();
     }
 

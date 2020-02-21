@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.ui;
+package com.mygdx.wargame.battle.screen.ui;
 
 
 import com.badlogic.gdx.Gdx;

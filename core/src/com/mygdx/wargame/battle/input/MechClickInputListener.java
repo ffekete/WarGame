@@ -1,25 +1,25 @@
 package com.mygdx.wargame.battle.input;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.HealthOverlay;
+import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
-import com.mygdx.wargame.battle.ui.HealthOverlay;
+import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
@@ -45,8 +45,11 @@ public class MechClickInputListener extends InputListener {
     private StageElementsStorage stageElementsStorage;
     private HealthOverlay healthOverlay;
     boolean overlayShown = false;
+    private TargetingPanelFacade targetingPanelFacade;
+    private EnemyMechInfoPanelFacade enemyMechInfoPanelFacade;
+    private BattleMap battleMap;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage, TargetingPanelFacade targetingPanelFacade, EnemyMechInfoPanelFacade enemyMechInfoPanelFacade, BattleMap battleMap) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -60,26 +63,29 @@ public class MechClickInputListener extends InputListener {
         this.stage = stage;
         this.stageElementsStorage = stageElementsStorage;
         healthOverlay = mechInfoPanelFacade.getHealthOverlayImage();
+        this.targetingPanelFacade = targetingPanelFacade;
+        this.enemyMechInfoPanelFacade = enemyMechInfoPanelFacade;
+        this.battleMap = battleMap;
     }
 
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-        if(!actionLock.isLocked() && !overlayShown && !mechInfoPanelFacade.isLocalMenuVisible()) {
-            healthOverlay.setPosition(mec.getX() -1.25f, mec.getY() - 0.5f);
+        if (!actionLock.isLocked() && !overlayShown && !mechInfoPanelFacade.isLocalMenuVisible()) {
+            healthOverlay.setPosition(mec.getX() - 1.25f, mec.getY() - 0.5f);
             healthOverlay.setHeadHealth("" + mec.getHp(BodyPart.Head));
-            healthOverlay.setLeftArmHealth("" + mec.getHp(BodyPart.LeftHand));
+            healthOverlay.setLeftArmHealth("" + mec.getHp(BodyPart.LeftArm));
             healthOverlay.setLeftLegHealth("" + mec.getHp(BodyPart.LeftLeg));
-            healthOverlay.setRightArmHealth("" + mec.getHp(BodyPart.RightHand));
+            healthOverlay.setRightArmHealth("" + mec.getHp(BodyPart.RightArm));
             healthOverlay.setRightLegHealth("" + mec.getHp(BodyPart.RightLeg));
             healthOverlay.setTorsoHealth("" + mec.getHp(BodyPart.Torso));
             healthOverlay.setShieldValue("" + mec.getShieldValue());
 
-            healthOverlay.setHeadArmor("" + mec.getComponents(BodyPart.Head).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
-            healthOverlay.setLeftLegArmor("" + mec.getComponents(BodyPart.LeftLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
-            healthOverlay.setRightLegArmor("" + mec.getComponents(BodyPart.RightLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
-            healthOverlay.setLeftArmArmor("" + mec.getComponents(BodyPart.LeftHand).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
-            healthOverlay.setRightArmArmor("" + mec.getComponents(BodyPart.RightHand).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
-            healthOverlay.setTorsoArmor("" + mec.getComponents(BodyPart.Torso).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor)a).getHitPoint()).reduce((a,b) -> a + b).orElse(0));
+            healthOverlay.setHeadArmor("" + mec.getComponents(BodyPart.Head).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
+            healthOverlay.setLeftLegArmor("" + mec.getComponents(BodyPart.LeftLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
+            healthOverlay.setRightLegArmor("" + mec.getComponents(BodyPart.RightLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
+            healthOverlay.setLeftArmArmor("" + mec.getComponents(BodyPart.LeftArm).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
+            healthOverlay.setRightArmArmor("" + mec.getComponents(BodyPart.RightArm).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
+            healthOverlay.setTorsoArmor("" + mec.getComponents(BodyPart.Torso).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
 
             stageElementsStorage.airLevel.addActor(healthOverlay);
             this.overlayShown = true;
@@ -89,14 +95,13 @@ public class MechClickInputListener extends InputListener {
 
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-        if(overlayShown) {
+        if (overlayShown) {
             healthOverlay.setSize(0f, 0f);
             stageElementsStorage.airLevel.removeActor(healthOverlay);
             overlayShown = false;
             event.stop();
         }
     }
-
 
 
     @Override
@@ -122,17 +127,17 @@ public class MechClickInputListener extends InputListener {
                 addAllAvailableWeaponsToScrollPane();
 
                 mechInfoPanelFacade.getMechInfoTable().clear();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("H : "+ mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("H : " + mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp(), labelStyle)).center().pad(5);
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp(), labelStyle)).center().pad(5).row();
 
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftHand) + "/" + mec.getLeftHandMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp(), labelStyle)).center().pad(5);
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightHand) + "/" + mec.getRightHandMaxHp(), labelStyle)).center().pad(5).row();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp(), labelStyle)).center().pad(5).row();
 
                 mechInfoPanelFacade.getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp(), labelStyle)).center().pad(5);
                 mechInfoPanelFacade.getMechInfoTable().add();
@@ -147,14 +152,52 @@ public class MechClickInputListener extends InputListener {
 
         } else if (mec.getTeam().equals(Team.enemy)) {
             // attack
-            mechInfoPanelFacade.hideLocalMenu();
-            rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot);
+            //mechInfoPanelFacade.hideLocalMenu();
+            //rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot, null);
+            if (!enemyMechInfoPanelFacade.isLocalMenuVisible()) {
+                updateCloseMenuButtonForEnemy();
+                updateAttackButton();
+                updateAimedAttackButton();
+                enemyMechInfoPanelFacade.showLocalMenu();
+            } else {
+                enemyMechInfoPanelFacade.hideLocalMenu();
+            }
         } else {
             // ???
         }
 
         event.stop();
         return true;
+    }
+
+    private void updateAttackButton() {
+
+        enemyMechInfoPanelFacade.getAttackButton().setVisible(true);
+        // Details button
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
+        enemyMechInfoPanelFacade.getAttackButton().setX(newCoord.x);
+        enemyMechInfoPanelFacade.getAttackButton().setY(newCoord.y);
+
+        enemyMechInfoPanelFacade.setAttackingMech(turnProcessingFacade.getNext().getKey());
+        enemyMechInfoPanelFacade.setAttackingPilot(turnProcessingFacade.getNext().getValue());
+        enemyMechInfoPanelFacade.setBattleMap(battleMap);
+        enemyMechInfoPanelFacade.setDefendingPilot(pilot);
+        enemyMechInfoPanelFacade.setDefendingMech(mec);
+    }
+
+    private void updateAimedAttackButton() {
+
+        enemyMechInfoPanelFacade.getAimedAttackButton().setVisible(true);
+        // Details button
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
+        enemyMechInfoPanelFacade.getAimedAttackButton().setX(newCoord.x);
+        enemyMechInfoPanelFacade.getAimedAttackButton().setY(newCoord.y);
+
+        enemyMechInfoPanelFacade.setAttackingMech(turnProcessingFacade.getNext().getKey());
+        enemyMechInfoPanelFacade.setAttackingPilot(turnProcessingFacade.getNext().getValue());
+        enemyMechInfoPanelFacade.setBattleMap(battleMap);
+        enemyMechInfoPanelFacade.setDefendingPilot(pilot);
+        enemyMechInfoPanelFacade.setDefendingMech(mec);
     }
 
     private void UpdateHeatBar() {
@@ -212,14 +255,20 @@ public class MechClickInputListener extends InputListener {
 
     }
 
+    private void updateCloseMenuButtonForEnemy() {
+        enemyMechInfoPanelFacade.getHideMenuButton().setVisible(true);
+        // Details button
+        Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
+        enemyMechInfoPanelFacade.getHideMenuButton().setX(newCoord.x);
+        enemyMechInfoPanelFacade.getHideMenuButton().setY(newCoord.y);
+    }
+
     private void updateCloseMenuButton() {
         mechInfoPanelFacade.getHideMenuButton().setVisible(true);
         // Details button
         Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
         mechInfoPanelFacade.getHideMenuButton().setX(newCoord.x);
         mechInfoPanelFacade.getHideMenuButton().setY(newCoord.y);
-
-
     }
 
     private void updateWeaponSelectionButton() {

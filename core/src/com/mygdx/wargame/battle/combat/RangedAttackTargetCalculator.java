@@ -10,9 +10,10 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.ui.WayPoint;
+import com.mygdx.wargame.battle.screen.ui.movement.WayPoint;
 import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
@@ -44,7 +45,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
     }
 
     @Override
-    public void calculate(Pilot attackerPilot, AbstractMech attackerMech, AbstractMech defenderMech, Pilot defenderPilot) {
+    public void calculate(Pilot attackerPilot, AbstractMech attackerMech, AbstractMech defenderMech, Pilot defenderPilot, BodyPart targetedBodyPart) {
 
         if (attackerMech != null && defenderMech != null) {
             Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) attackerMech.getX()][(int) attackerMech.getY()];
@@ -79,7 +80,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), stageElementsStorage, battleMap));
 
             sequenceAction.addAction(parallelAction);
-            sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
+            sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), targetedBodyPart));
             //sequenceAction.addAction(new UnlockAction(actionLock));
             sequenceAction.addAction(new RemoveWayPointAction(stageElementsStorage));
             attackerMech.addAction(sequenceAction);

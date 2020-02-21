@@ -11,8 +11,8 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
-import com.mygdx.wargame.battle.ui.WayPoint;
-import com.mygdx.wargame.battle.ui.WayPointEnd;
+import com.mygdx.wargame.battle.screen.ui.movement.WayPoint;
+import com.mygdx.wargame.battle.screen.ui.movement.WayPointEnd;
 import com.mygdx.wargame.battle.unit.action.AddMovementMarkersAction;
 import com.mygdx.wargame.battle.unit.action.AddWayPointAction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
@@ -82,7 +82,6 @@ public class GroundInputListener extends InputListener {
                     wayPoint = new WayPoint(assetManager, stageElementsStorage);
                 else {
                     wayPoint = new WayPointEnd(assetManager, stageElementsStorage);
-                    System.out.println("Last angle:" + MathUtils.getAngle(new double[]{paths.get(i).getX(), paths.get(i).getY()}, new double[]{paths.get(i-1).getX(), paths.get(i-1).getY()}));
                     wayPoint.setRotation(180 + MathUtils.getAngle(new double[]{paths.get(i).getX(), paths.get(i).getY()}, new double[]{paths.get(i-1).getX(), paths.get(i-1).getY()}));
                 }
                 wayPoint.setPosition(paths.get(i).getX(), paths.get(i).getY());

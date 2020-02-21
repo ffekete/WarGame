@@ -25,7 +25,9 @@ import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.input.BasicMouseHandlingInputAdapter;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.screen.ui.SelectionMarker;
+import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
+import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.rules.calculator.HeatCalculator;
@@ -56,6 +58,7 @@ public class BattleScreen implements Screen {
     private SelectionMarker selectionMarker;
     private ScreenConfiguration screenConfiguration;
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+    private TargetingPanelFacade targetingPanelFacade;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -73,7 +76,7 @@ public class BattleScreen implements Screen {
         viewport.apply();
 
         hudCamera = new OrthographicCamera();
-        hudViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y , hudCamera);
+        hudViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y, hudCamera);
 
         this.spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -87,6 +90,7 @@ public class BattleScreen implements Screen {
 
         stageElementsStorage.stage = stage;
         stageElementsStorage.hudStage = hudStage;
+
 
         selectionMarker = new SelectionMarker(screenLoader.getAssetManager(), spriteBatch);
 
@@ -103,7 +107,7 @@ public class BattleScreen implements Screen {
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade();
+        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade(stageElementsStorage, actionLock);
 
         MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade);
 
@@ -128,6 +132,10 @@ public class BattleScreen implements Screen {
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory);
 
+        targetingPanelFacade = new TargetingPanelFacade(screenLoader.getAssetManager(), rangedAttackTargetCalculator, rangeCalculator, turnProcessingFacade);
+
+        EnemyMechInfoPanelFacade enemyMechInfoPanelFacade = new EnemyMechInfoPanelFacade(stageElementsStorage, actionLock, targetingPanelFacade, rangedAttackTargetCalculator);
+
         battleMap.setTemporaryObstacle(1, 1);
         battleMap.setTemporaryObstacle(5, 2);
         battleMap.setTemporaryObstacle(6, 5);
@@ -136,16 +144,18 @@ public class BattleScreen implements Screen {
         stage.addActor(stageElementsStorage.mechLevel);
         stage.addActor(stageElementsStorage.airLevel);
 
-        stage.addListener( new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager()));
+        stage.addActor(mechInfoPanelFacade);
+
+        stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager()));
 
         battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
             stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
-            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage));
+            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage, targetingPanelFacade, enemyMechInfoPanelFacade, battleMap));
         }));
 
         battleScreenInputData.getGroup2().entrySet().forEach((entry -> {
             stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
-            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage));
+            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage, targetingPanelFacade, enemyMechInfoPanelFacade, battleMap));
         }));
 
         stage.addActor(selectionMarker);
@@ -154,6 +164,8 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.getHideMenuButton().setVisible(false);
         mechInfoPanelFacade.getPilotButton().setVisible(false);
         mechInfoPanelFacade.registerComponents(hudStage);
+
+        enemyMechInfoPanelFacade.registerComponents(hudStage);
 
         HudElementsFacade hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
         hudElementsFacade.registerComponents(hudStage);

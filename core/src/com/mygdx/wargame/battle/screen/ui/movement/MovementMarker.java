@@ -1,4 +1,4 @@
-package com.mygdx.wargame.battle.ui;
+package com.mygdx.wargame.battle.screen.ui.movement;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;

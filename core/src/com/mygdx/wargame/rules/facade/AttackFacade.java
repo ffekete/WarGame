@@ -49,6 +49,8 @@ public class AttackFacade {
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
 
+        System.out.println("Targeting: " + bodyPart);
+
         messageQue.reset();
 
         attackingMech.getSelectedWeapons().forEach(weapon -> {

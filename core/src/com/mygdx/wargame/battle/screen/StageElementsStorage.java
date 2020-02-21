@@ -6,10 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
-import com.mygdx.wargame.battle.map.BattleMapConfig;
-import com.mygdx.wargame.battle.ui.MovementMarker;
-import com.mygdx.wargame.battle.ui.WayPoint;
-import org.lwjgl.Sys;
+import com.mygdx.wargame.battle.screen.ui.movement.MovementMarker;
+import com.mygdx.wargame.battle.screen.ui.movement.WayPoint;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,15 +32,12 @@ public class StageElementsStorage {
             parentAlpha *= super.getColor().a;
             SnapshotArray<Actor> children = this.getChildren();
 
-            long st = System.currentTimeMillis();
             children.sort(new Comparator<Actor>() {
                 @Override
                 public int compare(Actor o1, Actor o2) {
                     return Float.compare(o2.getY(), o1.getY());
                 }
             });
-
-            System.out.println("Elapsed: " + (System.currentTimeMillis() - st));
 
             Actor[] actors = children.begin();
             Rectangle cullingArea = this.getCullingArea();
