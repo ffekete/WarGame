@@ -21,6 +21,7 @@ public class CenterCameraAction extends TemporalAction {
 
     public CenterCameraAction(StageElementsStorage stageElementsStorage, ActionLock actionLock) {
         this.stageElementsStorage = stageElementsStorage;
+        this.setDuration(1);
     }
 
     @Override

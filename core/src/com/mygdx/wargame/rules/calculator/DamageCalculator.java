@@ -79,8 +79,6 @@ public class DamageCalculator {
                         .reduce((a, b) -> a + b)
                         .orElse(0);
                 if (armorValue > 0) {
-                    //stageStorage.airLevel.addActor(new ExplosionAction(spriteBatch, assetManager, (int) targetMech.getX(), (int) targetMech.getY()));
-
                     addExplosion(targetMech);
 
                     showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1), messageQue);

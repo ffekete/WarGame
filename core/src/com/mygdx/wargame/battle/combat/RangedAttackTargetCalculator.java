@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -17,6 +18,7 @@ import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.rules.facade.AttackFacade;
+import org.checkerframework.checker.units.qual.C;
 
 public class RangedAttackTargetCalculator implements AttackCalculator {
 
@@ -60,6 +62,11 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
 
             sequenceAction.addAction(new LockAction(actionLock));
 
+            CenterCameraAction centerCameraAction = new CenterCameraAction(stageElementsStorage, actionLock);
+            centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stageElementsStorage.stage.getCamera().position.y);
+            centerCameraAction.setDuration(1f);
+            centerCameraAction.setPosition(attackerMech.getX(), attackerMech.getY());
+            sequenceAction.addAction(centerCameraAction);
 
             for(int i = 1; i < paths.getCount(); i++) {
                 WayPoint wayPoint = new WayPoint(assetManager, stageElementsStorage);

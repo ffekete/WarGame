@@ -32,16 +32,30 @@ public class FlankingTargetStrategy implements TargetingStrategy {
 
             Node start = new Node(mech.getX(), mech.getY());
 
+            // find flanking position that is accessible in this turn
             Optional<Node> flankingNode = Optional.of(availableNodes.stream()
                     .filter(node -> flankingCalculator.isFlankedFromPosition(node.getX(), node.getY(), target.get().getMech()))
                     .filter(node -> MathUtils.getDistance(node.getX(), node.getY(), target.get().getMech().getX(), target.get().getMech().getY()) <= minRange)
-                    .filter(node -> battleMap.getNodeGraphLv1().findPath(start, node).getCount() -1 <= mech.getMovementPoints())
+                    //.filter(node -> battleMap.getNodeGraphLv1().findPath(start, node).getCount() -1 <= mech.getMovementPoints())
                     .max(Comparator.comparingInt(o -> (int) MathUtils.getDistance(o.getX(), o.getY(), mech.getX(), mech.getY())))).get();
 
             if (flankingNode.isPresent()) {
                 target.get().setTargetNode(flankingNode.get());
                 return target;
+            } else {
+                // find flanking position around enemy, accessible in multiple turns
+                availableNodes = mapUtils.getAllAvailable(battleMap, target.get().getMech());
+
+                // find flanking position that is accessible in this turn
+                flankingNode = Optional.of(availableNodes.stream()
+                        .filter(node -> flankingCalculator.isFlankedFromPosition(node.getX(), node.getY(), target.get().getMech()))
+                        .filter(node -> MathUtils.getDistance(node.getX(), node.getY(), target.get().getMech().getX(), target.get().getMech().getY()) <= minRange)
+                        .max(Comparator.comparingInt(o -> (int) MathUtils.getDistance(o.getX(), o.getY(), mech.getX(), mech.getY())))).get();
             }
+
+
+            flankingNode.ifPresent(node -> target.get().setTargetNode(node));
+
             return target;
         }
 

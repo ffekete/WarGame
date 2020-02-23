@@ -72,7 +72,12 @@ AbstractMech extends Actor implements Mech {
         if (slow == 0) {
             slow++;
             step++;
-            if (step >= state.getEnd()) step = state.getStart();
+            if (step >= state.getEnd()) {
+                if(state != State.Dead)
+                    step = state.getStart();
+                else
+                    step = state.getEnd() -1;
+            }
             if (step < state.getStart())
                 step = state.getStart();
         } else {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.action.ShowReduceValueAction;
+import com.mygdx.wargame.battle.action.ZoomOutCameraAction;
+import com.mygdx.wargame.battle.action.ZoomToNormalCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -137,12 +140,9 @@ public class TurnProcessingFacade {
             sequenceAction.reset();
 
             // lock all actions
-            actionLock.setLocked(true);
-
             sequenceAction.addAction(new LockAction(actionLock));
 
             sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
-
 
             // reconnect graph so that attacker can move
             battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
@@ -192,6 +192,8 @@ public class TurnProcessingFacade {
                     battleMap.setPermanentObstacle(selectedMech.getX(), selectedMech.getY());
                 }
 
+                sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
+
                 // then attack
                 ParallelAction attackActions = new ParallelAction();
                 attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
@@ -200,6 +202,7 @@ public class TurnProcessingFacade {
                 AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                 sequenceAction.addAction(attackActions);
                 sequenceAction.addAction(attackAction);
+                sequenceAction.addAction(new ZoomToNormalCameraAction((OrthographicCamera) stage.getCamera()));
 
                 ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
@@ -226,7 +229,7 @@ public class TurnProcessingFacade {
     private Action centerCameraOnNext(StageElementsStorage stageElementsStorage) {
         CenterCameraAction centerCameraAction = new CenterCameraAction(stageElementsStorage, actionLock);
         centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
-        centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
+        //centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
         centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
         centerCameraAction.setDuration(1);
         return centerCameraAction;

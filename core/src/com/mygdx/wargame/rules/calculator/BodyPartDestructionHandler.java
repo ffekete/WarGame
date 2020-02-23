@@ -1,5 +1,6 @@
 package com.mygdx.wargame.rules.calculator;
 
+import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
@@ -14,6 +15,9 @@ public class BodyPartDestructionHandler {
             b.setStatus(Status.Destroyed);
         });
 
+        if(bodyPart == BodyPart.Head || bodyPart == BodyPart.Torso) {
+            mech.setState(State.Dead);
+        }
     }
 
 }

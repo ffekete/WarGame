@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -81,6 +82,13 @@ public class GroundInputListener extends InputListener {
 
             SequenceAction sequenceAction = new SequenceAction();
             sequenceAction.addAction(new LockAction(actionLock));
+
+            CenterCameraAction centerCameraAction = new CenterCameraAction(stageElementsStorage, actionLock);
+            centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stageElementsStorage.stage.getCamera().position.y);
+            centerCameraAction.setDuration(1f);
+            centerCameraAction.setPosition(attacker.getX(), attacker.getY());
+
+            attacker.addAction(centerCameraAction);
 
             for(int i = 1; i < paths.getCount(); i++) {
                 WayPoint wayPoint;

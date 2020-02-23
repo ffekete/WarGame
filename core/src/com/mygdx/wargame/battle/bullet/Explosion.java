@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.bullet;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,15 +20,15 @@ public class Explosion extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        delay += 0.05f;
-        if (delay == 0.10f) {
+        delay += Gdx.graphics.getDeltaTime();
+        if (delay >= 0.08f) {
             delay = 0;
             col++;
-            if (col == 12) {
+            if (col == 7) {
                 col = 0;
             }
         }
-        texture.setRegion(col * 96, 0, 96, 96);
+        texture.setRegion(col * 48, 0, 48, 48);
         batch.setColor(Color.WHITE);
         batch.draw(texture, getX() - 0.25f, getY() - 0.25f, 1.5f, 1.5f);
     }

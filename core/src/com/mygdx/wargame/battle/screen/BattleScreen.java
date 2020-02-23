@@ -173,6 +173,9 @@ public class BattleScreen implements Screen {
         float unitScale = 1 / 32f;
         orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
 
+        targetingPanelFacade.hide();
+        mechInfoPanelFacade.hideLocalMenu();
+        enemyMechInfoPanelFacade.hideLocalMenu();
     }
 
     @Override

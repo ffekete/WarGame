@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.bullet;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,6 +19,7 @@ public class PlasmaBullet extends AbstractBullet {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        batch.setColor(Color.WHITE);
         delay += 0.1f;
         if(delay == 0.2) {
             delay = 0;

@@ -21,7 +21,7 @@ public class AttackAnimationAction extends Action {
         this.defenderMech = defenderMech;
         length = attackerMech.getSelectedWeapons().stream()
                 .map(weapon -> weapon.getDamageMultiplier())
-                .reduce((a, b) -> a + b).get();
+                .reduce((a, b) -> a + b).orElse(999);
     }
 
     @Override

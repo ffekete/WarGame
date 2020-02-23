@@ -73,6 +73,7 @@ public class EnemyMechInfoPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
                 hideLocalMenu();
+                targetingPanelFacade.hide();
                 EnemyMechInfoPanelFacade.this.rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) defendingMech, defendingPilot, null);
                 return true;
             }
@@ -91,6 +92,7 @@ public class EnemyMechInfoPanelFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
                 hideLocalMenu();
+                targetingPanelFacade.hide();
                 stageElementsStorage.hudStage.addActor(targetingPanelFacade.getPanel(attackingPilot, attackingMech, defendingPilot, defendingMech));
                 targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250, 0), Config.SCREEN_SIZE_X), Math.min(Math.max(aimedAttackButton.getY() - 100, 0), Config.SCREEN_SIZE_Y));
                 targetingPanelFacade.getPanel().setSize(200, 200);
