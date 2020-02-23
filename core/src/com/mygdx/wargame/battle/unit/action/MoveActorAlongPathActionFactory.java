@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.action.FollowCameraAction;
@@ -25,11 +26,11 @@ public class MoveActorAlongPathActionFactory {
         this.movementMarkerFactory = movementMarkerFactory;
     }
 
-    public SequenceAction act(GraphPath<Node> paths, AbstractMech attacker, int range, BattleMap battleMap) {
+    public ParallelAction act(GraphPath<Node> paths, AbstractMech attacker, int range, BattleMap battleMap) {
+
+        ParallelAction moveAndFollowCamera = new ParallelAction();
         SequenceAction moveToAction = new SequenceAction();
         moveToAction.reset();
-
-        attacker.addAction(new FollowCameraAction(stageElementsStorage, attacker));
 
         moveToAction.addAction(new SetStateAction(attacker, State.Walk));
         moveToAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
@@ -54,10 +55,17 @@ public class MoveActorAlongPathActionFactory {
                 moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx , ny));
             }
         }
+
+        FollowCameraAction followCameraAction = new FollowCameraAction(stageElementsStorage, attacker);
+
         moveToAction.addAction(new SetStateAction(attacker, State.Idle));
-        moveToAction.addAction(new RemoveFollowCameraAction(attacker));
+        moveToAction.addAction(new RemoveFollowCameraAction(followCameraAction));
+
         if (node != null)
             moveToAction.addAction(new SetTemporaryObstacleAction(battleMap, (int) node.getX(), (int) node.getY()));
-        return moveToAction;
+
+        moveAndFollowCamera.addAction(followCameraAction);
+        moveAndFollowCamera.addAction(moveToAction);
+        return moveAndFollowCamera;
     }
 }

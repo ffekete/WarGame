@@ -9,6 +9,8 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 public class FollowCameraAction extends Action {
 
     private Actor actor;
+    private boolean finished = false;
+
 
     private StageElementsStorage stageElementsStorage;
 
@@ -21,7 +23,11 @@ public class FollowCameraAction extends Action {
     public boolean act(float delta) {
         stageElementsStorage.stage.getCamera().position.x = actor.getX();
         stageElementsStorage.stage.getCamera().position.y = actor.getY();
-        return false;
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }
 

@@ -31,11 +31,12 @@ public class ZoomOutCameraAction extends TemporalAction {
         if(firstRun) {
             targetZoom = 1f;
 
+            System.out.println("Zoom out");
             while (!(camera.position.x - camera.viewportWidth / 2f <= mech1.getX() && camera.position.x + camera.viewportWidth / 2f >= mech1.getX()
                     && camera.position.x - camera.viewportWidth / 2f <= mech2.getX() && camera.position.x + camera.viewportWidth / 2f>= mech2.getX() &&
                     camera.position.y - camera.viewportHeight / 2f <= mech1.getY() && camera.position.y + camera.viewportHeight / 2 >= mech1.getY()
                     && camera.position.y - camera.viewportHeight / 2f <= mech2.getY() && camera.position.y + camera.viewportHeight / 2f>= mech2.getY()))
-                targetZoom += 0.5f;
+                targetZoom += 0.05f;
 
             cx = Math.abs(mech1.getX() + mech2.getY()) / 2f;
             cy = Math.abs(mech1.getY() + mech2.getY()) / 2f;
