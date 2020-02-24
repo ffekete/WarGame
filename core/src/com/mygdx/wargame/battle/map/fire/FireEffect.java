@@ -31,7 +31,7 @@ public class FireEffect extends Actor {
             counter = 0;
         }
 
-        batch.setColor(Color.valueOf("FFFFFFAA"));
+        batch.setColor(Color.valueOf("FFFFFF66"));
         textureRegion.setRegion(step * 48, 0 , 48 ,48);
         batch.draw(textureRegion, getX(), getY(), 1, 1);
     }

@@ -9,29 +9,30 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Explosion extends Actor {
+public class MissileExplosion extends Actor {
 
     private TextureRegion texture;
     private float delay = 0f;
     private int col = 0;
     private RayHandler rayHandler;
 
-    public Explosion(AssetManager assetManager) {
-        this.texture = new TextureRegion(assetManager.get("Explosion.png", Texture.class));
+    public MissileExplosion(AssetManager assetManager, RayHandler rayHandler) {
+        this.texture = new TextureRegion(assetManager.get("MissileExplosion.png", Texture.class));
+        this.rayHandler = rayHandler;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         delay += Gdx.graphics.getDeltaTime();
-        if (delay >= 0.08f) {
+        if (delay >= 0.05f) {
             delay = 0;
             col++;
-            if (col == 7) {
+            if (col == 10) {
                 col = 0;
             }
         }
         texture.setRegion(col * 48, 0, 48, 48);
-        batch.setColor(Color.WHITE);
-        batch.draw(texture, getX() - 0.25f, getY() - 0.25f, 1.5f, 1.5f);
+        batch.setColor(Color.valueOf("FFFFFFAA"));
+        batch.draw(texture, getX() - 0.5f, getY() - 0.25f, 2f, 1.5f);
     }
 }

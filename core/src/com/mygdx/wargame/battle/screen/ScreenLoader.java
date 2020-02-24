@@ -48,6 +48,7 @@ public class ScreenLoader {
         assetManager.load("CannonBullet.png", Texture.class);
         assetManager.load("Missile.png", Texture.class);
         assetManager.load("Explosion.png", Texture.class);
+        assetManager.load("MissileExplosion.png", Texture.class);
         assetManager.load("Laser.png", Texture.class);
         assetManager.load("Ion.png", Texture.class);
         assetManager.load("MachineGun.png", Texture.class);

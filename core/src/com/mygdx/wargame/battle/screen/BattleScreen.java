@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.screen;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -8,12 +9,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.wargame.battle.action.FireSpreadAction;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.input.GroundInputListener;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
@@ -60,6 +64,8 @@ public class BattleScreen implements Screen {
     private ScreenConfiguration screenConfiguration;
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private TargetingPanelFacade targetingPanelFacade;
+    private World world;
+    private RayHandler rayHandler;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -67,6 +73,15 @@ public class BattleScreen implements Screen {
 
     @Override
     public void show() {
+
+        /// Box2D
+        Box2D.init();
+        world = new World(new Vector2(0, 0), true);
+
+        rayHandler = new RayHandler(world);
+        rayHandler.setShadows(true);
+        rayHandler.setAmbientLight(new Color(0.1f, 0.1f, 0f, 0.8f));
+
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
 
         screenConfiguration = new ScreenConfiguration(0, 0, 0);
@@ -92,7 +107,6 @@ public class BattleScreen implements Screen {
         stageElementsStorage.stage = stage;
         stageElementsStorage.hudStage = hudStage;
 
-
         selectionMarker = new SelectionMarker(screenLoader.getAssetManager(), spriteBatch);
 
         BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
@@ -117,7 +131,7 @@ public class BattleScreen implements Screen {
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(),
                 new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
-                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera);
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler);
 
         // display
 
@@ -131,7 +145,7 @@ public class BattleScreen implements Screen {
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
-        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory);
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler);
 
         targetingPanelFacade = new TargetingPanelFacade(screenLoader.getAssetManager(), rangedAttackTargetCalculator, rangeCalculator);
 
@@ -181,6 +195,8 @@ public class BattleScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        world.step(1/60f, 6, 2);
+
         camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
         camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
 
@@ -211,6 +227,9 @@ public class BattleScreen implements Screen {
         hudStage.act();
         hudStage.draw();
 
+        rayHandler.setCombinedMatrix(camera);
+        rayHandler.updateAndRender();
+
         //System.out.println(Gdx.graphics.getFramesPerSecond());
         //System.out.println(spriteBatch.renderCalls);
     }
@@ -237,7 +256,7 @@ public class BattleScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        world.dispose();
     }
 
 }

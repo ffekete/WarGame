@@ -1,11 +1,10 @@
 package com.mygdx.wargame.rules.facade;
 
-import com.badlogic.gdx.Gdx;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
@@ -61,9 +60,10 @@ public class TurnProcessingFacade {
     private HeatCalculator heatCalculator;
     private MechInfoPanelFacade mechInfoPanelFacade;
     private Camera camera;
+    private RayHandler rayHandler;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera, RayHandler rayHandler) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -80,6 +80,7 @@ public class TurnProcessingFacade {
         this.heatCalculator = heatCalculator;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
         this.camera = camera;
+        this.rayHandler = rayHandler;
 
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
@@ -202,7 +203,7 @@ public class TurnProcessingFacade {
                 ParallelAction attackActions = new ParallelAction();
                 attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                 attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
+                attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap, rayHandler));
                 AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                 sequenceAction.addAction(attackActions);
                 sequenceAction.addAction(attackAction);

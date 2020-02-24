@@ -1,16 +1,20 @@
 package com.mygdx.wargame.battle.unit.action;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.mygdx.wargame.battle.action.AddFireEffectAction;
+import com.mygdx.wargame.battle.action.MoveLightSourceAction;
 import com.mygdx.wargame.battle.action.SetOverlayAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
@@ -30,7 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BulletAnimationAction extends Action {
+public class
+BulletAnimationAction extends Action {
 
     private Mech attackerMech;
     private Mech defenderMech;
@@ -40,8 +45,9 @@ public class BulletAnimationAction extends Action {
     private int minRange;
     private StageElementsStorage stageElementsStorage;
     private BattleMap battleMap;
+    private RayHandler rayHandler;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap, RayHandler rayHandler) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
@@ -49,6 +55,7 @@ public class BulletAnimationAction extends Action {
         this.minRange = minRange;
         this.stageElementsStorage = stageElementsStorage;
         this.battleMap = battleMap;
+        this.rayHandler = rayHandler;
     }
 
     @Override
@@ -134,13 +141,24 @@ public class BulletAnimationAction extends Action {
                 visibleAction.setVisible(true);
                 sequenceAction.addAction(visibleAction);
 
+                ParallelAction moveAndLight = new ParallelAction();
+
                 if (weapon.getType() == WeaponType.Missile)
-                    sequenceAction.addAction(moveActorByBezierLine);
+                    moveAndLight.addAction(moveActorByBezierLine);
                 else
-                    sequenceAction.addAction(moveToAction);
+                    moveAndLight.addAction(moveToAction);
+
+                if(weapon.getType() == WeaponType.Plasma)
+                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.1f,0.6f,0.4f,1f)));
+
+
+                if(weapon.getType() == WeaponType.Laser)
+                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.6f,0.0f,0.0f,1f)));
+
+                sequenceAction.addAction(moveAndLight);
 
                 if (weapon.getType() == WeaponType.Missile) {
-                    Explosion explosion = new Explosion(assetManager);
+                    MissileExplosion explosion = new MissileExplosion(assetManager, rayHandler);
                     explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
                     SequenceAction explosionAction = new SequenceAction();
                     explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
