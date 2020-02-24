@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Edge;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.decoration.TreeImage;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.mech.Mech;
 
 import java.util.ArrayList;
@@ -82,4 +84,18 @@ public class MapUtils {
         return allAvailable;
     }
 
+    public List<TreeImage> nrOfTreesOnTile(StageElementsStorage stageElementsStorage, float tx, float ty) {
+
+        List<TreeImage> found = new ArrayList<>();
+
+        for (int i = 0; i < stageElementsStorage.mechLevel.getChildren().size; i++) {
+            if (stageElementsStorage.mechLevel.getChild(i).getClass().isAssignableFrom(TreeImage.class)
+                    && stageElementsStorage.mechLevel.getChild(i).getX() >= tx - 1 && stageElementsStorage.mechLevel.getChild(i).getX() <= tx + 1 &&
+                    stageElementsStorage.mechLevel.getChild(i).getY() >= ty - 1 && stageElementsStorage.mechLevel.getChild(i).getY() <= ty + 1) {
+                found.add((TreeImage) stageElementsStorage.mechLevel.getChild(i));
+            }
+        }
+
+        return found;
+    }
 }

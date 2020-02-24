@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.LayerIndex;
+import com.mygdx.wargame.battle.map.decoration.TreeImage;
 import com.mygdx.wargame.battle.map.overlay.Overlay;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
@@ -51,7 +52,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                     for(int k = 0; k < new Random().nextInt(Config.treeSpread); k++) {
                         int rnd = new Random().nextInt(treeVariations.size());
 
-                        Image tree = new Image(treeVariations.get(rnd));
+                        TreeImage tree = new TreeImage(treeVariations.get(rnd));
                         tree.setPosition(i + new Random().nextFloat(), j+ new Random().nextFloat());
                         tree.setSize(1, 1);
                         stageElementsStorage.mechLevel.addActor(tree);

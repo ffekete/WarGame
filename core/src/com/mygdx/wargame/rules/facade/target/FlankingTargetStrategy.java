@@ -26,6 +26,11 @@ public class FlankingTargetStrategy implements TargetingStrategy {
         Optional<Target> target = targetingStrategy.findTarget(pilot, mech, targets, battleMap, null);
 
         if (target.isPresent()) {
+
+            if(flankingCalculator.isFlankedFromPosition(mech.getX(), mech.getY(), target.get().getMech())) {
+                return target;
+            }
+
             List<Node> availableNodes = mapUtils.getAllAvailable(battleMap, mech);
 
             int minRange = rangeCalculator.calculateAllWeaponsRange(pilot, mech);

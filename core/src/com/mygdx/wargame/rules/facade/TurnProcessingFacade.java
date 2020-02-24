@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
+import com.mygdx.wargame.battle.action.FireSpreadAction;
 import com.mygdx.wargame.battle.action.ShowReduceValueAction;
 import com.mygdx.wargame.battle.action.ZoomOutCameraAction;
 import com.mygdx.wargame.battle.action.ZoomToNormalCameraAction;
@@ -108,6 +109,9 @@ public class TurnProcessingFacade {
         }
 
         if (!iterator.hasNext()) {
+
+            stageElementsStorage.stage.addAction(new FireSpreadAction(battleMap, stageElementsStorage, assetManager));
+
             iterator = allSorted.entrySet().iterator();
 
             // reset moved and attacked statuses

@@ -29,6 +29,7 @@ public class ScreenLoader {
         assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.load("DesertTile.png", Texture.class);
         assetManager.load("Grass.png", Texture.class);
+        assetManager.load("Flame.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
 
         assetManager.load("targeting/TargetHead.png", Texture.class);

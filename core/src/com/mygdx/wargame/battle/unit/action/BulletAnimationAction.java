@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
+import com.mygdx.wargame.battle.action.AddFireEffectAction;
 import com.mygdx.wargame.battle.action.SetOverlayAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
@@ -149,6 +150,7 @@ public class BulletAnimationAction extends Action {
                         explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager, LayerIndex.Decoration));
                         craterCreated = true;
                     }
+                    explosionAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap));
                     explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
 
                     if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {

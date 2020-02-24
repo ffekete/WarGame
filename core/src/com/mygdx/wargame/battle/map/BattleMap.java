@@ -29,12 +29,16 @@ public class BattleMap {
     private TiledMap tiledMap;
     private TextureRegionSelector textureRegionSelector;
     private int unitSize;
+    private int[][] fireMap;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
     public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize) {
         this.width = x;
         this.height = y;
+
+        fireMap = new int[x][y];
+
         this.actionLock = actionLock;
         this.terrainType = terrainType;
         this.assetManager = assetManager;
@@ -156,7 +160,9 @@ public class BattleMap {
         public TextureRegion select(TerrainType terrainType) {
             return new TextureRegion(assetManager.get("Grass.png", Texture.class));
         }
+    }
 
-
+    public int[][] getFireMap() {
+        return fireMap;
     }
 }

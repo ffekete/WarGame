@@ -2,10 +2,12 @@ package com.mygdx.wargame.battle.combat;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
+import com.mygdx.wargame.battle.action.ZoomOutCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -80,6 +82,8 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, attackerMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), battleMap));
 
             sequenceAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
+
+            sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, attackerMech, defenderMech, (OrthographicCamera) stageElementsStorage.stage.getCamera()));
 
             ParallelAction parallelAction = new ParallelAction();
 

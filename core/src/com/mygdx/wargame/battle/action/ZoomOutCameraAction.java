@@ -13,6 +13,7 @@ public class ZoomOutCameraAction extends TemporalAction {
     private boolean firstRun = true;
 
     float cx, cy;
+    float startX, startY, endX, endY;
 
     float targetZoom;
 
@@ -22,30 +23,38 @@ public class ZoomOutCameraAction extends TemporalAction {
         this.mech2 = mech2;
         this.camera = camera;
 
-        setDuration(2);
+        setDuration(1);
+
+
     }
 
     @Override
     protected void update(float percent) {
 
-        if(firstRun) {
-            targetZoom = 1f;
-
-            System.out.println("Zoom out");
-            while (!(camera.position.x - camera.viewportWidth / 2f <= mech1.getX() && camera.position.x + camera.viewportWidth / 2f >= mech1.getX()
-                    && camera.position.x - camera.viewportWidth / 2f <= mech2.getX() && camera.position.x + camera.viewportWidth / 2f>= mech2.getX() &&
-                    camera.position.y - camera.viewportHeight / 2f <= mech1.getY() && camera.position.y + camera.viewportHeight / 2 >= mech1.getY()
-                    && camera.position.y - camera.viewportHeight / 2f <= mech2.getY() && camera.position.y + camera.viewportHeight / 2f>= mech2.getY()))
-                targetZoom += 0.05f;
-
-            cx = Math.abs(mech1.getX() + mech2.getY()) / 2f;
-            cy = Math.abs(mech1.getY() + mech2.getY()) / 2f;
-            camera.position.x = cx;
-            camera.position.y = cy;
+        if (firstRun) {
+            startX = mech1.getX();
+            startY = mech1.getY();
+            endX = Math.abs(mech1.getX() + mech2.getY()) / 2f;
+            endY = Math.abs(mech1.getY() + mech2.getY()) / 2f;
             firstRun = false;
         }
+        float x, y;
+        if (percent == 0) {
+            x = startX;
+            y = startY;
+        } else if (percent == 1) {
+            x = endX;
+            y = endY;
+        } else {
+            x = startX + (endX - startX) * percent;
+            y = startY + (endY - startY) * percent;
+        }
+        //target.setPosition(x, y);
+        camera.position.x = x;
+        camera.position.y = y;
+
 
         System.out.println("Target:" + targetZoom);
-        camera.zoom = 1f + (targetZoom - 1f) * percent;
+        //camera.zoom = 1f + (targetZoom - 1f) * percent;
     }
 }
