@@ -8,6 +8,7 @@ import com.mygdx.wargame.component.shield.SmallShieldModule;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
 import com.mygdx.wargame.component.weapon.ballistic.MachineGun;
+import com.mygdx.wargame.component.weapon.flamer.Flamer;
 import com.mygdx.wargame.component.weapon.ion.LargeIonCannon;
 import com.mygdx.wargame.component.weapon.laser.LargeLaser;
 import com.mygdx.wargame.component.weapon.missile.SwarmMissile;
@@ -46,7 +47,8 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeLaser4);
         unit3.setActive(true);
         unit3.addComponent(BodyPart.Torso, new SmallShieldModule());
-        unit3.setHeatLevel(100);
+        unit3.addComponent(BodyPart.LeftLeg, new Flamer());
+        unit3.setHeatLevel(0);
 
         PlasmaCannon plasmaCannon = new PlasmaCannon();
         plasmaCannon.setStatus(Status.Active);

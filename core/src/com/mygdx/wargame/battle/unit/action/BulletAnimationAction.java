@@ -20,6 +20,7 @@ import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.LayerIndex;
+import com.mygdx.wargame.battle.map.fire.FireEffect;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.component.weapon.Weapon;
@@ -106,6 +107,10 @@ BulletAnimationAction extends Action {
                     bullet = new LaserBullet(assetManager);
                 } else if (weapon.getType() == WeaponType.Ion) {
                     bullet = new IonBullet(assetManager);
+
+                } else if (weapon.getType() == WeaponType.Flamer) {
+                    bullet = new FlameBullet(assetManager);
+
                 } else {
                     bullet = new CannonBullet(assetManager);
                 }
@@ -115,7 +120,7 @@ BulletAnimationAction extends Action {
                 Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
                 Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
 
-                if (weapon.getType() == WeaponType.Missile) {
+                if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y);
                     moveActorByBezierLine.setDuration(0.3f);
                 } else {
@@ -133,7 +138,7 @@ BulletAnimationAction extends Action {
                 hideAction.setVisible(false);
                 sequenceAction.addAction(hideAction);
 
-                if (weapon.getType() != WeaponType.Missile)
+                if (weapon.getType() != WeaponType.Missile && weapon.getType() != WeaponType.Flamer)
                     sequenceAction.addAction(rotateToAction);
 
                 sequenceAction.addAction(delayAction);
@@ -143,17 +148,17 @@ BulletAnimationAction extends Action {
 
                 ParallelAction moveAndLight = new ParallelAction();
 
-                if (weapon.getType() == WeaponType.Missile)
+                if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer)
                     moveAndLight.addAction(moveActorByBezierLine);
                 else
                     moveAndLight.addAction(moveToAction);
 
-                if(weapon.getType() == WeaponType.Plasma)
-                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.1f,0.6f,0.4f,1f)));
+                if (weapon.getType() == WeaponType.Plasma)
+                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.1f, 0.6f, 0.4f, 1f)));
 
 
-                if(weapon.getType() == WeaponType.Laser)
-                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.6f,0.0f,0.0f,1f)));
+                if (weapon.getType() == WeaponType.Laser)
+                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.6f, 0.0f, 0.0f, 1f)));
 
                 sequenceAction.addAction(moveAndLight);
 
@@ -177,6 +182,10 @@ BulletAnimationAction extends Action {
                     }
 
                     stageElementsStorage.airLevel.addAction(explosionAction);
+                }
+
+                if(weapon.getType() == WeaponType.Flamer) {
+                    sequenceAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap));
                 }
 
                 if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1 && !finishedByExplosion) {

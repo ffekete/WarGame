@@ -11,7 +11,7 @@ import java.util.Optional;
 @Item
 public class Flamer implements Weapon {
 
-    public static final int MAX_AMMO = 10;
+    public static final int MAX_AMMO = 20;
 
     private int ammo;
 
@@ -20,7 +20,7 @@ public class Flamer implements Weapon {
 
     @Override
     public int getShieldDamage() {
-        return 5;
+        return 3;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Flamer implements Weapon {
 
     @Override
     public int getBodyDamage() {
-        return 5;
+        return 3;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Flamer implements Weapon {
 
     @Override
     public int getHeat() {
-        return 5;
+        return 3;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class Flamer implements Weapon {
 
     @Override
     public int getAdditionalHeatToEnemy() {
-        return 30;
+        return 10;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Flamer implements Weapon {
 
     @Override
     public int getDamageMultiplier() {
-        return 1;
+        return 3;
     }
 
     @Override
