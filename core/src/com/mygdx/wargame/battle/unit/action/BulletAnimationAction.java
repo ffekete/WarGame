@@ -20,7 +20,6 @@ import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.LayerIndex;
-import com.mygdx.wargame.battle.map.fire.FireEffect;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.component.weapon.Weapon;
@@ -173,7 +172,7 @@ BulletAnimationAction extends Action {
                         explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager, LayerIndex.Decoration));
                         craterCreated = true;
                     }
-                    explosionAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap));
+                    explosionAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap, rayHandler));
                     explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
 
                     if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {
@@ -185,7 +184,7 @@ BulletAnimationAction extends Action {
                 }
 
                 if(weapon.getType() == WeaponType.Flamer) {
-                    sequenceAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap));
+                    sequenceAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap, rayHandler));
                 }
 
                 if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1 && !finishedByExplosion) {

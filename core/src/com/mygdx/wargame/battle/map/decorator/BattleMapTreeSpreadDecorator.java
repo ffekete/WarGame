@@ -55,6 +55,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                         TreeImage tree = new TreeImage(treeVariations.get(rnd));
                         tree.setPosition(i + new Random().nextFloat(), j+ new Random().nextFloat());
                         tree.setSize(1, 1);
+
                         stageElementsStorage.mechLevel.addActor(tree);
                     }
                 }

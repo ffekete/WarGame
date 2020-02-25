@@ -1,9 +1,8 @@
 package com.mygdx.wargame.battle.action;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
@@ -13,11 +12,13 @@ public class FireSpreadAction extends Action {
     private BattleMap battleMap;
     private StageElementsStorage stageElementsStorage;
     private AssetManager assetManager;
+    private RayHandler rayHandler;
 
-    public FireSpreadAction(BattleMap battleMap, StageElementsStorage stageElementsStorage, AssetManager assetManager) {
+    public FireSpreadAction(BattleMap battleMap, StageElementsStorage stageElementsStorage, AssetManager assetManager, RayHandler rayHandler) {
         this.battleMap = battleMap;
         this.stageElementsStorage = stageElementsStorage;
         this.assetManager = assetManager;
+        this.rayHandler = rayHandler;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class FireSpreadAction extends Action {
         for (int i = 0; i < BattleMapConfig.WIDTH; i++)
             for (int j = 0; j < BattleMapConfig.HEIGHT; j++) {
                 if (battleMap.getFireMap()[i][j] == 0 && newMap[i][j] > 0) {
-                    AddFireEffectAction fireEffectAction = new AddFireEffectAction(stageElementsStorage, assetManager, i, j, battleMap);
+                    AddFireEffectAction fireEffectAction = new AddFireEffectAction(stageElementsStorage, assetManager, i, j, battleMap, rayHandler);
                     stageElementsStorage.mechLevel.addAction(fireEffectAction);
                 }
             }

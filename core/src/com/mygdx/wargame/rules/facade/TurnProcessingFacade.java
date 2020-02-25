@@ -111,7 +111,7 @@ public class TurnProcessingFacade {
 
         if (!iterator.hasNext()) {
 
-            stageElementsStorage.stage.addAction(new FireSpreadAction(battleMap, stageElementsStorage, assetManager));
+            stageElementsStorage.stage.addAction(new FireSpreadAction(battleMap, stageElementsStorage, assetManager, rayHandler));
 
             iterator = allSorted.entrySet().iterator();
 

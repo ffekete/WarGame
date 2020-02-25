@@ -58,7 +58,7 @@ public class WreckingBall extends AbstractMech {
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.mechTextureRegion = new TextureRegion(assetManager.get("WreckingBall.png", Texture.class), 0, 0, 48, 48);
+        this.mechTextureRegion = new TextureRegion(assetManager.get("WreckingBall.png", Texture.class), 0, 0, 16, 16);
 
         hp.put(BodyPart.LeftArm, getLeftHandMaxHp());
         hp.put(BodyPart.RightArm, getRightHandMaxHp());

@@ -1,7 +1,7 @@
 package com.mygdx.wargame.battle.unit;
 
 public enum State {
-    Walk(1, 5), Attack(5, 8), Idle(0, 1), Dead(8, 11);
+    Walk(5, 10), Attack(10, 13), Idle(0, 5), Dead(8, 10);
 
     private int start;
     private int end;

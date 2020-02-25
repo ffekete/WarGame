@@ -1,5 +1,7 @@
 package com.mygdx.wargame.battle.map.fire;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -13,13 +15,16 @@ import java.util.Random;
 public class FireEffect extends Actor {
 
     private TextureRegion textureRegion;
+    private RayHandler rayHandler;
 
     private int step = new Random().nextInt(4);
     private float counter = 0;
 
-    public FireEffect(AssetManager assetManager, float x, float y) {
+    public FireEffect(AssetManager assetManager, float x, float y, RayHandler rayHandler) {
         textureRegion = new TextureRegion(assetManager.get("Flame.png", Texture.class));
+        this.rayHandler = rayHandler;
         setPosition(x, y);
+        new PointLight(rayHandler, 5, new Color(1, 0,0,0.5f), 1, x, y);
     }
 
     @Override
