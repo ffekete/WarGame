@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.screen;
 
+import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -10,8 +11,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +28,7 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.TerrainType;
+import com.mygdx.wargame.battle.map.decorator.BattleMapGrassSpreadDecorator;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.input.BasicMouseHandlingInputAdapter;
@@ -66,6 +70,7 @@ public class BattleScreen implements Screen {
     private TargetingPanelFacade targetingPanelFacade;
     private World world;
     private RayHandler rayHandler;
+    private BattleMapGrassSpreadDecorator grassSpreadDecorator;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -191,6 +196,9 @@ public class BattleScreen implements Screen {
         targetingPanelFacade.hide();
         mechInfoPanelFacade.hideLocalMenu();
         enemyMechInfoPanelFacade.hideLocalMenu();
+
+        grassSpreadDecorator = new BattleMapGrassSpreadDecorator(screenLoader.getAssetManager(), stageElementsStorage);
+        grassSpreadDecorator.decorate(3, battleMap);
     }
 
     @Override

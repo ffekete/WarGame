@@ -24,7 +24,7 @@ public class MissileExplosion extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         delay += Gdx.graphics.getDeltaTime();
-        if (delay >= 0.05f) {
+        if (delay >= 0.07f) {
             delay = 0;
             col++;
             if (col == 10) {

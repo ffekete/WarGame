@@ -49,7 +49,7 @@ public class MoveActorAlongPathActionFactory {
                 moveToAction.addAction(new ChangeDirectionAction(node.getX(), node.getY(), attacker));
                 MoveToAction moveToActionStep = new MoveToAction();
                 moveToActionStep.setPosition(node.getX(), node.getY());
-                moveToActionStep.setDuration(1f);
+                moveToActionStep.setDuration(1.1f);
                 moveToAction.addAction(moveToActionStep);
 
                 moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx , ny));

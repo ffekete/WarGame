@@ -21,6 +21,8 @@ public class HeatCalculator {
 
         baseValue += heatDissipation;
 
+        baseValue -= battleMap.getFireMap()[(int)targetMech.getX()][(int)targetMech.getY()]  > 0 ? 20 : 0;
+
         if(targetPilot.hasPerk(Perks.Engineer)) {
             baseValue += 5;
         }
