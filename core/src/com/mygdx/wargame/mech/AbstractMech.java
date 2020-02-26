@@ -21,6 +21,7 @@ AbstractMech extends Actor implements Mech {
     private int initiative;
     private int step = 1;
     private int slow = 0;
+    private float idleDelay = 0;
     private State state = State.Idle;
     private Direction direction = Direction.Left;
     private float range = 15f;
@@ -42,6 +43,12 @@ AbstractMech extends Actor implements Mech {
     }
 
     public void setState(State state) {
+
+        if (this.state != state) {
+            step = state.getStart();
+            slow = 0;
+        }
+
         this.state = state;
     }
 
@@ -57,7 +64,7 @@ AbstractMech extends Actor implements Mech {
     @Override
     public void setTeam(Team team) {
         this.team = team;
-        this.selectionTexture = new TextureRegion(team == Team.own ? assetManager.get("FriendlyMarker.png", Texture.class) : assetManager.get("EnemyMarker.png", Texture.class) );
+        this.selectionTexture = new TextureRegion(team == Team.own ? assetManager.get("FriendlyMarker.png", Texture.class) : assetManager.get("EnemyMarker.png", Texture.class));
     }
 
     @Override
@@ -69,22 +76,38 @@ AbstractMech extends Actor implements Mech {
         if (step > state.getEnd())
             step = state.getStart();
 
-        if (slow == 0) {
-            slow++;
-            step++;
-            if (step >= state.getEnd()) {
-                if(state != State.Dead)
+        if (state != State.Idle) {
+            if (slow == 0) {
+                step++;
+                if (step >= state.getEnd()) {
+                    if (state != State.Dead)
+                        step = state.getStart();
+                    else
+                        step = state.getEnd() - 1;
+                }
+                if (step < state.getStart())
                     step = state.getStart();
-                else
-                    step = state.getEnd() -1;
             }
-            if (step < state.getStart())
-                step = state.getStart();
         } else {
-            slow++;
-            if (slow == 11)
-                slow = 0;
+            if (idleDelay == 0 && state == State.Idle) {
+                if (slow == 0) {
+                    step++;
+                    if (step >= state.getEnd()) {
+                        step = state.getStart();
+                        idleDelay = 1;
+                    }
+                    if (step < state.getStart())
+                        step = state.getStart();
+                }
+            } else {
+                idleDelay = (idleDelay + 1) % 40;
+            }
         }
+
+        slow++;
+        if (slow == 11)
+            slow = 0;
+
 
         texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);
 
