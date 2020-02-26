@@ -100,7 +100,7 @@ AbstractMech extends Actor implements Mech {
                         step = state.getStart();
                 }
             } else {
-                idleDelay = (idleDelay + 1) % 40;
+                idleDelay = (idleDelay + 1) % 400;
             }
         }
 
