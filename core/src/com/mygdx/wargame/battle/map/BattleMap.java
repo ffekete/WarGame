@@ -160,7 +160,7 @@ public class BattleMap {
 
         public TextureRegion select(TerrainType terrainType) {
             TextureRegion t =  new TextureRegion(assetManager.get("Grass.png", Texture.class));
-            t.setRegion(0, 0, 48, 48);
+            t.setRegion(new Random().nextInt(2) * 16, new Random().nextInt(2) * 16, 16, 16);
             return t;
         }
     }

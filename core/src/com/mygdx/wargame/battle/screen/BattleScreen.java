@@ -42,6 +42,7 @@ import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.DrawUtils;
 
+import static com.mygdx.wargame.battle.map.BattleMapConfig.TILE_SIZE;
 import static com.mygdx.wargame.config.Config.SCREEN_SIZE_X;
 import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
@@ -140,7 +141,7 @@ public class BattleScreen implements Screen {
 
         BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
 
-        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, 32);
+        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE);
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
@@ -184,7 +185,7 @@ public class BattleScreen implements Screen {
         HudElementsFacade hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
         hudElementsFacade.registerComponents(hudStage);
 
-        float unitScale = 1 / 32f;
+        float unitScale = 1f / TILE_SIZE;
         orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
 
         targetingPanelFacade.hide();
@@ -231,9 +232,6 @@ public class BattleScreen implements Screen {
 
         rayHandler.setCombinedMatrix(camera);
         rayHandler.updateAndRender();
-
-        //System.out.println(Gdx.graphics.getFramesPerSecond());
-        //System.out.println(spriteBatch.renderCalls);
     }
 
     @Override

@@ -31,8 +31,8 @@ public class MissileExplosion extends Actor {
                 col = 0;
             }
         }
-        texture.setRegion(col * 48, 0, 48, 48);
-        batch.setColor(Color.valueOf("FFFFFFAA"));
-        batch.draw(texture, getX() - 0.5f, getY() - 0.25f, 2f, 1.5f);
+        texture.setRegion(col * 16, 0, 16, 16);
+        batch.setColor(Color.valueOf("FFFFFFCC"));
+        batch.draw(texture, getX()-0.25f, getY()-0.25f, 1.5f, 1.5f);
     }
 }

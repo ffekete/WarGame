@@ -52,7 +52,7 @@ public class MapUtils {
         return allAvailable;
     }
 
-    public List<Node> getAllAvailable(BattleMap battleMap, Mech mech) {
+    public List<Node> getAllAvailable(BattleMap battleMap, Mech mech, int distance) {
         Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int)mech.getX()][(int)mech.getY()];
 
         List<Node> allAvailable = new ArrayList<>();
@@ -71,7 +71,7 @@ public class MapUtils {
 
             if(!closedNodes.contains(next)) {
                 closedNodes.add(next);
-                if (battleMap.calculatePath(start, next).getCount() <= mech.getMovementPoints() + 1) {
+                if (battleMap.calculatePath(start, next).getCount() <= distance + 1) {
                     allAvailable.add(next);
                     edges = battleMap.getNodeGraphLv1().getNodeEdges().get(next);
                     for (int i = 0; i < edges.size; i++) {

@@ -27,20 +27,21 @@ public class FlankingTargetStrategy implements TargetingStrategy {
 
         if (target.isPresent()) {
 
-            if(flankingCalculator.isFlankedFromPosition(mech.getX(), mech.getY(), target.get().getMech())) {
+            if(flankingCalculator.isFlankedFromPosition(mech.getX(), mech.getY(), target.get().getMech()) && battleMap.getFireMap()[(int)mech.getX()][(int)mech.getY()] == 0) {
                 return target;
             }
 
-            List<Node> availableNodes = mapUtils.getAllAvailable(battleMap, mech);
+            List<Node> availableNodes = mapUtils.getAllAvailable(battleMap, mech, mech.getMovementPoints());
 
             int minRange = rangeCalculator.calculateAllWeaponsRange(pilot, mech);
 
             Node start = new Node(mech.getX(), mech.getY());
 
-            // find flanking position that is accessible in this turn
+            // find flanking position that is accessible in this turn, not burning
             Optional<Node> flankingNode = Optional.of(availableNodes.stream()
                     .filter(node -> flankingCalculator.isFlankedFromPosition(node.getX(), node.getY(), target.get().getMech()))
                     .filter(node -> MathUtils.getDistance(node.getX(), node.getY(), target.get().getMech().getX(), target.get().getMech().getY()) <= minRange)
+                    .filter(node -> battleMap.getFireMap()[(int)node.getX()][(int)node.getY()] == 0)
                     //.filter(node -> battleMap.getNodeGraphLv1().findPath(start, node).getCount() -1 <= mech.getMovementPoints())
                     .max(Comparator.comparingInt(o -> (int) MathUtils.getDistance(o.getX(), o.getY(), mech.getX(), mech.getY())))).get();
 
@@ -49,12 +50,13 @@ public class FlankingTargetStrategy implements TargetingStrategy {
                 return target;
             } else {
                 // find flanking position around enemy, accessible in multiple turns
-                availableNodes = mapUtils.getAllAvailable(battleMap, target.get().getMech());
+                availableNodes = mapUtils.getAllAvailable(battleMap, target.get().getMech(), 10);
 
                 // find flanking position that is accessible in this turn
                 flankingNode = Optional.of(availableNodes.stream()
                         .filter(node -> flankingCalculator.isFlankedFromPosition(node.getX(), node.getY(), target.get().getMech()))
                         .filter(node -> MathUtils.getDistance(node.getX(), node.getY(), target.get().getMech().getX(), target.get().getMech().getY()) <= minRange)
+                        .filter(node -> battleMap.getFireMap()[(int)node.getX()][(int)node.getY()] == 0)
                         .max(Comparator.comparingInt(o -> (int) MathUtils.getDistance(o.getX(), o.getY(), mech.getX(), mech.getY())))).get();
             }
 

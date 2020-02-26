@@ -27,7 +27,7 @@ public class FlameBullet extends AbstractBullet {
                 col = 0;
             }
         }
-        texture.setRegion(col * 48,0, 48, 48);
+        texture.setRegion(col * 16,0, 16, 16);
         batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 0.5f, 0.5f, getRotation() + 90f);
     }
 }

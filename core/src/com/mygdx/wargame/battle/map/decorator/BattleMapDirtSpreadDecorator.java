@@ -23,8 +23,6 @@ public class BattleMapDirtSpreadDecorator implements Decorator {
     private AssetManager assetManager;
     GroundOverlayConfig groundOverlayConfig;
 
-    private List<Texture> treeVariations;
-
     public BattleMapDirtSpreadDecorator(AssetManager assetManager) {
         this.assetManager = assetManager;
         groundOverlayConfig = new GroundOverlayConfig(assetManager);
