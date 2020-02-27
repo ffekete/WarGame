@@ -13,10 +13,8 @@ import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
-import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
+import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
-import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
@@ -46,13 +44,10 @@ public class MechClickInputListener extends InputListener {
     private Stage stage;
     private StageElementsStorage stageElementsStorage;
     private Table healthOverlay;
-    boolean overlayShown = false;
-    private TargetingPanelFacade targetingPanelFacade;
-    private EnemyMechInfoPanelFacade enemyMechInfoPanelFacade;
-    private HealthInfoPanelFacade healthInfoPanelFacade;
     private BattleMap battleMap;
+    private HUDMediator hudMediator;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage, TargetingPanelFacade targetingPanelFacade, EnemyMechInfoPanelFacade enemyMechInfoPanelFacade, HealthInfoPanelFacade healthInfoPanelFacade, BattleMap battleMap) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage, BattleMap battleMap, HUDMediator hudMediator) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -65,31 +60,29 @@ public class MechClickInputListener extends InputListener {
 
         this.stage = stage;
         this.stageElementsStorage = stageElementsStorage;
-        healthOverlay = healthInfoPanelFacade.getPanel();
-        this.targetingPanelFacade = targetingPanelFacade;
-        this.enemyMechInfoPanelFacade = enemyMechInfoPanelFacade;
-        this.healthInfoPanelFacade = healthInfoPanelFacade;
+        this.hudMediator = hudMediator;
+        healthOverlay = hudMediator.getHealthInfoPanelFacade().getPanel();
         this.battleMap = battleMap;
     }
 
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 
-        healthInfoPanelFacade.getNameLabel().setText(mec.getName());
-        healthInfoPanelFacade.setLocked(true);
-        healthInfoPanelFacade.update(pilot, mec);
+        hudMediator.getHealthInfoPanelFacade().getNameLabel().setText(mec.getName());
+        hudMediator.getHealthInfoPanelFacade().setLocked(true);
+        hudMediator.getHealthInfoPanelFacade().update(pilot, mec);
         event.stop();
     }
 
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-        healthInfoPanelFacade.setLocked(false);
+        hudMediator.getHealthInfoPanelFacade().setLocked(false);
     }
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-        targetingPanelFacade.hide();
+        hudMediator.getTargetingPanelFacade().hide();
 
         if (actionLock.isLocked())
             return true;
@@ -136,13 +129,13 @@ public class MechClickInputListener extends InputListener {
             // attack
             //mechInfoPanelFacade.hideLocalMenu();
             //rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot, null);
-            if (!enemyMechInfoPanelFacade.isLocalMenuVisible()) {
+            if (!hudMediator.getEnemyMechInfoPanelFacade().isLocalMenuVisible()) {
                 updateCloseMenuButtonForEnemy();
                 updateAttackButton();
                 updateAimedAttackButton();
-                enemyMechInfoPanelFacade.showLocalMenu();
+                hudMediator.getEnemyMechInfoPanelFacade().showLocalMenu();
             } else {
-                enemyMechInfoPanelFacade.hideLocalMenu();
+                hudMediator.getEnemyMechInfoPanelFacade().hideLocalMenu();
             }
         } else {
             // ???
@@ -154,32 +147,32 @@ public class MechClickInputListener extends InputListener {
 
     private void updateAttackButton() {
 
-        enemyMechInfoPanelFacade.getAttackButton().setVisible(true);
+        hudMediator.getEnemyMechInfoPanelFacade().getAttackButton().setVisible(true);
         // Details button
         Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
-        enemyMechInfoPanelFacade.getAttackButton().setX(newCoord.x);
-        enemyMechInfoPanelFacade.getAttackButton().setY(newCoord.y);
+        hudMediator.getEnemyMechInfoPanelFacade().getAttackButton().setX(newCoord.x);
+        hudMediator.getEnemyMechInfoPanelFacade().getAttackButton().setY(newCoord.y);
 
-        enemyMechInfoPanelFacade.setAttackingMech(turnProcessingFacade.getNext().getKey());
-        enemyMechInfoPanelFacade.setAttackingPilot(turnProcessingFacade.getNext().getValue());
-        enemyMechInfoPanelFacade.setBattleMap(battleMap);
-        enemyMechInfoPanelFacade.setDefendingPilot(pilot);
-        enemyMechInfoPanelFacade.setDefendingMech(mec);
+        hudMediator.getEnemyMechInfoPanelFacade().setAttackingMech(turnProcessingFacade.getNext().getKey());
+        hudMediator.getEnemyMechInfoPanelFacade().setAttackingPilot(turnProcessingFacade.getNext().getValue());
+        hudMediator.getEnemyMechInfoPanelFacade().setBattleMap(battleMap);
+        hudMediator.getEnemyMechInfoPanelFacade().setDefendingPilot(pilot);
+        hudMediator.getEnemyMechInfoPanelFacade().setDefendingMech(mec);
     }
 
     private void updateAimedAttackButton() {
 
-        enemyMechInfoPanelFacade.getAimedAttackButton().setVisible(true);
+        hudMediator.getEnemyMechInfoPanelFacade().getAimedAttackButton().setVisible(true);
         // Details button
         Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
-        enemyMechInfoPanelFacade.getAimedAttackButton().setX(newCoord.x);
-        enemyMechInfoPanelFacade.getAimedAttackButton().setY(newCoord.y);
+        hudMediator.getEnemyMechInfoPanelFacade().getAimedAttackButton().setX(newCoord.x);
+        hudMediator.getEnemyMechInfoPanelFacade().getAimedAttackButton().setY(newCoord.y);
 
-        enemyMechInfoPanelFacade.setAttackingMech(turnProcessingFacade.getNext().getKey());
-        enemyMechInfoPanelFacade.setAttackingPilot(turnProcessingFacade.getNext().getValue());
-        enemyMechInfoPanelFacade.setBattleMap(battleMap);
-        enemyMechInfoPanelFacade.setDefendingPilot(pilot);
-        enemyMechInfoPanelFacade.setDefendingMech(mec);
+        hudMediator.getEnemyMechInfoPanelFacade().setAttackingMech(turnProcessingFacade.getNext().getKey());
+        hudMediator.getEnemyMechInfoPanelFacade().setAttackingPilot(turnProcessingFacade.getNext().getValue());
+        hudMediator.getEnemyMechInfoPanelFacade().setBattleMap(battleMap);
+        hudMediator.getEnemyMechInfoPanelFacade().setDefendingPilot(pilot);
+        hudMediator.getEnemyMechInfoPanelFacade().setDefendingMech(mec);
     }
 
     private void addAllAvailableWeaponsToScrollPane() {
@@ -236,11 +229,11 @@ public class MechClickInputListener extends InputListener {
     }
 
     private void updateCloseMenuButtonForEnemy() {
-        enemyMechInfoPanelFacade.getHideMenuButton().setVisible(true);
+        hudMediator.getEnemyMechInfoPanelFacade().getHideMenuButton().setVisible(true);
         // Details button
         Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX() + 0.25f, mec.getY() + 0.25f);
-        enemyMechInfoPanelFacade.getHideMenuButton().setX(newCoord.x);
-        enemyMechInfoPanelFacade.getHideMenuButton().setY(newCoord.y);
+        hudMediator.getEnemyMechInfoPanelFacade().getHideMenuButton().setX(newCoord.x);
+        hudMediator.getEnemyMechInfoPanelFacade().getHideMenuButton().setY(newCoord.y);
     }
 
     private void updateCloseMenuButton() {

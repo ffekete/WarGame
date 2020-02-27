@@ -56,10 +56,19 @@ public class HudElementsFacade {
             }
         });
 
-        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH - (80 / SCREEN_HUD_RATIO), 0);
-        endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        show();
 
         stage.addActor(endTurnButton);
     }
+
+    public void hide() {
+        endTurnButton.setSize(0, 0);
+    }
+
+    public void show() {
+        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH - (80 / SCREEN_HUD_RATIO), 0);
+        endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+    }
+
 
 }

@@ -18,6 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
+import com.mygdx.wargame.battle.screen.ui.HUDMediator;
+import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
+import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
@@ -41,18 +44,12 @@ public class MechInfoPanelFacade extends Actor {
     private CheckBox.CheckBoxStyle checkBoxStyle;
     private BitmapFont font;
     private BitmapFont smallFont;
-    Label.LabelStyle labelStyle;
-    Label.LabelStyle smallLabelStyle;
-    ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
-    ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
-    ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
+    private Label.LabelStyle labelStyle;
+    private Label.LabelStyle smallLabelStyle;
+    private ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
+    private ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
 
-    private StageElementsStorage stageElementsStorage;
-    private ActionLock actionLock;
-
-    public MechInfoPanelFacade(StageElementsStorage stageElementsStorage, ActionLock actionLock) {
-        this.stageElementsStorage = stageElementsStorage;
-        this.actionLock = actionLock;
+    public MechInfoPanelFacade(HUDMediator hudMediator) {
         mechInfoTable = new Table();
 
         font = FontCreator.getBitmapFont();
@@ -98,7 +95,9 @@ public class MechInfoPanelFacade extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
-                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
+                hudMediator.getHealthInfoPanelFacade().hide();
+                hudMediator.getHudElementsFacade().hide();
+                hideLocalMenu();
                 // show this one
                 bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, bigInfoPanelHidden);
                 return true;
@@ -129,8 +128,10 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                // hide all other panels
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, false);
+                hudMediator.getHealthInfoPanelFacade().hide();
+                hudMediator.getHudElementsFacade().hide();
+                hideLocalMenu();
+                hideLocalMenu();
                 // show this one
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 return true;
@@ -156,11 +157,11 @@ public class MechInfoPanelFacade extends Actor {
             }
         });
 
-        Image fireImage = new Image(new Texture(Gdx.files.internal("skin/Fire.png")));
-
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
         weaponSelectionScrollPane.setDebug(true);
         Table weaponSelectionOuterTable = new Table();
+
+        weaponSelectionOuterTable.setDebug(true);
 
         ImageButton exitWeaponSelectionPanelButton = new ImageButton(hideMenuButtonsSelectionStyle);
         weaponSelectionOuterTable.add(exitWeaponSelectionPanelButton).size(10,10).colspan(2).right().top().row();
@@ -168,6 +169,7 @@ public class MechInfoPanelFacade extends Actor {
         exitWeaponSelectionPanelButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                hudMediator.getHealthInfoPanelFacade().show();
                 weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 weaponSelectionContainerHidden = true;
                 return true;
@@ -343,15 +345,15 @@ public class MechInfoPanelFacade extends Actor {
         return smallLabelStyle;
     }
 
-    public ProgressBar.ProgressBarStyle getHeatInfoProgressBarStyle() {
-        return heatInfoProgressBarStyle;
-    }
-
     public ProgressBar.ProgressBarStyle getSmallHeatInfoProgressBarStyle() {
         return smallHeatInfoProgressBarStyle;
     }
 
     public ProgressBar.ProgressBarStyle getStabilityProgressBarStyle() {
         return stabilityProgressBarStyle;
+    }
+
+    public void hide() {
+        hideLocalMenu();
     }
 }
