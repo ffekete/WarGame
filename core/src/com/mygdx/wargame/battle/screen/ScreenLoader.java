@@ -35,6 +35,8 @@ public class ScreenLoader {
         assetManager.load("Flame.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
 
+        assetManager.load("details/HeadIcon.png", Texture.class);
+
         assetManager.load("targeting/TargetHead.png", Texture.class);
         assetManager.load("targeting/TargetTorso.png", Texture.class);
         assetManager.load("targeting/TargetLeftArm.png", Texture.class);
@@ -72,6 +74,8 @@ public class ScreenLoader {
         assetManager.load("skin/BigInfoPanel.png", Texture.class);
         assetManager.load("skin/CalledShotUp.png", Texture.class);
         assetManager.load("skin/CalledShotDown.png", Texture.class);
+        assetManager.load("skin/HideButtonUp.png", Texture.class);
+        assetManager.load("skin/HideButtonDown.png", Texture.class);
         assetManager.finishLoading();
     }
 

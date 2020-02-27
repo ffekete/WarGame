@@ -101,25 +101,25 @@ public class MechClickInputListener extends InputListener {
                 updateWeaponSelectionButton();
                 addAllAvailableWeaponsToScrollPane();
 
-                mechInfoPanelFacade.getMechInfoTable().clear();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("H : " + mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp() + " A: " + getArmor(BodyPart.Head), labelStyle)).center().pad(5);
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp() + " A: " + getArmor(BodyPart.Torso), labelStyle)).center().pad(5).row();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().clear();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("H : " + mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp() + " A: " + getArmor(BodyPart.Head), labelStyle)).center().pad(5);
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp() + " A: " + getArmor(BodyPart.Torso), labelStyle)).center().pad(5).row();
 
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp() + " A: " + getArmor(BodyPart.LeftArm), labelStyle)).center().pad(5);
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp() + " A: " + getArmor(BodyPart.RightArm), labelStyle)).center().pad(5).row();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp() + " A: " + getArmor(BodyPart.LeftArm), labelStyle)).center().pad(5);
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp() + " A: " + getArmor(BodyPart.RightArm), labelStyle)).center().pad(5).row();
 
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp() + " A: " + getArmor(BodyPart.LeftLeg), labelStyle)).center().pad(5);
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("RL: " + mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp() + " A: " + getArmor(BodyPart.RightLeg), labelStyle)).pad(5).center().row();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("Shield: " + mec.getShieldValue(), labelStyle)).pad(5).colspan(5).center();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp() + " A: " + getArmor(BodyPart.LeftLeg), labelStyle)).center().pad(5);
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("RL: " + mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp() + " A: " + getArmor(BodyPart.RightLeg), labelStyle)).pad(5).center().row();
+                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("Shield: " + mec.getShieldValue(), labelStyle)).pad(5).colspan(5).center();
 
                 mechInfoPanelFacade.getWeaponSelectionContainer().layout();
 
@@ -215,15 +215,12 @@ public class MechClickInputListener extends InputListener {
         hudStage.setScrollFocus(mechInfoPanelFacade.getWeaponSelectionContainer());
     }
 
-    private void updateDetailsButton() {
+    public void updateDetailsButton() {
         mechInfoPanelFacade.getDetailsButton().setVisible(true);
         // Details button
         Vector2 newCoord = StageUtils.convertBetweenStages(stage, hudStage, mec.getX(), mec.getY());
         mechInfoPanelFacade.getDetailsButton().setX(newCoord.x);
         mechInfoPanelFacade.getDetailsButton().setY(newCoord.y);
-
-        mechInfoPanelFacade.getBigInfoPanelContainer().setSize(0, 0);
-        mechInfoPanelFacade.getBigInfoPanelContainer().setPosition(mechInfoPanelFacade.getDetailsButton().getX(), mechInfoPanelFacade.getDetailsButton().getY());
     }
 
     private void updatePilotButton() {

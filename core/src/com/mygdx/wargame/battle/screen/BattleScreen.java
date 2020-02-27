@@ -31,6 +31,7 @@ import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.screen.ui.SelectionMarker;
+import com.mygdx.wargame.battle.screen.ui.detailspage.DetailsPageFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
@@ -155,6 +156,9 @@ public class BattleScreen implements Screen {
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler);
 
+        DetailsPageFacade detailsPageFacade = new DetailsPageFacade(mechInfoPanelFacade, hudMediator, screenLoader.getAssetManager());
+        hudMediator.setDetailsPageFacade(detailsPageFacade);
+
         targetingPanelFacade = new TargetingPanelFacade(screenLoader.getAssetManager(), rangedAttackTargetCalculator, rangeCalculator);
         hudMediator.setTargetingPanelFacade(targetingPanelFacade);
 
@@ -189,13 +193,19 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.getDetailsButton().setVisible(false);
         mechInfoPanelFacade.getHideMenuButton().setVisible(false);
         mechInfoPanelFacade.getPilotButton().setVisible(false);
-        mechInfoPanelFacade.registerComponents(hudStage);
-
-        enemyMechInfoPanelFacade.registerComponents(hudStage);
 
         HudElementsFacade hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
-        hudElementsFacade.registerComponents(hudStage);
         hudMediator.setHudElementsFacade(hudElementsFacade);
+
+        // create
+        detailsPageFacade.create();
+
+        // register components
+        mechInfoPanelFacade.registerComponents(hudStage);
+        enemyMechInfoPanelFacade.registerComponents(hudStage);
+        hudElementsFacade.registerComponents(hudStage);
+        detailsPageFacade.registerComponents(hudStage);
+
 
         float unitScale = 1f / TILE_SIZE;
         orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
