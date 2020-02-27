@@ -15,12 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
-import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
@@ -35,7 +31,8 @@ public class MechInfoPanelFacade extends Actor {
     private ImageButton weaponSelectionButton;
 
     private Container<Table> bigInfoPanelContainer;
-    private Table mechInfoTable;
+    private Table mechInfoOuterTable;
+    private Table mechInfoInnerTable;
     private boolean bigInfoPanelHidden = true;
     private boolean weaponSelectionContainerHidden = true;
     private boolean localMenuVisible = false;
@@ -50,8 +47,6 @@ public class MechInfoPanelFacade extends Actor {
     private ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
 
     public MechInfoPanelFacade(HUDMediator hudMediator) {
-        mechInfoTable = new Table();
-
         font = FontCreator.getBitmapFont();
         smallFont = FontCreator.getBitmapFont(10);
 
@@ -60,6 +55,10 @@ public class MechInfoPanelFacade extends Actor {
 
         smallLabelStyle = new Label.LabelStyle();
         smallLabelStyle.font = smallFont;
+
+        ImageButton.ImageButtonStyle hideMenuButtonsSelectionStyle = new ImageButton.ImageButtonStyle();
+        hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
+        hideMenuButtonsSelectionStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonDown.png")));
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = smallFont;
@@ -99,7 +98,7 @@ public class MechInfoPanelFacade extends Actor {
                 hudMediator.getHudElementsFacade().hide();
                 hideLocalMenu();
                 // show this one
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, bigInfoPanelHidden);
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoOuterTable, bigInfoPanelHidden);
                 return true;
             }
         });
@@ -140,23 +139,6 @@ public class MechInfoPanelFacade extends Actor {
 
         weaponSelectionButton.setSize(weaponSelectionButton.getWidth() / SCREEN_HUD_RATIO, weaponSelectionButton.getHeight() / SCREEN_HUD_RATIO);
 
-        ImageButton.ImageButtonStyle hideMenuButtonsSelectionStyle = new ImageButton.ImageButtonStyle();
-        hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
-        hideMenuButtonsSelectionStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonDown.png")));
-
-        hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        hideMenuButton.setSize(hideMenuButton.getWidth() / SCREEN_HUD_RATIO, hideMenuButton.getHeight() / SCREEN_HUD_RATIO);
-        hideMenuButton.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                // hide all other panels
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, false);
-                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
-                hideLocalMenu();
-                return true;
-            }
-        });
-
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
         weaponSelectionScrollPane.setDebug(true);
         Table weaponSelectionOuterTable = new Table();
@@ -182,18 +164,44 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png"))));
         weaponSelectionContainer.fillX().pad(30 / SCREEN_HUD_RATIO);
 
-        weaponSelectionContainer.setSize(600 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO);
-        weaponSelectionContainer.setY(-200 / SCREEN_HUD_RATIO);
+        weaponSelectionContainer.setSize(0, 0);
         weaponSelectionScrollPane.setScrollbarsVisible(true);
 
-
         // Mech info
+        ImageButton exitMechInfoTablePanelButton = new ImageButton(hideMenuButtonsSelectionStyle);
 
-        bigInfoPanelContainer = new Container<>(mechInfoTable);
-        bigInfoPanelContainer.setSize(300 / SCREEN_HUD_RATIO, 300 / SCREEN_HUD_RATIO);
+        exitMechInfoTablePanelButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                hudMediator.getHealthInfoPanelFacade().show();
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoOuterTable, bigInfoPanelHidden);
+                return true;
+            }
+        });
+
+        mechInfoOuterTable = new Table();
+        mechInfoInnerTable = new Table();
+        mechInfoOuterTable.add(exitMechInfoTablePanelButton).size(10,10).fillX().right().top().row();
+        mechInfoOuterTable.add(mechInfoInnerTable).fill();
+
+        bigInfoPanelContainer = new Container<>(mechInfoOuterTable);
+        bigInfoPanelContainer.setSize(0, 0);
         bigInfoPanelContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/BigInfoPanel.png"))));
         bigInfoPanelContainer.setVisible(false);
-        //mechInfoTable.background(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/StatusBackground.png"))));
+
+        // hide menu
+        hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
+        hideMenuButton.setSize(hideMenuButton.getWidth() / SCREEN_HUD_RATIO, hideMenuButton.getHeight() / SCREEN_HUD_RATIO);
+        hideMenuButton.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // hide all other panels
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoOuterTable, false);
+                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
+                hideLocalMenu();
+                return true;
+            }
+        });
     }
 
     public Table getIbTable() {
@@ -326,7 +334,7 @@ public class MechInfoPanelFacade extends Actor {
     }
 
     public Table getMechInfoTable() {
-        return mechInfoTable;
+        return mechInfoInnerTable;
     }
 
     public CheckBox.CheckBoxStyle getCheckBoxStyle() {

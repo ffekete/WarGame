@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+import static com.mygdx.wargame.config.Config.*;
 
 public class BigInfoPanelMovementHandler {
 
@@ -18,12 +18,12 @@ public class BigInfoPanelMovementHandler {
             ParallelAction parallelAction = new ParallelAction();
 
             SizeToAction sizeToAction = new SizeToAction();
-            sizeToAction.setSize(300 / SCREEN_HUD_RATIO, 300 / SCREEN_HUD_RATIO);
+            sizeToAction.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT);
             sizeToAction.setDuration(0.25f);
             parallelAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
-            moveToAction.setPosition(detailsButton.getX() - 260 / SCREEN_HUD_RATIO, detailsButton.getY() - 260 / SCREEN_HUD_RATIO);
+            moveToAction.setPosition(0, 0);
             moveToAction.setDuration(0.25f);
             parallelAction.addAction(moveToAction);
 
