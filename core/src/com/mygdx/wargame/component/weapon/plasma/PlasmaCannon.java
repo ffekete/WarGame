@@ -15,6 +15,11 @@ public class PlasmaCannon implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "PLC";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

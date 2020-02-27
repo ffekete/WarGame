@@ -14,6 +14,10 @@ public class SmallCannonMk2 implements Weapon {
     private int ammo = MAX_AMMO;
     private Status status;
 
+    @Override
+    public String getShortName() {
+        return "SCan2";
+    }
 
     @Override
     public int getShieldDamage() {

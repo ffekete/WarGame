@@ -14,6 +14,11 @@ public class ExtendedRangeMediumLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "XRMLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 6;
     }

@@ -14,6 +14,11 @@ public class ExtendedRangeLargeLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "XRLLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 6;
     }

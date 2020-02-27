@@ -29,7 +29,7 @@ import com.mygdx.wargame.util.StageUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+import static com.mygdx.wargame.config.Config.*;
 
 public class MechClickInputListener extends InputListener {
 
@@ -105,7 +105,6 @@ public class MechClickInputListener extends InputListener {
                 updateCloseMenuButton();
                 updatePilotButton();
                 updateWeaponSelectionButton();
-                UpdateHeatBar();
                 addAllAvailableWeaponsToScrollPane();
 
                 mechInfoPanelFacade.getMechInfoTable().clear();
@@ -183,10 +182,6 @@ public class MechClickInputListener extends InputListener {
         enemyMechInfoPanelFacade.setDefendingMech(mec);
     }
 
-    private void UpdateHeatBar() {
-        mechInfoPanelFacade.getHeatProgressBar().setValue(mec.getHeatLevel());
-    }
-
     private void addAllAvailableWeaponsToScrollPane() {
         checkBoxMap.clear();
         mec.getAllComponents().stream()
@@ -194,7 +189,7 @@ public class MechClickInputListener extends InputListener {
                 .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
                 .map(c -> ((Weapon) c))
                 .forEach(w -> {
-                    CheckBox checkBox = new CheckBox("  " + w.getName(), checkBoxStyle);
+                    CheckBox checkBox = new CheckBox("  " + w.getShortName(), checkBoxStyle);
                     checkBoxMap.put(w, checkBox);
                     checkBox.setChecked(w.getStatus() == Status.Selected);
                     checkBox.addListener(new ChangeListener() {
@@ -203,7 +198,7 @@ public class MechClickInputListener extends InputListener {
                             w.setStatus(checkBox.isChecked() ? Status.Selected : Status.Active);
                         }
                     });
-                    mechInfoPanelFacade.getIbTable().add(checkBox).padRight(20);
+                    mechInfoPanelFacade.getIbTable().add(checkBox).left().padLeft(20/ SCREEN_HUD_RATIO);
 
                     int ammo = w.getAmmo().orElse(-1);
                     mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
@@ -215,6 +210,8 @@ public class MechClickInputListener extends InputListener {
 
                     mechInfoPanelFacade.getIbTable().row();
                 });
+
+        hudStage.setScrollFocus(mechInfoPanelFacade.getWeaponSelectionContainer());
     }
 
     private void updateDetailsButton() {
@@ -269,7 +266,7 @@ public class MechClickInputListener extends InputListener {
 
     private void addSelectAllWeaponsCheckbox() {
         CheckBox checkBoxSelectAll = new CheckBox("  Select all", checkBoxStyle);
-        mechInfoPanelFacade.getIbTable().add(checkBoxSelectAll).row();
+        mechInfoPanelFacade.getIbTable().add(checkBoxSelectAll).left().padLeft(20/ SCREEN_HUD_RATIO).row();
         checkBoxSelectAll.setChecked(true);
         checkBoxSelectAll.addListener(new ChangeListener() {
             @Override

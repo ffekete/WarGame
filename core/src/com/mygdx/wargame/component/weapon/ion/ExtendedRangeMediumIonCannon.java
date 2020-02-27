@@ -14,6 +14,11 @@ public class ExtendedRangeMediumIonCannon implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "ERMIo";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 20;
     }

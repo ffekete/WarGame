@@ -15,6 +15,11 @@ public class SwarmMissile implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "SwM";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 2;
     }

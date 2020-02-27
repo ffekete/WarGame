@@ -13,6 +13,12 @@ public class MediumIonCannon implements Weapon {
 
     private Status status;
 
+
+    @Override
+    public String getShortName() {
+        return "MIon";
+    }
+
     @Override
     public int getShieldDamage() {
         return 20;

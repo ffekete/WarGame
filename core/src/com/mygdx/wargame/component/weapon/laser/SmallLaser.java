@@ -13,6 +13,11 @@ public class SmallLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "SLas";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 5;
     }

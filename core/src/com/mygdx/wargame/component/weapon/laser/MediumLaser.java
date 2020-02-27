@@ -14,6 +14,11 @@ public class MediumLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "MLas";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 6;
     }

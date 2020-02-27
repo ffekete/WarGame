@@ -14,6 +14,11 @@ public class TripleBarrelSmallLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "3BSLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 5;
     }

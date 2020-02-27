@@ -14,6 +14,11 @@ public class DoubleBarrelMediumLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "2BMLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 5;
     }

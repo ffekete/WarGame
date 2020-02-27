@@ -14,6 +14,11 @@ public class ExtendedRangeLargeIonCannon implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "ERLIo";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 30;
     }

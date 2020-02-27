@@ -14,6 +14,11 @@ public class SniperMediumLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "SnMLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 6;
     }

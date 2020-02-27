@@ -40,4 +40,6 @@ public interface Weapon extends Component {
     void resetAmmo();
 
     void reduceAmmo();
+
+    String getShortName();
 }

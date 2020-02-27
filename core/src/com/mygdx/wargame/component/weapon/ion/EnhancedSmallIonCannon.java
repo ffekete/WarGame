@@ -14,6 +14,11 @@ public class EnhancedSmallIonCannon implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "ESIon";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 17;
     }

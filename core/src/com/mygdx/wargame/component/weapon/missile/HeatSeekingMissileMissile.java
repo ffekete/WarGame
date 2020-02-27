@@ -15,6 +15,11 @@ public class HeatSeekingMissileMissile implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "HSM";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 2;
     }

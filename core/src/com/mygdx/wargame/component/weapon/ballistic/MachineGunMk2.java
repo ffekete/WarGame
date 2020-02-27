@@ -15,6 +15,11 @@ public class MachineGunMk2 implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "MaGu2";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

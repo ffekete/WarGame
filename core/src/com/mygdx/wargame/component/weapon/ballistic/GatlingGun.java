@@ -145,4 +145,9 @@ public class GatlingGun implements Weapon {
     public void reduceAmmo() {
         this.ammo--;
     }
+
+    @Override
+    public String getShortName() {
+        return "GaGu";
+    }
 }

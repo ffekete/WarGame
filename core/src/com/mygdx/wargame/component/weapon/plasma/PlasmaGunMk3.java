@@ -15,6 +15,11 @@ public class PlasmaGunMk3 implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "PlaG3";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

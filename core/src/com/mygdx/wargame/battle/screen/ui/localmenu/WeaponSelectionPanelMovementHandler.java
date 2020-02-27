@@ -8,22 +8,22 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+import static com.mygdx.wargame.config.Config.*;
 
 public class WeaponSelectionPanelMovementHandler {
 
-    public boolean moveWeaponSelectionButton(boolean weaponSelectionContainerHidden, Actor weaponSelectionButton, Actor weaponSelectionContainer, Actor weaponSelectionScrollPane, Actor heatProgressBar) {
+    public boolean moveWeaponSelectionButton(boolean weaponSelectionContainerHidden, Actor weaponSelectionButton, Actor weaponSelectionContainer, Actor weaponSelectionScrollPane) {
         if (weaponSelectionContainerHidden) {
 
             ParallelAction enlargeAndSetVisibleAction = new ParallelAction();
 
             SizeToAction sizeToAction = new SizeToAction();
-            sizeToAction.setSize(600 / SCREEN_HUD_RATIO, 300 / SCREEN_HUD_RATIO);
+            sizeToAction.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT);
             sizeToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
-            moveToAction.setPosition(Math.max(weaponSelectionButton.getX() - 560 / SCREEN_HUD_RATIO, 0), Math.max(weaponSelectionButton.getY() - 260 / SCREEN_HUD_RATIO, 0));
+            moveToAction.setPosition(0, 0);
             moveToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(moveToAction);
 
@@ -40,8 +40,6 @@ public class WeaponSelectionPanelMovementHandler {
             SequenceAction waitThenShowAction = new SequenceAction();
             waitThenShowAction.addAction(delayAction);
             waitThenShowAction.addAction(visibleAction);
-
-            heatProgressBar.addAction(waitThenShowAction);
 
             weaponSelectionScrollPane.addAction(enlargeAndSetVisibleAction);
 
@@ -70,7 +68,6 @@ public class WeaponSelectionPanelMovementHandler {
             shrinkMoveThenSetVisibleAction.addAction(visibleAction);
 
             weaponSelectionContainer.addAction(shrinkMoveThenSetVisibleAction);
-            heatProgressBar.setVisible(false);
             weaponSelectionScrollPane.addAction(shrinkMoveThenSetVisibleAction);
 
             return true;

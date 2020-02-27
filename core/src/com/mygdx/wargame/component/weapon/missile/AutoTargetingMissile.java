@@ -15,6 +15,11 @@ public class AutoTargetingMissile implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "ATM";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 2;
     }

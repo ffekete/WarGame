@@ -15,6 +15,11 @@ public class SmallCannonMk3 implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "SCan3";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

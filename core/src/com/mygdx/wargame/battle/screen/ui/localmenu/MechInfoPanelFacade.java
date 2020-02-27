@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -25,7 +26,6 @@ public class MechInfoPanelFacade extends Actor {
     private Table ibTable = new Table();
     private ScrollPane weaponSelectionScrollPane;
     private Container<Table> weaponSelectionContainer;
-    private ProgressBar heatProgressBar;
     private ImageButton detailsButton;
     private ImageButton hideMenuButton;
     private ImageButton pilotButton;
@@ -80,12 +80,6 @@ public class MechInfoPanelFacade extends Actor {
         weaponsListScrollPaneStyle.hScroll = weaponSelectionScrollBar;
         weaponsListScrollPaneStyle.hScrollKnob = scrollKnob;
 
-        heatInfoProgressBarStyle = new ProgressBar.ProgressBarStyle();
-        heatInfoProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ProgressBar.png")));
-        heatInfoProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatKnob.png")));
-        //heatInfoProgressBarStyle.knobBefore = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatBefore.png")));
-        //heatInfoProgressBarStyle.knobAfter = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HeatAfter.png")));
-
         smallHeatInfoProgressBarStyle = new ProgressBar.ProgressBarStyle();
         smallHeatInfoProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("HeatProgressBarBg.png")));
         smallHeatInfoProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("HeatProgressBarKnob.png")));
@@ -93,9 +87,6 @@ public class MechInfoPanelFacade extends Actor {
         stabilityProgressBarStyle = new ProgressBar.ProgressBarStyle();
         stabilityProgressBarStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarBg.png")));
         stabilityProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarKnob.png")));
-
-        heatProgressBar = new ProgressBar(0, 100, 1, false, heatInfoProgressBarStyle);
-        heatProgressBar.setValue(50);
 
         ImageButton.ImageButtonStyle detailsImageButtonStyle = new ImageButton.ImageButtonStyle();
         detailsImageButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/DetailsButtonUp.png")));
@@ -107,7 +98,7 @@ public class MechInfoPanelFacade extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
-                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
+                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 // show this one
                 bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, bigInfoPanelHidden);
                 return true;
@@ -141,7 +132,7 @@ public class MechInfoPanelFacade extends Actor {
                 // hide all other panels
                 bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, false);
                 // show this one
-                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
+                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 return true;
             }
         });
@@ -159,7 +150,7 @@ public class MechInfoPanelFacade extends Actor {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // hide all other panels
                 bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, false);
-                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
+                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 hideLocalMenu();
                 return true;
             }
@@ -170,8 +161,19 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
         weaponSelectionScrollPane.setDebug(true);
         Table weaponSelectionOuterTable = new Table();
-        weaponSelectionOuterTable.add(fireImage).padRight(10);
-        weaponSelectionOuterTable.add(heatProgressBar).width(400 / SCREEN_HUD_RATIO).padRight(10 / SCREEN_HUD_RATIO).row();
+
+        ImageButton exitWeaponSelectionPanelButton = new ImageButton(hideMenuButtonsSelectionStyle);
+        weaponSelectionOuterTable.add(exitWeaponSelectionPanelButton).size(10,10).colspan(2).right().top().row();
+
+        exitWeaponSelectionPanelButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
+                weaponSelectionContainerHidden = true;
+                return true;
+            }
+        });
+
         weaponSelectionOuterTable.add(weaponSelectionScrollPane).colspan(2);
 
         weaponSelectionContainer = new Container<>(weaponSelectionOuterTable);
@@ -181,6 +183,7 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionContainer.setSize(600 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO);
         weaponSelectionContainer.setY(-200 / SCREEN_HUD_RATIO);
         weaponSelectionScrollPane.setScrollbarsVisible(true);
+
 
         // Mech info
 
@@ -207,10 +210,6 @@ public class MechInfoPanelFacade extends Actor {
 
     public Container getWeaponSelectionContainer() {
         return weaponSelectionContainer;
-    }
-
-    public ProgressBar getHeatProgressBar() {
-        return heatProgressBar;
     }
 
     public Container<Table> getBigInfoPanelContainer() {

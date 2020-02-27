@@ -14,6 +14,11 @@ public class SmallIonCannon implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "SIon";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 15;
     }

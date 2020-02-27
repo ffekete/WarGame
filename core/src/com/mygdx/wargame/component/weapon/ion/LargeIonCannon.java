@@ -14,6 +14,11 @@ public class LargeIonCannon implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "LIon";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 30;
     }

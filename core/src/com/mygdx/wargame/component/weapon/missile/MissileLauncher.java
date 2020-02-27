@@ -15,6 +15,11 @@ public class MissileLauncher implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "MisLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 3;
     }

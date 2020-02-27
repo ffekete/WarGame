@@ -14,6 +14,11 @@ public class GatlingSmallLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "GaSLa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 3;
     }

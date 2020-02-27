@@ -15,6 +15,11 @@ public class MediumCannonMk3 implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "MCan3";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

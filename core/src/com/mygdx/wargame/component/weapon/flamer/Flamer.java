@@ -17,6 +17,10 @@ public class Flamer implements Weapon {
 
     private Status status;
 
+    @Override
+    public String getShortName() {
+        return "Flam";
+    }
 
     @Override
     public int getShieldDamage() {

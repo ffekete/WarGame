@@ -16,6 +16,11 @@ public class SmallCannon implements Weapon {
 
 
     @Override
+    public String getShortName() {
+        return "SCan";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

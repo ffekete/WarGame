@@ -15,6 +15,11 @@ public class Devastator implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "Deva";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 3;
     }

@@ -144,4 +144,9 @@ public class LargeCannon implements Weapon {
     public void reduceAmmo() {
         this.ammo--;
     }
+
+    @Override
+    public String getShortName() {
+        return "LaCa";
+    }
 }

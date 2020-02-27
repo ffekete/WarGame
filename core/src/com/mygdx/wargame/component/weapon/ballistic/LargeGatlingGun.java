@@ -16,6 +16,11 @@ public class LargeGatlingGun implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "LaGa";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 0;
     }

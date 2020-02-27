@@ -14,6 +14,11 @@ public class LargeLaser implements Weapon {
     private Status status;
 
     @Override
+    public String getShortName() {
+        return "LLas";
+    }
+
+    @Override
     public int getShieldDamage() {
         return 6;
     }
