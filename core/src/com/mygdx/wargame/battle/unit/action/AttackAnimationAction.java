@@ -1,7 +1,6 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.util.MathUtils;

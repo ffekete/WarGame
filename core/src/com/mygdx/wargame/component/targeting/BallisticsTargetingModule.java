@@ -9,7 +9,7 @@ public class BallisticsTargetingModule implements TargetingModule {
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {
-        if(weaponType == WeaponType.Ballistic) {
+        if (weaponType == WeaponType.Ballistic) {
             return 5;
         }
         return 0;

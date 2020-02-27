@@ -7,7 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
-import com.mygdx.wargame.config.Config;
+
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class WeaponSelectionPanelMovementHandler {
 
@@ -17,12 +18,12 @@ public class WeaponSelectionPanelMovementHandler {
             ParallelAction enlargeAndSetVisibleAction = new ParallelAction();
 
             SizeToAction sizeToAction = new SizeToAction();
-            sizeToAction.setSize(600 * Config.UI_SCALING, 300 * Config.UI_SCALING);
+            sizeToAction.setSize(600 / SCREEN_HUD_RATIO, 300 / SCREEN_HUD_RATIO);
             sizeToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
-            moveToAction.setPosition(Math.max(weaponSelectionButton.getX() - 560 * Config.UI_SCALING, 0), Math.max(weaponSelectionButton.getY() - 260 * Config.UI_SCALING, 0));
+            moveToAction.setPosition(Math.max(weaponSelectionButton.getX() - 560 / SCREEN_HUD_RATIO, 0), Math.max(weaponSelectionButton.getY() - 260 / SCREEN_HUD_RATIO, 0));
             moveToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(moveToAction);
 

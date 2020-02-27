@@ -16,9 +16,10 @@ import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.HitChanceCalculatorFacade;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class HealthInfoPanelFacade {
 
@@ -44,12 +45,12 @@ public class HealthInfoPanelFacade {
     public HealthInfoPanelFacade(AssetManager assetManager) {
         panelImage = new Image(assetManager.get("skin/BigInfoPanel.png", Texture.class));
 
-        this.headImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/HeadHealthIcon.png", 96, 96));
-        this.torsoImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/TorsoHealthIcon.png", 96, 96));
-        this.leftArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/LeftArmHealthIcon.png", 48, 96));
-        this.leftLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/LeftLegHealthIcon.png", 48, 96));
-        this.rightArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/RightArmHealthIcon.png", 48, 96));
-        this.rightLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/RightLegHealthIcon.png", 48, 96));
+        this.headImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/HeadHealthIcon.png", 96 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.torsoImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/TorsoHealthIcon.png", 96 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.leftArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/LeftArmHealthIcon.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.leftLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/LeftLegHealthIcon.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.rightArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/RightArmHealthIcon.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.rightLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "health/RightLegHealthIcon.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
 
         headImage.setClip(true);
 
@@ -59,25 +60,25 @@ public class HealthInfoPanelFacade {
         //panel.setDebug(true);
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontCreator.getBitmapFont(12);
+        labelStyle.font = FontCreator.getBitmapFont(10);
 
         this.nameLabel = new Label("N/A", labelStyle);
 
         panel.add(nameLabel).colspan(5).row();
 
-        panel.add().size(30, 30);
-        panel.add(headImage).size(30, 30).colspan(3);
-        panel.add().size(30, 30).row();
+        panel.add().size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO);
+        panel.add(headImage).size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO).colspan(3);
+        panel.add().size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO).row();
 
-        panel.add(rightArmImage).size(20, 50);
-        panel.add(torsoImage).size(40, 40).colspan(3);
-        panel.add(leftArmImage).size(20, 50).row();
+        panel.add(rightArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add(torsoImage).size(40 / SCREEN_HUD_RATIO, 40 / SCREEN_HUD_RATIO).colspan(3);
+        panel.add(leftArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO).row();
 
-        panel.add().size(20, 50);
-        panel.add(rightLegImage).size(20, 50);
-        panel.add().size(5, 50);
-        panel.add(leftLegImage).size(20, 50);
-        panel.add().size(20, 50);
+        panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add(rightLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add().size(1, 50 / SCREEN_HUD_RATIO);
+        panel.add(leftLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
 
         panel.setColor(Color.valueOf("FFFFFFBB"));
     }
@@ -150,13 +151,19 @@ public class HealthInfoPanelFacade {
 
     public void addTooltip(BodyPart bodyPart, ImageButton imageButton) {
         Table tooltipContent = new Table();
+
         Container<Table> container = new Container<>(tooltipContent);
 
-        tooltipContent.pad(20, 20, 20, 20);
+        container.maxHeight(40);
+        container.maxWidth(50);
+
+        tooltipContent.pad(20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO);
 
         Tooltip<Container> tooltip = new Tooltip<>(container);
         tooltipContent.background(panelImage.getDrawable());
         tooltip.setInstant(true);
+        tooltip.getManager().offsetX = 3f;
+        tooltip.getManager().offsetY = 3f;
 
         removeToolTips(imageButton);
 
@@ -175,7 +182,7 @@ public class HealthInfoPanelFacade {
         }
 
         toRemove.stream().forEach(e -> {
-            ((Tooltip)e).hide();
+            ((Tooltip) e).hide();
             imageButton.getListeners().removeValue(e, true);
 
         });

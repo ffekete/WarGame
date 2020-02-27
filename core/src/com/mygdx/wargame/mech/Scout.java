@@ -65,10 +65,9 @@ public class Scout extends AbstractMech {
         hp.put(BodyPart.LeftLeg, getLeftLegMaxHp());
         hp.put(BodyPart.RightLeg, getRightLegMaxHp());
         hp.put(BodyPart.Torso, getTorsoMaxHp());
-        hp.put(BodyPart.Head,getHeadMaxHp());
+        hp.put(BodyPart.Head, getHeadMaxHp());
 
     }
-
 
 
     @Override

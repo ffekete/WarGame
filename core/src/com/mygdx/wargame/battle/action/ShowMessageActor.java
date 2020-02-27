@@ -28,7 +28,7 @@ public class ShowMessageActor extends TemporalAction {
 
         label = new ScalableLabel(message, labelStyle, 0.02f);
 
-        Vector2 newCoordinates = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.stage, initialX -0.5f, initialY);
+        Vector2 newCoordinates = StageUtils.convertBetweenStages(stageElementsStorage.stage, stageElementsStorage.stage, initialX - 0.5f, initialY);
         label.setPosition(newCoordinates.x, newCoordinates.y);
 
         actionLock.setWaitForObject(label);

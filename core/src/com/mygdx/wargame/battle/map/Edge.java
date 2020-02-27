@@ -2,7 +2,6 @@ package com.mygdx.wargame.battle.map;
 
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.NumberUtils;
 
 public class Edge implements Connection<Node> {
 

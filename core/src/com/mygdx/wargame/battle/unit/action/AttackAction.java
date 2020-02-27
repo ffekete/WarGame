@@ -37,7 +37,7 @@ public class AttackAction extends Action {
         attackerMech.setAttacked(true);
         attackerMech.setMoved(true);
 
-        if(MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) > minRange) {
+        if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) > minRange) {
             // not in range, can't do anything
             return true;
         }

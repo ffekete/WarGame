@@ -2,7 +2,6 @@ package com.mygdx.wargame.battle.map.overlay;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.google.common.collect.ImmutableMap;
-import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.map.tileselector.DirtTileSelector;
 import com.mygdx.wargame.battle.map.tileselector.Selector;
 

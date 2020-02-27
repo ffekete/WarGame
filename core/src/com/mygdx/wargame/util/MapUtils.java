@@ -20,27 +20,27 @@ public class MapUtils {
 
     public Map<Node, Integer> getAllAvailableWithMovementPointsCost(BattleMap battleMap, Mech mech) {
 
-        Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int)mech.getX()][(int)mech.getY()];
+        Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) mech.getX()][(int) mech.getY()];
 
         Map<Node, Integer> allAvailable = new HashMap();
         List<Node> openNodes = new ArrayList<>();
         Set<Node> closedNodes = new HashSet<>();
 
         Array<Edge> edges = battleMap.getNodeGraphLv1().getNodeEdges().get(start);
-        for(int i = 0; i < edges.size; i++) {
+        for (int i = 0; i < edges.size; i++) {
             openNodes.add(edges.get(i).getToNode());
         }
         //closedNodes.add(start);
 
-        while(!openNodes.isEmpty()) {
+        while (!openNodes.isEmpty()) {
 
             Node next = openNodes.remove(0);
 
-            if(!closedNodes.contains(next)) {
+            if (!closedNodes.contains(next)) {
                 closedNodes.add(next);
                 GraphPath graphPath = battleMap.calculatePath(start, next);
                 if (graphPath.getCount() <= mech.getMovementPoints() + 1) {
-                    allAvailable.put(next, graphPath.getCount() -1);
+                    allAvailable.put(next, graphPath.getCount() - 1);
                     edges = battleMap.getNodeGraphLv1().getNodeEdges().get(next);
                     for (int i = 0; i < edges.size; i++) {
                         openNodes.add(edges.get(i).getToNode());
@@ -53,23 +53,23 @@ public class MapUtils {
     }
 
     public List<Node> getAllAvailable(BattleMap battleMap, Mech mech, int distance) {
-        Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int)mech.getX()][(int)mech.getY()];
+        Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) mech.getX()][(int) mech.getY()];
 
         List<Node> allAvailable = new ArrayList<>();
         List<Node> openNodes = new ArrayList<>();
         Set<Node> closedNodes = new HashSet<>();
 
         Array<Edge> edges = battleMap.getNodeGraphLv1().getNodeEdges().get(start);
-        for(int i = 0; i < edges.size; i++) {
+        for (int i = 0; i < edges.size; i++) {
             openNodes.add(edges.get(i).getToNode());
         }
         //closedNodes.add(start);
 
-        while(!openNodes.isEmpty()) {
+        while (!openNodes.isEmpty()) {
 
             Node next = openNodes.remove(0);
 
-            if(!closedNodes.contains(next)) {
+            if (!closedNodes.contains(next)) {
                 closedNodes.add(next);
                 if (battleMap.calculatePath(start, next).getCount() <= distance + 1) {
                     allAvailable.add(next);

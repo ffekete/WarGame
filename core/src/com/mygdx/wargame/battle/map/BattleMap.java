@@ -1,6 +1,5 @@
 package com.mygdx.wargame.battle.map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -159,7 +158,7 @@ public class BattleMap {
         }
 
         public TextureRegion select(TerrainType terrainType) {
-            TextureRegion t =  new TextureRegion(assetManager.get("Grass.png", Texture.class));
+            TextureRegion t = new TextureRegion(assetManager.get("Grass.png", Texture.class));
             t.setRegion(new Random().nextInt(2) * 16, new Random().nextInt(2) * 16, 16, 16);
             return t;
         }

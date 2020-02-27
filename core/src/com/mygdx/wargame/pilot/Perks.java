@@ -18,7 +18,7 @@ public enum Perks {
     Leader("+10  to morale saves for the team", "Leader"),
     Hero("+20 to morale saves for the team", "Leader"),
     Dreaded("-10 morale saving throws for enemies", "Dreaded"),
-    RockSteady("-5 to stability hits received by mech","Rocksteady"),
+    RockSteady("-5 to stability hits received by mech", "Rocksteady"),
     JungleExpert("+5 to evasion and +1 to movement points on jungle maps", "Jungle expert"),
     DesertExpert("+1 movement speed on desert maps", "Desert expert"),
     SwampExpert("+5 to stability and +1 to movement points on swamp maps", "Swamp expert"),

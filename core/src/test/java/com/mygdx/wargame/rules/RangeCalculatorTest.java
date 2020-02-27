@@ -55,7 +55,7 @@ public class RangeCalculatorTest {
                 .add(new SniperMediumLaser())
                 .add(new MissileLauncher())
                 .add(new SniperLargeLaser())
-        .build());
+                .build());
 
         Pilot pilot = new Pilot(new HashMap<>(), new HashSet<>());
         int range = rangeCalculator.calculateAllWeaponsRange(pilot, mech);

@@ -3,10 +3,6 @@ package com.mygdx.wargame.battle.action;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.config.Config;
-
-import static com.mygdx.wargame.config.Config.SCREEN_SIZE_X;
-import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
 
 public class CenterCameraAction extends TemporalAction {
 

@@ -38,7 +38,7 @@ public class PlasmaHitChanceCalculator implements HitChanceCalculator {
             baseHitChance += 5;
         }
 
-        baseHitChance -= (int)MathUtils.getDistance(mech.getX(), mech.getY(), target.getX(), target.getY());
+        baseHitChance -= (int) MathUtils.getDistance(mech.getX(), mech.getY(), target.getX(), target.getY());
 
         return baseHitChance;
     }

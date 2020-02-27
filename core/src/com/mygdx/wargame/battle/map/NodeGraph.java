@@ -8,8 +8,6 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import java.util.Set;
-
 public class NodeGraph implements IndexedGraph<Node> {
 
     private int width, height;
@@ -64,7 +62,7 @@ public class NodeGraph implements IndexedGraph<Node> {
         if (!streetsMap.containsKey(fromNode)) {
             streetsMap.put(fromNode, new Array<Connection<Node>>());
         }
-        if(!streetsMap.get(fromNode).contains(edge, false)) {
+        if (!streetsMap.get(fromNode).contains(edge, false)) {
             streetsMap.get(fromNode).add(edge);
             edges.add(edge);
 

@@ -15,7 +15,7 @@ public class BodyPartDestructionHandler {
             b.setStatus(Status.Destroyed);
         });
 
-        if(bodyPart == BodyPart.Head || bodyPart == BodyPart.Torso) {
+        if (bodyPart == BodyPart.Head || bodyPart == BodyPart.Torso) {
             mech.setState(State.Dead);
         }
     }

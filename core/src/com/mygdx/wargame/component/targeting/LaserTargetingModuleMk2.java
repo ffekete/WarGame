@@ -9,7 +9,7 @@ public class LaserTargetingModuleMk2 implements TargetingModule {
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {
-        if(weaponType == WeaponType.Laser) {
+        if (weaponType == WeaponType.Laser) {
             return 5;
         }
         return 0;

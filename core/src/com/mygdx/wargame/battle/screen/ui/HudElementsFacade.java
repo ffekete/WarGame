@@ -9,7 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class HudElementsFacade {
 
@@ -35,7 +38,7 @@ public class HudElementsFacade {
         endTurnButton.addAction(new Action() {
             @Override
             public boolean act(float delta) {
-                if(!actionLock.isLocked() && turnProcessingFacade.isNextPlayerControlled()) {
+                if (!actionLock.isLocked() && turnProcessingFacade.isNextPlayerControlled()) {
                     endTurnButton.setVisible(true);
                 } else {
                     endTurnButton.setVisible(false);
@@ -52,6 +55,9 @@ public class HudElementsFacade {
                 return true;
             }
         });
+
+        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH - (80 / SCREEN_HUD_RATIO), 0);
+        endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         stage.addActor(endTurnButton);
     }

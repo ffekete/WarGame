@@ -183,7 +183,7 @@ BulletAnimationAction extends Action {
                     stageElementsStorage.airLevel.addAction(explosionAction);
                 }
 
-                if(weapon.getType() == WeaponType.Flamer) {
+                if (weapon.getType() == WeaponType.Flamer) {
                     sequenceAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap, rayHandler));
                 }
 

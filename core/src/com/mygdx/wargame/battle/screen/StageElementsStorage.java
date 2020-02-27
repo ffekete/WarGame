@@ -28,7 +28,7 @@ public class StageElementsStorage {
     public static class SortedGroup extends Group {
 
         @Override
-        protected void drawChildren (Batch batch, float parentAlpha) {
+        protected void drawChildren(Batch batch, float parentAlpha) {
             parentAlpha *= super.getColor().a;
             SnapshotArray<Actor> children = this.getChildren();
 
@@ -104,7 +104,7 @@ public class StageElementsStorage {
             }
             children.end();
         }
-        
+
 
     }
 

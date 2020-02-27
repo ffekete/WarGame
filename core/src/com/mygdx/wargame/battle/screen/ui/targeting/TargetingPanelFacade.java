@@ -28,6 +28,8 @@ import com.mygdx.wargame.util.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+
 public class TargetingPanelFacade {
 
     private Image panelImage;
@@ -52,12 +54,12 @@ public class TargetingPanelFacade {
     public TargetingPanelFacade(AssetManager assetManager, RangedAttackTargetCalculator rangedAttackTargetCalculator, RangeCalculator rangeCalculator) {
         panelImage = new Image(assetManager.get("skin/BigInfoPanel.png", Texture.class));
 
-        this.headImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetHead.png", 96, 96));
-        this.torsoImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetTorso.png", 96, 96));
-        this.leftArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetLeftArm.png", 48, 96));
-        this.leftLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetLeftLeg.png", 48, 96));
-        this.rightArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetRightArm.png", 48, 96));
-        this.rightLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetRightLeg.png", 48, 96));
+        this.headImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetHead.png", 96 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.torsoImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetTorso.png", 96 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.leftArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetLeftArm.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.leftLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetLeftLeg.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.rightArmImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetRightArm.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
+        this.rightLegImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetRightLeg.png", 48 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
 
         headImage.setClip(true);
 
@@ -165,7 +167,7 @@ public class TargetingPanelFacade {
         });
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontCreator.getBitmapFont(12);
+        labelStyle.font = FontCreator.getBitmapFont(10);
 
         ImageButton.ImageButtonStyle closeMenuButtonStyle = new ImageButton.ImageButtonStyle();
         closeMenuButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
@@ -180,21 +182,21 @@ public class TargetingPanelFacade {
             }
         });
 
-        panel.add(closePanelButton).size(20, 20).top().right().colspan(5).row();
+        panel.add(closePanelButton).size(20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO).top().right().colspan(5).row();
 
-        panel.add().size(30, 30);
-        panel.add(headImage).size(30, 30).colspan(3);
+        panel.add().size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO);
+        panel.add(headImage).size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO).colspan(3);
         panel.add().row();
 
-        panel.add(rightArmImage).size(20, 50);
-        panel.add(torsoImage).size(40, 40).colspan(3);
-        panel.add(leftArmImage).size(20, 50).row();
+        panel.add(rightArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add(torsoImage).size(40 / SCREEN_HUD_RATIO, 40 / SCREEN_HUD_RATIO).colspan(3);
+        panel.add(leftArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO).row();
 
-        panel.add().size(20, 50);
-        panel.add(rightLegImage).size(20, 50);
-        panel.add().size(5, 50);
-        panel.add(leftLegImage).size(20, 50);
-        panel.add().size(20, 50);
+        panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add(rightLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add().size(5 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add(leftLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
     }
 
     private ImageButton.ImageButtonStyle getImageButtonStyle(AssetManager assetManager, String path, float minWidth, float minHeight) {
@@ -232,15 +234,15 @@ public class TargetingPanelFacade {
         Table tooltipContent = new Table();
         Container<Table> container = new Container<>(tooltipContent);
 
-        tooltipContent.pad(20, 20, 20, 20);
+        tooltipContent.pad(20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO);
 
         Tooltip<Container> tooltip = new Tooltip<>(container);
         tooltipContent.background(panelImage.getDrawable());
         tooltip.setInstant(true);
 
         List<EventListener> toRemove = new ArrayList<>();
-        for(Object e : imageButton.getListeners()) {
-            if(Tooltip.class.isAssignableFrom(e.getClass())) {
+        for (Object e : imageButton.getListeners()) {
+            if (Tooltip.class.isAssignableFrom(e.getClass())) {
                 toRemove.add((EventListener) e);
             }
         }

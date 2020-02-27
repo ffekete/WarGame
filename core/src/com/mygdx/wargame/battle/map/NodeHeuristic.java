@@ -7,6 +7,6 @@ public class NodeHeuristic implements Heuristic<Node> {
 
     @Override
     public float estimate(Node fromNode, Node toNode) {
-        return  Vector2.dst(fromNode.getX(), fromNode.getY(), toNode.getX(), toNode.getY());
+        return Vector2.dst(fromNode.getX(), fromNode.getY(), toNode.getX(), toNode.getY());
     }
 }

@@ -36,7 +36,6 @@ public class AddFireEffectAction extends Action {
     public boolean act(float delta) {
 
 
-
         if (battleMap.getFireMap()[(int) x][(int) y] == 0 && treesOnTile.size() > 0) {
 
             treesOnTile.forEach(treeImage -> {

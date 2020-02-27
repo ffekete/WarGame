@@ -11,7 +11,7 @@ public class MoraleSavingCalculator {
 
     public int calculate(Pilot targetPilot, Mech targetMech, Set<Pilot> defenders, Set<Pilot> attackers) {
 
-        if(targetPilot.hasPerk(Perks.Crazy)) {
+        if (targetPilot.hasPerk(Perks.Crazy)) {
             return 100;
         }
 
@@ -31,23 +31,23 @@ public class MoraleSavingCalculator {
                 + targetMech.getTorsoMaxHp()
                 + targetMech.getHeadMaxHp();
 
-        if((float)remainingHp / (float)maxHp < 0.2f) {
+        if ((float) remainingHp / (float) maxHp < 0.2f) {
             baseValue -= 100; // panic!
         }
 
-        if(targetPilot.hasPerk(Perks.Cautious))
+        if (targetPilot.hasPerk(Perks.Cautious))
             baseValue -= 10;
 
-        if(targetPilot.hasPerk(Perks.Brave))
+        if (targetPilot.hasPerk(Perks.Brave))
             baseValue += 10;
 
-        if(targetPilot.hasPerk(Perks.Leader) || defenders.stream().anyMatch(defender -> defender.hasPerk(Perks.Leader)))
+        if (targetPilot.hasPerk(Perks.Leader) || defenders.stream().anyMatch(defender -> defender.hasPerk(Perks.Leader)))
             baseValue += 10 * defenders.stream().filter(a -> a.hasPerk(Perks.Leader)).count();
 
-        if(targetPilot.hasPerk(Perks.Hero) || defenders.stream().anyMatch(defender -> defender.hasPerk(Perks.Hero)))
+        if (targetPilot.hasPerk(Perks.Hero) || defenders.stream().anyMatch(defender -> defender.hasPerk(Perks.Hero)))
             baseValue += 20 * defenders.stream().filter(a -> a.hasPerk(Perks.Hero)).count();
 
-        if(attackers.stream().anyMatch(attacker -> attacker.hasPerk(Perks.Dreaded)))
+        if (attackers.stream().anyMatch(attacker -> attacker.hasPerk(Perks.Dreaded)))
             baseValue -= 10 * attackers.stream().filter(a -> a.hasPerk(Perks.Dreaded)).count();
 
         return baseValue;

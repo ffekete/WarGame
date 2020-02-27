@@ -4,6 +4,7 @@ import com.mygdx.wargame.component.weapon.Status;
 
 public class ActiveHeatSink implements HeatSink {
     private Status status;
+
     @Override
     public int getHeatDissipation() {
         return 30;

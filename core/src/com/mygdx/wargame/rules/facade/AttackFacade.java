@@ -14,12 +14,6 @@ import com.mygdx.wargame.rules.calculator.CriticalHitChanceCalculator;
 import com.mygdx.wargame.rules.calculator.DamageCalculator;
 import com.mygdx.wargame.rules.calculator.EvasionCalculator;
 import com.mygdx.wargame.rules.calculator.StabilityCalculator;
-import com.mygdx.wargame.rules.calculator.hitchance.BallisticHitChanceCalculator;
-import com.mygdx.wargame.rules.calculator.hitchance.FlamerHitChanceCalculator;
-import com.mygdx.wargame.rules.calculator.hitchance.IonHitChanceCalculator;
-import com.mygdx.wargame.rules.calculator.hitchance.LaserHitChanceCalculator;
-import com.mygdx.wargame.rules.calculator.hitchance.MissileHitChanceCalculator;
-import com.mygdx.wargame.rules.calculator.hitchance.PlasmaHitChanceCalculator;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Random;
@@ -52,7 +46,7 @@ public class AttackFacade {
                 int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
 
                 // reduce ammo of weapon
-                for(int i = 0; i < weapon.getDamageMultiplier(); i++)
+                for (int i = 0; i < weapon.getDamageMultiplier(); i++)
                     weapon.reduceAmmo();
 
                 if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {

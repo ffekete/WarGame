@@ -20,14 +20,14 @@ public class IonBullet extends AbstractBullet {
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
         delay += 0.1f;
-        if(delay == 0.2) {
+        if (delay == 0.2) {
             delay = 0;
             col++;
-            if(col == 5) {
+            if (col == 5) {
                 col = 0;
             }
         }
-        texture.setRegion(col * 32,0, 32, 32);
+        texture.setRegion(col * 32, 0, 32, 32);
         batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 1f, 1f, getRotation());
     }
 }

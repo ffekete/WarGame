@@ -24,7 +24,7 @@ public class WeakestTargetStrategy implements TargetingStrategy {
                 })
                 .findFirst();
 
-        if(target.isPresent())
+        if (target.isPresent())
             return Optional.of(new Target(target.get().getKey(), target.get().getValue()));
 
         return Optional.empty();

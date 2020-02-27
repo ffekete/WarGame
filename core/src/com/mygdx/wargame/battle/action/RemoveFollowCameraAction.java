@@ -1,7 +1,6 @@
 package com.mygdx.wargame.battle.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class RemoveFollowCameraAction extends Action {
 

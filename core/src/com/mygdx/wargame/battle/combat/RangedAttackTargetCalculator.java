@@ -72,7 +72,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             centerCameraAction.setPosition(attackerMech.getX(), attackerMech.getY());
             sequenceAction.addAction(centerCameraAction);
 
-            for(int i = 1; i < paths.getCount(); i++) {
+            for (int i = 1; i < paths.getCount(); i++) {
                 WayPoint wayPoint = new WayPoint(assetManager, stageElementsStorage);
                 wayPoint.setPosition(paths.get(i).getX(), paths.get(i).getY());
 

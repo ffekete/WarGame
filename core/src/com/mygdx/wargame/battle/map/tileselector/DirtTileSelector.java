@@ -19,7 +19,7 @@ public class DirtTileSelector implements Selector {
 
     public TextureRegion getFor(NodeGraph map, int x, int y, int skip) {
 
-        int mask = MapUtils.bitmask4bitForTile(map, x,y, TileOverlayType.Dirt, skip);
+        int mask = MapUtils.bitmask4bitForTile(map, x, y, TileOverlayType.Dirt, skip);
 
         // rock
         textureRegion.setRegion((mask % 4) * 32, (mask / 4) * 32, 32, 32);

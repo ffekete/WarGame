@@ -12,7 +12,7 @@ public class MovementSpeedCalculator {
 
     public int calculate(Pilot pilot, Mech mech, BattleMap battleMap) {
 
-        if(mech.getStability() <= 0)
+        if (mech.getStability() <= 0)
             return 0;
 
         if (mech.getHp(BodyPart.LeftLeg) <= 0 && mech.getHp(BodyPart.LeftLeg) <= 0)
@@ -48,11 +48,11 @@ public class MovementSpeedCalculator {
         }
 
         // Stability
-        if(mech.getStability() <= 50 && mech.getStability() > 25) {
+        if (mech.getStability() <= 50 && mech.getStability() > 25) {
             baseSpeed *= 0.75f;
         }
 
-        if(mech.getStability() < 25) {
+        if (mech.getStability() < 25) {
             baseSpeed *= 0.5f;
         }
 

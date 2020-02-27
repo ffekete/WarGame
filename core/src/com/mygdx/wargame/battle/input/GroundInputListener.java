@@ -70,14 +70,13 @@ public class GroundInputListener extends InputListener {
         if (attacker != null) {
 
             Node start = battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()];
-            Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int)x][(int)y];
+            Node end = battleMap.getNodeGraphLv1().getNodeWeb()[(int) x][(int) y];
 
             // reconnect so that attacker can move
-            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int)attacker.getX()][(int)attacker.getY()]);
+            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) attacker.getX()][(int) attacker.getY()]);
 
             GraphPath<Node> paths = battleMap.calculatePath(start, end);
             battleMap.addPath(attacker, paths);
-
 
 
             SequenceAction sequenceAction = new SequenceAction();
@@ -90,14 +89,14 @@ public class GroundInputListener extends InputListener {
 
             attacker.addAction(centerCameraAction);
 
-            for(int i = 1; i < paths.getCount(); i++) {
+            for (int i = 1; i < paths.getCount(); i++) {
                 WayPoint wayPoint;
 
-                if(i < paths.getCount() -1)
+                if (i < paths.getCount() - 1)
                     wayPoint = new WayPoint(assetManager, stageElementsStorage);
                 else {
                     wayPoint = new WayPointEnd(assetManager, stageElementsStorage);
-                    wayPoint.setRotation(180 + MathUtils.getAngle(new double[]{paths.get(i).getX(), paths.get(i).getY()}, new double[]{paths.get(i-1).getX(), paths.get(i-1).getY()}));
+                    wayPoint.setRotation(180 + MathUtils.getAngle(new double[]{paths.get(i).getX(), paths.get(i).getY()}, new double[]{paths.get(i - 1).getX(), paths.get(i - 1).getY()}));
                 }
                 wayPoint.setPosition(paths.get(i).getX(), paths.get(i).getY());
 

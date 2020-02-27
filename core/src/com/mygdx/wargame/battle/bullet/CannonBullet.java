@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class CannonBullet extends AbstractBullet {
 
@@ -21,14 +20,14 @@ public class CannonBullet extends AbstractBullet {
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
         delay += 0.1f;
-        if(delay == 0.2) {
+        if (delay == 0.2) {
             delay = 0;
             col++;
-            if(col == 5) {
+            if (col == 5) {
                 col = 0;
             }
         }
-        texture.setRegion(col * 32,0, 32, 32);
+        texture.setRegion(col * 32, 0, 32, 32);
         batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 0.5f, 0.5f, getRotation());
     }
 }

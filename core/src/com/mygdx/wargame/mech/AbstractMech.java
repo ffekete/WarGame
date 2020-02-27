@@ -12,8 +12,6 @@ import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
 
-import java.security.acl.Owner;
-
 public abstract class
 AbstractMech extends Actor implements Mech {
 

@@ -20,14 +20,14 @@ public class FlameBullet extends AbstractBullet {
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
         delay += 0.1f;
-        if(delay == 0.1) {
+        if (delay == 0.1) {
             delay = 0;
             col++;
-            if(col == 4) {
+            if (col == 4) {
                 col = 0;
             }
         }
-        texture.setRegion(col * 16,0, 16, 16);
+        texture.setRegion(col * 16, 0, 16, 16);
         batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 0.5f, 0.5f, getRotation() + 90f);
     }
 }

@@ -15,7 +15,7 @@ public class TargetingFacade {
 
     public Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap) {
 
-        if(pilot.hasPerk(Perks.Cautious)) {
+        if (pilot.hasPerk(Perks.Cautious)) {
             return weakestTargetStrategy.findTarget(pilot, mech, targets, battleMap, null);
         }
         return new FlankingTargetStrategy().findTarget(pilot, mech, targets, battleMap, firstTargetStrategy);

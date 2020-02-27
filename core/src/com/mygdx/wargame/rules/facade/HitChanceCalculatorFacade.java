@@ -23,7 +23,7 @@ public class HitChanceCalculatorFacade {
     public int getHitChance(Weapon weapon, Pilot attackingPilot, Mech attackingMech, Mech defendingMech, BodyPart targetBodyPart) {
 
         int modifier = 0;
-        if(targetBodyPart != null) {
+        if (targetBodyPart != null) {
             switch (targetBodyPart) {
                 case LeftLeg:
                 case RightLeg:

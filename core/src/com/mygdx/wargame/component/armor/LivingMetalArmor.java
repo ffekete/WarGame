@@ -5,7 +5,7 @@ import com.mygdx.wargame.component.weapon.Status;
 public class LivingMetalArmor implements Armor {
 
     private static final int MAX_HP = 10;
-    private int hp =10;
+    private int hp = 10;
     private Status status;
 
     @Override
@@ -61,7 +61,7 @@ public class LivingMetalArmor implements Armor {
 
     @Override
     public void update() {
-        if(this.hp < MAX_HP)
+        if (this.hp < MAX_HP)
             this.hp++;
     }
 

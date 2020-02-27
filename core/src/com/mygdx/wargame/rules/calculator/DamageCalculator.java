@@ -83,8 +83,7 @@ public class DamageCalculator {
 
                     showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1), messageQue);
                     reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1), bodyPart);
-                }
-                else {
+                } else {
                     // get hp damage
                     addExplosion(targetMech);
 
@@ -110,8 +109,8 @@ public class DamageCalculator {
         stageElementsStorage.airLevel.addAction(messageQue);
     }
 
-    private void showMessage(Mech targetMech, String message,SequenceAction messageQue) {
-        ShowMessageActor showMessageActor = new ShowMessageActor(mechInfoPanelFacade.getSmallLabelStyle(), targetMech.getX(),targetMech.getY(), message, stageElementsStorage, actionLock);
+    private void showMessage(Mech targetMech, String message, SequenceAction messageQue) {
+        ShowMessageActor showMessageActor = new ShowMessageActor(mechInfoPanelFacade.getSmallLabelStyle(), targetMech.getX(), targetMech.getY(), message, stageElementsStorage, actionLock);
         showMessageActor.setDuration(2f);
         messageQue.addAction(showMessageActor);
     }

@@ -2,17 +2,10 @@ package com.mygdx.wargame.battle.map.decorator;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
-import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.decoration.TreeImage;
-import com.mygdx.wargame.battle.map.overlay.Overlay;
-import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.config.Config;
 
@@ -49,11 +42,11 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
             for (int j = 0; j < newMap[0].length; j++) {
                 if (newMap[i][j] == 1) {
 
-                    for(int k = 0; k < new Random().nextInt(Config.treeSpread); k++) {
+                    for (int k = 0; k < new Random().nextInt(Config.treeSpread); k++) {
                         int rnd = new Random().nextInt(treeVariations.size());
 
                         TreeImage tree = new TreeImage(treeVariations.get(rnd));
-                        tree.setPosition(i + new Random().nextFloat(), j+ new Random().nextFloat());
+                        tree.setPosition(i + new Random().nextFloat(), j + new Random().nextFloat());
                         tree.setSize(1, 1);
 
                         stageElementsStorage.mechLevel.addActor(tree);

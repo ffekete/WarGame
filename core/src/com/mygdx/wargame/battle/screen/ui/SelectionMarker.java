@@ -3,7 +3,6 @@ package com.mygdx.wargame.battle.screen.ui;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,9 +25,9 @@ public class SelectionMarker extends Actor {
     public void act(float delta) {
         delay += delta;
 
-        if(delay >= 0.25) {
+        if (delay >= 0.25) {
             col++;
-            if(col >= 2) {
+            if (col >= 2) {
                 col = 0;
             }
             delay = 0;
@@ -39,7 +38,7 @@ public class SelectionMarker extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         textureRegion.setRegion(col * 32, 0, 32, 32);
         spriteBatch.setColor(color);
-        spriteBatch.draw(textureRegion, getX() -1f, getY() + 1f, 3,3);
+        spriteBatch.draw(textureRegion, getX() - 1f, getY() + 1f, 3, 3);
         spriteBatch.setColor(Color.WHITE);
     }
 

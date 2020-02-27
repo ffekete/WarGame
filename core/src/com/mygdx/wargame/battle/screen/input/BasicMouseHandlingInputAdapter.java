@@ -20,20 +20,19 @@ public class BasicMouseHandlingInputAdapter extends InputAdapter {
 
     @Override
     public boolean scrolled(int amount) {
-       screenConfiguration.zoom = amount * Gdx.graphics.getDeltaTime();
+        screenConfiguration.zoom = amount * Gdx.graphics.getDeltaTime();
         return true;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
 
-        if(actionLock.isLocked())
+        if (actionLock.isLocked())
             return true;
 
         if (screenY <= 10) {
             screenConfiguration.scrollY = 10 * Gdx.graphics.getDeltaTime();
-        }
-        else if (screenY >= SCREEN_SIZE_Y - 10) {
+        } else if (screenY >= SCREEN_SIZE_Y - 10) {
             screenConfiguration.scrollY = -10 * Gdx.graphics.getDeltaTime();
 
         } else {
@@ -42,8 +41,7 @@ public class BasicMouseHandlingInputAdapter extends InputAdapter {
 
         if (screenX <= 10) {
             screenConfiguration.scrollX = -10 * Gdx.graphics.getDeltaTime();
-        }
-        else if (screenX >= SCREEN_SIZE_X - 10) {
+        } else if (screenX >= SCREEN_SIZE_X - 10) {
             screenConfiguration.scrollX = 10 * Gdx.graphics.getDeltaTime();
 
         } else {

@@ -12,7 +12,7 @@ public class EvasionCalculator {
     public int calculate(Pilot targetPilot, Mech targetMech, Pilot enemyPilot, BattleMap battleMap) {
         int baseEvasion = targetMech.getRemainingMovementPoints();
 
-        if(targetPilot.hasPerk(Perks.Agile)) {
+        if (targetPilot.hasPerk(Perks.Agile)) {
             baseEvasion += 5;
         }
 
@@ -20,7 +20,7 @@ public class EvasionCalculator {
 
         baseEvasion -= Math.ceil(enemyPilot.getSkills().get(Skill.Targeting) * 0.05d);
 
-        if(battleMap.getTerrainType() == TerrainType.Jungle && targetPilot.hasPerk(Perks.JungleExpert))
+        if (battleMap.getTerrainType() == TerrainType.Jungle && targetPilot.hasPerk(Perks.JungleExpert))
             baseEvasion += 5;
 
         return baseEvasion;

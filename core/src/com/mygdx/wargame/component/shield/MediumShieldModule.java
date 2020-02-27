@@ -18,7 +18,7 @@ public class MediumShieldModule implements Shield {
     @Override
     public void reduceShieldValue(int amount) {
         this.value -= amount;
-        if(value < 0)
+        if (value < 0)
             value = 0;
     }
 
@@ -60,7 +60,7 @@ public class MediumShieldModule implements Shield {
     @Override
     public void update() {
         value += 1;
-        if(value > MAX_VALUE)
+        if (value > MAX_VALUE)
             value = MAX_VALUE;
     }
 

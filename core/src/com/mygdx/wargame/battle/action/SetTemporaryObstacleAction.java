@@ -6,7 +6,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 public class SetTemporaryObstacleAction extends Action {
 
     private BattleMap battleMap;
-    private int x,y;
+    private int x, y;
 
     public SetTemporaryObstacleAction(BattleMap battleMap, int x, int y) {
         this.battleMap = battleMap;

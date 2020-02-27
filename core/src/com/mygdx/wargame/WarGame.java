@@ -5,13 +5,13 @@ import com.mygdx.wargame.battle.screen.BattleScreen;
 
 public class WarGame extends Game {
 
-	private BattleScreen battleScreen;
+    private BattleScreen battleScreen;
 
-	@Override
-	public void create () {
+    @Override
+    public void create() {
 
-		battleScreen = new BattleScreen();
-		this.setScreen(battleScreen);
-	}
+        battleScreen = new BattleScreen();
+        this.setScreen(battleScreen);
+    }
 
 }

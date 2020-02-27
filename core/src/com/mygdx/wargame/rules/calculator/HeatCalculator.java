@@ -16,14 +16,14 @@ public class HeatCalculator {
         int heatDissipation = targetMech.getAllComponents().stream()
                 .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> HeatSink.class.isAssignableFrom(c.getClass()))
-                .map(c -> ((HeatSink)c).getHeatDissipation())
-                .reduce((a,b) -> a+b).orElse(0);
+                .map(c -> ((HeatSink) c).getHeatDissipation())
+                .reduce((a, b) -> a + b).orElse(0);
 
         baseValue += heatDissipation;
 
-        baseValue -= battleMap.getFireMap()[(int)targetMech.getX()][(int)targetMech.getY()]  > 0 ? 20 : 0;
+        baseValue -= battleMap.getFireMap()[(int) targetMech.getX()][(int) targetMech.getY()] > 0 ? 20 : 0;
 
-        if(targetPilot.hasPerk(Perks.Engineer)) {
+        if (targetPilot.hasPerk(Perks.Engineer)) {
             baseValue += 5;
         }
 

@@ -29,6 +29,8 @@ import com.mygdx.wargame.util.StageUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+
 public class MechClickInputListener extends InputListener {
 
     private Mech mec;
@@ -204,11 +206,11 @@ public class MechClickInputListener extends InputListener {
                     mechInfoPanelFacade.getIbTable().add(checkBox).padRight(20);
 
                     int ammo = w.getAmmo().orElse(-1);
-                    mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15);
-                    mechInfoPanelFacade.getIbTable().add(new Label("H: " + w.getHeat(), labelStyle)).padRight(15);
-                    mechInfoPanelFacade.getIbTable().add(new Label("SD: " + w.getShieldDamage(), labelStyle)).padRight(15);
-                    mechInfoPanelFacade.getIbTable().add(new Label("AD: " + w.getArmorDamage(), labelStyle)).padRight(15);
-                    mechInfoPanelFacade.getIbTable().add(new Label("BD: " + w.getBodyDamage(), labelStyle)).padRight(15);
+                    mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
+                    mechInfoPanelFacade.getIbTable().add(new Label("H: " + w.getHeat(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
+                    mechInfoPanelFacade.getIbTable().add(new Label("SD: " + w.getShieldDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
+                    mechInfoPanelFacade.getIbTable().add(new Label("AD: " + w.getArmorDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
+                    mechInfoPanelFacade.getIbTable().add(new Label("BD: " + w.getBodyDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
                     mechInfoPanelFacade.getIbTable().add(new Label("x ( " + w.getDamageMultiplier() + " )", labelStyle));
 
                     mechInfoPanelFacade.getIbTable().row();

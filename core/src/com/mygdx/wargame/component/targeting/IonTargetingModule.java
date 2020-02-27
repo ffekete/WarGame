@@ -9,7 +9,7 @@ public class IonTargetingModule implements TargetingModule {
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {
-        if(weaponType == WeaponType.Ion) {
+        if (weaponType == WeaponType.Ion) {
             return 5;
         }
         return 0;

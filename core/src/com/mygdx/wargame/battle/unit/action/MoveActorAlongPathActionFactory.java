@@ -4,7 +4,6 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.action.FollowCameraAction;
 import com.mygdx.wargame.battle.action.RemoveFollowCameraAction;
 import com.mygdx.wargame.battle.action.SetTemporaryObstacleAction;
@@ -52,7 +51,7 @@ public class MoveActorAlongPathActionFactory {
                 moveToActionStep.setDuration(1.1f);
                 moveToAction.addAction(moveToActionStep);
 
-                moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx , ny));
+                moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx, ny));
             }
         }
 

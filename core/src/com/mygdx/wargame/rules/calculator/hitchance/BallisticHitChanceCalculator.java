@@ -38,7 +38,7 @@ public class BallisticHitChanceCalculator implements HitChanceCalculator {
             baseHitChance += 5;
         }
 
-        baseHitChance -= (int)MathUtils.getDistance(targetingMech.getX(), targetingMech.getY(), target.getX(), target.getY());
+        baseHitChance -= (int) MathUtils.getDistance(targetingMech.getX(), targetingMech.getY(), target.getX(), target.getY());
 
         return baseHitChance;
     }

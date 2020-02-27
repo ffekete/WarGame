@@ -25,10 +25,10 @@ public class CriticalHitChanceCalculator {
                 .stream()
                 .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> TargetingModule.class.isAssignableFrom(c.getClass()))
-                .map(c -> ((TargetingModule)c).getAdditionalCriticalChance())
+                .map(c -> ((TargetingModule) c).getAdditionalCriticalChance())
                 .reduce(Integer::sum);
 
-        if(additionalCriticalChance.isPresent())
+        if (additionalCriticalChance.isPresent())
             baseCriticalChance += additionalCriticalChance.get();
 
         return baseCriticalChance;

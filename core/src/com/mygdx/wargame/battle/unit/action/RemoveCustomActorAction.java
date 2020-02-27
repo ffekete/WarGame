@@ -23,7 +23,7 @@ public class RemoveCustomActorAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        if(stage != null)
+        if (stage != null)
             stage.getActors().removeValue(actor, true);
         else
             group.removeActor(actor, true);

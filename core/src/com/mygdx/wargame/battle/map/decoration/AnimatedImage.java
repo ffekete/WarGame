@@ -27,12 +27,12 @@ public class AnimatedImage extends Image implements Tree {
     public void draw(Batch batch, float parentAlpha) {
         counter += Gdx.graphics.getDeltaTime();
 
-        if(counter >= speed) {
+        if (counter >= speed) {
             step = (step + 1) % size;
             counter = 0;
         }
 
         textureRegion.setRegion(step * 48, 0, 48, 48);
-        batch.draw(textureRegion, getX(), getY(), 1,  1);
+        batch.draw(textureRegion, getX(), getY(), 1, 1);
     }
 }

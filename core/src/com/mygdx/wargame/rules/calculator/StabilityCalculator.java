@@ -28,17 +28,17 @@ public class StabilityCalculator {
 
         baseStabilityDamage -= TargetMech.getStabilityResistance();
 
-        if(targetPilot.hasPerk(Perks.RockSteady)) {
+        if (targetPilot.hasPerk(Perks.RockSteady)) {
             baseStabilityDamage -= 5;
         }
 
         baseStabilityDamage += battleMap.getTerrainType().getStabilityModifier();
 
-        if(battleMap.getTerrainType() == TerrainType.Swamp && targetPilot.hasPerk(Perks.SwampExpert)) {
+        if (battleMap.getTerrainType() == TerrainType.Swamp && targetPilot.hasPerk(Perks.SwampExpert)) {
             baseStabilityDamage += 5;
         }
 
-        if(battleMap.getTerrainType() == TerrainType.Snow && targetPilot.hasPerk(Perks.SnowExpert)) {
+        if (battleMap.getTerrainType() == TerrainType.Snow && targetPilot.hasPerk(Perks.SnowExpert)) {
             baseStabilityDamage += 5;
         }
 

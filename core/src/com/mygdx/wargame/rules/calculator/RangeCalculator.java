@@ -13,7 +13,7 @@ public class RangeCalculator {
     public int calculate(Pilot pilot, Weapon weapon) {
         int baseRange = weapon.getRange();
 
-        if(pilot.hasPerk(Perks.Cautious)) {
+        if (pilot.hasPerk(Perks.Cautious)) {
             baseRange++;
         }
 

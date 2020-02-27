@@ -24,20 +24,20 @@ public class FireEffect extends Actor {
         textureRegion = new TextureRegion(assetManager.get("Flame.png", Texture.class));
         this.rayHandler = rayHandler;
         setPosition(x, y);
-        new PointLight(rayHandler, 5, new Color(0.5f, 0,0,0.5f), 0.5f, x, y);
+        new PointLight(rayHandler, 5, new Color(0.5f, 0, 0, 0.5f), 0.5f, x, y);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         counter += Gdx.graphics.getDeltaTime();
 
-        if(counter >= 0.1f) {
+        if (counter >= 0.1f) {
             step = (step + 1) % 3;
             counter = 0;
         }
 
         batch.setColor(Color.valueOf("FFFFFF66"));
-        textureRegion.setRegion(step * 16, 0 , 16 ,16);
+        textureRegion.setRegion(step * 16, 0, 16, 16);
         batch.draw(textureRegion, getX(), getY(), 1, 1);
     }
 }

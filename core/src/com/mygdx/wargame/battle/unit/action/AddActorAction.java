@@ -23,7 +23,7 @@ public class AddActorAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        if(stage != null)
+        if (stage != null)
             stage.addActor(actor);
         else
             group.addActor(actor);

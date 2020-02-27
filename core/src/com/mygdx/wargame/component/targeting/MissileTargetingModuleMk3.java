@@ -9,7 +9,7 @@ public class MissileTargetingModuleMk3 implements TargetingModule {
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {
-        if(weaponType == WeaponType.Missile) {
+        if (weaponType == WeaponType.Missile) {
             return 5;
         }
         return 0;

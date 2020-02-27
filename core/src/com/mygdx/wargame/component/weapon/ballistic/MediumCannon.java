@@ -111,7 +111,7 @@ public class MediumCannon implements Weapon {
 
     @Override
     public void resetAmmo() {
-        this.ammo  = MAX_AMMO;
+        this.ammo = MAX_AMMO;
     }
 
     @Override

@@ -17,6 +17,6 @@ public class ShowReduceHeatAction extends TemporalAction {
 
     @Override
     protected void update(float percent) {
-        progressBar.setValue((actual - (actual -target) * percent));
+        progressBar.setValue((actual - (actual - target) * percent));
     }
 }

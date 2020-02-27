@@ -9,7 +9,7 @@ public class PlasmaTargetingModuleMk2 implements TargetingModule {
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {
-        if(weaponType == WeaponType.Plasma) {
+        if (weaponType == WeaponType.Plasma) {
             return 5;
         }
         return 0;

@@ -11,6 +11,7 @@ import java.util.Optional;
 @Item
 public class SmallLaser implements Weapon {
     private Status status;
+
     @Override
     public int getShieldDamage() {
         return 5;

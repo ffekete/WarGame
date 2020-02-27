@@ -1,9 +1,7 @@
 package com.mygdx.wargame.battle.action;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.mygdx.wargame.battle.screen.StageElementsStorage;
 
 public class ZoomToNormalCameraAction extends TemporalAction {
 

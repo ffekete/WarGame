@@ -37,7 +37,7 @@ public class DamageCalculatorTest {
 
     @BeforeMethod
     public void setUp() {
-    when(criticalHitChanceCalculator.calculate(any(), any(), any())).thenReturn(-100); // jinxing critical chance
+        when(criticalHitChanceCalculator.calculate(any(), any(), any())).thenReturn(-100); // jinxing critical chance
     }
 
     @Test
@@ -302,7 +302,7 @@ public class DamageCalculatorTest {
 
         assertThat((defenderMech.getAllComponents().stream().map(c -> ((Shield) c).getShieldValue()).reduce((a, b) -> a + b)).get(), is(20));
 
-        damageCalculator.calculate(attacker,attackerMech,defender, defenderMech, new TripleBarrelSmallLaser(), BodyPart.Head, new SequenceAction());
+        damageCalculator.calculate(attacker, attackerMech, defender, defenderMech, new TripleBarrelSmallLaser(), BodyPart.Head, new SequenceAction());
 
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 0), is(true));
         assertThat(defenderMech.getAllComponents().stream().anyMatch(c -> ((Shield) c).getShieldValue() == 8), is(true));

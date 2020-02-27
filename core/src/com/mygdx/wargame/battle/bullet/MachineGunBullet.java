@@ -17,7 +17,7 @@ public class MachineGunBullet extends AbstractBullet {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
-        texture.setRegion(0,0, 32, 32);
+        texture.setRegion(0, 0, 32, 32);
         batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 1f, 1f, getRotation());
     }
 }

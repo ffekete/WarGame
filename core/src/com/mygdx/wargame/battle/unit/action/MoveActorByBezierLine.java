@@ -1,13 +1,8 @@
 package com.mygdx.wargame.battle.unit.action;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.mygdx.wargame.config.Config;
-
-import java.util.Random;
 
 public class MoveActorByBezierLine extends TemporalAction {
 

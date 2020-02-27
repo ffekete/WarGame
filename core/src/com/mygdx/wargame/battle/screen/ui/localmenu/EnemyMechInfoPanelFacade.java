@@ -2,9 +2,7 @@ package com.mygdx.wargame.battle.screen.ui.localmenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -21,6 +19,8 @@ import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
+
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class EnemyMechInfoPanelFacade {
 
@@ -56,7 +56,7 @@ public class EnemyMechInfoPanelFacade {
         hideMenuButtonsSelectionStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonDown.png")));
 
         hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        hideMenuButton.setSize(hideMenuButton.getWidth() * Config.UI_SCALING, hideMenuButton.getHeight() * Config.UI_SCALING);
+        hideMenuButton.setSize(hideMenuButton.getWidth() / SCREEN_HUD_RATIO, hideMenuButton.getHeight() / SCREEN_HUD_RATIO);
         hideMenuButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -67,7 +67,7 @@ public class EnemyMechInfoPanelFacade {
         });
 
         attackButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        attackButton.setSize(attackButton.getWidth() * Config.UI_SCALING, attackButton.getHeight() * Config.UI_SCALING);
+        attackButton.setSize(attackButton.getWidth() / SCREEN_HUD_RATIO, attackButton.getHeight() / SCREEN_HUD_RATIO);
         attackButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -85,7 +85,7 @@ public class EnemyMechInfoPanelFacade {
         calledShotButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CalledShotDown.png")));
 
         aimedAttackButton = new ImageButton(calledShotButtonStyle);
-        aimedAttackButton.setSize(aimedAttackButton.getWidth() * Config.UI_SCALING, aimedAttackButton.getHeight() * Config.UI_SCALING);
+        aimedAttackButton.setSize(aimedAttackButton.getWidth() / SCREEN_HUD_RATIO, aimedAttackButton.getHeight() / SCREEN_HUD_RATIO);
 
         aimedAttackButton.addListener(new ClickListener() {
             @Override
@@ -94,8 +94,8 @@ public class EnemyMechInfoPanelFacade {
                 hideLocalMenu();
                 targetingPanelFacade.hide();
                 stageElementsStorage.hudStage.addActor(targetingPanelFacade.getPanel(attackingPilot, attackingMech, defendingPilot, defendingMech));
-                targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250, 0), Config.SCREEN_SIZE_X), Math.min(Math.max(aimedAttackButton.getY() - 100, 0), Config.SCREEN_SIZE_Y));
-                targetingPanelFacade.getPanel().setSize(200, 200);
+                targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250 / SCREEN_HUD_RATIO, 0), Config.HUD_VIEWPORT_WIDTH), Math.min(Math.max(aimedAttackButton.getY() - 100 / SCREEN_HUD_RATIO, 0), Config.HUD_VIEWPORT_HEIGHT));
+                targetingPanelFacade.getPanel().setSize(200 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO);
                 targetingPanelFacade.getPanel().setVisible(true);
                 //EnemyMechInfoPanelFacade.this.rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) defendingMech, defendingPilot, null);
                 return true;
@@ -124,7 +124,7 @@ public class EnemyMechInfoPanelFacade {
 
         MoveByAction moveTo = new MoveByAction();
 
-        moveTo.setAmount(0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -134,7 +134,7 @@ public class EnemyMechInfoPanelFacade {
         attackButton.addAction(sequenceAction);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -144,7 +144,7 @@ public class EnemyMechInfoPanelFacade {
         hideMenuButton.addAction(sequenceAction);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(-60 * Config.UI_SCALING, 0);
+        moveTo.setAmount(-60 / SCREEN_HUD_RATIO, 0);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -154,7 +154,7 @@ public class EnemyMechInfoPanelFacade {
         aimedAttackButton.addAction(sequenceAction);
 //
 //        moveTo = new MoveByAction();
-//        moveTo.setAmount(60 * Config.UI_SCALING, 0);
+//        moveTo.setAmount(60 / SCREEN_HUD_RATIO, 0);
 //        moveTo.setDuration(0.25f);
 //        sequenceAction = new SequenceAction();
 //        visibleAction = new VisibleAction();
@@ -171,22 +171,22 @@ public class EnemyMechInfoPanelFacade {
     public void showLocalMenu() {
         localMenuVisible = true;
         MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount(0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         attackButton.addAction(moveTo);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         hideMenuButton.addAction(moveTo);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(60 * Config.UI_SCALING, 0);
+        moveTo.setAmount(60 / SCREEN_HUD_RATIO, 0);
         moveTo.setDuration(0.25f);
         aimedAttackButton.addAction(moveTo);
 //
 //        moveTo = new MoveByAction();
-//        moveTo.setAmount(-60 * Config.UI_SCALING, 0);
+//        moveTo.setAmount(-60 / SCREEN_HUD_RATIO, 0);
 //        moveTo.setDuration(0.25f);
 //        aimedAttackButton.addAction(moveTo);
 //

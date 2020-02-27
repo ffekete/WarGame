@@ -17,7 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
-import com.mygdx.wargame.config.Config;
+
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class MechInfoPanelFacade extends Actor {
 
@@ -45,8 +46,6 @@ public class MechInfoPanelFacade extends Actor {
     ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
-    private Container<Table> healthOverlay;
-    private Table healthOverlayTable;
 
     private StageElementsStorage stageElementsStorage;
     private ActionLock actionLock;
@@ -57,22 +56,13 @@ public class MechInfoPanelFacade extends Actor {
         mechInfoTable = new Table();
 
         font = FontCreator.getBitmapFont();
-        smallFont = FontCreator.getBitmapFont(13);
+        smallFont = FontCreator.getBitmapFont(10);
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = font;
 
         smallLabelStyle = new Label.LabelStyle();
         smallLabelStyle.font = smallFont;
-
-        healthOverlayTable = new Table();
-        healthOverlay = new Container<>(healthOverlayTable);
-        healthOverlay.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png"))));
-        healthOverlay.setPosition(0, 0);
-        healthOverlay.setSize(200, 200);
-
-        healthOverlayTable.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("HealthOverlay.png"))));
-
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = smallFont;
@@ -112,7 +102,7 @@ public class MechInfoPanelFacade extends Actor {
         detailsImageButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/DetailsButtonDown.png")));
 
         detailsButton = new ImageButton(detailsImageButtonStyle);
-        detailsButton.setSize(detailsButton.getWidth() * Config.UI_SCALING, detailsButton.getHeight() * Config.UI_SCALING);
+        detailsButton.setSize(detailsButton.getWidth() / SCREEN_HUD_RATIO, detailsButton.getHeight() / SCREEN_HUD_RATIO);
         detailsButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -129,7 +119,7 @@ public class MechInfoPanelFacade extends Actor {
         pilotButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PilotButtonUp.png")));
         pilotButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PilotButtonDown.png")));
         pilotButton = new ImageButton(pilotButtonStyle);
-        pilotButton.setSize(pilotButton.getWidth() * Config.UI_SCALING, pilotButton.getHeight() * Config.UI_SCALING);
+        pilotButton.setSize(pilotButton.getWidth() / SCREEN_HUD_RATIO, pilotButton.getHeight() / SCREEN_HUD_RATIO);
         pilotButton.addListener(new ClickListener() {
 
             @Override
@@ -156,14 +146,14 @@ public class MechInfoPanelFacade extends Actor {
             }
         });
 
-        weaponSelectionButton.setSize(weaponSelectionButton.getWidth() * Config.UI_SCALING, weaponSelectionButton.getHeight() * Config.UI_SCALING);
+        weaponSelectionButton.setSize(weaponSelectionButton.getWidth() / SCREEN_HUD_RATIO, weaponSelectionButton.getHeight() / SCREEN_HUD_RATIO);
 
         ImageButton.ImageButtonStyle hideMenuButtonsSelectionStyle = new ImageButton.ImageButtonStyle();
         hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
         hideMenuButtonsSelectionStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonDown.png")));
 
         hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        hideMenuButton.setSize(hideMenuButton.getWidth() * Config.UI_SCALING, hideMenuButton.getHeight() * Config.UI_SCALING);
+        hideMenuButton.setSize(hideMenuButton.getWidth() / SCREEN_HUD_RATIO, hideMenuButton.getHeight() / SCREEN_HUD_RATIO);
         hideMenuButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -181,21 +171,21 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionScrollPane.setDebug(true);
         Table weaponSelectionOuterTable = new Table();
         weaponSelectionOuterTable.add(fireImage).padRight(10);
-        weaponSelectionOuterTable.add(heatProgressBar).width(400 * Config.UI_SCALING).padRight(10).row();
+        weaponSelectionOuterTable.add(heatProgressBar).width(400 / SCREEN_HUD_RATIO).padRight(10 / SCREEN_HUD_RATIO).row();
         weaponSelectionOuterTable.add(weaponSelectionScrollPane).colspan(2);
 
         weaponSelectionContainer = new Container<>(weaponSelectionOuterTable);
         weaponSelectionContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png"))));
-        weaponSelectionContainer.fillX().pad(30 * Config.UI_SCALING);
+        weaponSelectionContainer.fillX().pad(30 / SCREEN_HUD_RATIO);
 
-        weaponSelectionContainer.setSize(600 * Config.UI_SCALING, 200 * Config.UI_SCALING);
-        weaponSelectionContainer.setY(-200 * Config.UI_SCALING);
+        weaponSelectionContainer.setSize(600 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO);
+        weaponSelectionContainer.setY(-200 / SCREEN_HUD_RATIO);
         weaponSelectionScrollPane.setScrollbarsVisible(true);
 
         // Mech info
 
         bigInfoPanelContainer = new Container<>(mechInfoTable);
-        bigInfoPanelContainer.setSize(300 * Config.UI_SCALING, 300 * Config.UI_SCALING);
+        bigInfoPanelContainer.setSize(300 / SCREEN_HUD_RATIO, 300 / SCREEN_HUD_RATIO);
         bigInfoPanelContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/BigInfoPanel.png"))));
         bigInfoPanelContainer.setVisible(false);
         //mechInfoTable.background(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/StatusBackground.png"))));
@@ -264,7 +254,7 @@ public class MechInfoPanelFacade extends Actor {
         visibleAction.setVisible(false);
 
         MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount(0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -274,7 +264,7 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionButton.addAction(sequenceAction);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -284,7 +274,7 @@ public class MechInfoPanelFacade extends Actor {
         hideMenuButton.addAction(sequenceAction);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(-60 * Config.UI_SCALING, 0);
+        moveTo.setAmount(-60 / SCREEN_HUD_RATIO, 0);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -294,7 +284,7 @@ public class MechInfoPanelFacade extends Actor {
         pilotButton.addAction(sequenceAction);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(60 * Config.UI_SCALING, 0);
+        moveTo.setAmount(60 / SCREEN_HUD_RATIO, 0);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -314,22 +304,22 @@ public class MechInfoPanelFacade extends Actor {
     public void showLocalMenu() {
         localMenuVisible = true;
         MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount(0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         weaponSelectionButton.addAction(moveTo);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 / SCREEN_HUD_RATIO);
         moveTo.setDuration(0.25f);
         hideMenuButton.addAction(moveTo);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(60 * Config.UI_SCALING, 0);
+        moveTo.setAmount(60 / SCREEN_HUD_RATIO, 0);
         moveTo.setDuration(0.25f);
         pilotButton.addAction(moveTo);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount(-60 * Config.UI_SCALING, 0);
+        moveTo.setAmount(-60 / SCREEN_HUD_RATIO, 0);
         moveTo.setDuration(0.25f);
         detailsButton.addAction(moveTo);
     }
@@ -364,9 +354,5 @@ public class MechInfoPanelFacade extends Actor {
 
     public ProgressBar.ProgressBarStyle getStabilityProgressBarStyle() {
         return stabilityProgressBarStyle;
-    }
-
-    public Table getHealthOverlayTable() {
-        return healthOverlayTable;
     }
 }

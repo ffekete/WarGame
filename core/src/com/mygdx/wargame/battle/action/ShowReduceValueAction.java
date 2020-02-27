@@ -20,6 +20,6 @@ public class ShowReduceValueAction extends TemporalAction {
 
     @Override
     protected void update(float percent) {
-        progressBar.setValue((actual + sign *( (actual -target) * percent)));
+        progressBar.setValue((actual + sign * ((actual - target) * percent)));
     }
 }

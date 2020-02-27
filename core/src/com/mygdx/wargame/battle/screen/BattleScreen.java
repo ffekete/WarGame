@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.input.GroundInputListener;
@@ -44,8 +44,7 @@ import com.mygdx.wargame.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.DrawUtils;
 
 import static com.mygdx.wargame.battle.map.BattleMapConfig.TILE_SIZE;
-import static com.mygdx.wargame.config.Config.SCREEN_SIZE_X;
-import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
+import static com.mygdx.wargame.config.Config.*;
 
 public class BattleScreen implements Screen {
 
@@ -89,12 +88,12 @@ public class BattleScreen implements Screen {
         screenConfiguration = new ScreenConfiguration(0, 0, 0);
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, camera);
+        viewport = new StretchViewport(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, camera);
         viewport.update(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, true);
         viewport.apply();
 
         hudCamera = new OrthographicCamera();
-        hudViewport = new FitViewport(SCREEN_SIZE_X, SCREEN_SIZE_Y, hudCamera);
+        hudViewport = new StretchViewport(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT, hudCamera);
 
         this.spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -196,7 +195,7 @@ public class BattleScreen implements Screen {
         healthInfoPanelFacade.show();
 
         healthInfoPanelFacade.getPanel().setPosition(0, 0);
-        healthInfoPanelFacade.getPanel().setSize(150, 150);
+        healthInfoPanelFacade.getPanel().setSize(60, 60);
         healthInfoPanelFacade.show();
         hudStage.addActor(healthInfoPanelFacade.getPanel());
 
@@ -209,7 +208,7 @@ public class BattleScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        System.out.println(Gdx.graphics.getFramesPerSecond());
+        //System.out.println(Gdx.graphics.getFramesPerSecond());
 
         camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
         camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
@@ -239,7 +238,7 @@ public class BattleScreen implements Screen {
         spriteBatch.setProjectionMatrix(hudCamera.combined);
         spriteBatch.setColor(Color.WHITE);
 
-        if(!healthInfoPanelFacade.isLocked()) {
+        if (!healthInfoPanelFacade.isLocked()) {
             healthInfoPanelFacade.update(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
         }
 
