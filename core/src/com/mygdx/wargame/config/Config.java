@@ -2,6 +2,7 @@ package com.mygdx.wargame.config;
 
 public class Config {
 
+    public static final int AI_TARGET_RANGE = 15;
     public static int SCREEN_SIZE_X = 1366;
     public static int SCREEN_SIZE_Y = 768;
 

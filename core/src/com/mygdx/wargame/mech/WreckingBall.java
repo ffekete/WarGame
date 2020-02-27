@@ -177,4 +177,9 @@ public class WreckingBall extends AbstractMech {
     public int getMovementPoints() {
         return this.movementPoints;
     }
+
+    @Override
+    public int getMaxHp(BodyPart bodyPart) {
+        return hp.get(bodyPart);
+    }
 }

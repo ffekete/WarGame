@@ -97,4 +97,6 @@ public interface Mech extends Comparable<Mech> {
     int getShieldValue();
 
     Direction getDirection();
+
+    int getMaxHp(BodyPart bodyPart);
 }

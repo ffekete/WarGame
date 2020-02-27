@@ -4,11 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
@@ -19,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
-import com.mygdx.wargame.battle.screen.ui.HealthOverlay;
-import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.config.Config;
 
 public class MechInfoPanelFacade extends Actor {
@@ -49,7 +45,8 @@ public class MechInfoPanelFacade extends Actor {
     ProgressBar.ProgressBarStyle heatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
     ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
-    private HealthOverlay healthOverlayImage;
+    private Container<Table> healthOverlay;
+    private Table healthOverlayTable;
 
     private StageElementsStorage stageElementsStorage;
     private ActionLock actionLock;
@@ -68,8 +65,14 @@ public class MechInfoPanelFacade extends Actor {
         smallLabelStyle = new Label.LabelStyle();
         smallLabelStyle.font = smallFont;
 
-        healthOverlayImage = new HealthOverlay(smallLabelStyle, new TextureRegion(new Texture(Gdx.files.internal("HealthOverlay.png"))));
-        healthOverlayImage.setTouchable(Touchable.disabled);
+        healthOverlayTable = new Table();
+        healthOverlay = new Container<>(healthOverlayTable);
+        healthOverlay.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png"))));
+        healthOverlay.setPosition(0, 0);
+        healthOverlay.setSize(200, 200);
+
+        healthOverlayTable.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("HealthOverlay.png"))));
+
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = smallFont;
@@ -116,7 +119,7 @@ public class MechInfoPanelFacade extends Actor {
                 // hide all other panels
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(false, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane, heatProgressBar);
                 // show this one
-                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer,mechInfoTable, bigInfoPanelHidden);
+                bigInfoPanelHidden = bigInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(detailsButton, bigInfoPanelContainer, mechInfoTable, bigInfoPanelHidden);
                 return true;
             }
         });
@@ -261,7 +264,7 @@ public class MechInfoPanelFacade extends Actor {
         visibleAction.setVisible(false);
 
         MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount( 0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 * Config.UI_SCALING);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -271,7 +274,7 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionButton.addAction(sequenceAction);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount( 0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 * Config.UI_SCALING);
         moveTo.setDuration(0.25f);
         sequenceAction = new SequenceAction();
         visibleAction = new VisibleAction();
@@ -311,12 +314,12 @@ public class MechInfoPanelFacade extends Actor {
     public void showLocalMenu() {
         localMenuVisible = true;
         MoveByAction moveTo = new MoveByAction();
-        moveTo.setAmount( 0, -60 * Config.UI_SCALING);
+        moveTo.setAmount(0, -60 * Config.UI_SCALING);
         moveTo.setDuration(0.25f);
         weaponSelectionButton.addAction(moveTo);
 
         moveTo = new MoveByAction();
-        moveTo.setAmount( 0, 60 * Config.UI_SCALING);
+        moveTo.setAmount(0, 60 * Config.UI_SCALING);
         moveTo.setDuration(0.25f);
         hideMenuButton.addAction(moveTo);
 
@@ -363,7 +366,7 @@ public class MechInfoPanelFacade extends Actor {
         return stabilityProgressBarStyle;
     }
 
-    public HealthOverlay getHealthOverlayImage() {
-        return healthOverlayImage;
+    public Table getHealthOverlayTable() {
+        return healthOverlayTable;
     }
 }

@@ -76,7 +76,7 @@ public class FlankingTargetStrategyTest {
 
         MapUtils mapUtils = new MapUtils();
 
-        List<Node> allAvailableNodes = mapUtils.getAllAvailable(battleMap, mech03);
+        List<Node> allAvailableNodes = mapUtils.getAllAvailable(battleMap, mech03, 15);
 
         assertThat(allAvailableNodes.size(), is(441));
     }

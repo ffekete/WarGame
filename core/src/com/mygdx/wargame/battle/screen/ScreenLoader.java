@@ -42,6 +42,13 @@ public class ScreenLoader {
         assetManager.load("targeting/TargetLeftLeg.png", Texture.class);
         assetManager.load("targeting/TargetRightLeg.png", Texture.class);
 
+        assetManager.load("health/HeadHealthIcon.png", Texture.class);
+        assetManager.load("health/TorsoHealthIcon.png", Texture.class);
+        assetManager.load("health/LeftArmHealthIcon.png", Texture.class);
+        assetManager.load("health/RightArmHealthIcon.png", Texture.class);
+        assetManager.load("health/LeftLegHealthIcon.png", Texture.class);
+        assetManager.load("health/RightLegHealthIcon.png", Texture.class);
+
         assetManager.load("variation/Tree01.png", Texture.class);
         assetManager.load("variation/Tree02.png", Texture.class);
         assetManager.load("variation/Tree03.png", Texture.class);

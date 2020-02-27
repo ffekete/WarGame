@@ -2,6 +2,7 @@ package com.mygdx.wargame.rules.facade.target;
 
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.FlankingCalculator;
@@ -50,7 +51,7 @@ public class FlankingTargetStrategy implements TargetingStrategy {
                 return target;
             } else {
                 // find flanking position around enemy, accessible in multiple turns
-                availableNodes = mapUtils.getAllAvailable(battleMap, target.get().getMech(), 10);
+                availableNodes = mapUtils.getAllAvailable(battleMap, target.get().getMech(), minRange);
 
                 // find flanking position that is accessible in this turn
                 flankingNode = Optional.of(availableNodes.stream()

@@ -7,17 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.screen.ui.HealthOverlay;
+import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.BodyPart;
@@ -43,13 +43,14 @@ public class MechClickInputListener extends InputListener {
     private Stage hudStage;
     private Stage stage;
     private StageElementsStorage stageElementsStorage;
-    private HealthOverlay healthOverlay;
+    private Table healthOverlay;
     boolean overlayShown = false;
     private TargetingPanelFacade targetingPanelFacade;
     private EnemyMechInfoPanelFacade enemyMechInfoPanelFacade;
+    private HealthInfoPanelFacade healthInfoPanelFacade;
     private BattleMap battleMap;
 
-    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage, TargetingPanelFacade targetingPanelFacade, EnemyMechInfoPanelFacade enemyMechInfoPanelFacade, BattleMap battleMap) {
+    public MechClickInputListener(Mech defenderMech, Pilot defenderPilot, TurnProcessingFacade turnProcessingFacade, RangedAttackTargetCalculator rangedAttackTargetCalculator, ActionLock actionLock, Label.LabelStyle labelStyle, CheckBox.CheckBoxStyle checkBoxStyle, MechInfoPanelFacade mechInfoPanelFacade, Stage hudStage, Stage stage, StageElementsStorage stageElementsStorage, TargetingPanelFacade targetingPanelFacade, EnemyMechInfoPanelFacade enemyMechInfoPanelFacade, HealthInfoPanelFacade healthInfoPanelFacade, BattleMap battleMap) {
         this.mec = defenderMech;
         this.pilot = defenderPilot;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -62,52 +63,29 @@ public class MechClickInputListener extends InputListener {
 
         this.stage = stage;
         this.stageElementsStorage = stageElementsStorage;
-        healthOverlay = mechInfoPanelFacade.getHealthOverlayImage();
+        healthOverlay = healthInfoPanelFacade.getPanel();
         this.targetingPanelFacade = targetingPanelFacade;
         this.enemyMechInfoPanelFacade = enemyMechInfoPanelFacade;
+        this.healthInfoPanelFacade = healthInfoPanelFacade;
         this.battleMap = battleMap;
     }
 
     @Override
     public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-        if (!actionLock.isLocked() && !overlayShown && !mechInfoPanelFacade.isLocalMenuVisible()) {
-            healthOverlay.setPosition(mec.getX() - 1.25f, mec.getY() - 0.5f);
-            healthOverlay.setHeadHealth("" + mec.getHp(BodyPart.Head));
-            healthOverlay.setLeftArmHealth("" + mec.getHp(BodyPart.LeftArm));
-            healthOverlay.setLeftLegHealth("" + mec.getHp(BodyPart.LeftLeg));
-            healthOverlay.setRightArmHealth("" + mec.getHp(BodyPart.RightArm));
-            healthOverlay.setRightLegHealth("" + mec.getHp(BodyPart.RightLeg));
-            healthOverlay.setTorsoHealth("" + mec.getHp(BodyPart.Torso));
-            healthOverlay.setShieldValue("" + mec.getShieldValue());
 
-            healthOverlay.setHeadArmor("" + mec.getComponents(BodyPart.Head).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
-            healthOverlay.setLeftLegArmor("" + mec.getComponents(BodyPart.LeftLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
-            healthOverlay.setRightLegArmor("" + mec.getComponents(BodyPart.RightLeg).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
-            healthOverlay.setLeftArmArmor("" + mec.getComponents(BodyPart.LeftArm).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
-            healthOverlay.setRightArmArmor("" + mec.getComponents(BodyPart.RightArm).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
-            healthOverlay.setTorsoArmor("" + mec.getComponents(BodyPart.Torso).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0));
-
-            stageElementsStorage.airLevel.addActor(healthOverlay);
-            this.overlayShown = true;
-            event.stop();
-        }
+        healthInfoPanelFacade.getNameLabel().setText(mec.getName());
+        healthInfoPanelFacade.setLocked(true);
+        healthInfoPanelFacade.update(pilot, mec);
+        event.stop();
     }
 
     @Override
-    public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-        if (overlayShown) {
-            healthOverlay.setSize(0f, 0f);
-            stageElementsStorage.airLevel.removeActor(healthOverlay);
-            overlayShown = false;
-            event.stop();
-        }
+    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+        healthInfoPanelFacade.setLocked(false);
     }
-
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-        overlayShown = false;
-        healthOverlay.setSize(0f, 0f);
 
         targetingPanelFacade.hide();
 

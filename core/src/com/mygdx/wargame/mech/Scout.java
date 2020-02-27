@@ -176,6 +176,11 @@ public class Scout extends AbstractMech {
     }
 
     @Override
+    public int getMaxHp(BodyPart bodyPart) {
+        return hp.get(bodyPart);
+    }
+
+    @Override
     public int getMovementPoints() {
         return this.movementPoints;
     }
