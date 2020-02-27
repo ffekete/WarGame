@@ -250,7 +250,7 @@ public class TargetingPanelFacade {
         toRemove.stream().forEach(e -> imageButton.getListeners().removeValue(e, true));
 
         attackingMech.getSelectedWeapons().stream().forEach(w -> {
-            tooltipContent.add(new Label(w.getName() + " to hit:", labelStyle)).padRight(20).left();
+            tooltipContent.add(new Label(w.getName() + " to hit:", labelStyle)).padRight(20 / SCREEN_HUD_RATIO).left();
             tooltipContent.add(new Label("" + hitChanceCalculatorFacade.getHitChance(w, attackingPilot, attackingMech, targetMech, bodyPart) + "%", labelStyle)).left()
                     .row();
         });

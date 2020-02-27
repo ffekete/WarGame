@@ -180,6 +180,24 @@ public class Marauder extends AbstractMech {
 
     @Override
     public int getMaxHp(BodyPart bodyPart) {
-        return hp.get(bodyPart);
+        if (bodyPart == BodyPart.Head)
+            return HEAD_HP;
+
+        if (bodyPart == BodyPart.Torso)
+            return TORSO_HP;
+
+        if (bodyPart == BodyPart.LeftLeg)
+            return LEFT_LEG_HP;
+
+        if (bodyPart == BodyPart.LeftArm)
+            return LEFT_HAND_HP;
+
+        if (bodyPart == BodyPart.RightLeg)
+            return RIGHT_LEG_HP;
+
+        if (bodyPart == BodyPart.RightArm)
+            return RIGHT_HAND_HP;
+
+        return 999; // never, pls
     }
 }

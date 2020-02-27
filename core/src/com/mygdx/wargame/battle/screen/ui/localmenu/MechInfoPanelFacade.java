@@ -181,8 +181,8 @@ public class MechInfoPanelFacade extends Actor {
 
         mechInfoOuterTable = new Table();
         mechInfoInnerTable = new Table();
-        mechInfoOuterTable.add(exitMechInfoTablePanelButton).size(10,10).fillX().right().top().row();
-        mechInfoOuterTable.add(mechInfoInnerTable).fill();
+        mechInfoOuterTable.add(exitMechInfoTablePanelButton).size(10,10).fill().right().top().row();
+        mechInfoOuterTable.add(mechInfoInnerTable).center().fill();
 
         bigInfoPanelContainer = new Container<>(mechInfoOuterTable);
         bigInfoPanelContainer.setSize(0, 0);

@@ -16,6 +16,7 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.BodyPart;
@@ -101,23 +102,26 @@ public class MechClickInputListener extends InputListener {
                 addAllAvailableWeaponsToScrollPane();
 
                 mechInfoPanelFacade.getMechInfoTable().clear();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("H : " + mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("H : " + mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp() + " A: " + getArmor(BodyPart.Head), labelStyle)).center().pad(5);
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp(), labelStyle)).center().pad(5).row();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp() + " A: " + getArmor(BodyPart.Torso), labelStyle)).center().pad(5).row();
 
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp() + " A: " + getArmor(BodyPart.LeftArm), labelStyle)).center().pad(5);
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp(), labelStyle)).center().pad(5).row();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp() + " A: " + getArmor(BodyPart.RightArm), labelStyle)).center().pad(5).row();
 
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp(), labelStyle)).center().pad(5);
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp() + " A: " + getArmor(BodyPart.LeftLeg), labelStyle)).center().pad(5);
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
                 mechInfoPanelFacade.getMechInfoTable().add();
-                mechInfoPanelFacade.getMechInfoTable().add(new Label("RL: " + mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp(), labelStyle)).pad(5).center();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("RL: " + mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp() + " A: " + getArmor(BodyPart.RightLeg), labelStyle)).pad(5).center().row();
+                mechInfoPanelFacade.getMechInfoTable().add(new Label("Shield: " + mec.getShieldValue(), labelStyle)).pad(5).colspan(5).center();
+
+                mechInfoPanelFacade.getWeaponSelectionContainer().layout();
 
                 mechInfoPanelFacade.showLocalMenu();
             } else {
@@ -143,6 +147,10 @@ public class MechClickInputListener extends InputListener {
 
         event.stop();
         return true;
+    }
+
+    private Integer getArmor(BodyPart bodyPart) {
+        return mec.getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(c -> ((Armor)c).getHitPoint()).reduce((a, b) -> a+b).orElse(0);
     }
 
     private void updateAttackButton() {

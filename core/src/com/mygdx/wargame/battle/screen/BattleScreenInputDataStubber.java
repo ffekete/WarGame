@@ -32,7 +32,7 @@ public class BattleScreenInputDataStubber {
     }
 
     public void stub(BattleScreenInputData battleScreenInputData) {
-        Mech unit3 = new Scout("3", spriteBatch, assetManager);
+        Mech unit3 = new Scout("Ace", spriteBatch, assetManager);
         unit3.setPosition(6, 5);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
@@ -65,7 +65,7 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeIonCannon);
         unit3.addComponent(BodyPart.Torso, machineGun);
 
-        Marauder unit2 = new Marauder("2", spriteBatch, assetManager);
+        Marauder unit2 = new Marauder("ReadEye111", spriteBatch, assetManager);
         unit2.setPosition(1, 1);
         unit2.setTeam(Team.own);
         unit2.setActive(true);
@@ -100,6 +100,9 @@ public class BattleScreenInputDataStubber {
         LargeCannon largeCannon11 = new LargeCannon();
         largeCannon11.setStatus(Status.Selected);
 
+        LargeCannon largeCannon12 = new LargeCannon();
+        largeCannon12.setStatus(Status.Selected);
+
         unit2.addComponent(BodyPart.LeftLeg, largeCannon2);
         unit2.addComponent(BodyPart.LeftLeg, largeCannon3);
         unit2.addComponent(BodyPart.RightLeg, largeCannon4);
@@ -110,8 +113,9 @@ public class BattleScreenInputDataStubber {
         unit2.addComponent(BodyPart.Torso, largeCannon9);
         unit2.addComponent(BodyPart.Torso, largeCannon10);
         unit2.addComponent(BodyPart.Torso, largeCannon11);
+        unit2.addComponent(BodyPart.Torso, largeCannon12);
 
-        Mech unit = new WreckingBall("1", spriteBatch, assetManager);
+        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager);
         unit.setPosition(5, 2);
         unit.setTeam(Team.enemy);
         unit.setActive(true);

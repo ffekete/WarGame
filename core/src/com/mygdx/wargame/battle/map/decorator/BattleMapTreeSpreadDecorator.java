@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.map.decorator;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
@@ -46,6 +47,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                         int rnd = new Random().nextInt(treeVariations.size());
 
                         TreeImage tree = new TreeImage(treeVariations.get(rnd));
+                        tree.setTouchable(Touchable.disabled);
                         tree.setPosition(i + new Random().nextFloat(), j + new Random().nextFloat());
                         tree.setSize(1, 1);
 

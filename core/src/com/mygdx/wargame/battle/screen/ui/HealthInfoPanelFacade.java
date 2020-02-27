@@ -17,6 +17,7 @@ import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.HitChanceCalculatorFacade;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
@@ -64,21 +65,27 @@ public class HealthInfoPanelFacade {
 
         this.nameLabel = new Label("N/A", labelStyle);
 
-        panel.add(nameLabel).colspan(5).row();
+        panel.add(nameLabel).colspan(7).row();
 
+        panel.add();
         panel.add().size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO);
         panel.add(headImage).size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO).colspan(3);
-        panel.add().size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO).row();
+        panel.add().size(30 / SCREEN_HUD_RATIO, 30 / SCREEN_HUD_RATIO);
+        panel.add().row();
 
+        panel.add();
         panel.add(rightArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add(torsoImage).size(40 / SCREEN_HUD_RATIO, 40 / SCREEN_HUD_RATIO).colspan(3);
-        panel.add(leftArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO).row();
+        panel.add(leftArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add().row();
 
+        panel.add().size(10);
         panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add(rightLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
-        panel.add().size(1, 50 / SCREEN_HUD_RATIO);
+        panel.add().size(5 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add(leftLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+        panel.add().size(10);
 
         panel.setColor(Color.valueOf("FFFFFFBB"));
     }
@@ -136,15 +143,15 @@ public class HealthInfoPanelFacade {
         float ratio = (float) actualHp / maxHp;
 
         if (ratio >= 0.75f) {
-            imageButton.getChildren().items[0].setColor(Color.valueOf("006600"));
+            Arrays.stream(imageButton.getChildren().items).filter(i -> Image.class.isAssignableFrom(i.getClass())).findFirst().get().setColor(Color.valueOf("006600"));
         } else if (ratio >= 0.5f) {
-            imageButton.getChildren().items[0].setColor(Color.valueOf("00AA00"));
+            Arrays.stream(imageButton.getChildren().items).filter(i -> Image.class.isAssignableFrom(i.getClass())).findFirst().get().setColor(Color.valueOf("00AA00"));
         } else if (ratio >= 0.25f) {
-            imageButton.getChildren().items[0].setColor(Color.valueOf("AAAA00"));
+            Arrays.stream(imageButton.getChildren().items).filter(i -> Image.class.isAssignableFrom(i.getClass())).findFirst().get().setColor(Color.valueOf("AAAA00"));
         } else if (ratio > 0f) {
-            imageButton.getChildren().items[0].setColor(Color.valueOf("AA0000"));
+            Arrays.stream(imageButton.getChildren().items).filter(i -> Image.class.isAssignableFrom(i.getClass())).findFirst().get().setColor(Color.valueOf("AA0000"));
         } else {
-            imageButton.getChildren().items[0].setColor(Color.valueOf("333333"));
+            Arrays.stream(imageButton.getChildren().items).filter(i -> Image.class.isAssignableFrom(i.getClass())).findFirst().get().setColor(Color.valueOf("333333"));
         }
 
     }
