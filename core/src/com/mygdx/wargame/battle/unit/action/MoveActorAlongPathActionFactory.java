@@ -13,12 +13,14 @@ import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
 public class MoveActorAlongPathActionFactory {
 
     private StageElementsStorage stageElementsStorage;
     private MovementMarkerFactory movementMarkerFactory;
+    private MapUtils mapUtils = new MapUtils();
 
     public MoveActorAlongPathActionFactory(StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory) {
         this.stageElementsStorage = stageElementsStorage;
@@ -46,10 +48,18 @@ public class MoveActorAlongPathActionFactory {
                 attacker.consumeMovementPoint(1);
 
                 moveToAction.addAction(new ChangeDirectionAction(node.getX(), node.getY(), attacker));
+
+                ParallelAction moveAndShakeTreesAction = new ParallelAction();
+
                 MoveToAction moveToActionStep = new MoveToAction();
                 moveToActionStep.setPosition(node.getX(), node.getY());
                 moveToActionStep.setDuration(1.1f);
-                moveToAction.addAction(moveToActionStep);
+
+                mapUtils.nrOfTreesOnTile(stageElementsStorage, node.getX(), node.getY()).forEach(tree-> moveAndShakeTreesAction.addAction(new ShakeAction(1.1f, tree)));
+
+                moveAndShakeTreesAction.addAction(moveToActionStep);
+
+                moveToAction.addAction(moveAndShakeTreesAction);
 
                 moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx, ny));
             }
