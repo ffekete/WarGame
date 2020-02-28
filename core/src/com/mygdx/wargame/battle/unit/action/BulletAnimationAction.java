@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -28,6 +29,7 @@ import com.mygdx.wargame.component.weapon.ballistic.MachineGun;
 import com.mygdx.wargame.component.weapon.ballistic.MachineGunMk2;
 import com.mygdx.wargame.component.weapon.ballistic.MachineGunMk3;
 import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ BulletAnimationAction extends Action {
     private StageElementsStorage stageElementsStorage;
     private BattleMap battleMap;
     private RayHandler rayHandler;
+    private MapUtils mapUtils = new MapUtils();
 
     public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap, RayHandler rayHandler) {
         this.attackerMech = attackerMech;
@@ -167,6 +170,14 @@ BulletAnimationAction extends Action {
                     SequenceAction explosionAction = new SequenceAction();
                     explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
                     explosionAction.addAction(new AddActorAction(stageElementsStorage.airLevel, explosion));
+
+
+                    ParallelAction waitAndShake = new ParallelAction();
+                    waitAndShake.addAction(new ShakeAction(1f, (Actor)defenderMech));
+                    mapUtils.nrOfTreesOnTile(stageElementsStorage, defenderMech.getX(), defenderMech.getY()).forEach(tree-> waitAndShake.addAction(new ShakeAction(1.1f, tree)));
+                    explosionAction.addAction(waitAndShake);
+
+
                     explosionAction.addAction(new DelayAction(0.5f));
                     if (!craterCreated) {
                         explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager, LayerIndex.Decoration));

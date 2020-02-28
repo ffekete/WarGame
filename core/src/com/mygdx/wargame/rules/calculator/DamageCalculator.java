@@ -1,7 +1,9 @@
 package com.mygdx.wargame.rules.calculator;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.ShowMessageActor;
 import com.mygdx.wargame.battle.bullet.Explosion;
@@ -10,6 +12,7 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.AddActorAction;
 import com.mygdx.wargame.battle.unit.action.RemoveCustomActorAction;
+import com.mygdx.wargame.battle.unit.action.ShakeAction;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
@@ -18,6 +21,7 @@ import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.util.MapUtils;
 
 import java.util.Random;
 import java.util.Set;
@@ -31,6 +35,7 @@ public class DamageCalculator {
     private AssetManager assetManager;
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
+    private MapUtils mapUtils = new MapUtils();
 
     public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
