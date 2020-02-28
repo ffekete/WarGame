@@ -130,7 +130,7 @@ public class BattleScreen implements Screen {
         healthInfoPanelFacade = new HealthInfoPanelFacade(screenLoader.getAssetManager());
         hudMediator.setHealthInfoPanelFacade(healthInfoPanelFacade);
 
-        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade(hudMediator);
+        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade(hudMediator, screenLoader.getAssetManager());
         hudMediator.setMechInfoPanelFacade(mechInfoPanelFacade);
 
         MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade);

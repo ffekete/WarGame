@@ -16,10 +16,8 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.Team;
-import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
@@ -28,7 +26,7 @@ import com.mygdx.wargame.util.StageUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.mygdx.wargame.config.Config.*;
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class MechClickInputListener extends InputListener {
 
@@ -101,25 +99,7 @@ public class MechClickInputListener extends InputListener {
                 updateWeaponSelectionButton();
                 addAllAvailableWeaponsToScrollPane();
 
-                hudMediator.getDetailsPageFacade().getMechInfoTable().clear();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("H : " + mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp() + " A: " + getArmor(BodyPart.Head), labelStyle)).center().pad(5);
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("T : " + mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp() + " A: " + getArmor(BodyPart.Torso), labelStyle)).center().pad(5).row();
-
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("LH: " + mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp() + " A: " + getArmor(BodyPart.LeftArm), labelStyle)).center().pad(5);
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("RH: " + mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp() + " A: " + getArmor(BodyPart.RightArm), labelStyle)).center().pad(5).row();
-
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("LL: " + mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp() + " A: " + getArmor(BodyPart.LeftLeg), labelStyle)).center().pad(5);
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("RL: " + mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp() + " A: " + getArmor(BodyPart.RightLeg), labelStyle)).pad(5).center().row();
-                hudMediator.getDetailsPageFacade().getMechInfoTable().add(new Label("Shield: " + mec.getShieldValue(), labelStyle)).pad(5).colspan(5).center();
+                hudMediator.getDetailsPageFacade().update(mec);
 
                 mechInfoPanelFacade.getWeaponSelectionContainer().layout();
 
@@ -130,9 +110,6 @@ public class MechClickInputListener extends InputListener {
 
         } else if (mec.getTeam().equals(Team.enemy)) {
 
-            // attack
-            //mechInfoPanelFacade.hideLocalMenu();
-            //rangedAttackTargetCalculator.calculate(turnProcessingFacade.getNext().getValue(), (AbstractMech) turnProcessingFacade.getNext().getKey(), (AbstractMech) mec, pilot, null);
             if (!hudMediator.getEnemyMechInfoPanelFacade().isLocalMenuVisible()) {
                 updateCloseMenuButtonForEnemy();
                 updateAttackButton();
@@ -147,10 +124,6 @@ public class MechClickInputListener extends InputListener {
 
         event.stop();
         return true;
-    }
-
-    private Integer getArmor(BodyPart bodyPart) {
-        return mec.getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(c -> ((Armor)c).getHitPoint()).reduce((a, b) -> a+b).orElse(0);
     }
 
     private void updateAttackButton() {
@@ -199,7 +172,7 @@ public class MechClickInputListener extends InputListener {
                             w.setStatus(checkBox.isChecked() ? Status.Selected : Status.Active);
                         }
                     });
-                    mechInfoPanelFacade.getIbTable().add(checkBox).left().padLeft(20/ SCREEN_HUD_RATIO);
+                    mechInfoPanelFacade.getIbTable().add(checkBox).left().padLeft(20 / SCREEN_HUD_RATIO);
 
                     int ammo = w.getAmmo().orElse(-1);
                     mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
@@ -264,7 +237,7 @@ public class MechClickInputListener extends InputListener {
 
     private void addSelectAllWeaponsCheckbox() {
         CheckBox checkBoxSelectAll = new CheckBox("  Select all", checkBoxStyle);
-        mechInfoPanelFacade.getIbTable().add(checkBoxSelectAll).left().padLeft(20/ SCREEN_HUD_RATIO).row();
+        mechInfoPanelFacade.getIbTable().add(checkBoxSelectAll).left().padLeft(20 / SCREEN_HUD_RATIO).row();
         checkBoxSelectAll.setChecked(true);
         checkBoxSelectAll.addListener(new ChangeListener() {
             @Override

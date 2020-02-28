@@ -36,6 +36,16 @@ public class ScreenLoader {
         assetManager.load("objects/Crater.png", Texture.class);
 
         assetManager.load("details/HeadIcon.png", Texture.class);
+        assetManager.load("details/TorsoIcon.png", Texture.class);
+        assetManager.load("details/LeftArmIcon.png", Texture.class);
+        assetManager.load("details/RightArmIcon.png", Texture.class);
+        assetManager.load("details/LeftLegIcon.png", Texture.class);
+        assetManager.load("details/RightLegIcon.png", Texture.class);
+        assetManager.load("details/ShieldIcon.png", Texture.class);
+        assetManager.load("details/ShieldComponentIcon.png", Texture.class);
+        assetManager.load("details/ButtonBg.png", Texture.class);
+        assetManager.load("details/ButtonBgDown.png", Texture.class);
+        assetManager.load("details/ButtonBgOver.png", Texture.class);
 
         assetManager.load("targeting/TargetHead.png", Texture.class);
         assetManager.load("targeting/TargetTorso.png", Texture.class);
@@ -69,6 +79,7 @@ public class ScreenLoader {
         assetManager.load("EnemyMarker.png", Texture.class);
         assetManager.load("MovementMarker.png", Texture.class);
 
+        assetManager.load("skin/InfoPanel.png", Texture.class);
         assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
         assetManager.load("skin/BigInfoPanel.png", Texture.class);

@@ -1,6 +1,8 @@
 package com.mygdx.wargame.battle.screen.ui.localmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -41,8 +43,10 @@ public class MechInfoPanelFacade extends Actor {
     private Label.LabelStyle smallLabelStyle;
     private ProgressBar.ProgressBarStyle smallHeatInfoProgressBarStyle;
     private ProgressBar.ProgressBarStyle stabilityProgressBarStyle;
+    private AssetManager assetManager;
 
-    public MechInfoPanelFacade(HUDMediator hudMediator) {
+    public MechInfoPanelFacade(HUDMediator hudMediator, AssetManager assetManager) {
+        this.assetManager = assetManager;
         font = FontCreator.getBitmapFont();
         smallFont = FontCreator.getBitmapFont(10);
 
@@ -124,13 +128,20 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionButton.setSize(weaponSelectionButton.getWidth() / SCREEN_HUD_RATIO, weaponSelectionButton.getHeight() / SCREEN_HUD_RATIO);
 
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
-        weaponSelectionScrollPane.setDebug(true);
+        //weaponSelectionScrollPane.setDebug(true);
         Table weaponSelectionOuterTable = new Table();
 
-        weaponSelectionOuterTable.setDebug(true);
+        //weaponSelectionOuterTable.setDebug(true);
 
-        ImageButton exitWeaponSelectionPanelButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        weaponSelectionOuterTable.add(exitWeaponSelectionPanelButton).size(10,10).colspan(2).right().top().row();
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = FontCreator.getBitmapFont(13);
+        textButtonStyle.fontColor = Color.valueOf("007700");
+        textButtonStyle.overFontColor = Color.valueOf("00AA00");
+        textButtonStyle.down = new TextureRegionDrawable(this.assetManager.get("details/ButtonBgDown.png", Texture.class));
+        textButtonStyle.up = new TextureRegionDrawable(this.assetManager.get("details/ButtonBg.png", Texture.class));
+        textButtonStyle.over = new TextureRegionDrawable(this.assetManager.get("details/ButtonBgOver.png", Texture.class));
+
+        TextButton exitWeaponSelectionPanelButton = new TextButton("Exit", textButtonStyle);
 
         exitWeaponSelectionPanelButton.addListener(new InputListener() {
             @Override
@@ -142,7 +153,8 @@ public class MechInfoPanelFacade extends Actor {
             }
         });
 
-        weaponSelectionOuterTable.add(weaponSelectionScrollPane).colspan(2);
+        weaponSelectionOuterTable.add(weaponSelectionScrollPane).colspan(2).row();
+        weaponSelectionOuterTable.add(exitWeaponSelectionPanelButton).size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).colspan(2).pad(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
 
         weaponSelectionContainer = new Container<>(weaponSelectionOuterTable);
         weaponSelectionContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/InfoPanel.png"))));
