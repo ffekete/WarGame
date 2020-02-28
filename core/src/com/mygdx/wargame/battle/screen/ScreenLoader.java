@@ -65,6 +65,9 @@ public class ScreenLoader {
 
         assetManager.load("Birds.png", Texture.class);
 
+        assetManager.load("hud/AmmoIcon.png", Texture.class);
+        assetManager.load("hud/HealthIcon.png", Texture.class);
+
         assetManager.load("variation/Tree01.png", Texture.class);
         assetManager.load("variation/Tree02.png", Texture.class);
         assetManager.load("variation/Tree03.png", Texture.class);

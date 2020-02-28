@@ -18,6 +18,8 @@ import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
+import java.util.Random;
+
 public class MoveActorAlongPathActionFactory {
 
     private StageElementsStorage stageElementsStorage;
@@ -59,9 +61,13 @@ public class MoveActorAlongPathActionFactory {
                 moveToActionStep.setPosition(node.getX(), node.getY());
                 moveToActionStep.setDuration(1.1f);
 
+                float nodex = node.getX();
+                float nodey = node.getY();
+
                 mapUtils.nrOfTreesOnTile(stageElementsStorage, node.getX(), node.getY()).forEach(tree-> {
                     moveAndShakeTreesAction.addAction(new ShakeAction(1.1f, tree));
-                    moveAndShakeTreesAction.addAction(new AddActorAction(stageElementsStorage.airLevel, new Birds(assetManager)));
+                    if(new Random().nextInt(100) == 0)
+                        moveAndShakeTreesAction.addAction(new AddActorAction(stageElementsStorage.airLevel, new Birds(assetManager,nodex, nodey)));
                 });
 
                 moveAndShakeTreesAction.addAction(moveToActionStep);

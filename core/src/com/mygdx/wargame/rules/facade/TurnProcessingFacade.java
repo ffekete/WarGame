@@ -21,6 +21,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.ScalableProgressBar;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.*;
@@ -61,9 +62,10 @@ public class TurnProcessingFacade {
     private MechInfoPanelFacade mechInfoPanelFacade;
     private Camera camera;
     private RayHandler rayHandler;
+    private HUDMediator hudMediator;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera, RayHandler rayHandler) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera, RayHandler rayHandler, HUDMediator hudMediator) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -81,6 +83,7 @@ public class TurnProcessingFacade {
         this.mechInfoPanelFacade = mechInfoPanelFacade;
         this.camera = camera;
         this.rayHandler = rayHandler;
+        this.hudMediator = hudMediator;
 
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
@@ -127,6 +130,8 @@ public class TurnProcessingFacade {
             next = iterator.next();
             //centerCameraOnNext(stage);
         }
+
+        hudMediator.getHudElementsFacade().update();
 
         Mech selectedMech = next.getKey();
         Pilot selectedPilot = next.getValue();

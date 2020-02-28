@@ -16,18 +16,19 @@ public class Birds extends Actor {
     private int col = 0;
 
 
-    public Birds(AssetManager assetManager) {
+    public Birds(AssetManager assetManager, float x, float y) {
         this.texture = new TextureRegion(assetManager.get("Birds.png", Texture.class));
+        setPosition(x, y);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         delay += Gdx.graphics.getDeltaTime();
-        if (delay >= 0.08f) {
+        if (delay >= 0.1f) {
             delay = 0;
             col++;
             if (col == 6) {
-                col = 0;
+                this.remove();
             }
         }
         texture.setRegion(col * 16, 0, 16, 16);
