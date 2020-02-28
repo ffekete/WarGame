@@ -22,7 +22,9 @@ public class ScreenLoader {
         assetManager.load("WayPointEnd.png", Texture.class);
         assetManager.load("HealthOverlay.png", Texture.class);
         assetManager.load("Marauder.png", Texture.class);
-        assetManager.load("Marauder.png", Texture.class);
+        assetManager.load("Giant.png", Texture.class);
+        assetManager.load("Colossus.png", Texture.class);
+        assetManager.load("PowerArmor.png", Texture.class);
         assetManager.load("Scout.png", Texture.class);
         assetManager.load("WreckingBall.png", Texture.class);
         assetManager.load("tileset/Dirt.png", Texture.class);

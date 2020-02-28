@@ -14,6 +14,7 @@ import com.mygdx.wargame.component.weapon.laser.LargeLaser;
 import com.mygdx.wargame.component.weapon.missile.SwarmMissile;
 import com.mygdx.wargame.component.weapon.plasma.PlasmaCannon;
 import com.mygdx.wargame.mech.BodyPart;
+import com.mygdx.wargame.mech.Colossus;
 import com.mygdx.wargame.mech.Marauder;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.mech.Scout;
@@ -65,7 +66,7 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeIonCannon);
         unit3.addComponent(BodyPart.Torso, machineGun);
 
-        Marauder unit2 = new Marauder("ReadEye111", spriteBatch, assetManager);
+        Colossus unit2 = new Colossus("ReadEye111", spriteBatch, assetManager);
         unit2.setPosition(1, 1);
         unit2.setTeam(Team.own);
         unit2.setActive(true);
