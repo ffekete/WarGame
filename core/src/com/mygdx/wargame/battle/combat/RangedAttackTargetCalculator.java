@@ -46,7 +46,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
         this.assetManager = assetManager;
         this.stageElementsStorage = stageElementsStorage;
         this.movementMarkerFactory = movementMarkerFactory;
-        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory);
+        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory, assetManager);
         this.rayHandler = rayHandler;
     }
 

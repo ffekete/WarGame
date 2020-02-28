@@ -88,7 +88,7 @@ public class TurnProcessingFacade {
 
         iterator = allSorted.entrySet().iterator();
 
-        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory);
+        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory, assetManager);
     }
 
     public Map.Entry<Mech, Pilot> getNext() {

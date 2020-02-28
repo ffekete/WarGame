@@ -63,6 +63,8 @@ public class ScreenLoader {
         assetManager.load("health/LeftLegHealthIcon.png", Texture.class);
         assetManager.load("health/RightLegHealthIcon.png", Texture.class);
 
+        assetManager.load("Birds.png", Texture.class);
+
         assetManager.load("variation/Tree01.png", Texture.class);
         assetManager.load("variation/Tree02.png", Texture.class);
         assetManager.load("variation/Tree03.png", Texture.class);
@@ -76,7 +78,7 @@ public class ScreenLoader {
         assetManager.load("Laser.png", Texture.class);
         assetManager.load("Ion.png", Texture.class);
         assetManager.load("MachineGun.png", Texture.class);
-        assetManager.load("Shield.png", Texture.class);
+        assetManager.load("Shielded.png", Texture.class);
         assetManager.load("FriendlyMarker.png", Texture.class);
         assetManager.load("EnemyMarker.png", Texture.class);
         assetManager.load("MovementMarker.png", Texture.class);

@@ -48,7 +48,7 @@ public class GroundInputListener extends InputListener {
         this.mechInfoPanelFacade = mechInfoPanelFacade;
         this.stageElementsStorage = stageElementsStorage;
         this.movementMarkerFactory = movementMarkerFactory;
-        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory);
+        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory, assetManager);
         this.assetManager = assetManager;
         this.targetingPanelFacade = targetingPanelFacade;
         this.enemyMechInfoPanelFacade = enemyMechInfoPanelFacade;

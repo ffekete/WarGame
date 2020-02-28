@@ -1,0 +1,359 @@
+
+textures.png
+size: 2048,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+CannonBullet
+  rotate: false
+  xy: 1156, 212
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+DesertTile
+  rotate: false
+  xy: 1416, 212
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Explosion
+  rotate: false
+  xy: 2, 148
+  size: 1152, 96
+  orig: 1152, 96
+  offset: 0, 0
+  index: -1
+Grass
+  rotate: false
+  xy: 1156, 128
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+HeatProgressBarBg
+  rotate: false
+  xy: 1156, 78
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+HeatProgressBarKnob
+  rotate: false
+  xy: 2, 2
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+Ion
+  rotate: false
+  xy: 2, 14
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+Laser
+  rotate: false
+  xy: 198, 14
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+MachineGun
+  rotate: false
+  xy: 1352, 178
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Marauder
+  rotate: false
+  xy: 2, 98
+  size: 1152, 48
+  orig: 1152, 48
+  offset: 0, 0
+  index: -1
+Missile
+  rotate: false
+  xy: 1156, 178
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+MovementMarker
+  rotate: false
+  xy: 1206, 128
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+PlasmaBullet
+  rotate: false
+  xy: 1286, 212
+  size: 128, 32
+  orig: 128, 32
+  offset: 0, 0
+  index: -1
+SelectionMarker
+  rotate: false
+  xy: 132, 14
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Shield
+  rotate: false
+  xy: 1286, 178
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WayPoint
+  rotate: false
+  xy: 1206, 78
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WayPointEnd
+  rotate: false
+  xy: 1256, 128
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+WreckingBall
+  rotate: false
+  xy: 2, 48
+  size: 1152, 48
+  orig: 1152, 48
+  offset: 0, 0
+  index: -1
+
+textures2.png
+size: 512,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+skin/BigInfoPanel
+  rotate: false
+  xy: 2, 122
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+skin/CheckboxChecked
+  rotate: false
+  xy: 234, 168
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+skin/CheckboxUnchecked
+  rotate: false
+  xy: 234, 150
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+skin/DetailsButtonDown
+  rotate: false
+  xy: 198, 70
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/DetailsButtonUp
+  rotate: false
+  xy: 328, 200
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/EndTurnButtonDown
+  rotate: false
+  xy: 132, 38
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+skin/EndTurnButtonUp
+  rotate: false
+  xy: 262, 168
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+skin/Fire
+  rotate: false
+  xy: 198, 36
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/HeatAfter
+  rotate: false
+  xy: 2, 38
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+skin/HeatBefore
+  rotate: false
+  xy: 262, 234
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+skin/HeatKnob
+  rotate: false
+  xy: 328, 166
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/HideButtonDown
+  rotate: false
+  xy: 362, 200
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/HideButtonUp
+  rotate: false
+  xy: 362, 166
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/InfoPanel
+  rotate: false
+  xy: 2, 56
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+skin/PanelBackground
+  rotate: false
+  xy: 132, 186
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+skin/PilotButtonDown
+  rotate: false
+  xy: 132, 4
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/PilotButtonUp
+  rotate: false
+  xy: 396, 218
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/ProgressBar
+  rotate: false
+  xy: 2, 20
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+skin/ScrollBar
+  rotate: false
+  xy: 252, 168
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
+skin/ScrollBarKnob
+  rotate: false
+  xy: 2, 2
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
+skin/StatusBackground
+  rotate: false
+  xy: 132, 104
+  size: 100, 80
+  orig: 100, 80
+  offset: 0, 0
+  index: -1
+skin/WeaponSelectionButtonDown
+  rotate: false
+  xy: 396, 184
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+skin/WeaponSelectionButtonUp
+  rotate: false
+  xy: 430, 218
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+
+textures3.png
+size: 256,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+variation/Trees
+  rotate: false
+  xy: 52, 18
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+variation/Trees02
+  rotate: false
+  xy: 86, 18
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+variation/Trees03
+  rotate: false
+  xy: 120, 18
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+variation/Trees04
+  rotate: false
+  xy: 2, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+
+textures4.png
+size: 64,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+objects/Crater
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+
+textures5.png
+size: 256,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tileset/Dirt
+  rotate: false
+  xy: 2, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

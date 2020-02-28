@@ -69,6 +69,7 @@ public class BattleScreen implements Screen {
     private HealthInfoPanelFacade healthInfoPanelFacade;
     private World world;
     private RayHandler rayHandler;
+    private HudElementsFacade hudElementsFacade;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -194,11 +195,12 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.getHideMenuButton().setVisible(false);
         mechInfoPanelFacade.getPilotButton().setVisible(false);
 
-        HudElementsFacade hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
+        hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
         hudMediator.setHudElementsFacade(hudElementsFacade);
 
         // create
         detailsPageFacade.create();
+        hudElementsFacade.create();
 
         // register components
         mechInfoPanelFacade.registerComponents(hudStage);
@@ -260,6 +262,8 @@ public class BattleScreen implements Screen {
         if (!healthInfoPanelFacade.isLocked()) {
             healthInfoPanelFacade.update(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
         }
+
+        hudElementsFacade.update();
 
         hudStage.act();
         hudStage.draw();

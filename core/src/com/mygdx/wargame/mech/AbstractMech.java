@@ -9,8 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
+
+import java.util.Random;
 
 public abstract class
 AbstractMech extends Actor implements Mech {
@@ -18,6 +21,7 @@ AbstractMech extends Actor implements Mech {
     private Team team;
     private int initiative;
     private int step = 1;
+    private int shieldStep = new Random().nextInt(6);
     private int slow = 0;
     private float idleDelay = 0;
     private State state = State.Idle;
@@ -37,7 +41,7 @@ AbstractMech extends Actor implements Mech {
     public AbstractMech(int initiative, AssetManager assetManager) {
         this.initiative = initiative;
         this.assetManager = assetManager;
-        this.shieldTextureRegion = new TextureRegion(assetManager.get("Shield.png", Texture.class));
+        this.shieldTextureRegion = new TextureRegion(assetManager.get("Shielded.png", Texture.class));
     }
 
     public void setState(State state) {
@@ -106,6 +110,9 @@ AbstractMech extends Actor implements Mech {
         if (slow == 11)
             slow = 0;
 
+        if(slow == 0) {
+            shieldStep = (shieldStep + 1) % 6;
+        }
 
         texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);
 
@@ -117,8 +124,8 @@ AbstractMech extends Actor implements Mech {
 
         if (getShieldValue() > 0) {
             spriteBatch.setColor(Color.valueOf("FFFFFF55"));
-            shieldTextureRegion.setRegion((step % 2) * 32, 0, 32, 32);
-            spriteBatch.draw(shieldTextureRegion, x - 0.1f, y - 0.3f, 1.2f, 1.2f);
+            shieldTextureRegion.setRegion((shieldStep % 6) * 16, 0, 16, 16);
+            spriteBatch.draw(shieldTextureRegion, x - 0.2f, y - 0.2f, 1.4f, 1.4f);
             spriteBatch.setColor(Color.WHITE);
         }
     }
@@ -212,6 +219,16 @@ AbstractMech extends Actor implements Mech {
                 .filter(c -> c.getStatus() != Status.Destroyed)
                 .filter(c -> Shield.class.isAssignableFrom(c.getClass()))
                 .map(s -> ((Shield) s).getShieldValue())
+                .reduce((a, b) -> a + b)
+                .orElse(0);
+    }
+
+    @Override
+    public int getArmorValue() {
+        return getAllComponents().stream()
+                .filter(c -> c.getStatus() != Status.Destroyed)
+                .filter(c -> Armor.class.isAssignableFrom(c.getClass()))
+                .map(a -> ((Armor) a).getHitPoint())
                 .reduce((a, b) -> a + b)
                 .orElse(0);
     }

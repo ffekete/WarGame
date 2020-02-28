@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -12,6 +13,7 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.State;
+import com.mygdx.wargame.decor.Birds;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
@@ -21,10 +23,12 @@ public class MoveActorAlongPathActionFactory {
     private StageElementsStorage stageElementsStorage;
     private MovementMarkerFactory movementMarkerFactory;
     private MapUtils mapUtils = new MapUtils();
+    private AssetManager assetManager;
 
-    public MoveActorAlongPathActionFactory(StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory) {
+    public MoveActorAlongPathActionFactory(StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, AssetManager assetManager) {
         this.stageElementsStorage = stageElementsStorage;
         this.movementMarkerFactory = movementMarkerFactory;
+        this.assetManager = assetManager;
     }
 
     public ParallelAction act(GraphPath<Node> paths, AbstractMech attacker, int range, BattleMap battleMap) {
@@ -55,7 +59,10 @@ public class MoveActorAlongPathActionFactory {
                 moveToActionStep.setPosition(node.getX(), node.getY());
                 moveToActionStep.setDuration(1.1f);
 
-                mapUtils.nrOfTreesOnTile(stageElementsStorage, node.getX(), node.getY()).forEach(tree-> moveAndShakeTreesAction.addAction(new ShakeAction(1.1f, tree)));
+                mapUtils.nrOfTreesOnTile(stageElementsStorage, node.getX(), node.getY()).forEach(tree-> {
+                    moveAndShakeTreesAction.addAction(new ShakeAction(1.1f, tree));
+                    moveAndShakeTreesAction.addAction(new AddActorAction(stageElementsStorage.airLevel, new Birds(assetManager)));
+                });
 
                 moveAndShakeTreesAction.addAction(moveToActionStep);
 
