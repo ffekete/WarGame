@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.screen.ui.detailspage;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.localmenu.BigInfoPanelMovementHandler;
@@ -123,13 +125,13 @@ public class DetailsPageFacade {
     }
 
     private Image getArmorImage(TextTooltip.TextTooltipStyle textTooltipStyle) {
-        Image armorImage = new Image(assetManager.get("details/ShieldIcon.png", Texture.class));
+        Image armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldIcon.png", Texture.class)), 0.15f, 300);
         armorImage.addListener(new TextTooltip("Armor", textTooltipStyle));
         return armorImage;
     }
 
     private Image getShieldImage(TextTooltip.TextTooltipStyle textTooltipStyle) {
-        Image armorImage = new Image(assetManager.get("details/ShieldComponentIcon.png", Texture.class));
+        Image armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldComponentIcon.png", Texture.class)), 0.15f, 300);
         armorImage.addListener(new TextTooltip("Shield", textTooltipStyle));
         return armorImage;
     }

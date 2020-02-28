@@ -22,13 +22,17 @@ public class TerrainTypeAwareBattleMapDecorator {
     public TerrainTypeAwareBattleMapDecorator(AssetManager assetManager, StageElementsStorage stageElementsStorage) {
         this.assetManager = assetManager;
         decorators = ImmutableMap.<TerrainType, List<Decorator>>builder()
-                .put(TerrainType.Grassland, ImmutableList.of(new BattleMapTreeSpreadDecorator(assetManager, stageElementsStorage), new BattleMapDirtSpreadDecorator(assetManager)))
+                .put(TerrainType.Grassland, ImmutableList.of(
+                        new BattleMapWaterSpreadDecorator(assetManager),
+                        new BattleMapTreeSpreadDecorator(assetManager, stageElementsStorage),
+                        new BattleMapDirtSpreadDecorator(assetManager)))
                 .build();
         this.stageElementsStorage = stageElementsStorage;
 
         stepsConfig = ImmutableMap.<Class<? extends Decorator>, Integer>builder()
-                .put(BattleMapTreeSpreadDecorator.class, 3)
                 .put(BattleMapDirtSpreadDecorator.class, 3)
+                .put(BattleMapWaterSpreadDecorator.class, 3)
+                .put(BattleMapTreeSpreadDecorator.class, 3)
                 .build();
     }
 

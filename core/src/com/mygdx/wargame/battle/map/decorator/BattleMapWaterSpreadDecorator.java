@@ -13,7 +13,7 @@ import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 
 import java.util.Random;
 
-public class BattleMapDirtSpreadDecorator implements Decorator {
+public class BattleMapWaterSpreadDecorator implements Decorator {
 
     private int deathLimit = 5;
     private int birthLimit = 3;
@@ -21,7 +21,7 @@ public class BattleMapDirtSpreadDecorator implements Decorator {
     private AssetManager assetManager;
     GroundOverlayConfig groundOverlayConfig;
 
-    public BattleMapDirtSpreadDecorator(AssetManager assetManager) {
+    public BattleMapWaterSpreadDecorator(AssetManager assetManager) {
         this.assetManager = assetManager;
         groundOverlayConfig = new GroundOverlayConfig(assetManager);
     }
@@ -32,21 +32,21 @@ public class BattleMapDirtSpreadDecorator implements Decorator {
 
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
-                if (newMap[i][j] == 1 && (worldMap.getNodeGraphLv1().getNodeWeb()[i][j].getGroundOverlay() == null || worldMap.getNodeGraphLv1().getNodeWeb()[i][j].getGroundOverlay().getTileOverlayType() != TileOverlayType.Water)) {
-                    worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setGroundOverlay(new Overlay(TileOverlayType.Dirt));
+                if (newMap[i][j] == 1) {
+                    worldMap.getNodeGraphLv1().getNodeWeb()[i][j].setGroundOverlay(new Overlay(TileOverlayType.Water));
                 }
             }
         }
 
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
-                if (newMap[i][j] == 1&& (worldMap.getNodeGraphLv1().getNodeWeb()[i][j].getGroundOverlay() == null || worldMap.getNodeGraphLv1().getNodeWeb()[i][j].getGroundOverlay().getTileOverlayType() != TileOverlayType.Water)) {
+                if (newMap[i][j] == 1) {
 
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-                    groundOverlayConfig.getFor(TileOverlayType.Dirt).getFor(worldMap.getNodeGraphLv1(), i, j, 1);
+                    groundOverlayConfig.getFor(TileOverlayType.Water).getFor(worldMap.getNodeGraphLv1(), i, j, 1);
 
-                    cell.setTile(new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Dirt).getFor(worldMap.getNodeGraphLv1(), i, j, 1))));
+                    cell.setTile(new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Water).getFor(worldMap.getNodeGraphLv1(), i, j, 1))));
 
                     worldMap.getLayer(LayerIndex.Tiles).setCell(i, j, cell);
                 }

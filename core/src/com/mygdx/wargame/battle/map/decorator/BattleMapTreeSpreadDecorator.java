@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.decoration.TreeImage;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.config.Config;
 
@@ -41,7 +42,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
 
         for (int i = 0; i < newMap.length; i++) {
             for (int j = 0; j < newMap[0].length; j++) {
-                if (newMap[i][j] == 1) {
+                if (newMap[i][j] == 1&& (worldMap.getNodeGraphLv1().getNodeWeb()[i][j].getGroundOverlay() == null || worldMap.getNodeGraphLv1().getNodeWeb()[i][j].getGroundOverlay().getTileOverlayType() != TileOverlayType.Water)) {
 
                     for (int k = 0; k < new Random().nextInt(Config.treeSpread); k++) {
                         int rnd = new Random().nextInt(treeVariations.size());

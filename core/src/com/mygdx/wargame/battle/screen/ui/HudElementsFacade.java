@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.screen.ui;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.config.Config;
@@ -105,12 +107,12 @@ public class HudElementsFacade {
         //upperHud.setDebug(true);
         upperHud.setSize(HUD_VIEWPORT_WIDTH, 60 / SCREEN_HUD_RATIO);
         upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT - 60 / SCREEN_HUD_RATIO);
-        shieldImage = new Image(new TextureRegionDrawable(assetManager.get("details/ShieldComponentIcon.png", Texture.class)));
+        shieldImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldComponentIcon.png", Texture.class)), 0.15f, 350);
         upperHud.addActor(shieldImage);
         shieldValueLabel = labelPool.obtain();
         upperHud.addActor(shieldValueLabel);
 
-        armorImage = new Image(new TextureRegionDrawable(assetManager.get("details/ShieldIcon.png", Texture.class)));
+        armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldIcon.png", Texture.class)), 0.15f, 300);
         armorValueLabel = labelPool.obtain();
         upperHud.addActor(armorImage);
         upperHud.addActor(armorValueLabel);
@@ -123,7 +125,7 @@ public class HudElementsFacade {
         armorValueLabel.addListener(armorToolTip);
         armorImage.addListener(armorToolTip);
 
-        ammoImage = new Image(new TextureRegionDrawable(assetManager.get("hud/AmmoIcon.png", Texture.class)));
+        ammoImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/AmmoIcon.png", Texture.class)), 0.15f, 250);
         ammoValueLabel = labelPool.obtain();
 
         upperHud.addActor(ammoImage);
@@ -137,7 +139,7 @@ public class HudElementsFacade {
         ammoValueLabel.addListener(ammoToolTip);
         ammoImage.addListener(ammoToolTip);
 
-        healthImage = new Image(new TextureRegionDrawable(assetManager.get("hud/HealthIcon.png", Texture.class)));
+        healthImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/HealthIcon.png", Texture.class)), 0.15f, 100);
         healthValueLabel = labelPool.obtain();
 
         upperHud.addActor(healthImage);

@@ -27,7 +27,10 @@ public class ScreenLoader {
         assetManager.load("PowerArmor.png", Texture.class);
         assetManager.load("Scout.png", Texture.class);
         assetManager.load("WreckingBall.png", Texture.class);
+
         assetManager.load("tileset/Dirt.png", Texture.class);
+        assetManager.load("tileset/Water.png", Texture.class);
+
         assetManager.load("SelectionMarker.png", Texture.class);
         assetManager.load("DesertTile.png", Texture.class);
         assetManager.load("Grass.png", Texture.class);

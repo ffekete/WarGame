@@ -13,7 +13,7 @@ public class Flamer implements Weapon {
 
     public static final int MAX_AMMO = 20;
 
-    private int ammo;
+    private int ammo = MAX_AMMO;
 
     private Status status;
 

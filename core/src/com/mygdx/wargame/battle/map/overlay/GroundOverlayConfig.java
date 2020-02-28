@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.map.tileselector.DirtTileSelector;
 import com.mygdx.wargame.battle.map.tileselector.Selector;
+import com.mygdx.wargame.battle.map.tileselector.WaterTileSelector;
 
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class GroundOverlayConfig {
         this.assetManager = assetManager;
         this.selectorMap = ImmutableMap.<TileOverlayType, Selector>builder()
                 .put(TileOverlayType.Dirt, new DirtTileSelector(this.assetManager))
+                .put(TileOverlayType.Water, new WaterTileSelector(this.assetManager))
                 .build();
     }
 
