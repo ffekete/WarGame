@@ -36,7 +36,7 @@ public class HudElementsFacade {
     private ActionLock actionLock;
     private Image shieldImage;
     private Label shieldValueLabel;
-    private HorizontalGroup upperHud;
+    private Table upperHud;
     private Label.LabelStyle labelStyle;
 
     private Image armorImage;
@@ -55,6 +55,18 @@ public class HudElementsFacade {
 
     private Tooltip<Table> healthToolTip;
     private Table healthTooltipTable;
+
+    private Image heatImage;
+    private Label heatValueLabel;
+
+    private Tooltip<Table> heatToolTip;
+    private Table heatTooltipTable;
+
+    private Image stabilityImage;
+    private Label stabilityValueLabel;
+
+    private Tooltip<Table> stabilityToolTip;
+    private Table stabilityTooltipTable;
 
     private Pool<Label> labelPool;
 
@@ -103,19 +115,21 @@ public class HudElementsFacade {
             }
         });
 
-        upperHud = new HorizontalGroup();
+        upperHud = new Table();
+        upperHud.left();
+
         //upperHud.setDebug(true);
         upperHud.setSize(HUD_VIEWPORT_WIDTH, 60 / SCREEN_HUD_RATIO);
         upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT - 60 / SCREEN_HUD_RATIO);
-        shieldImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldComponentIcon.png", Texture.class)), 0.15f, 350);
-        upperHud.addActor(shieldImage);
+        shieldImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldComponentIcon.png", Texture.class)), 0.15f, 100);
+        upperHud.add(shieldImage);
         shieldValueLabel = labelPool.obtain();
-        upperHud.addActor(shieldValueLabel);
+        upperHud.add(shieldValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
-        armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldIcon.png", Texture.class)), 0.15f, 300);
+        armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldIcon.png", Texture.class)), 0.15f, 100);
         armorValueLabel = labelPool.obtain();
-        upperHud.addActor(armorImage);
-        upperHud.addActor(armorValueLabel);
+        upperHud.add(armorImage);
+        upperHud.add(armorValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
         armorTooltipTable = new Table();
         armorToolTip = new Tooltip<>(armorTooltipTable);
@@ -125,11 +139,11 @@ public class HudElementsFacade {
         armorValueLabel.addListener(armorToolTip);
         armorImage.addListener(armorToolTip);
 
-        ammoImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/AmmoIcon.png", Texture.class)), 0.15f, 250);
+        ammoImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/AmmoIcon.png", Texture.class)), 0.15f, 100);
         ammoValueLabel = labelPool.obtain();
 
-        upperHud.addActor(ammoImage);
-        upperHud.addActor(ammoValueLabel);
+        upperHud.add(ammoImage);
+        upperHud.add(ammoValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
         tooltipTable = new Table();
         ammoToolTip = new Tooltip<Table>(tooltipTable);
@@ -142,8 +156,8 @@ public class HudElementsFacade {
         healthImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/HealthIcon.png", Texture.class)), 0.15f, 100);
         healthValueLabel = labelPool.obtain();
 
-        upperHud.addActor(healthImage);
-        upperHud.addActor(healthValueLabel);
+        upperHud.add(healthImage);
+        upperHud.add(healthValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
         healthTooltipTable = new Table();
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
@@ -152,6 +166,37 @@ public class HudElementsFacade {
 
         healthValueLabel.addListener(healthToolTip);
         healthImage.addListener(healthToolTip);
+
+        heatImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/HeatIcon.png", Texture.class)), 0.15f, 100);
+        heatValueLabel = labelPool.obtain();
+
+        upperHud.add(heatImage);
+        upperHud.add(heatValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+
+        heatTooltipTable = new Table();
+        heatToolTip = new Tooltip<Table>(heatTooltipTable);
+        heatToolTip.setInstant(true);
+        heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+
+        heatValueLabel.addListener(heatToolTip);
+        heatImage.addListener(heatToolTip);
+        heatTooltipTable.add(new Label("When heat level reaches 100 the mech may blow up.", labelStyle));
+
+        stabilityImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/StabilityIcon.png", Texture.class)), 0.15f, 100);
+        stabilityValueLabel = labelPool.obtain();
+
+        upperHud.add(stabilityImage);
+        upperHud.add(stabilityValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+
+        stabilityTooltipTable = new Table();
+        stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
+        stabilityToolTip.setInstant(true);
+        stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+
+        stabilityValueLabel.addListener(stabilityToolTip);
+        stabilityImage.addListener(stabilityToolTip);
+        stabilityTooltipTable.add(new Label("When stability level reaches 0 the mech cannot move anymore.", labelStyle));
+
 
         show();
     }
@@ -210,12 +255,26 @@ public class HudElementsFacade {
             healthTooltipTable.add(hpLabel).row();
         });
 
+        heatValueLabel.setText(turnProcessingFacade.getNext().getKey().getHeatLevel());
 
+        stabilityValueLabel.setText(turnProcessingFacade.getNext().getKey().getStability());
     }
 
     private Optional<Integer> getAmmoCount() {
         return turnProcessingFacade.getNext().getKey().getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(w -> ((Weapon) w).getAmmo()).reduce((a, b) -> {
             return Optional.of(a.orElse(0) + b.orElse(0));
         }).get();
+    }
+
+    public Label getHeatValueLabel() {
+        return heatValueLabel;
+    }
+
+    public Label getAmmoValueLabel() {
+        return ammoValueLabel;
+    }
+
+    public Label getStabilityValueLabel() {
+        return stabilityValueLabel;
     }
 }

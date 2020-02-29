@@ -5,17 +5,21 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
+import com.mygdx.wargame.battle.action.IntAction;
 import com.mygdx.wargame.battle.action.ZoomOutCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.movement.WayPoint;
 import com.mygdx.wargame.battle.unit.action.*;
+import com.mygdx.wargame.component.weapon.Weapon;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.pilot.Pilot;
@@ -35,8 +39,9 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
     private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
     private MovementMarkerFactory movementMarkerFactory;
     private RayHandler rayHandler;
+    private HUDMediator hudMediator;
 
-    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, RayHandler rayHandler) {
+    public RangedAttackTargetCalculator(BattleMap battleMap, RangeCalculator rangeCalculator, AttackFacade attackFacade, ActionLock actionLock, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, RayHandler rayHandler, HUDMediator hudMediator) {
         this.battleMap = battleMap;
         this.rangeCalculator = rangeCalculator;
         this.attackFacade = attackFacade;
@@ -46,6 +51,7 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
         this.assetManager = assetManager;
         this.stageElementsStorage = stageElementsStorage;
         this.movementMarkerFactory = movementMarkerFactory;
+        this.hudMediator = hudMediator;
         this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory, assetManager);
         this.rayHandler = rayHandler;
     }
@@ -93,9 +99,15 @@ public class RangedAttackTargetCalculator implements AttackCalculator {
             parallelAction.addAction(new AttackAnimationAction(attackerMech, defenderMech, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech)));
             parallelAction.addAction(new BulletAnimationAction(attackerMech, defenderMech, stage, assetManager, actionLock, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), stageElementsStorage, battleMap, rayHandler));
 
+            int heatBeforeAttack = attackerMech.getHeatLevel();
+            int ammoBeforeAttack = attackerMech.getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(c -> (Weapon) c).map(w -> w.getAmmo().orElse(0)).reduce((a, b) -> a+b).orElse(0);
             sequenceAction.addAction(parallelAction);
             sequenceAction.addAction(new AttackAction(attackFacade, attackerMech, attackerPilot, defenderMech, defenderPilot, battleMap, rangeCalculator.calculateAllWeaponsRange(attackerPilot, attackerMech), targetedBodyPart));
+
+            sequenceAction.addAction(new IntAction(heatBeforeAttack, attackerMech::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatValueLabel()));
+            sequenceAction.addAction(new IntAction(ammoBeforeAttack, () -> attackerMech.getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(c -> (Weapon) c).map(w -> w.getAmmo().orElse(0)).reduce((a, b) -> a+b).orElse(0), 1f, hudMediator.getHudElementsFacade().getAmmoValueLabel()));
             sequenceAction.addAction(new RemoveWayPointAction(stageElementsStorage));
+            sequenceAction.addAction(new UnlockAction(actionLock, ""));
             attackerMech.addAction(sequenceAction);
         }
     }

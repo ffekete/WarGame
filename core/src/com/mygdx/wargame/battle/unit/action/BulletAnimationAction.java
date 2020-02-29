@@ -187,7 +187,7 @@ BulletAnimationAction extends Action {
                     explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
 
                     if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {
-                        explosionAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof explosion"));
+                        //explosionAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof explosion"));
                         finishedByExplosion = true;
                     }
 
@@ -199,7 +199,7 @@ BulletAnimationAction extends Action {
                 }
 
                 if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1 && !finishedByExplosion) {
-                    sequenceAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof normal attack"));
+                    //sequenceAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof normal attack"));
                 }
 
                 sequenceAction.addAction(new RemoveActorAction());

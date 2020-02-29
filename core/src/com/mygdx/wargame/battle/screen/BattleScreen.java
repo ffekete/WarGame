@@ -155,7 +155,7 @@ public class BattleScreen implements Screen {
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
-        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler);
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler, hudMediator);
 
         DetailsPageFacade detailsPageFacade = new DetailsPageFacade(mechInfoPanelFacade, hudMediator, screenLoader.getAssetManager());
         hudMediator.setDetailsPageFacade(detailsPageFacade);

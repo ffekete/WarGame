@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 
+import java.util.Random;
+
 public class AnimatedImage extends Image implements Tree {
 
     private int size;
@@ -26,6 +28,7 @@ public class AnimatedImage extends Image implements Tree {
         this.speed = speed;
         size = textureRegion.getTexture().getWidth() / 16;
         this.idle = idle;
+        this.idleCounter = new Random().nextInt(idle);
     }
 
     private static TextureRegion getTextureRegion(TextureRegion texture) {
