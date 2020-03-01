@@ -26,6 +26,8 @@ import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.ScalableProgressBar;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.*;
+import com.mygdx.wargame.component.heatsink.HeatSink;
+import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Pilot;
@@ -163,6 +165,7 @@ public class TurnProcessingFacade {
             selectedMech.resetMovementPoints(movementPoints);
 
             sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
+            sequenceAction.addAction(regenerateShields(selectedMech));
             sequenceAction.addAction(new DelayAction(0.5f));
             sequenceAction.addAction(reduceStabilityLevel(selectedMech));
 
@@ -228,6 +231,7 @@ public class TurnProcessingFacade {
             sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, selectedMech));
             sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
             sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
+            sequenceAction.addAction(regenerateShields(selectedMech));
             sequenceAction.addAction(new DelayAction(0.5f));
             sequenceAction.addAction(reduceStabilityLevel(selectedMech));
             sequenceAction.addAction(new UnlockAction(actionLock, ""));
@@ -265,6 +269,21 @@ public class TurnProcessingFacade {
         SequenceAction sequenceAction = new SequenceAction();
         sequenceAction.addAction(new IntAction(stabilityBeforeIncrease, mech::getStability, 1f, hudMediator.getHudElementsFacade().getStabilityValueLabel()));
 
+        return sequenceAction;
+    }
+
+    private Action regenerateShields(Mech mech) {
+
+        int shieldBeforeIncrease = mech.getShieldValue();
+
+        mech.getAllComponents().forEach(c -> {
+            if(Shield.class.isAssignableFrom(c.getClass())) {
+                c.update();
+            }
+        });
+
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(new IntAction(shieldBeforeIncrease, mech::getShieldValue, 1f, hudMediator.getHudElementsFacade().getShieldValueLabel()));
         return sequenceAction;
     }
 

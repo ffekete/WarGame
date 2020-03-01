@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableMap;
+import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.component.Component;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
@@ -51,8 +52,8 @@ public class PowerArmor extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public PowerArmor(String name, SpriteBatch spriteBatch, AssetManager assetManager) {
-        super(5, assetManager);
+    public PowerArmor(String name, SpriteBatch spriteBatch, AssetManager assetManager, BattleMap battleMap) {
+        super(5, assetManager, battleMap);
         this.spriteBatch = spriteBatch;
         this.name = name;
 

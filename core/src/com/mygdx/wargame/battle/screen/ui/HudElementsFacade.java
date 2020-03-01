@@ -277,4 +277,8 @@ public class HudElementsFacade {
     public Label getStabilityValueLabel() {
         return stabilityValueLabel;
     }
+
+    public Label getShieldValueLabel() {
+        return this.shieldValueLabel;
+    }
 }

@@ -1,6 +1,7 @@
 package com.mygdx.wargame.rules.calculator;
 
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.component.heatsink.HeatSink;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.mech.Mech;
@@ -20,6 +21,11 @@ public class HeatCalculator {
                 .reduce((a, b) -> a + b).orElse(0);
 
         baseValue += heatDissipation;
+
+        if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay() != null &&
+                battleMap.getNodeGraphLv1().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
+            baseValue += 20;
+        }
 
         baseValue -= battleMap.getFireMap()[(int) targetMech.getX()][(int) targetMech.getY()] > 0 ? 20 : 0;
 

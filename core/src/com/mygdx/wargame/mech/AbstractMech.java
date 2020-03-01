@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.LayerIndex;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
@@ -33,15 +36,17 @@ AbstractMech extends Actor implements Mech {
     private boolean moved;
     private boolean active;
     private AssetManager assetManager;
+    private BattleMap battleMap;
 
     protected TextureRegion mechTextureRegion;
     private TextureRegion shieldTextureRegion;
     private TextureRegion selectionTexture;
 
-    public AbstractMech(int initiative, AssetManager assetManager) {
+    public AbstractMech(int initiative, AssetManager assetManager, BattleMap battleMap) {
         this.initiative = initiative;
         this.assetManager = assetManager;
         this.shieldTextureRegion = new TextureRegion(assetManager.get("Shielded.png", Texture.class));
+        this.battleMap = battleMap;
     }
 
     public void setState(State state) {
@@ -114,11 +119,23 @@ AbstractMech extends Actor implements Mech {
             shieldStep = (shieldStep + 1) % 6;
         }
 
-        texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);
-
+        if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay() != null &&
+                battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
+            texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 10);
+        } else {
+            texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);
+        }
         texture.flip(direction.isMirrored(), false);
         spriteBatch.setColor(Color.valueOf("FFFFFF"));
-        spriteBatch.draw(texture, x, y, 1, 1);
+
+        if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay() != null &&
+                battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
+            spriteBatch.draw(texture, x, y + 0.3f, 1, 0.6f);
+        } else {
+            spriteBatch.draw(texture, x, y, 1, 1);
+        }
+
+
         spriteBatch.setColor(Color.valueOf("FFFFFF99"));
         spriteBatch.draw(selectionTexture, x, y, 1, 1);
 

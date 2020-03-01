@@ -3,7 +3,9 @@ package com.mygdx.wargame.battle.map.decorator;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.LayerIndex;
@@ -17,7 +19,7 @@ public class BattleMapWaterSpreadDecorator implements Decorator {
 
     private int deathLimit = 5;
     private int birthLimit = 3;
-    private float chanceToStartAlive = 45;
+    private float chanceToStartAlive =40;
     private AssetManager assetManager;
     GroundOverlayConfig groundOverlayConfig;
 
@@ -44,9 +46,13 @@ public class BattleMapWaterSpreadDecorator implements Decorator {
 
                     TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-                    groundOverlayConfig.getFor(TileOverlayType.Water).getFor(worldMap.getNodeGraphLv1(), i, j, 1);
+                    Array<StaticTiledMapTile> tiles = new Array<>();
+                    tiles.add( new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Water).getFor(worldMap.getNodeGraphLv1(), i, j, 1, 0))));
+                    tiles.add( new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Water).getFor(worldMap.getNodeGraphLv1(), i, j, 1, 1))));
 
-                    cell.setTile(new StaticTiledMapTile(new TextureRegion(groundOverlayConfig.getFor(TileOverlayType.Water).getFor(worldMap.getNodeGraphLv1(), i, j, 1))));
+                    tiles.shuffle();
+
+                    cell.setTile(new AnimatedTiledMapTile(1f, tiles));
 
                     worldMap.getLayer(LayerIndex.Tiles).setCell(i, j, cell);
                 }

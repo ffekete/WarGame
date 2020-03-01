@@ -116,7 +116,11 @@ public class BattleScreen implements Screen {
         BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
         BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, screenLoader.getAssetManager());
 
-        battleScreenInputDataStubber.stub(battleScreenInputData);
+        BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
+
+        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE);
+
+        battleScreenInputDataStubber.stub(battleScreenInputData, battleMap);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
@@ -148,10 +152,6 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.setTouchable(Touchable.enabled);
 
         TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(screenLoader.getAssetManager(), stageElementsStorage);
-
-        BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
-
-        battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE);
 
         terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 

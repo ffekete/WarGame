@@ -2,8 +2,10 @@ package com.mygdx.wargame.battle.screen;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.armor.CompositeMaterialArmor;
+import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.shield.SmallShieldModule;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
@@ -32,8 +34,8 @@ public class BattleScreenInputDataStubber {
         this.assetManager = assetManager;
     }
 
-    public void stub(BattleScreenInputData battleScreenInputData) {
-        Mech unit3 = new Scout("Ace", spriteBatch, assetManager);
+    public void stub(BattleScreenInputData battleScreenInputData, BattleMap battleMap) {
+        Mech unit3 = new Scout("Ace", spriteBatch, assetManager, battleMap);
         unit3.setPosition(6, 5);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
@@ -47,7 +49,9 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.RightArm, largeLaser);
         unit3.addComponent(BodyPart.Torso, largeLaser4);
         unit3.setActive(true);
-        unit3.addComponent(BodyPart.Torso, new SmallShieldModule());
+        Shield smallShield = new SmallShieldModule();
+        smallShield.reduceShieldValue(10);
+        unit3.addComponent(BodyPart.Torso, smallShield);
         Flamer flamer = new Flamer();
         flamer.setStatus(Status.Selected);
         unit3.addComponent(BodyPart.LeftLeg, flamer);
@@ -66,7 +70,7 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeIonCannon);
         unit3.addComponent(BodyPart.Torso, machineGun);
 
-        Colossus unit2 = new Colossus("ReadEye111", spriteBatch, assetManager);
+        Colossus unit2 = new Colossus("ReadEye111", spriteBatch, assetManager, battleMap);
         unit2.setPosition(1, 1);
         unit2.setTeam(Team.own);
         unit2.setActive(true);
@@ -116,7 +120,7 @@ public class BattleScreenInputDataStubber {
         unit2.addComponent(BodyPart.Torso, largeCannon11);
         unit2.addComponent(BodyPart.Torso, largeCannon12);
 
-        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager);
+        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager,battleMap);
         unit.setPosition(5, 2);
         unit.setTeam(Team.enemy);
         unit.setActive(true);

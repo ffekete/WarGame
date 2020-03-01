@@ -17,7 +17,7 @@ public class DirtTileSelector implements Selector {
         textureRegion = new TextureRegion(this.assetManager.get("tileset/Dirt.png", Texture.class));
     }
 
-    public TextureRegion getFor(NodeGraph map, int x, int y, int skip) {
+    public TextureRegion getFor(NodeGraph map, int x, int y, int skip, int step) {
 
         int mask = MapUtils.bitmask4bitForTile(map, x, y, TileOverlayType.Dirt, skip);
 
