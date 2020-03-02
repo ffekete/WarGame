@@ -13,6 +13,7 @@ public class HUDMediator {
     private TargetingPanelFacade targetingPanelFacade;
     private HealthInfoPanelFacade healthInfoPanelFacade;
     private DetailsPageFacade detailsPageFacade;
+    private MainMenuFacade mainMenuFacade;
 
     public HUDMediator() {
     }
@@ -71,5 +72,13 @@ public class HUDMediator {
 
     public void setDetailsPageFacade(DetailsPageFacade detailsPageFacade) {
         this.detailsPageFacade = detailsPageFacade;
+    }
+
+    public MainMenuFacade getMainMenuFacade() {
+        return mainMenuFacade;
+    }
+
+    public void setMainMenuFacade(MainMenuFacade mainMenuFacade) {
+        this.mainMenuFacade = mainMenuFacade;
     }
 }

@@ -29,7 +29,7 @@ public class ShakeAction extends TemporalAction {
 
             if(step ==0) {
 
-                offSetX = origX + new Random().nextFloat() / 50;
+                offSetX = origX; //origX + new Random().nextFloat() / 50;
                 offSetY = origY + new Random().nextFloat() / 20;
 
                 actor.setPosition(offSetX, offSetY);

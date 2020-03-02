@@ -153,39 +153,39 @@ public class DetailsPageFacade {
         mechInfoInnerTable.clear();
 
         mechInfoInnerTable.add(headImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp(), labelStyle)).center().pad(5);
+        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.Head) + "/" + mec.getHeadMaxHp(), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
 
         mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.Head, mec), labelStyle)).center().pad(5);
+        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.Head, mec), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
         mechInfoInnerTable.add();
-        mechInfoInnerTable.add(torsoImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp(), labelStyle)).center().pad(5);
-        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.Torso, mec), labelStyle)).center().pad(5).row();
+        mechInfoInnerTable.add(torsoImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.Torso) + "/" + mec.getTorsoMaxHp(), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
+        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.Torso, mec), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO).row();
 
-        mechInfoInnerTable.add(leftArmImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp(), labelStyle)).center().pad(5);
-        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.LeftArm, mec), labelStyle)).center().pad(5);
+        mechInfoInnerTable.add(leftArmImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.LeftArm) + "/" + mec.getLeftHandMaxHp(), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
+        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.LeftArm, mec), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
         mechInfoInnerTable.add();
-        mechInfoInnerTable.add(rightArmImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp(), labelStyle)).center().pad(5);
-        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.RightArm, mec), labelStyle)).center().pad(5).row();
+        mechInfoInnerTable.add(rightArmImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.RightArm) + "/" + mec.getRightHandMaxHp(), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
+        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.RightArm, mec), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO).row();
 
-        mechInfoInnerTable.add(leftLegImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp(), labelStyle)).center().pad(5);
-        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.LeftLeg, mec), labelStyle)).center().pad(5);
+        mechInfoInnerTable.add(leftLegImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.LeftLeg) + "/" + mec.getLeftLegMaxHp(), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
+        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.LeftLeg, mec), labelStyle)).center().pad(20 / SCREEN_HUD_RATIO);
         mechInfoInnerTable.add();
-        mechInfoInnerTable.add(rightLegImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp(), labelStyle)).pad(5).center();
-        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.RightLeg, mec), labelStyle)).pad(5).center().row();
+        mechInfoInnerTable.add(rightLegImage).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label(mec.getHp(BodyPart.RightLeg) + "/" + mec.getRightLegMaxHp(), labelStyle)).pad(20 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(getArmorImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label("" + getArmor(BodyPart.RightLeg, mec), labelStyle)).pad(20 / SCREEN_HUD_RATIO).center().row();
 
 
-        mechInfoInnerTable.add(getShieldImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        mechInfoInnerTable.add(new Label("" + mec.getShieldValue(), labelStyle)).pad(5).colspan(4).left();
+        mechInfoInnerTable.add(getShieldImage(textTooltipStyle)).size(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO).center();
+        mechInfoInnerTable.add(new Label("" + mec.getShieldValue(), labelStyle)).pad(20 / SCREEN_HUD_RATIO).colspan(4).left();
 
 
     }

@@ -34,10 +34,14 @@ public class HudElementsFacade {
     private AssetManager assetManager;
     private TurnProcessingFacade turnProcessingFacade;
     private ActionLock actionLock;
-    private Image shieldImage;
-    private Label shieldValueLabel;
+
     private Table upperHud;
     private Label.LabelStyle labelStyle;
+
+    private Tooltip<Table> shieldToolTip;
+    private Table shieldTooltipTable;
+    private Image shieldImage;
+    private Label shieldValueLabel;
 
     private Image armorImage;
     private Label armorValueLabel;
@@ -48,7 +52,7 @@ public class HudElementsFacade {
     private Label ammoValueLabel;
 
     private Tooltip<Table> ammoToolTip;
-    private Table tooltipTable;
+    private Table ammoTooltipTable;
 
     private Image healthImage;
     private Label healthValueLabel;
@@ -124,9 +128,21 @@ public class HudElementsFacade {
         //upperHud.setDebug(true);
         upperHud.setSize(HUD_VIEWPORT_WIDTH, 60 / SCREEN_HUD_RATIO);
         upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT - 60 / SCREEN_HUD_RATIO);
+
+        shieldTooltipTable = new Table();
+        shieldToolTip = new Tooltip<Table>(shieldTooltipTable);
+        shieldToolTip.setInstant(true);
+        shieldTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        shieldTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
+        shieldTooltipTable.add(new Label("Shield protects against energy based attacks.\nIt slowly regenerates over time until the component is destroyed.", labelStyle));
+
         shieldImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldComponentIcon.png", Texture.class)), 0.15f, 100);
         upperHud.add(shieldImage);
         shieldValueLabel = labelPool.obtain();
+
+        shieldImage.addListener(shieldToolTip);
+        shieldValueLabel.addListener(shieldToolTip);
+
         upperHud.add(shieldValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
         armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldIcon.png", Texture.class)), 0.15f, 100);
@@ -149,11 +165,11 @@ public class HudElementsFacade {
         upperHud.add(ammoImage);
         upperHud.add(ammoValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
-        tooltipTable = new Table();
-        ammoToolTip = new Tooltip<Table>(tooltipTable);
+        ammoTooltipTable = new Table();
+        ammoToolTip = new Tooltip<Table>(ammoTooltipTable);
         ammoToolTip.setInstant(true);
-        tooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
-        tooltipTable.setColor(Color.valueOf("FFFFFFEE"));
+        ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        ammoTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
         ammoValueLabel.addListener(ammoToolTip);
         ammoImage.addListener(ammoToolTip);
 
@@ -239,14 +255,14 @@ public class HudElementsFacade {
             armorTooltipTable.add(armorLabel).row();
         });
 
-        tooltipTable.clear();
+        ammoTooltipTable.clear();
         turnProcessingFacade.getNext().getKey().getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(c -> (Weapon) c).forEach(w -> {
             Label nameLabel = labelPool.obtain();
             nameLabel.setText(w.getShortName());
             Label ammoLabel = labelPool.obtain();
             ammoLabel.setText("" + (w.getAmmo().isPresent() ? w.getAmmo().get() : "N/A"));
-            tooltipTable.add(nameLabel).padRight(40 / SCREEN_HUD_RATIO);
-            tooltipTable.add(ammoLabel).row();
+            ammoTooltipTable.add(nameLabel).padRight(40 / SCREEN_HUD_RATIO);
+            ammoTooltipTable.add(ammoLabel).row();
         });
 
         healthValueLabel.setText("" + (int) (100f * Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getHp(b)).reduce((a, b) -> a + b).orElse(0) / (float) Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getMaxHp(b)).reduce((a, b) -> a + b).orElse(0)));
