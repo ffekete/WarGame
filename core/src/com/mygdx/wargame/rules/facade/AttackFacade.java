@@ -8,11 +8,13 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
 import com.mygdx.wargame.rules.calculator.BodyPartDestructionHandler;
 import com.mygdx.wargame.rules.calculator.CriticalHitChanceCalculator;
 import com.mygdx.wargame.rules.calculator.DamageCalculator;
 import com.mygdx.wargame.rules.calculator.EvasionCalculator;
+import com.mygdx.wargame.rules.calculator.HeatDamageCalculator;
 import com.mygdx.wargame.rules.calculator.StabilityCalculator;
 import com.mygdx.wargame.util.MathUtils;
 
@@ -28,12 +30,14 @@ public class AttackFacade {
     private StabilityCalculator stabilityCalculator = new StabilityCalculator(criticalHitChanceCalculator);
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
-    SequenceAction messageQue = new SequenceAction();
+    private SequenceAction messageQue = new SequenceAction();
+    private HeatDamageCalculator heatDamageCalculator;
 
     public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
         this.mechInfoPanelFacade = mechInfoPanelFacade;
         this.actionLock = actionLock;
         damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageElementsStorage, assetManager, mechInfoPanelFacade, this.actionLock);
+        heatDamageCalculator = new HeatDamageCalculator(stageElementsStorage, actionLock);
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
@@ -42,6 +46,13 @@ public class AttackFacade {
         attackingMech.getSelectedWeapons().forEach(weapon -> {
 
             if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), defendingMech.getX(), defendingMech.getY()) <= weapon.getRange()) {
+
+                if(attackingMech.getHeatLevel() > 100) {
+                    if(new Random().nextInt(100) - (attackingPilot.hasPerk(Perks.Hazardous) ? 10 : 0) >= 80) {
+                        System.out.println("Heat");
+                        heatDamageCalculator.calculate(attackingMech, weapon, messageQue);
+                    }
+                }
 
                 int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
 

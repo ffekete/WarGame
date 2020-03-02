@@ -52,9 +52,5 @@ public class ZoomOutCameraAction extends TemporalAction {
         //target.setPosition(x, y);
         camera.position.x = x;
         camera.position.y = y;
-
-
-        System.out.println("Target:" + targetZoom);
-        //camera.zoom = 1f + (targetZoom - 1f) * percent;
     }
 }

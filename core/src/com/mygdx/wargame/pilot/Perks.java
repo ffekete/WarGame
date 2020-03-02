@@ -17,6 +17,7 @@ public enum Perks {
     Lucky("+3%  to critical chances with weapons", "Lucky"),
     Leader("+10  to morale saves for the team", "Leader"),
     Hero("+20 to morale saves for the team", "Leader"),
+    Hazardous("-10% chance of sustaining heat damage when using overheated weapons", "Hazardous"),
     Dreaded("-10 morale saving throws for enemies", "Dreaded"),
     RockSteady("-5 to stability hits received by mech", "Rocksteady"),
     JungleExpert("+5 to evasion and +1 to movement points on jungle maps", "Jungle expert"),

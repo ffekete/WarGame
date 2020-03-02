@@ -32,6 +32,7 @@ public class ShowMessageActor extends TemporalAction {
         label.setPosition(newCoordinates.x, newCoordinates.y);
 
         actionLock.setWaitForObject(label);
+        setDuration(2f);
     }
 
     public boolean act(float delta) {
