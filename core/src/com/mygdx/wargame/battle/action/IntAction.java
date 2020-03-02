@@ -32,6 +32,11 @@ public class IntAction extends TemporalAction {
     }
 
     protected void update(float percent) {
+
+        if(value == end.get()) {
+            setDuration(0f);
+        }
+
         if (percent == 0)
             value = start;
         else if (percent == 1)

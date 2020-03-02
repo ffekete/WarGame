@@ -1,12 +1,12 @@
 package com.mygdx.wargame.battle.screen.ui;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -138,6 +138,7 @@ public class HudElementsFacade {
         armorToolTip = new Tooltip<>(armorTooltipTable);
         armorToolTip.setInstant(true);
         armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        armorTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         armorValueLabel.addListener(armorToolTip);
         armorImage.addListener(armorToolTip);
@@ -152,7 +153,7 @@ public class HudElementsFacade {
         ammoToolTip = new Tooltip<Table>(tooltipTable);
         ammoToolTip.setInstant(true);
         tooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
-
+        tooltipTable.setColor(Color.valueOf("FFFFFFEE"));
         ammoValueLabel.addListener(ammoToolTip);
         ammoImage.addListener(ammoToolTip);
 
@@ -166,6 +167,7 @@ public class HudElementsFacade {
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
         healthToolTip.setInstant(true);
         healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        healthTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         healthValueLabel.addListener(healthToolTip);
         healthImage.addListener(healthToolTip);
@@ -180,6 +182,7 @@ public class HudElementsFacade {
         heatToolTip = new Tooltip<Table>(heatTooltipTable);
         heatToolTip.setInstant(true);
         heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        heatTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         heatValueLabel.addListener(heatToolTip);
         heatImage.addListener(heatToolTip);
@@ -195,6 +198,7 @@ public class HudElementsFacade {
         stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
         stabilityToolTip.setInstant(true);
         stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        stabilityTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         stabilityValueLabel.addListener(stabilityToolTip);
         stabilityImage.addListener(stabilityToolTip);
@@ -230,7 +234,7 @@ public class HudElementsFacade {
             Label armorLabel = labelPool.obtain();
             Label partLabel = labelPool.obtain();
             partLabel.setText(bodyPart.name());
-            armorLabel.setText(turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a,b) -> a+b).orElse(0) + " / " + turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a,b) -> a+b).orElse(0));
+            armorLabel.setText(turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0) + " / " + turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a, b) -> a + b).orElse(0));
             armorTooltipTable.add(partLabel).padRight(40 / SCREEN_HUD_RATIO);
             armorTooltipTable.add(armorLabel).row();
         });
@@ -245,14 +249,14 @@ public class HudElementsFacade {
             tooltipTable.add(ammoLabel).row();
         });
 
-        healthValueLabel.setText("" + (int)(100f * Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getHp(b)).reduce((a,b)->a+b).orElse(0) / (float)Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getMaxHp(b)).reduce((a,b)->a+b).orElse(0)));
+        healthValueLabel.setText("" + (int) (100f * Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getHp(b)).reduce((a, b) -> a + b).orElse(0) / (float) Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getMaxHp(b)).reduce((a, b) -> a + b).orElse(0)));
 
         healthTooltipTable.clear();
         Arrays.stream(BodyPart.values()).forEach(bodyPart -> {
             Label hpLabel = labelPool.obtain();
             Label partLabel = labelPool.obtain();
             partLabel.setText(bodyPart.name());
-            hpLabel.setText(+ turnProcessingFacade.getNext().getKey().getHp(bodyPart) + " / " + turnProcessingFacade.getNext().getKey().getMaxHp(bodyPart));
+            hpLabel.setText(+turnProcessingFacade.getNext().getKey().getHp(bodyPart) + " / " + turnProcessingFacade.getNext().getKey().getMaxHp(bodyPart));
             healthTooltipTable.add(partLabel);
             healthTooltipTable.add(hpLabel).row();
         });
