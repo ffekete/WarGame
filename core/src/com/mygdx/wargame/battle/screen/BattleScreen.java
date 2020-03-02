@@ -30,6 +30,7 @@ import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.input.BasicMouseHandlingInputAdapter;
+import com.mygdx.wargame.battle.screen.ui.GameEndFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
@@ -250,12 +251,24 @@ public class BattleScreen implements Screen {
             });
             hudStage.setScrollFocus(mechInfoPanelFacade.getIbTable());
 
+            GameEndFacade gameEndFacade = new GameEndFacade(screenLoader.getAssetManager(), actionLock);
+
+            gameEndFacade.create();
+
+            gameEndFacade.register(hudStage);
+
+            gameEndFacade.hide();
+
+            hudMediator.setGameEndFacade(gameEndFacade);
+
             firstRun = false;
         }
 
         Gdx.input.setInputProcessor(inputMultiplexer);
         hudElementsFacade.show();
         healthInfoPanelFacade.show();
+
+
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.ScalableProgressBar;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.*;
+import com.mygdx.wargame.common.ScreenRegister;
 import com.mygdx.wargame.component.heatsink.HeatSink;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.mech.AbstractMech;
@@ -134,108 +135,117 @@ public class TurnProcessingFacade {
             //centerCameraOnNext(stage);
         }
 
-        hudMediator.getHudElementsFacade().update();
+        if(team2.keySet().stream().noneMatch(Mech::isActive)) {
+            hudMediator.getGameEndFacade().setWon(true);
+            hudMediator.getGameEndFacade().show();
+        } else  if(team1.keySet().stream().noneMatch(Mech::isActive)){
+            hudMediator.getGameEndFacade().setWon(false);
+            hudMediator.getGameEndFacade().show();
+        } else {
 
-        Mech selectedMech = next.getKey();
-        Pilot selectedPilot = next.getValue();
+            hudMediator.getHudElementsFacade().update();
 
-        battleMap.removePath(next.getKey());
+            Mech selectedMech = next.getKey();
+            Pilot selectedPilot = next.getValue();
 
-        if (!selectedMech.isActive()) {
-            // skip, if deactivated
-            if (iterator.hasNext()) {
-                next = iterator.next();
-            }
-        } else if (team2.containsKey(selectedMech)) {
+            battleMap.removePath(next.getKey());
 
-            SequenceAction sequenceAction = new SequenceAction();
+            if (!selectedMech.isActive()) {
+                // skip, if deactivated
+                if (iterator.hasNext()) {
+                    next = iterator.next();
+                }
+            } else if (team2.containsKey(selectedMech)) {
 
-            sequenceAction.reset();
+                SequenceAction sequenceAction = new SequenceAction();
 
-            // lock all actions
-            sequenceAction.addAction(new LockAction(actionLock));
+                sequenceAction.reset();
 
-            sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
+                // lock all actions
+                sequenceAction.addAction(new LockAction(actionLock));
 
-            // reconnect graph so that attacker can move
-            battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+                sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
 
-            // calculate movement points
-            int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
-            selectedMech.resetMovementPoints(movementPoints);
+                // reconnect graph so that attacker can move
+                battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 
-            sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
-            sequenceAction.addAction(regenerateShields(selectedMech));
-            sequenceAction.addAction(new DelayAction(0.5f));
-            sequenceAction.addAction(reduceStabilityLevel(selectedMech));
+                // calculate movement points
+                int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
+                selectedMech.resetMovementPoints(movementPoints);
 
-            // find target
-            Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
+                sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
+                sequenceAction.addAction(regenerateShields(selectedMech));
+                sequenceAction.addAction(new DelayAction(0.5f));
+                sequenceAction.addAction(reduceStabilityLevel(selectedMech));
 
-            int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech);
+                // find target
+                Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
 
-            // move if target too far away
-            if (target.isPresent()) {
-                if (target.get().getTargetNode() != null) {
-                    System.out.println("Found target node");
+                int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech);
 
-                    // calculate path
-                    GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
-                            battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.get().getTargetNode().getX()][(int) target.get().getTargetNode().getY()]);
+                // move if target too far away
+                if (target.isPresent()) {
+                    if (target.get().getTargetNode() != null) {
+                        System.out.println("Found target node");
 
-                    battleMap.addPath(selectedMech, paths);
+                        // calculate path
+                        GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                                battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.get().getTargetNode().getX()][(int) target.get().getTargetNode().getY()]);
 
-                    sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, (AbstractMech) selectedMech, 0, battleMap));
+                        battleMap.addPath(selectedMech, paths);
 
-                } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
-                    // reconnect graph so that attacker can move
-                    battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+                        sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, (AbstractMech) selectedMech, 0, battleMap));
 
-                    // calculate path
-                    GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
-                            battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.get().getMech().getX()][(int) target.get().getMech().getY()]);
+                    } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
+                        // reconnect graph so that attacker can move
+                        battleMap.getNodeGraphLv1().reconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 
-                    battleMap.addPath(selectedMech, paths);
+                        // calculate path
+                        GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                                battleMap.getNodeGraphLv1().getNodeWeb()[(int) target.get().getMech().getX()][(int) target.get().getMech().getY()]);
 
-                    sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, (AbstractMech) selectedMech, 0, battleMap));
+                        battleMap.addPath(selectedMech, paths);
 
-                } else {
-                    // obstacle again, no movement
-                    battleMap.setPermanentObstacle(selectedMech.getX(), selectedMech.getY());
+                        sequenceAction.addAction(moveActorAlongPathActionFactory.act(paths, (AbstractMech) selectedMech, 0, battleMap));
+
+                    } else {
+                        // obstacle again, no movement
+                        battleMap.setPermanentObstacle(selectedMech.getX(), selectedMech.getY());
+                    }
+
+                    sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
+
+                    // then attack
+                    ParallelAction attackActions = new ParallelAction();
+                    attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
+                    attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
+                    attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap, rayHandler));
+                    AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
+                    sequenceAction.addAction(attackActions);
+                    sequenceAction.addAction(attackAction);
+                    sequenceAction.addAction(new ZoomToNormalCameraAction((OrthographicCamera) stage.getCamera()));
+                    sequenceAction.addAction(new UnlockAction(actionLock, ""));
+
+                    ((AbstractMech) selectedMech).addAction(sequenceAction);
                 }
 
-                sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
+            } else {
+                // wait for "next" button press
+                int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
+                selectedMech.resetMovementPoints(movementPoints);
 
-                // then attack
-                ParallelAction attackActions = new ParallelAction();
-                attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
-                attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap, rayHandler));
-                AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
-                sequenceAction.addAction(attackActions);
-                sequenceAction.addAction(attackAction);
-                sequenceAction.addAction(new ZoomToNormalCameraAction((OrthographicCamera) stage.getCamera()));
+                SequenceAction sequenceAction = new SequenceAction();
+                sequenceAction.addAction(new LockAction(actionLock));
+                sequenceAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
+                sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, selectedMech));
+                sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
+                sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
+                sequenceAction.addAction(regenerateShields(selectedMech));
+                sequenceAction.addAction(new DelayAction(0.5f));
+                sequenceAction.addAction(reduceStabilityLevel(selectedMech));
                 sequenceAction.addAction(new UnlockAction(actionLock, ""));
-
                 ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
-
-        } else {
-            // wait for "next" button press
-            int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
-            selectedMech.resetMovementPoints(movementPoints);
-
-            SequenceAction sequenceAction = new SequenceAction();
-            sequenceAction.addAction(new LockAction(actionLock));
-            sequenceAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
-            sequenceAction.addAction(new AddMovementMarkersAction(stageElementsStorage, movementMarkerFactory, battleMap, selectedMech));
-            sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
-            sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
-            sequenceAction.addAction(regenerateShields(selectedMech));
-            sequenceAction.addAction(new DelayAction(0.5f));
-            sequenceAction.addAction(reduceStabilityLevel(selectedMech));
-            sequenceAction.addAction(new UnlockAction(actionLock, ""));
-            ((AbstractMech) selectedMech).addAction(sequenceAction);
         }
 
     }
