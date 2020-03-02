@@ -99,6 +99,7 @@ public class ScreenLoader {
         assetManager.load("skin/CalledShotDown.png", Texture.class);
         assetManager.load("skin/HideButtonUp.png", Texture.class);
         assetManager.load("skin/HideButtonDown.png", Texture.class);
+        assetManager.load("skin/SimplePanel.png", Texture.class);
         assetManager.finishLoading();
     }
 

@@ -115,6 +115,9 @@ public class HudElementsFacade {
             }
         });
 
+        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH - (80 / SCREEN_HUD_RATIO), 0);
+        endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+
         upperHud = new Table();
         upperHud.left();
 
@@ -134,7 +137,7 @@ public class HudElementsFacade {
         armorTooltipTable = new Table();
         armorToolTip = new Tooltip<>(armorTooltipTable);
         armorToolTip.setInstant(true);
-        armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         armorValueLabel.addListener(armorToolTip);
         armorImage.addListener(armorToolTip);
@@ -148,7 +151,7 @@ public class HudElementsFacade {
         tooltipTable = new Table();
         ammoToolTip = new Tooltip<Table>(tooltipTable);
         ammoToolTip.setInstant(true);
-        tooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        tooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         ammoValueLabel.addListener(ammoToolTip);
         ammoImage.addListener(ammoToolTip);
@@ -162,7 +165,7 @@ public class HudElementsFacade {
         healthTooltipTable = new Table();
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
         healthToolTip.setInstant(true);
-        healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         healthValueLabel.addListener(healthToolTip);
         healthImage.addListener(healthToolTip);
@@ -176,7 +179,7 @@ public class HudElementsFacade {
         heatTooltipTable = new Table();
         heatToolTip = new Tooltip<Table>(heatTooltipTable);
         heatToolTip.setInstant(true);
-        heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         heatValueLabel.addListener(heatToolTip);
         heatImage.addListener(heatToolTip);
@@ -191,7 +194,7 @@ public class HudElementsFacade {
         stabilityTooltipTable = new Table();
         stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
         stabilityToolTip.setInstant(true);
-        stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         stabilityValueLabel.addListener(stabilityToolTip);
         stabilityImage.addListener(stabilityToolTip);
@@ -207,14 +210,13 @@ public class HudElementsFacade {
     }
 
     public void hide() {
-        endTurnButton.setSize(0, 0);
-        upperHud.setSize(0, 0);
+        endTurnButton.setVisible(false);
+        upperHud.setVisible(false);
     }
 
     public void show() {
-        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH - (80 / SCREEN_HUD_RATIO), 0);
-        endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
-        upperHud.setSize(HUD_VIEWPORT_WIDTH, 60 / SCREEN_HUD_RATIO);
+        endTurnButton.setVisible(true);
+        upperHud.setVisible(true);
     }
 
     public void update() {

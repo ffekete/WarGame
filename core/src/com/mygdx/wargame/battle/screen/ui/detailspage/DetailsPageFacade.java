@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.screen.ui.detailspage;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -57,25 +58,25 @@ public class DetailsPageFacade {
 
     public void create() {
 
-        textTooltipStyle = new TextTooltip.TextTooltipStyle(labelStyle, new TextureRegionDrawable(assetManager.get("skin/InfoPanel.png", Texture.class)));
+        textTooltipStyle = new TextTooltip.TextTooltipStyle(labelStyle, new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class)));
 
         headImage = new Image(assetManager.get("details/HeadIcon.png", Texture.class));
-        headImage.addListener(new TextTooltip("Head health", textTooltipStyle));
+        headImage.addListener(new TextTooltip(" Head health ", textTooltipStyle));
 
         torsoImage = new Image(assetManager.get("details/TorsoIcon.png", Texture.class));
-        torsoImage.addListener(new TextTooltip("Torso health", textTooltipStyle));
+        torsoImage.addListener(new TextTooltip(" Torso health ", textTooltipStyle));
 
         leftArmImage = new Image(assetManager.get("details/LeftArmIcon.png", Texture.class));
-        leftArmImage.addListener(new TextTooltip("Left arm health", textTooltipStyle));
+        leftArmImage.addListener(new TextTooltip(" Left arm health ", textTooltipStyle));
 
         rightArmImage = new Image(assetManager.get("details/RightArmIcon.png", Texture.class));
-        rightArmImage.addListener(new TextTooltip("Right arm health", textTooltipStyle));
+        rightArmImage.addListener(new TextTooltip(" Right arm health ", textTooltipStyle));
 
         leftLegImage = new Image(assetManager.get("details/LeftLegIcon.png", Texture.class));
-        leftLegImage.addListener(new TextTooltip("Left leg health", textTooltipStyle));
+        leftLegImage.addListener(new TextTooltip(" Left leg health ", textTooltipStyle));
 
         rightLegImage = new Image(assetManager.get("details/RightLegIcon.png", Texture.class));
-        rightLegImage.addListener(new TextTooltip("Right leg health", textTooltipStyle));
+        rightLegImage.addListener(new TextTooltip(" Right leg health ", textTooltipStyle));
 
 
         mechInfoPanelFacade.getDetailsButton().addListener(new ClickListener() {

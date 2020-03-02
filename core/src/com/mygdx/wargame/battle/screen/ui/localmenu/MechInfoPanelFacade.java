@@ -118,7 +118,6 @@ public class MechInfoPanelFacade extends Actor {
                 hudMediator.getHealthInfoPanelFacade().hide();
                 hudMediator.getHudElementsFacade().hide();
                 hideLocalMenu();
-                hideLocalMenu();
                 // show this one
                 weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 return true;
@@ -147,6 +146,7 @@ public class MechInfoPanelFacade extends Actor {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 hudMediator.getHealthInfoPanelFacade().show();
+                hudMediator.getHudElementsFacade().show();
                 weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
                 weaponSelectionContainerHidden = true;
                 return true;
