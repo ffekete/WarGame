@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.screen.ui;
 
 import com.mygdx.wargame.battle.screen.ui.detailspage.DetailsPageFacade;
+import com.mygdx.wargame.battle.screen.ui.detailspage.PilotDetailsFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
@@ -15,6 +16,7 @@ public class HUDMediator {
     private DetailsPageFacade detailsPageFacade;
     private MainMenuFacade mainMenuFacade;
     private GameEndFacade gameEndFacade;
+    private PilotDetailsFacade pilotDetailsFacade;
 
     public HUDMediator() {
     }
@@ -25,6 +27,7 @@ public class HUDMediator {
         enemyMechInfoPanelFacade.hideLocalMenu();
         targetingPanelFacade.hide();
         healthInfoPanelFacade.hide();
+        pilotDetailsFacade.hide();
     }
 
     public void setHudElementsFacade(HudElementsFacade hudElementsFacade) {
@@ -89,5 +92,13 @@ public class HUDMediator {
 
     public void setGameEndFacade(GameEndFacade gameEndFacade) {
         this.gameEndFacade = gameEndFacade;
+    }
+
+    public PilotDetailsFacade getPilotDetailsFacade() {
+        return pilotDetailsFacade;
+    }
+
+    public void setPilotDetailsFacade(PilotDetailsFacade pilotDetailsFacade) {
+        this.pilotDetailsFacade = pilotDetailsFacade;
     }
 }

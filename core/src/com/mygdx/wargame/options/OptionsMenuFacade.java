@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.common.ScreenRegister;
 
+import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+
 public class OptionsMenuFacade {
 
     private TextButton.TextButtonStyle textButtonStyle;
@@ -44,7 +46,7 @@ public class OptionsMenuFacade {
             }
         });
 
-        outerTable.add(resumeButton).center().size(100, 50);
+        outerTable.add(resumeButton).center().size(400 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO);
     }
 
 

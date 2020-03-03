@@ -91,7 +91,7 @@ public class MechClickInputListener extends InputListener {
             if (!mechInfoPanelFacade.isLocalMenuVisible()) {
 
                 mechInfoPanelFacade.getIbTable().clear();
-
+                hudMediator.getPilotDetailsFacade().update(pilot);
                 addSelectAllWeaponsCheckbox();
                 updateDetailsButton();
                 updateCloseMenuButton();

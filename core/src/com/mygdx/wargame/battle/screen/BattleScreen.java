@@ -37,6 +37,7 @@ import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.screen.ui.MainMenuFacade;
 import com.mygdx.wargame.battle.screen.ui.SelectionMarker;
 import com.mygdx.wargame.battle.screen.ui.detailspage.DetailsPageFacade;
+import com.mygdx.wargame.battle.screen.ui.detailspage.PilotDetailsFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.EnemyMechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
@@ -260,6 +261,14 @@ public class BattleScreen implements Screen {
             gameEndFacade.hide();
 
             hudMediator.setGameEndFacade(gameEndFacade);
+
+            PilotDetailsFacade pilotDetailsFacade = new PilotDetailsFacade(screenLoader.getAssetManager(), hudMediator);
+
+            pilotDetailsFacade.create();
+            pilotDetailsFacade.register(hudStage);
+            pilotDetailsFacade.hide();
+
+            hudMediator.setPilotDetailsFacade(pilotDetailsFacade);
 
             firstRun = false;
         }

@@ -1,25 +1,64 @@
 package com.mygdx.wargame.pilot;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 public class PilotCreator {
+
+    Set<String> names = ImmutableSet.<String>builder()
+            .add("Ace")
+            .add("Brave")
+            .add("Huston")
+            .add("Bravo")
+            .add("Charlie")
+            .add("Alpha")
+            .add("Taurus")
+            .add("Eagle")
+            .add("Hawk")
+            .add("Patch")
+            .add("Dirk")
+            .add("Kirk")
+            .add("Longshot")
+            .add("Dragon")
+            .add("Slime")
+            .add("Snail")
+            .add("Croc")
+            .add("Diamond")
+            .build();
+
     public Pilot getPilot() {
-        return new Pilot(ImmutableMap.
-                <Skill, Integer>builder()
-                .put(Skill.Entrenching, 5)
-                .put(Skill.Targeting, 5)
-                .put(Skill.PlasmaWeapons, 5)
-                .put(Skill.Ballistics, 5)
-                .put(Skill.Flamer, 5)
-                .put(Skill.IonWeapons, 5)
-                .put(Skill.Lasers, 5)
-                .put(Skill.Missiles, 5)
-                .put(Skill.Evading, 5)
-                .put(Skill.Piloting, 5)
-                .put(Skill.Shields, 5)
-                .build(),
-                ImmutableSet.of()
+
+        Map<Skill, Integer> skills = new HashMap<>();
+
+        skills.put(Skill.Entrenching, new Random().nextInt(10));
+        skills.put(Skill.Targeting, new Random().nextInt(10));
+        skills.put(Skill.PlasmaWeapons, new Random().nextInt(10));
+        skills.put(Skill.Ballistics, new Random().nextInt(10));
+        skills.put(Skill.Flamer, new Random().nextInt(10));
+        skills.put(Skill.IonWeapons, new Random().nextInt(10));
+        skills.put(Skill.Lasers, new Random().nextInt(10));
+        skills.put(Skill.Missiles, new Random().nextInt(10));
+        skills.put(Skill.Evading, new Random().nextInt(10));
+        skills.put(Skill.Piloting, new Random().nextInt(10));
+
+        Pilot pilot = new Pilot(skills,
+                new HashSet<>()
         );
+
+        Arrays.stream(Perks.values()).forEach(perk -> {
+            if (new Random().nextInt(10) == 0) {
+                pilot.getPerks().add(perk);
+            }
+        });
+
+        pilot.setName((String)names.toArray()[new Random().nextInt(names.size())]);
+
+        return pilot;
     }
 }

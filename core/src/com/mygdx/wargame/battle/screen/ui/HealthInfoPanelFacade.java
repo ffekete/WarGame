@@ -79,13 +79,13 @@ public class HealthInfoPanelFacade {
         panel.add(leftArmImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add().row();
 
-        panel.add().size(10);
+        panel.add().size(40 / SCREEN_HUD_RATIO);
         panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add(rightLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add().size(5 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add(leftLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
-        panel.add().size(10);
+        panel.add().size(40 / SCREEN_HUD_RATIO);
 
         panel.setColor(Color.valueOf("FFFFFFBB"));
     }

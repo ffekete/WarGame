@@ -10,6 +10,7 @@ public class Pilot {
     private Map<Skill, Integer> skills;
     private Set<Perks> perks;
     private Mech mech;
+    private String name;
 
     public Pilot(Map<Skill, Integer> skills, Set<Perks> perks) {
         this.skills = skills;
@@ -43,5 +44,13 @@ public class Pilot {
 
     public void setMech(Mech mech) {
         this.mech = mech;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
