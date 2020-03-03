@@ -2,7 +2,7 @@ package com.mygdx.wargame.battle.unit;
 
 public enum Direction {
 
-    Up(false, 0), Down(true, 0), Left(false, 0), Right(true, 0);
+    Up(true, 0), Down(false, 0), Left(false, 0), Right(true, 0);
 
     private boolean mirrored;
     private int offset;

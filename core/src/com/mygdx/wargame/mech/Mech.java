@@ -34,8 +34,6 @@ public interface Mech extends Comparable<Mech> {
 
     void setHeatLevel(int amount);
 
-    void setCoordinates(float x, float y);
-
     int getRemainingMovementPoints();
 
     int getMaxMovementPoints();

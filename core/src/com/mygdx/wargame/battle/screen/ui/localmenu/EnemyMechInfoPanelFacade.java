@@ -52,11 +52,10 @@ public class EnemyMechInfoPanelFacade {
         this.rangedAttackTargetCalculator = rangedAttackTargetCalculator;
 
         ImageButton.ImageButtonStyle hideMenuButtonsSelectionStyle = new ImageButton.ImageButtonStyle();
-        hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
-        hideMenuButtonsSelectionStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonDown.png")));
+        hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/ExitLocalMenuButton.png")));
 
         hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        hideMenuButton.setSize(hideMenuButton.getWidth() / SCREEN_HUD_RATIO, hideMenuButton.getHeight() / SCREEN_HUD_RATIO);
+        hideMenuButton.setSize(hideMenuButton.getWidth() / 2, hideMenuButton.getHeight() / 2);
         hideMenuButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -67,7 +66,7 @@ public class EnemyMechInfoPanelFacade {
         });
 
         attackButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        attackButton.setSize(attackButton.getWidth() / SCREEN_HUD_RATIO, attackButton.getHeight() / SCREEN_HUD_RATIO);
+        attackButton.setSize(attackButton.getWidth() / 2, attackButton.getHeight() / 2);
         attackButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -81,11 +80,10 @@ public class EnemyMechInfoPanelFacade {
 
 
         ImageButton.ImageButtonStyle calledShotButtonStyle = new ImageButton.ImageButtonStyle();
-        calledShotButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CalledShotUp.png")));
-        calledShotButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CalledShotDown.png")));
+        calledShotButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/CalledShotUp.png")));
 
         aimedAttackButton = new ImageButton(calledShotButtonStyle);
-        aimedAttackButton.setSize(aimedAttackButton.getWidth() / SCREEN_HUD_RATIO, aimedAttackButton.getHeight() / SCREEN_HUD_RATIO);
+        aimedAttackButton.setSize(aimedAttackButton.getWidth() / 2, aimedAttackButton.getHeight() / 2);
 
         aimedAttackButton.addListener(new ClickListener() {
             @Override

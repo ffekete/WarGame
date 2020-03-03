@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.screen;
 
+import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -78,6 +79,7 @@ public class BattleScreen implements Screen {
     private HudElementsFacade hudElementsFacade;
     private boolean firstRun = true;
     private InputMultiplexer inputMultiplexer;
+    PointLight pointLight;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -127,7 +129,7 @@ public class BattleScreen implements Screen {
 
             BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
 
-            battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE);
+            battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE, world);
 
             battleScreenInputDataStubber.stub(battleScreenInputData, battleMap);
 
@@ -317,11 +319,12 @@ public class BattleScreen implements Screen {
             healthInfoPanelFacade.update(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
         }
 
+        rayHandler.setCombinedMatrix(camera);
+        rayHandler.updateAndRender();
+
         hudStage.act();
         hudStage.draw();
 
-        rayHandler.setCombinedMatrix(camera);
-        rayHandler.updateAndRender();
     }
 
     @Override

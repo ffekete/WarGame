@@ -101,6 +101,12 @@ public class ScreenLoader {
         assetManager.load("skin/HideButtonUp.png", Texture.class);
         assetManager.load("skin/HideButtonDown.png", Texture.class);
         assetManager.load("skin/SimplePanel.png", Texture.class);
+
+        assetManager.load("localmenu/AttackButton.png", Texture.class);
+        assetManager.load("localmenu/CalledShotUp.png", Texture.class);
+        assetManager.load("localmenu/DetailsButton.png", Texture.class);
+        assetManager.load("localmenu/ExitLocalMenuButton.png", Texture.class);
+        assetManager.load("localmenu/PilotButton.png", Texture.class);
         assetManager.finishLoading();
     }
 

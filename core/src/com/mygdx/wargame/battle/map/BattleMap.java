@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.mech.Mech;
 
@@ -30,12 +31,14 @@ public class BattleMap {
     private TextureRegionSelector textureRegionSelector;
     private int unitSize;
     private int[][] fireMap;
+    private World world;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize) {
+    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize, World world) {
         this.width = x;
         this.height = y;
+        this.world = world;
 
         fireMap = new int[x][y];
 
@@ -166,5 +169,9 @@ public class BattleMap {
 
     public int[][] getFireMap() {
         return fireMap;
+    }
+
+    public World getWorld() {
+        return world;
     }
 }

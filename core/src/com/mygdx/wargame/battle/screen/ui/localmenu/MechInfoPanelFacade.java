@@ -58,8 +58,7 @@ public class MechInfoPanelFacade extends Actor {
         smallLabelStyle.font = smallFont;
 
         ImageButton.ImageButtonStyle hideMenuButtonsSelectionStyle = new ImageButton.ImageButtonStyle();
-        hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
-        hideMenuButtonsSelectionStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonDown.png")));
+        hideMenuButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/ExitLocalMenuButton.png")));
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = smallFont;
@@ -86,19 +85,17 @@ public class MechInfoPanelFacade extends Actor {
         stabilityProgressBarStyle.knob = new TextureRegionDrawable(new Texture(Gdx.files.internal("StabilityProgressBarKnob.png")));
 
         ImageButton.ImageButtonStyle detailsImageButtonStyle = new ImageButton.ImageButtonStyle();
-        detailsImageButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/DetailsButtonUp.png")));
-        detailsImageButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/DetailsButtonDown.png")));
+        detailsImageButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/DetailsButton.png")));
 
         detailsButton = new ImageButton(detailsImageButtonStyle);
-        detailsButton.setSize(detailsButton.getWidth() / SCREEN_HUD_RATIO, detailsButton.getHeight() / SCREEN_HUD_RATIO);
+        detailsButton.setSize(detailsButton.getWidth() / 2, detailsButton.getHeight() / 2);
 
         detailsButton.setVisible(true);
 
         ImageButton.ImageButtonStyle pilotButtonStyle = new ImageButton.ImageButtonStyle();
-        pilotButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PilotButtonUp.png")));
-        pilotButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PilotButtonDown.png")));
+        pilotButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/PilotButton.png")));
         pilotButton = new ImageButton(pilotButtonStyle);
-        pilotButton.setSize(pilotButton.getWidth() / SCREEN_HUD_RATIO, pilotButton.getHeight() / SCREEN_HUD_RATIO);
+        pilotButton.setSize(pilotButton.getWidth() / 2, pilotButton.getHeight() / 2);
         pilotButton.addListener(new ClickListener() {
 
             @Override
@@ -110,8 +107,7 @@ public class MechInfoPanelFacade extends Actor {
         });
 
         ImageButton.ImageButtonStyle weaponSelectionButtonStyle = new ImageButton.ImageButtonStyle();
-        weaponSelectionButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/WeaponSelectionButtonUp.png")));
-        weaponSelectionButtonStyle.imageDown = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/WeaponSelectionButtonDown.png")));
+        weaponSelectionButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/AttackButton.png")));
         weaponSelectionButton = new ImageButton(weaponSelectionButtonStyle);
 
         weaponSelectionButton.addListener(new ClickListener() {
@@ -126,7 +122,7 @@ public class MechInfoPanelFacade extends Actor {
             }
         });
 
-        weaponSelectionButton.setSize(weaponSelectionButton.getWidth() / SCREEN_HUD_RATIO, weaponSelectionButton.getHeight() / SCREEN_HUD_RATIO);
+        weaponSelectionButton.setSize(weaponSelectionButton.getWidth() / 2, weaponSelectionButton.getHeight() / 2);
 
         weaponSelectionScrollPane = new ScrollPane(ibTable, weaponsListScrollPaneStyle);
         //weaponSelectionScrollPane.setDebug(true);
@@ -169,7 +165,7 @@ public class MechInfoPanelFacade extends Actor {
 
         // hide menu
         hideMenuButton = new ImageButton(hideMenuButtonsSelectionStyle);
-        hideMenuButton.setSize(hideMenuButton.getWidth() / SCREEN_HUD_RATIO, hideMenuButton.getHeight() / SCREEN_HUD_RATIO);
+        hideMenuButton.setSize(hideMenuButton.getWidth() / 2, hideMenuButton.getHeight() / 2);
         hideMenuButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

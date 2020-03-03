@@ -176,11 +176,6 @@ AbstractMech extends Actor implements Mech {
     }
 
     @Override
-    public void setCoordinates(float x, float y) {
-        super.setPosition(x, y);
-    }
-
-    @Override
     public int getStability() {
         return stability;
     }
