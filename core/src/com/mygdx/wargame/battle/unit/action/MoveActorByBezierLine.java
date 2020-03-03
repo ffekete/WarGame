@@ -22,16 +22,6 @@ public class MoveActorByBezierLine extends TemporalAction {
 
         myCatmull = new CatmullRomSpline<Vector2>(points, false);
     }
-//
-//    @Override
-//    public boolean act(float delta) {
-//        Vector2 v = new Vector2();
-//        path1.valueAt(v, actualPoint);
-//        actualPoint++;
-//        this.getActor().setPosition(v.x, v.y);
-//
-//        return false;
-//    }
 
     @Override
     protected void update(float percent) {
@@ -39,9 +29,9 @@ public class MoveActorByBezierLine extends TemporalAction {
         Vector2 out = new Vector2();
 
 
-        myCatmull.valueAt(out, percent < 1 ? percent : 0.99f);
+        myCatmull.valueAt(out, percent);
         getActor().setPosition(out.x, out.y);
-        //System.out.println(" Move to: "  + out.x + " " + out.y);
+        //System.out.println(" Move to: "  + out.x + " " + out.y + actor);
         myCatmull.derivativeAt(out, percent);
         getActor().setRotation(out.angle());
     }

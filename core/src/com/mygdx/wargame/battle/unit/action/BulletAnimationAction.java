@@ -109,7 +109,6 @@ BulletAnimationAction extends Action {
                     bullet = new LaserBullet(assetManager);
                 } else if (weapon.getType() == WeaponType.Ion) {
                     bullet = new IonBullet(assetManager);
-
                 } else if (weapon.getType() == WeaponType.Flamer) {
                     bullet = new FlameBullet(assetManager);
 
@@ -173,8 +172,8 @@ BulletAnimationAction extends Action {
 
 
                     ParallelAction waitAndShake = new ParallelAction();
-                    waitAndShake.addAction(new ShakeAction(1f, (Actor)defenderMech));
-                    mapUtils.nrOfTreesOnTile(stageElementsStorage, defenderMech.getX(), defenderMech.getY()).forEach(tree-> waitAndShake.addAction(new ShakeAction(1.1f, tree)));
+                    waitAndShake.addAction(new ShakeAction(1f, (Actor) defenderMech));
+                    mapUtils.nrOfTreesOnTile(stageElementsStorage, defenderMech.getX(), defenderMech.getY()).forEach(tree -> waitAndShake.addAction(new ShakeAction(1.1f, tree)));
                     explosionAction.addAction(waitAndShake);
 
 

@@ -3,7 +3,6 @@ package com.mygdx.wargame.battle.screen.ui.detailspage;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -91,7 +90,7 @@ public class PilotDetailsFacade {
         outerTable.add(exitPanelButton).colspan(3).center().size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).pad(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
 
         skillTable.pad(60 / SCREEN_HUD_RATIO);
-        
+
         perkTable.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT / 3);
         perkTable.pad(60 / SCREEN_HUD_RATIO);
     }

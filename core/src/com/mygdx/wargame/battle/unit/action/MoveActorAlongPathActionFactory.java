@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -11,6 +12,7 @@ import com.mygdx.wargame.battle.action.SetTemporaryObstacleAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
+import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.decor.Birds;
@@ -57,20 +59,42 @@ public class MoveActorAlongPathActionFactory {
 
                 ParallelAction moveAndShakeTreesAction = new ParallelAction();
 
-                MoveToAction moveToActionStep = new MoveToAction();
-                moveToActionStep.setPosition(node.getX(), node.getY());
-                moveToActionStep.setDuration(1.1f);
+
+                // Jump to water or normal walk?
+                MoveToAction moveToActionStep;
+                if (node.getGroundOverlay() != null && node.getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && (latest.getGroundOverlay() == null || latest.getGroundOverlay().getTileOverlayType() != TileOverlayType.Water)) {
+                    moveToActionStep = new JumpInAction(latest.getX(), latest.getY(), node.getX(), node.getY(), attacker, assetManager, stageElementsStorage);
+
+                } else if ((node.getGroundOverlay() == null || node.getGroundOverlay().getTileOverlayType() != TileOverlayType.Water) && (latest.getGroundOverlay() != null && latest.getGroundOverlay().getTileOverlayType() == TileOverlayType.Water)) {
+                    moveToActionStep = new JumpOutOfWaterAction(latest.getX(), latest.getY(), node.getX(), node.getY(), attacker, assetManager, stageElementsStorage);
+
+                } else {
+                    moveToActionStep = new MoveToAction();
+                    moveToActionStep.setPosition(node.getX(), node.getY());
+                    moveToActionStep.setDuration(1.1f);
+                }
+
 
                 float nodex = node.getX();
                 float nodey = node.getY();
 
-                mapUtils.nrOfTreesOnTile(stageElementsStorage, node.getX(), node.getY()).forEach(tree-> {
+                mapUtils.nrOfTreesOnTile(stageElementsStorage, node.getX(), node.getY()).forEach(tree -> {
                     moveAndShakeTreesAction.addAction(new ShakeAction(1.1f, tree));
-                    if(new Random().nextInt(100) == 0)
-                        moveAndShakeTreesAction.addAction(new AddActorAction(stageElementsStorage.airLevel, new Birds(assetManager,nodex, nodey)));
+                    if (new Random().nextInt(100) == 0)
+                        moveAndShakeTreesAction.addAction(new AddActorAction(stageElementsStorage.airLevel, new Birds(assetManager, nodex, nodey)));
                 });
 
-                moveAndShakeTreesAction.addAction(moveToActionStep);
+                if(moveToActionStep.getClass() == JumpInAction.class) {
+                    SequenceAction sequenceAction = new SequenceAction();
+
+                    sequenceAction.addAction(moveToActionStep);
+                    sequenceAction.addAction(new DelayAction(0.5f));
+                    sequenceAction.addAction(new SetStateAction(attacker, State.Walk));
+
+                    moveAndShakeTreesAction.addAction(sequenceAction);
+                } else {
+                    moveAndShakeTreesAction.addAction(moveToActionStep);
+                }
 
                 moveToAction.addAction(moveAndShakeTreesAction);
 

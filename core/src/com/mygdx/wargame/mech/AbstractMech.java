@@ -87,7 +87,7 @@ AbstractMech extends Actor implements Mech {
             if (slow == 0) {
                 step++;
                 if (step >= state.getEnd()) {
-                    if (state != State.Dead)
+                    if (state != State.Dead && state != State.Jump)
                         step = state.getStart();
                     else
                         step = state.getEnd() - 1;
@@ -120,7 +120,7 @@ AbstractMech extends Actor implements Mech {
         }
 
         if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay() != null &&
-                battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
+                battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && state != State.Jump) {
             texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 10);
         } else {
             texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);

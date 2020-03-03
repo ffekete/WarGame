@@ -12,13 +12,15 @@ public class TargetingFacade {
 
     private FirstTargetStrategy firstTargetStrategy = new FirstTargetStrategy();
     private WeakestTargetStrategy weakestTargetStrategy = new WeakestTargetStrategy();
+    private FlankingTargetStrategy flankingTargetStrategy = new FlankingTargetStrategy();
 
     public Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap) {
 
         if (pilot.hasPerk(Perks.Cautious)) {
-            return weakestTargetStrategy.findTarget(pilot, mech, targets, battleMap, null);
+            return flankingTargetStrategy.findTarget(pilot, mech, targets, battleMap, weakestTargetStrategy);
         }
-        return new FlankingTargetStrategy().findTarget(pilot, mech, targets, battleMap, firstTargetStrategy);
+
+        return flankingTargetStrategy.findTarget(pilot, mech, targets, battleMap, firstTargetStrategy);
 
     }
 

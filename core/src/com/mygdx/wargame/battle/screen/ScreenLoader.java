@@ -39,6 +39,7 @@ public class ScreenLoader {
         assetManager.load("GrassDecoration03.png", Texture.class);
         assetManager.load("Flame.png", Texture.class);
         assetManager.load("objects/Crater.png", Texture.class);
+        assetManager.load("Splash.png", Texture.class);
 
         assetManager.load("details/HeadIcon.png", Texture.class);
         assetManager.load("details/TorsoIcon.png", Texture.class);
