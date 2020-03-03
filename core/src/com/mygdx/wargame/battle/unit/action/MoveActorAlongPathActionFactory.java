@@ -84,7 +84,7 @@ public class MoveActorAlongPathActionFactory {
                         moveAndShakeTreesAction.addAction(new AddActorAction(stageElementsStorage.airLevel, new Birds(assetManager, nodex, nodey)));
                 });
 
-                if(moveToActionStep.getClass() == JumpInAction.class) {
+                if(moveToActionStep.getClass() == JumpInAction.class || moveToActionStep.getClass() == JumpOutOfWaterAction.class) {
                     SequenceAction sequenceAction = new SequenceAction();
 
                     sequenceAction.addAction(moveToActionStep);

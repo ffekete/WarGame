@@ -36,7 +36,7 @@ public class JumpInAction extends MoveToAction {
             mech.setState(State.Jump);
         } else {
             mech.addAction(new AddActorAction(stageElementsStorage.mechLevel, new Splash(assetManager, mech.getX(), mech.getY() - 0.3f)));
-            mech.setState(State.Idle);
+            mech.setState(State.Crouch);
         }
         moveActorByBezierLine.update(percent);
     }

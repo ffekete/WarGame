@@ -74,6 +74,9 @@ public class HudElementsFacade {
 
     private Pool<Label> labelPool;
 
+    private Label pilotNameLabel;
+    private Label mechNameLabel;
+
     public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, ActionLock actionLock) {
         this.assetManager = assetManager;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -220,6 +223,11 @@ public class HudElementsFacade {
         stabilityImage.addListener(stabilityToolTip);
         stabilityTooltipTable.add(new Label("When stability level reaches 0 the mech cannot move anymore.", labelStyle));
 
+        mechNameLabel = labelPool.obtain();
+        pilotNameLabel = labelPool.obtain();
+
+        upperHud.add(mechNameLabel).padRight(20 / SCREEN_HUD_RATIO);
+        upperHud.add(pilotNameLabel).padRight(20 / SCREEN_HUD_RATIO);
 
         show();
     }
@@ -280,6 +288,9 @@ public class HudElementsFacade {
         heatValueLabel.setText(turnProcessingFacade.getNext().getKey().getHeatLevel());
 
         stabilityValueLabel.setText(turnProcessingFacade.getNext().getKey().getStability());
+
+        pilotNameLabel.setText(turnProcessingFacade.getNext().getValue().getName());
+        mechNameLabel.setText("(" + turnProcessingFacade.getNext().getKey().getName() + ")");
     }
 
     private Optional<Integer> getAmmoCount() {

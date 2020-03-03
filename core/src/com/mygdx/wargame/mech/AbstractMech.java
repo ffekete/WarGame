@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
@@ -115,12 +114,12 @@ AbstractMech extends Actor implements Mech {
         if (slow == 11)
             slow = 0;
 
-        if(slow == 0) {
+        if (slow == 0) {
             shieldStep = (shieldStep + 1) % 6;
         }
 
-        if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay() != null &&
-                battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && state != State.Jump) {
+        if (battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay() != null &&
+                battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && state != State.Jump) {
             texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 10);
         } else {
             texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);
@@ -128,8 +127,8 @@ AbstractMech extends Actor implements Mech {
         texture.flip(direction.isMirrored(), false);
         spriteBatch.setColor(Color.valueOf("FFFFFF"));
 
-        if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay() != null &&
-                battleMap.getNodeGraphLv1().getNodeWeb()[(int)getX()][(int)getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
+        if (battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay() != null &&
+                battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && state != State.Jump) {
             spriteBatch.draw(texture, x, y + 0.3f, 1, 0.6f);
         } else {
             spriteBatch.draw(texture, x, y, 1, 1);

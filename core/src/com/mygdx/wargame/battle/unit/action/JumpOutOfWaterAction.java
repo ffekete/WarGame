@@ -40,7 +40,7 @@ public class JumpOutOfWaterAction extends MoveToAction {
             }
             mech.setState(State.Jump);
         } else {
-            mech.setState(State.Idle);
+            mech.setState(State.Crouch);
         }
         moveActorByBezierLine.update(percent);
     }
