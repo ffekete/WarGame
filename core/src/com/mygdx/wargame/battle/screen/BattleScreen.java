@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
@@ -79,7 +80,7 @@ public class BattleScreen implements Screen {
     private HudElementsFacade hudElementsFacade;
     private boolean firstRun = true;
     private InputMultiplexer inputMultiplexer;
-    PointLight pointLight;
+    private StageElementsStorage stageElementsStorage;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -97,7 +98,7 @@ public class BattleScreen implements Screen {
             rayHandler.setShadows(true);
             rayHandler.setAmbientLight(new Color(0.1f, 0.1f, 0f, 0.8f));
 
-            StageElementsStorage stageElementsStorage = new StageElementsStorage();
+            stageElementsStorage = new StageElementsStorage();
 
             screenConfiguration = new ScreenConfiguration(0, 0, 0);
 
@@ -289,6 +290,10 @@ public class BattleScreen implements Screen {
 
         camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
         camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
+
+        stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2f, camera.position.y - VIEWPORT_HEIGHT/ 2f, camera.position.x + VIEWPORT_WIDTH / 2f, camera.position.y + VIEWPORT_HEIGHT/ 2f));
+        stageElementsStorage.mechLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2f, camera.position.y - VIEWPORT_HEIGHT/ 2f, camera.position.x + VIEWPORT_WIDTH / 2f, camera.position.y + VIEWPORT_HEIGHT/ 2f));
+        stageElementsStorage.airLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2f, camera.position.y - VIEWPORT_HEIGHT/ 2f, camera.position.x + VIEWPORT_WIDTH / 2f, camera.position.y + VIEWPORT_HEIGHT/ 2f));
 
         DrawUtils.clearScreen();
 

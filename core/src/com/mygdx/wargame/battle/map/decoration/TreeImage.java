@@ -22,16 +22,9 @@ public class TreeImage extends Image implements Tree {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-
-        if(onScreen()) {
             batch.setColor(Color.valueOf("FFFFFF55"));
             batch.draw(shadows, getX(), getY(), 1, 1);
             batch.setColor(Color.WHITE);
             super.draw(batch, parentAlpha);
-        }
-    }
-
-    private boolean onScreen() {
-        return Math.abs(getStage().getCamera().position.x - getX()) < VIEWPORT_WIDTH / 2 && Math.abs(getStage().getCamera().position.y - getY()) < VIEWPORT_HEIGHT / 2;
     }
 }
