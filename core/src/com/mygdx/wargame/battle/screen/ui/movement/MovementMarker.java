@@ -26,7 +26,7 @@ public class MovementMarker extends Actor implements Pool.Poolable {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(Color.valueOf("FFFFFF11"));
+        batch.setColor(Color.valueOf("FFFFFF33"));
         batch.draw(texture, getX(), getY() - 0.2f, 1, 1);
         batch.setColor(Color.WHITE);
     }
@@ -40,7 +40,7 @@ public class MovementMarker extends Actor implements Pool.Poolable {
         this.label = new ScalableLabel("" + movementPointsCost, labelStyle, 0.015f);
 
         label.setPosition(getX() + 0.5f, getY() + 0.4f);
-        label.setColor(Color.valueOf("FFFFFF11"));
+        label.setColor(Color.valueOf("FFFFFF33"));
 
         label.setSize(10, 10);
         stageElementsStorage.groundLevel.addActor(label);

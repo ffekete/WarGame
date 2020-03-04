@@ -35,7 +35,7 @@ public class DamageCalculator {
     private AssetManager assetManager;
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
-    private MapUtils mapUtils = new MapUtils();
+    private FlankingCalculator flankingCalculator;
 
     public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, ActionLock actionLock) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
@@ -44,6 +44,7 @@ public class DamageCalculator {
         this.assetManager = assetManager;
         this.mechInfoPanelFacade = mechInfoPanelFacade;
         this.actionLock = actionLock;
+        this.flankingCalculator = new FlankingCalculator();
     }
 
     public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart, SequenceAction messageQue) {
@@ -69,12 +70,14 @@ public class DamageCalculator {
                     .reduce((a, b) -> a + b)
                     .orElse(0);
 
+            boolean isFlanked = flankingCalculator.isFlankedFromPosition(attackingMech.getX(), attackingMech.getY(), targetMech);
+
             if (shieldedValue > 0) {
-                reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1));
+                reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1) * (int)(isFlanked ? 1.2f : 1f), messageQue);
             } else {
 
                 // add heat
-                targetMech.setHeatLevel(targetMech.getHeatLevel() + weapon.getAdditionalHeatToEnemy() * (critical ? 2 : 1));
+                targetMech.setHeatLevel(targetMech.getHeatLevel() + weapon.getAdditionalHeatToEnemy() * (critical ? 2 : 1)* (int)(isFlanked ? 1.2f : 1f));
 
                 // get armor damage
                 int armorValue = targetMech.getComponents(bodyPart).stream()
@@ -86,20 +89,20 @@ public class DamageCalculator {
                 if (armorValue > 0) {
                     addExplosion(targetMech);
 
-                    showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1), messageQue);
-                    reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1), bodyPart);
+                    showMessage(targetMech, "Armor damaged: " + weapon.getArmorDamage() * (critical ? 2 : 1)* (int)(isFlanked ? 1.2f : 1f) + (critical ? " (crit) " : "") + (isFlanked ? " (flanked)" : ""), messageQue);
+                    reduceArmorValue(targetPilot, targetMech, weapon.getArmorDamage() * (critical ? 2 : 1)* (int)(isFlanked ? 1.2f : 1f), bodyPart);
                 } else {
                     // get hp damage
                     addExplosion(targetMech);
 
-                    int damage = weapon.getBodyDamage() * (critical ? 2 : 1);
+                    int damage = weapon.getBodyDamage() * (critical ? 2 : 1) * (int)(isFlanked ? 1.2f : 1f);
 
                     if (targetPilot.hasPerk(Perks.Robust)) {
                         double reduction = Math.ceil(damage * 0.05f);
                         damage -= (int) reduction;
                     }
 
-                    showMessage(targetMech, "Body damaged: " + damage, messageQue);
+                    showMessage(targetMech, "Body damaged: " + damage + (critical ? " (crit) " : "") + (isFlanked ? " (flanked)" : ""), messageQue);
 
                     targetMech.setHp(bodyPart, targetMech.getHp(bodyPart) - damage);
 
@@ -132,7 +135,7 @@ public class DamageCalculator {
         stageElementsStorage.airLevel.addAction(sequenceAction);
     }
 
-    private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage) {
+    private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage, SequenceAction messageQue) {
         int maxDamage = shieldDamage;
 
         if (pilot.hasPerk(Perks.Robust)) {
@@ -159,6 +162,7 @@ public class DamageCalculator {
                 int damage = Math.min(s.getShieldValue(), maxDamage);
                 maxDamage -= damage;
                 s.reduceShieldValue(damage);
+                showMessage(mech, "Shield damaged: " + damage, messageQue);
             }
         }
     }

@@ -70,6 +70,9 @@ public class MechClickInputListener extends InputListener {
         hudMediator.getHealthInfoPanelFacade().getNameLabel().setText(mec.getName());
         hudMediator.getHealthInfoPanelFacade().setLocked(true);
         hudMediator.getHealthInfoPanelFacade().update(pilot, mec);
+
+        System.out.println("Sheisse: " + battleMap.getNodeGraphLv1().getConnections(battleMap.getNodeGraphLv1().getNodeWeb()[(int)mec.getX()][(int)mec.getY()]).size);
+
         event.stop();
     }
 

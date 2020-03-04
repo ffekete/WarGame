@@ -8,16 +8,18 @@ import com.mygdx.wargame.component.armor.CompositeMaterialArmor;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.shield.SmallShieldModule;
 import com.mygdx.wargame.component.weapon.Status;
+import com.mygdx.wargame.component.weapon.ballistic.GaussCannon;
 import com.mygdx.wargame.component.weapon.ballistic.LargeCannon;
 import com.mygdx.wargame.component.weapon.ballistic.MachineGun;
 import com.mygdx.wargame.component.weapon.flamer.Flamer;
 import com.mygdx.wargame.component.weapon.ion.LargeIonCannon;
 import com.mygdx.wargame.component.weapon.laser.LargeLaser;
+import com.mygdx.wargame.component.weapon.laser.SmallLaser;
 import com.mygdx.wargame.component.weapon.missile.SwarmMissile;
 import com.mygdx.wargame.component.weapon.plasma.PlasmaCannon;
 import com.mygdx.wargame.mech.BodyPart;
 import com.mygdx.wargame.mech.Colossus;
-import com.mygdx.wargame.mech.Marauder;
+import com.mygdx.wargame.mech.Giant;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.mech.Scout;
 import com.mygdx.wargame.mech.WreckingBall;
@@ -81,50 +83,15 @@ public class BattleScreenInputDataStubber {
         LargeCannon largeCannon3 = new LargeCannon();
         largeCannon3.setStatus(Status.Selected);
 
-        LargeCannon largeCannon4 = new LargeCannon();
-        largeCannon4.setStatus(Status.Selected);
 
-        LargeCannon largeCannon5 = new LargeCannon();
-        largeCannon5.setStatus(Status.Selected);
+        unit2.addComponent(BodyPart.LeftArm, largeCannon2);
+        unit2.addComponent(BodyPart.RightArm, largeCannon3);
 
-        LargeCannon largeCannon6 = new LargeCannon();
-        largeCannon6.setStatus(Status.Selected);
-
-        LargeCannon largeCannon7 = new LargeCannon();
-        largeCannon7.setStatus(Status.Selected);
-
-        LargeCannon largeCannon8 = new LargeCannon();
-        largeCannon8.setStatus(Status.Selected);
-
-        LargeCannon largeCannon9 = new LargeCannon();
-        largeCannon9.setStatus(Status.Selected);
-
-        LargeCannon largeCannon10 = new LargeCannon();
-        largeCannon10.setStatus(Status.Selected);
-
-        LargeCannon largeCannon11 = new LargeCannon();
-        largeCannon11.setStatus(Status.Selected);
-
-        LargeCannon largeCannon12 = new LargeCannon();
-        largeCannon12.setStatus(Status.Selected);
-
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon2);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon3);
-        unit2.addComponent(BodyPart.RightLeg, largeCannon4);
-        unit2.addComponent(BodyPart.RightLeg, largeCannon5);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon6);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon7);
-        unit2.addComponent(BodyPart.LeftLeg, largeCannon8);
-        unit2.addComponent(BodyPart.Torso, largeCannon9);
-        unit2.addComponent(BodyPart.Torso, largeCannon10);
-        unit2.addComponent(BodyPart.Torso, largeCannon11);
-        unit2.addComponent(BodyPart.Torso, largeCannon12);
-
-        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager,battleMap);
+        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager, battleMap);
         unit.setPosition(5, 2);
         unit.setTeam(Team.enemy);
         unit.setActive(true);
-        unit.setStability(50);
+
         unit.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
         unit.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
         unit.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
@@ -134,12 +101,45 @@ public class BattleScreenInputDataStubber {
         largeLaser3.setStatus(Status.Selected);
         unit.addComponent(BodyPart.LeftLeg, largeLaser2);
         unit.addComponent(BodyPart.Torso, largeLaser3);
+        unit.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
+        unit.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
+        unit.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
+
+        Mech unit4 = new Giant("", spriteBatch, assetManager, battleMap);
+        unit4.setPosition(7,2);
+        unit4.setTeam(Team.enemy);
+        unit4.setActive(true);
+        unit4.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
+        unit4.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
+        unit4.addComponent(BodyPart.Torso, new CompositeMaterialArmor());
+        unit4.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
+        unit4.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
+        unit4.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
+
+        MachineGun machineGun1 = new MachineGun();
+        machineGun1.setStatus(Status.Selected);
+
+        GaussCannon gaussCannon = new GaussCannon();
+        gaussCannon.setStatus(Status.Selected);
+
+        SmallLaser smallLaser = new SmallLaser();
+        smallLaser.setStatus(Status.Selected);
+
+        SmallLaser smallLaser2 = new SmallLaser();
+        smallLaser.setStatus(Status.Selected);
+
+        unit.addComponent(BodyPart.LeftLeg, machineGun1);
+        unit.addComponent(BodyPart.Torso, gaussCannon);
+        unit.addComponent(BodyPart.Torso, smallLaser);
+        unit.addComponent(BodyPart.Torso, smallLaser2);
+
 
         PilotCreator pilotCreator = new PilotCreator();
 
         Pilot p1 = pilotCreator.getPilot();
         Pilot p2 = pilotCreator.getPilot();
         Pilot p3 = pilotCreator.getPilot();
+        Pilot p4 = pilotCreator.getPilot();
 
         battleScreenInputData.getGroup1().clear();
         battleScreenInputData.getGroup2().clear();
@@ -147,6 +147,7 @@ public class BattleScreenInputDataStubber {
         battleScreenInputData.getGroup1().put(unit2, p2);
         battleScreenInputData.getGroup1().put(unit3, p3);
         battleScreenInputData.getGroup2().put(unit, p1);
+        battleScreenInputData.getGroup2().put(unit4, p4);
     }
 
 }

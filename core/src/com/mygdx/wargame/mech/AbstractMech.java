@@ -149,7 +149,7 @@ AbstractMech extends Actor implements Mech {
         if (getShieldValue() > 0) {
             spriteBatch.setColor(Color.valueOf("FFFFFF55"));
             shieldTextureRegion.setRegion((shieldStep % 6) * 16, 0, 16, 16);
-            spriteBatch.draw(shieldTextureRegion, x - 0.2f, y - 0.2f, 1.4f, 1.4f);
+            spriteBatch.draw(shieldTextureRegion, x - 0.5f, y - 0.5f, 2f, 2f);
             spriteBatch.setColor(Color.WHITE);
         }
     }

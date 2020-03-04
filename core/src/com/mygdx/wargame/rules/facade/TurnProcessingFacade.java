@@ -210,7 +210,7 @@ public class TurnProcessingFacade {
 
                     } else {
                         // obstacle again, no movement
-                        battleMap.setPermanentObstacle(selectedMech.getX(), selectedMech.getY());
+                        battleMap.setTemporaryObstacle(selectedMech.getX(), selectedMech.getY());
                     }
 
                     sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));

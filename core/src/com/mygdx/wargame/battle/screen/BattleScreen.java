@@ -183,9 +183,8 @@ public class BattleScreen implements Screen {
 
             hudMediator.setEnemyMechInfoPanelFacade(enemyMechInfoPanelFacade);
 
-            battleMap.setTemporaryObstacle(1, 1);
-            battleMap.setTemporaryObstacle(5, 2);
-            battleMap.setTemporaryObstacle(6, 5);
+            battleScreenInputData.getGroup1().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
+            battleScreenInputData.getGroup2().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
 
             stage.addActor(stageElementsStorage.groundLevel);
             stage.addActor(stageElementsStorage.mechLevel);

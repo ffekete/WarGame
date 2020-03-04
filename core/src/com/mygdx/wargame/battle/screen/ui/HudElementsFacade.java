@@ -296,7 +296,7 @@ public class HudElementsFacade {
     private Optional<Integer> getAmmoCount() {
         return turnProcessingFacade.getNext().getKey().getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(w -> ((Weapon) w).getAmmo()).reduce((a, b) -> {
             return Optional.of(a.orElse(0) + b.orElse(0));
-        }).get();
+        }).orElse(Optional.of(0));
     }
 
     public Label getHeatValueLabel() {

@@ -43,6 +43,9 @@ public class MovementMarkerFactory {
             stageElementsStorage.groundLevel.addActor(movementMarker);
             stageElementsStorage.movementMarkerList.add(movementMarker);
         });
+
+        // clean up
+        battleMap.getNodeGraphLv1().disconnectCities(battleMap.getNodeGraphLv1().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
     }
 
     public void remove(MovementMarker movementMarker) {
