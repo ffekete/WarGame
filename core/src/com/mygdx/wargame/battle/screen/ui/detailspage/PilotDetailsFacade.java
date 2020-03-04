@@ -127,8 +127,14 @@ public class PilotDetailsFacade {
         skillTable.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT / 2);
         perkTable = new Table();
 
-        skillScrollPane = new ScrollPane(skillTable);
-        perkScrollPane = new ScrollPane(perkTable);
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPaneStyle.vScrollKnob = new TextureRegionDrawable(assetManager.get("skin/ScrollBarKnob.png", Texture.class));
+
+        skillScrollPane = new ScrollPane(skillTable, scrollPaneStyle);
+        skillScrollPane.setScrollbarsVisible(true);
+
+        perkScrollPane = new ScrollPane(perkTable, scrollPaneStyle);
+        perkScrollPane.setScrollbarsVisible(true);
 
         outerTable.add();
         outerTable.add(pilotNameLabel).pad(60 / SCREEN_HUD_RATIO);
