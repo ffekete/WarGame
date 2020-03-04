@@ -291,9 +291,9 @@ public class BattleScreen implements Screen {
         camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
         camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
 
-        stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2f, camera.position.y - VIEWPORT_HEIGHT/ 2f, camera.position.x + VIEWPORT_WIDTH / 2f, camera.position.y + VIEWPORT_HEIGHT/ 2f));
-        stageElementsStorage.mechLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2f, camera.position.y - VIEWPORT_HEIGHT/ 2f, camera.position.x + VIEWPORT_WIDTH / 2f, camera.position.y + VIEWPORT_HEIGHT/ 2f));
-        stageElementsStorage.airLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2f, camera.position.y - VIEWPORT_HEIGHT/ 2f, camera.position.x + VIEWPORT_WIDTH / 2f, camera.position.y + VIEWPORT_HEIGHT/ 2f));
+        stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH,  VIEWPORT_HEIGHT));
+        stageElementsStorage.mechLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
+        stageElementsStorage.airLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
 
         DrawUtils.clearScreen();
 

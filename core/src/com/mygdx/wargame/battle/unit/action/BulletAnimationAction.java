@@ -121,8 +121,12 @@ BulletAnimationAction extends Action {
                 Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
                 Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
 
-                if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer) {
+                if( weapon.getType() == WeaponType.Flamer) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
+                    moveActorByBezierLine.setDuration(0.3f);
+                }
+                else if (weapon.getType() == WeaponType.Missile) {
+                    moveActorByBezierLine = new MoveSmokingActorByBezierLine(start.x, start.y, end.x, end.y, true, assetManager);
                     moveActorByBezierLine.setDuration(0.3f);
                 } else {
                     bullet.setPosition(start.x, start.y);
