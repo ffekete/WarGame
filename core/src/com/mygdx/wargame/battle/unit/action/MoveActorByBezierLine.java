@@ -7,8 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 public class MoveActorByBezierLine extends TemporalAction {
 
     private CatmullRomSpline<Vector2> myCatmull;
+    private boolean roatate = false;
 
-    public MoveActorByBezierLine(float sx, float sy, float ex, float ey) {
+    public MoveActorByBezierLine(float sx, float sy, float ex, float ey, boolean rotate) {
         float xPts;
         float yPts;
         Vector2[] points = new Vector2[4];
@@ -18,6 +19,8 @@ public class MoveActorByBezierLine extends TemporalAction {
 
         points[1] = new Vector2(sx, sy);
         points[2] = new Vector2(ex, ey);
+
+        this.roatate = rotate;
 
 
         myCatmull = new CatmullRomSpline<Vector2>(points, false);
@@ -31,9 +34,10 @@ public class MoveActorByBezierLine extends TemporalAction {
 
         myCatmull.valueAt(out, percent);
         getActor().setPosition(out.x, out.y);
-        //System.out.println(" Move to: "  + out.x + " " + out.y + actor);
-        myCatmull.derivativeAt(out, percent);
-        getActor().setRotation(out.angle());
-    }
 
+        if(roatate) {
+            myCatmull.derivativeAt(out, percent);
+            getActor().setRotation(out.angle());
+        }
+    }
 }

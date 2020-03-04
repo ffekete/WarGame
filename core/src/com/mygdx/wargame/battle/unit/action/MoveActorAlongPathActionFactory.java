@@ -41,6 +41,8 @@ public class MoveActorAlongPathActionFactory {
         SequenceAction moveToAction = new SequenceAction();
         moveToAction.reset();
 
+        FollowCameraAction followCameraAction = new FollowCameraAction(stageElementsStorage, attacker);
+
         moveToAction.addAction(new SetStateAction(attacker, State.Walk));
         moveToAction.addAction(new RemoveMovementMarkersAction(stageElementsStorage, movementMarkerFactory));
         Node last = paths.get(paths.getCount() - 1);
@@ -101,8 +103,6 @@ public class MoveActorAlongPathActionFactory {
                 moveToAction.addAction(new RemoveOneWayPointAction(stageElementsStorage, nx, ny));
             }
         }
-
-        FollowCameraAction followCameraAction = new FollowCameraAction(stageElementsStorage, attacker);
 
         moveToAction.addAction(new SetStateAction(attacker, State.Idle));
         moveToAction.addAction(new RemoveFollowCameraAction(followCameraAction));

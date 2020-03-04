@@ -23,7 +23,7 @@ public class JumpInAction extends MoveToAction {
         this.mech = mech;
         this.stageElementsStorage = stageElementsStorage;
         setDuration(2f);
-        moveActorByBezierLine = new MoveActorByBezierLine(sx, sy, ex, ey);
+        moveActorByBezierLine = new MoveActorByBezierLine(sx, sy, ex, ey, false);
         moveActorByBezierLine.setActor(mech);
         moveActorByBezierLine.setDuration(2f);
         this.assetManager = assetManager;

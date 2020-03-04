@@ -122,7 +122,7 @@ BulletAnimationAction extends Action {
                 Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
 
                 if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y);
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
                     moveActorByBezierLine.setDuration(0.3f);
                 } else {
                     bullet.setPosition(start.x, start.y);
