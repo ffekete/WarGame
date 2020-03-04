@@ -10,24 +10,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.action.FireSpreadAction;
 import com.mygdx.wargame.battle.action.IntAction;
-import com.mygdx.wargame.battle.action.ShowReduceValueAction;
 import com.mygdx.wargame.battle.action.ZoomOutCameraAction;
-import com.mygdx.wargame.battle.action.ZoomToNormalCameraAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.battle.screen.ui.ScalableProgressBar;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.unit.action.*;
-import com.mygdx.wargame.common.ScreenRegister;
-import com.mygdx.wargame.component.heatsink.HeatSink;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.mech.AbstractMech;
 import com.mygdx.wargame.mech.Mech;
@@ -218,9 +212,10 @@ public class TurnProcessingFacade {
                         battleMap.setTemporaryObstacle(selectedMech.getX(), selectedMech.getY());
                     }
 
-                    sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
 
                     if(target.get().getMech() != null) {
+                        sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
+
                         // then attack
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
@@ -229,7 +224,6 @@ public class TurnProcessingFacade {
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
-                        sequenceAction.addAction(new ZoomToNormalCameraAction((OrthographicCamera) stage.getCamera()));
                     }
                     sequenceAction.addAction(new UnlockAction(actionLock, ""));
 

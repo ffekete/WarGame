@@ -87,6 +87,10 @@ public class MapUtils {
 
     public List<TreeImage> nrOfTreesOnTile(StageElementsStorage stageElementsStorage, float tx, float ty) {
 
+        if(stageElementsStorage.mechLevel.getChildren() == null) {
+            throw new RuntimeException();
+        }
+
         List<TreeImage> found = new ArrayList<>();
 
         for (int i = 0; i < stageElementsStorage.mechLevel.getChildren().size; i++) {

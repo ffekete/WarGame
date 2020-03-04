@@ -128,10 +128,10 @@ public class BattleScreenInputDataStubber {
         SmallLaser smallLaser2 = new SmallLaser();
         smallLaser.setStatus(Status.Selected);
 
-        unit.addComponent(BodyPart.LeftLeg, machineGun1);
-        unit.addComponent(BodyPart.Torso, gaussCannon);
-        unit.addComponent(BodyPart.Torso, smallLaser);
-        unit.addComponent(BodyPart.Torso, smallLaser2);
+        unit4.addComponent(BodyPart.LeftLeg, machineGun1);
+        unit4.addComponent(BodyPart.Torso, gaussCannon);
+        unit4.addComponent(BodyPart.Torso, smallLaser);
+        unit4.addComponent(BodyPart.Torso, smallLaser2);
 
 
         PilotCreator pilotCreator = new PilotCreator();

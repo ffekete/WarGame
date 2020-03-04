@@ -23,12 +23,18 @@ public class FlankingTargetStrategy implements TargetingStrategy {
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private StageElementsStorage stageElementsStorage;
 
+    public FlankingTargetStrategy(StageElementsStorage stageElementsStorage) {
+        this.stageElementsStorage = stageElementsStorage;
+    }
+
     @Override
     public Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap, TargetingStrategy targetingStrategy) {
 
         Optional<Node> flankingNode;
 
         if(mech.getSelectedWeapons().isEmpty()) {
+
+            System.out.println("Need to chill " + mech);
 
             Target target = new Target(null, null);
 
@@ -55,10 +61,12 @@ public class FlankingTargetStrategy implements TargetingStrategy {
                 target.setTargetNode(flankingNode.get());
                 return Optional.of(target);
             }
+            System.out.println("But cnnot chill for some reason " + mech);
         }
 
         // if no place to chill, look for attack!
 
+        System.out.println("Attacking instead of chill " + mech);
         Optional<Target> target = targetingStrategy.findTarget(pilot, mech, targets, battleMap, null);
 
         if (target.isPresent()) {

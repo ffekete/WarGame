@@ -1,6 +1,7 @@
 package com.mygdx.wargame.rules.facade.target;
 
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.mech.Mech;
 import com.mygdx.wargame.pilot.Perks;
 import com.mygdx.wargame.pilot.Pilot;
@@ -12,9 +13,16 @@ public class TargetingFacade {
 
     private FirstTargetStrategy firstTargetStrategy = new FirstTargetStrategy();
     private WeakestTargetStrategy weakestTargetStrategy = new WeakestTargetStrategy();
-    private FlankingTargetStrategy flankingTargetStrategy = new FlankingTargetStrategy();
+    private FlankingTargetStrategy flankingTargetStrategy;
+    private StageElementsStorage stageElementsStorage;
+
+    public TargetingFacade(StageElementsStorage stageElementsStorage) {
+        this.stageElementsStorage = stageElementsStorage;
+    }
 
     public Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap) {
+
+        this.flankingTargetStrategy = new FlankingTargetStrategy(stageElementsStorage);
 
         if (pilot.hasPerk(Perks.Cautious)) {
             return flankingTargetStrategy.findTarget(pilot, mech, targets, battleMap, weakestTargetStrategy);

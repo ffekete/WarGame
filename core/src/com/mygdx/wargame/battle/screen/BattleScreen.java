@@ -1,6 +1,5 @@
 package com.mygdx.wargame.battle.screen;
 
-import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -159,7 +158,7 @@ public class BattleScreen implements Screen {
             AttackFacade attackFacade = new AttackFacade(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
 
             this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
-                    new TargetingFacade(),
+                    new TargetingFacade(stageElementsStorage),
                     new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
                     battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler, hudMediator);
 

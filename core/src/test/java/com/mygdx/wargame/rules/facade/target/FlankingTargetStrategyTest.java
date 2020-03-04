@@ -64,7 +64,7 @@ public class FlankingTargetStrategyTest {
 
         BattleMap battleMap = new BattleMap(100, 100, new ActionLock(), TerrainType.Grassland, null, textureRegionSelector, 16, null);
 
-        FlankingTargetStrategy flankingTargetStrategy = new FlankingTargetStrategy();
+        FlankingTargetStrategy flankingTargetStrategy = new FlankingTargetStrategy(null);
         Optional<Target> target = flankingTargetStrategy.findTarget(new PilotCreator().getPilot(), mech03, ImmutableMap.of(mech01, new Pilot(null, null), mech02, new Pilot(null, null)), battleMap, new WeakestTargetStrategy());
 
         assertThat(target.isPresent(), is(true));
