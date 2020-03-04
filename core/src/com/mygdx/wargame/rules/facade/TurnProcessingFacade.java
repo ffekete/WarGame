@@ -67,6 +67,7 @@ public class TurnProcessingFacade {
     private Camera camera;
     private RayHandler rayHandler;
     private HUDMediator hudMediator;
+    private WeaponSelectionOptimizer weaponSelectionOptimizer;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
                                 Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera, RayHandler rayHandler, HUDMediator hudMediator) {
@@ -96,6 +97,8 @@ public class TurnProcessingFacade {
         iterator = allSorted.entrySet().iterator();
 
         this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(stageElementsStorage, this.movementMarkerFactory, assetManager);
+
+        this.weaponSelectionOptimizer = new WeaponSelectionOptimizer();
     }
 
     public Map.Entry<Mech, Pilot> getNext() {
@@ -157,6 +160,8 @@ public class TurnProcessingFacade {
                 }
             } else if (team2.containsKey(selectedMech)) {
 
+                weaponSelectionOptimizer.doIt(selectedMech);
+
                 SequenceAction sequenceAction = new SequenceAction();
 
                 sequenceAction.reset();
@@ -215,15 +220,17 @@ public class TurnProcessingFacade {
 
                     sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
 
-                    // then attack
-                    ParallelAction attackActions = new ParallelAction();
-                    attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
-                    attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                    attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap, rayHandler));
-                    AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
-                    sequenceAction.addAction(attackActions);
-                    sequenceAction.addAction(attackAction);
-                    sequenceAction.addAction(new ZoomToNormalCameraAction((OrthographicCamera) stage.getCamera()));
+                    if(target.get().getMech() != null) {
+                        // then attack
+                        ParallelAction attackActions = new ParallelAction();
+                        attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
+                        attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
+                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap, rayHandler));
+                        AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
+                        sequenceAction.addAction(attackActions);
+                        sequenceAction.addAction(attackAction);
+                        sequenceAction.addAction(new ZoomToNormalCameraAction((OrthographicCamera) stage.getCamera()));
+                    }
                     sequenceAction.addAction(new UnlockAction(actionLock, ""));
 
                     ((AbstractMech) selectedMech).addAction(sequenceAction);

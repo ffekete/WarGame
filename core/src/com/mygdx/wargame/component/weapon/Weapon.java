@@ -42,4 +42,6 @@ public interface Weapon extends Component {
     void reduceAmmo();
 
     String getShortName();
+
+    Status getStatus();
 }

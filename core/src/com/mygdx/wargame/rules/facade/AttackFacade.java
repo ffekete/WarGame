@@ -26,7 +26,7 @@ public class AttackFacade {
     private CriticalHitChanceCalculator criticalHitChanceCalculator = new CriticalHitChanceCalculator();
     private BodyPartDestructionHandler bodyPartDestructionHandler = new BodyPartDestructionHandler();
     private DamageCalculator damageCalculator;
-    private EvasionCalculator evasionCalculator = new EvasionCalculator();
+    private EvasionCalculator evasionCalculator;
     private StabilityCalculator stabilityCalculator = new StabilityCalculator(criticalHitChanceCalculator);
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
@@ -38,6 +38,7 @@ public class AttackFacade {
         this.actionLock = actionLock;
         damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageElementsStorage, assetManager, mechInfoPanelFacade, this.actionLock);
         heatDamageCalculator = new HeatDamageCalculator(stageElementsStorage, actionLock);
+        this.evasionCalculator = new EvasionCalculator(stageElementsStorage);
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
@@ -47,8 +48,8 @@ public class AttackFacade {
 
             if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), defendingMech.getX(), defendingMech.getY()) <= weapon.getRange()) {
 
-                if(attackingMech.getHeatLevel() > 100) {
-                    if(new Random().nextInt(100) - (attackingPilot.hasPerk(Perks.Hazardous) ? 10 : 0) >= 80) {
+                if (attackingMech.getHeatLevel() > 100) {
+                    if (new Random().nextInt(100) - (attackingPilot.hasPerk(Perks.Hazardous) ? 10 : 0) >= 80) {
                         System.out.println("Heat");
                         heatDamageCalculator.calculate(attackingMech, weapon, messageQue);
                     }
