@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.screen.ui.detailspage;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
+import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.pilot.Pilot;
@@ -57,11 +59,11 @@ public class PilotDetailsFacade {
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(13);
-        textButtonStyle.fontColor = Color.valueOf("007700");
-        textButtonStyle.overFontColor = Color.valueOf("00AA00");
-        textButtonStyle.down = new TextureRegionDrawable(assetManager.get("details/ButtonBgDown.png", Texture.class));
-        textButtonStyle.up = new TextureRegionDrawable(assetManager.get("details/ButtonBg.png", Texture.class));
-        textButtonStyle.over = new TextureRegionDrawable(assetManager.get("details/ButtonBgOver.png", Texture.class));
+        textButtonStyle.fontColor = Color.valueOf("FFFFFF");
+        textButtonStyle.overFontColor = Color.valueOf("00FF00");
+
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+
 
         TextButton exitPanelButton = new TextButton("Exit", textButtonStyle);
 

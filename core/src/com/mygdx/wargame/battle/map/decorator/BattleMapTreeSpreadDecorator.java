@@ -47,7 +47,7 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                     for (int k = 0; k < new Random().nextInt(Config.treeSpread); k++) {
                         int rnd = new Random().nextInt(treeVariations.size());
 
-                        TreeImage tree = new TreeImage(treeVariations.get(rnd));
+                        TreeImage tree = new TreeImage(treeVariations.get(rnd), assetManager);
                         tree.setTouchable(Touchable.disabled);
                         tree.setPosition(i + new Random().nextFloat(), j + new Random().nextFloat());
                         tree.setSize(1, 1);

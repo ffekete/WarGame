@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
@@ -132,11 +134,11 @@ public class MechInfoPanelFacade extends Actor {
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(13);
-        textButtonStyle.fontColor = Color.valueOf("007700");
-        textButtonStyle.overFontColor = Color.valueOf("00AA00");
-        textButtonStyle.down = new TextureRegionDrawable(this.assetManager.get("details/ButtonBgDown.png", Texture.class));
-        textButtonStyle.up = new TextureRegionDrawable(this.assetManager.get("details/ButtonBg.png", Texture.class));
-        textButtonStyle.over = new TextureRegionDrawable(this.assetManager.get("details/ButtonBgOver.png", Texture.class));
+        textButtonStyle.fontColor = Color.valueOf("FFFFFF");
+        textButtonStyle.overFontColor = Color.valueOf("00FF00");
+
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(this.assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+
 
         TextButton exitWeaponSelectionPanelButton = new TextButton("Exit", textButtonStyle);
 

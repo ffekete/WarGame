@@ -68,6 +68,7 @@ public class ScreenLoader {
         assetManager.load("health/RightLegHealthIcon.png", Texture.class);
 
         assetManager.load("Birds.png", Texture.class);
+        assetManager.load("Shadow.png", Texture.class);
 
         assetManager.load("hud/AmmoIcon.png", Texture.class);
         assetManager.load("hud/HealthIcon.png", Texture.class);

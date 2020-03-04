@@ -40,12 +40,14 @@ AbstractMech extends Actor implements Mech {
     protected TextureRegion mechTextureRegion;
     private TextureRegion shieldTextureRegion;
     private TextureRegion selectionTexture;
+    private Texture shadow;
 
     public AbstractMech(int initiative, AssetManager assetManager, BattleMap battleMap) {
         this.initiative = initiative;
         this.assetManager = assetManager;
         this.shieldTextureRegion = new TextureRegion(assetManager.get("Shielded.png", Texture.class));
         this.battleMap = battleMap;
+        this.shadow = assetManager.get("Shadow.png", Texture.class);
     }
 
     public void setState(State state) {
@@ -129,11 +131,17 @@ AbstractMech extends Actor implements Mech {
 
         if (battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay() != null &&
                 battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && state != State.Jump) {
+
+            spriteBatch.setColor(Color.valueOf("FFFFFF44"));
+            spriteBatch.draw(shadow, x, y + 0.3f, 1, 1);
+            spriteBatch.setColor(Color.WHITE);
             spriteBatch.draw(texture, x, y + 0.3f, 1, 0.6f);
         } else {
+            spriteBatch.setColor(Color.valueOf("FFFFFF44"));
+            spriteBatch.draw(shadow, x, y, 1, 1);
+            spriteBatch.setColor(Color.WHITE);
             spriteBatch.draw(texture, x, y, 1, 1);
         }
-
 
         spriteBatch.setColor(Color.valueOf("FFFFFF99"));
         spriteBatch.draw(selectionTexture, x, y, 1, 1);

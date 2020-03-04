@@ -1,13 +1,16 @@
 package com.mygdx.wargame.battle.screen.ui;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.common.ScreenRegister;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
@@ -19,6 +22,8 @@ public class MainMenuFacade {
     private TextButton optionsMenuButton;
 
     private TextButton.TextButtonStyle textButtonStyle;
+    private TextButton.TextButtonStyle textButtonStyle2;
+    private TextButton.TextButtonStyle textButtonStyle3;
 
     private AssetManager assetManager;
 
@@ -42,13 +47,25 @@ public class MainMenuFacade {
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(20);
-        textButtonStyle.down = new TextureRegionDrawable(this.assetManager.get("details/ButtonBgDown.png", Texture.class));
-        textButtonStyle.up = new TextureRegionDrawable(this.assetManager.get("details/ButtonBg.png", Texture.class));
-        textButtonStyle.over = new TextureRegionDrawable(this.assetManager.get("details/ButtonBgOver.png", Texture.class));
+        textButtonStyle.fontColor = Color.valueOf("FFFFFF");
+        textButtonStyle.overFontColor = Color.valueOf("00FF00");
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+
+        this.textButtonStyle2 = new TextButton.TextButtonStyle();
+        textButtonStyle2.font = FontCreator.getBitmapFont(20);
+        textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
+        textButtonStyle2.overFontColor = Color.valueOf("00FF00");
+        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+
+        this.textButtonStyle3 = new TextButton.TextButtonStyle();
+        textButtonStyle3.font = FontCreator.getBitmapFont(20);
+        textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
+        textButtonStyle3.overFontColor = Color.valueOf("00FF00");
+        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
 
         this.resumeGameButton = new TextButton("RESUME", textButtonStyle);
 
-        this.exitGameButton = new TextButton("EXIT", textButtonStyle);
+        this.exitGameButton = new TextButton("EXIT", textButtonStyle2);
         exitGameButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
         this.optionsMenuButton = new TextButton("OPTIONS", textButtonStyle);
         optionsMenuButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);

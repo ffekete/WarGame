@@ -65,7 +65,10 @@ public class EnemyMechInfoPanelFacade {
             }
         });
 
-        attackButton = new ImageButton(hideMenuButtonsSelectionStyle);
+        ImageButton.ImageButtonStyle attackButtonsSelectionStyle = new ImageButton.ImageButtonStyle();
+        attackButtonsSelectionStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("localmenu/AttackButton.png")));
+
+        attackButton = new ImageButton(attackButtonsSelectionStyle);
         attackButton.setSize(attackButton.getWidth() / 2, attackButton.getHeight() / 2);
         attackButton.addListener(new ClickListener() {
             @Override
