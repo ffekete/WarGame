@@ -36,8 +36,8 @@ public class BattleScreenInputDataStubber {
         this.assetManager = assetManager;
     }
 
-    public void stub(BattleScreenInputData battleScreenInputData, BattleMap battleMap) {
-        Mech unit3 = new Scout("Ace", spriteBatch, assetManager, battleMap);
+    public void stub(BattleScreenInputData battleScreenInputData, BattleMap battleMap, TurnProcessingFacadeStore turnProcessingFacadeStore) {
+        Mech unit3 = new Scout("Ace", spriteBatch, assetManager, battleMap, turnProcessingFacadeStore);
         unit3.setPosition(6, 5);
         unit3.setTeam(Team.own);
         unit3.setStability(100);
@@ -72,7 +72,7 @@ public class BattleScreenInputDataStubber {
         unit3.addComponent(BodyPart.Torso, largeIonCannon);
         unit3.addComponent(BodyPart.Torso, machineGun);
 
-        Colossus unit2 = new Colossus("ReadEye111", spriteBatch, assetManager, battleMap);
+        Colossus unit2 = new Colossus("ReadEye111", spriteBatch, assetManager, battleMap, turnProcessingFacadeStore);
         unit2.setPosition(1, 1);
         unit2.setTeam(Team.own);
         unit2.setActive(true);
@@ -87,7 +87,7 @@ public class BattleScreenInputDataStubber {
         unit2.addComponent(BodyPart.LeftArm, largeCannon2);
         unit2.addComponent(BodyPart.RightArm, largeCannon3);
 
-        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager, battleMap);
+        Mech unit = new WreckingBall("Dirty", spriteBatch, assetManager, battleMap, turnProcessingFacadeStore);
         unit.setPosition(5, 2);
         unit.setTeam(Team.enemy);
         unit.setActive(true);
@@ -105,8 +105,8 @@ public class BattleScreenInputDataStubber {
         unit.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
         unit.addComponent(BodyPart.LeftLeg, new SmallShieldModule());
 
-        Mech unit4 = new Giant("", spriteBatch, assetManager, battleMap);
-        unit4.setPosition(7,2);
+        Mech unit4 = new Giant("", spriteBatch, assetManager, battleMap, turnProcessingFacadeStore);
+        unit4.setPosition(7, 2);
         unit4.setTeam(Team.enemy);
         unit4.setActive(true);
         unit4.addComponent(BodyPart.Torso, new CompositeMaterialArmor());

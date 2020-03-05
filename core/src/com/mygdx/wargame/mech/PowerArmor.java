@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.screen.TurnProcessingFacadeStore;
 import com.mygdx.wargame.component.Component;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.component.weapon.Weapon;
+import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,8 +54,8 @@ public class PowerArmor extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public PowerArmor(String name, SpriteBatch spriteBatch, AssetManager assetManager, BattleMap battleMap) {
-        super(5, assetManager, battleMap);
+    public PowerArmor(String name, SpriteBatch spriteBatch, AssetManager assetManager, BattleMap battleMap, TurnProcessingFacadeStore turnProcessingFacadeStore) {
+        super(5, assetManager, battleMap, turnProcessingFacadeStore);
         this.spriteBatch = spriteBatch;
         this.name = name;
 

@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.decoration.AnimatedGameObjectImage;
-import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
+import com.mygdx.wargame.battle.screen.TurnProcessingFacadeStore;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
@@ -17,6 +17,8 @@ import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
 import com.mygdx.wargame.config.Config;
+import com.mygdx.wargame.rules.calculator.FlankingCalculator;
+import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 import java.util.Random;
 
@@ -39,20 +41,24 @@ AbstractMech extends Actor implements Mech {
     private boolean active;
     private AssetManager assetManager;
     private BattleMap battleMap;
+    private TurnProcessingFacadeStore turnProcessingFacadeStore;
 
     protected TextureRegion mechTextureRegion;
     private TextureRegion shieldTextureRegion;
     private TextureRegion selectionTexture;
     private Texture shadow;
     private AnimatedGameObjectImage directionMarker;
+    private FlankingCalculator flankingCalculator;
 
-    public AbstractMech(int initiative, AssetManager assetManager, BattleMap battleMap) {
+    public AbstractMech(int initiative, AssetManager assetManager, BattleMap battleMap, TurnProcessingFacadeStore turnProcessingFacadeStore) {
         this.initiative = initiative;
         this.assetManager = assetManager;
         this.shieldTextureRegion = new TextureRegion(assetManager.get("Shielded.png", Texture.class));
         this.battleMap = battleMap;
         this.shadow = assetManager.get("Shadow.png", Texture.class);
         this.directionMarker = new AnimatedGameObjectImage(new TextureRegion(assetManager.get("DirectionMarker.png", Texture.class)), 0.1f, 10);
+        this.turnProcessingFacadeStore = turnProcessingFacadeStore;
+        this.flankingCalculator = new FlankingCalculator();
     }
 
     public void setState(State state) {
@@ -158,7 +164,16 @@ AbstractMech extends Actor implements Mech {
             spriteBatch.setColor(Color.WHITE);
         }
 
-        if(Config.showDirectionMarkers) {
+        if (Config.showDirectionMarkers) {
+
+            if (turnProcessingFacadeStore.getTurnProcessingFacade().getNext() != null
+                    && turnProcessingFacadeStore.getTurnProcessingFacade().getNext().getKey() != this
+                    && flankingCalculator.isFlankedFromPosition(turnProcessingFacadeStore.getTurnProcessingFacade().getNext().getKey().getX(), turnProcessingFacadeStore.getTurnProcessingFacade().getNext().getKey().getY(), this )) {
+                spriteBatch.setColor(Color.RED);
+            } else {
+                spriteBatch.setColor(Color.WHITE);
+            }
+
             switch (direction) {
                 case Up:
                     directionMarker.setRotation(90);

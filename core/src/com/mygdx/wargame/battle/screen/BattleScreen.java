@@ -133,8 +133,6 @@ public class BattleScreen implements Screen {
 
             battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE, world);
 
-            battleScreenInputDataStubber.stub(battleScreenInputData, battleMap);
-
             inputMultiplexer = new InputMultiplexer();
 
             inputMultiplexer.addProcessor(new BasicMouseHandlingInputAdapter(screenConfiguration, actionLock));
@@ -158,12 +156,15 @@ public class BattleScreen implements Screen {
             MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade);
 
             AttackFacade attackFacade = new AttackFacade(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
+            TurnProcessingFacadeStore turnProcessingFacadeStore = new TurnProcessingFacadeStore();
+            battleScreenInputDataStubber.stub(battleScreenInputData, battleMap, turnProcessingFacadeStore);
 
             this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                     new TargetingFacade(stageElementsStorage),
                     new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
                     battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler, hudMediator);
 
+            turnProcessingFacadeStore.setTurnProcessingFacade(turnProcessingFacade);
             // display
 
             mechInfoPanelFacade.setTouchable(Touchable.enabled);
