@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
+import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
@@ -226,6 +227,8 @@ public class MechInfoPanelFacade extends Actor {
     }
 
     public void hideLocalMenu() {
+        Config.showDirectionMarkers = false;
+
         localMenuVisible = false;
         weaponSelectionContainerHidden = true;
 
@@ -282,6 +285,9 @@ public class MechInfoPanelFacade extends Actor {
     }
 
     public void showLocalMenu() {
+
+        Config.showDirectionMarkers = true;
+
         localMenuVisible = true;
         MoveByAction moveTo = new MoveByAction();
         moveTo.setAmount(0, -60 / SCREEN_HUD_RATIO);
