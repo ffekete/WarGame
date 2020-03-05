@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Pool;
 import com.google.common.collect.ImmutableList;
+import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.action.AddActorAction;
@@ -62,7 +63,7 @@ public class CloudGenerator {
 
     private SequenceAction addCloud(float y, String color, boolean flipx) {
         MoveToAction moveToAction = new MoveToAction();
-        moveToAction.setPosition(VIEWPORT_WIDTH, y);
+        moveToAction.setPosition(BattleMapConfig.WIDTH, y);
         moveToAction.setStartPosition(0, y);
 
         moveToAction.setDuration(50f);

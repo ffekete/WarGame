@@ -31,7 +31,7 @@ import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.CloudGenerator;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
-import com.mygdx.wargame.battle.screen.input.BasicMouseHandlingInputAdapter;
+import com.mygdx.wargame.battle.screen.input.BasicInputAdapter;
 import com.mygdx.wargame.battle.screen.ui.GameEndFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
@@ -135,13 +135,15 @@ public class BattleScreen implements Screen {
 
             inputMultiplexer = new InputMultiplexer();
 
-            inputMultiplexer.addProcessor(new BasicMouseHandlingInputAdapter(screenConfiguration, actionLock));
+            HUDMediator hudMediator = new HUDMediator();
+
+            TurnProcessingFacadeStore turnProcessingFacadeStore = new TurnProcessingFacadeStore();
+
+            inputMultiplexer.addProcessor(new BasicInputAdapter(screenConfiguration, actionLock, hudMediator, turnProcessingFacadeStore, stageElementsStorage));
 
             inputMultiplexer.addProcessor(hudStage);
             inputMultiplexer.addProcessor(stage);
             Gdx.input.setInputProcessor(inputMultiplexer);
-
-            HUDMediator hudMediator = new HUDMediator();
 
             MainMenuFacade mainMenuFacade = new MainMenuFacade(screenLoader.getAssetManager(), hudMediator);
 
@@ -156,7 +158,7 @@ public class BattleScreen implements Screen {
             MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade);
 
             AttackFacade attackFacade = new AttackFacade(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
-            TurnProcessingFacadeStore turnProcessingFacadeStore = new TurnProcessingFacadeStore();
+
             battleScreenInputDataStubber.stub(battleScreenInputData, battleMap, turnProcessingFacadeStore);
 
             this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,

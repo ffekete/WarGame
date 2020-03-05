@@ -236,7 +236,6 @@ public class MechClickInputListener extends InputListener {
         mechInfoPanelFacade.getWeaponSelectionContainer().setSize(0, 0);
         mechInfoPanelFacade.getWeaponSelectionContainer().setPosition(mechInfoPanelFacade.getWeaponSelectionButton().getX(), mechInfoPanelFacade.getWeaponSelectionButton().getY());
 
-
     }
 
     private void addSelectAllWeaponsCheckbox() {

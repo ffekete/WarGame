@@ -116,11 +116,7 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                hudMediator.getHealthInfoPanelFacade().hide();
-                hudMediator.getHudElementsFacade().hide();
-                hideLocalMenu();
-                // show this one
-                weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
+                showWeaponSelectionPanel(hudMediator);
                 return true;
             }
         });
@@ -179,6 +175,14 @@ public class MechInfoPanelFacade extends Actor {
                 return true;
             }
         });
+    }
+
+    public void showWeaponSelectionPanel(HUDMediator hudMediator) {
+        hudMediator.getHealthInfoPanelFacade().hide();
+        hudMediator.getHudElementsFacade().hide();
+        hideLocalMenu();
+        // show this one
+        weaponSelectionContainerHidden = weaponSelectionPanelMovementHandler.moveWeaponSelectionButton(weaponSelectionContainerHidden, weaponSelectionButton, weaponSelectionContainer, weaponSelectionScrollPane);
     }
 
     public Table getIbTable() {
