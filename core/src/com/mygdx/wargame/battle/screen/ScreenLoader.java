@@ -38,9 +38,11 @@ public class ScreenLoader {
         assetManager.load("GrassDecoration02.png", Texture.class);
         assetManager.load("GrassDecoration03.png", Texture.class);
         assetManager.load("Flame.png", Texture.class);
-        assetManager.load("objects/Crater.png", Texture.class);
         assetManager.load("Splash.png", Texture.class);
         assetManager.load("InfoIcon.png", Texture.class);
+
+        assetManager.load("objects/Crater.png", Texture.class);
+        assetManager.load("objects/Rocks.png", Texture.class);
 
         assetManager.load("details/HeadIcon.png", Texture.class);
         assetManager.load("details/TorsoIcon.png", Texture.class);
@@ -81,6 +83,14 @@ public class ScreenLoader {
         assetManager.load("variation/Tree02.png", Texture.class);
         assetManager.load("variation/Tree03.png", Texture.class);
         assetManager.load("variation/Tree04.png", Texture.class);
+        assetManager.load("variation/Tree05.png", Texture.class);
+        assetManager.load("variation/Tree06.png", Texture.class);
+        assetManager.load("variation/Bush01.png", Texture.class);
+        assetManager.load("variation/Bush02.png", Texture.class);
+
+        assetManager.load("cloud/Cloud01.png", Texture.class);
+        assetManager.load("cloud/Cloud02.png", Texture.class);
+        assetManager.load("cloud/Cloud03.png", Texture.class);
 
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);

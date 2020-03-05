@@ -46,29 +46,30 @@ public class AttackFacade {
 
         attackingMech.getSelectedWeapons().forEach(weapon -> {
 
-            if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), defendingMech.getX(), defendingMech.getY()) <= weapon.getRange()) {
+            if(weapon.getAmmo().isPresent() && weapon.getAmmo().get() == 0) {
+                // no ammo, skip
+            } else {
 
-                if (attackingMech.getHeatLevel() > 100) {
-                    if (new Random().nextInt(100) - (attackingPilot.hasPerk(Perks.Hazardous) ? 10 : 0) >= 80) {
-                        System.out.println("Heat");
-                        heatDamageCalculator.calculate(attackingMech, weapon, messageQue);
+                if (MathUtils.getDistance(attackingMech.getX(), attackingMech.getY(), defendingMech.getX(), defendingMech.getY()) <= weapon.getRange()) {
+
+                    if (attackingMech.getHeatLevel() > 100) {
+                        if (new Random().nextInt(100) - (attackingPilot.hasPerk(Perks.Hazardous) ? 10 : 0) >= 80) {
+                            System.out.println("Heat");
+                            heatDamageCalculator.calculate(attackingMech, weapon, messageQue);
+                        }
                     }
+
+                    int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
+
+                    if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
+                        // hit!
+                        damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart, messageQue);
+                        int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
+                        defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
+                    }
+
+                    attackingMech.setHeatLevel(attackingMech.getHeatLevel() + weapon.getHeat());
                 }
-
-                int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
-
-                // reduce ammo of weapon
-                for (int i = 0; i < weapon.getDamageMultiplier(); i++)
-                    weapon.reduceAmmo();
-
-                if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
-                    // hit!
-                    damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart, messageQue);
-                    int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
-                    defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
-                }
-
-                attackingMech.setHeatLevel(attackingMech.getHeatLevel() + weapon.getHeat());
             }
         });
 

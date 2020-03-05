@@ -52,6 +52,14 @@ public class DamageCalculator {
 
         for (int i = 0; i < weapon.getDamageMultiplier(); i++) {
 
+            // if no ammo, skip
+            if(weapon.getAmmo().isPresent() && weapon.getAmmo().get() < 1) {
+                continue;
+            }
+
+            // reduce ammo of weapon
+            weapon.reduceAmmo();
+
             // calculate critical
             boolean critical = new Random().nextInt(100) < weapon.getCriticalChance() + criticalHitChanceCalculator.calculate(attackingPilot, attackingMech, weapon) ? true : false;
 

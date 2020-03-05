@@ -31,12 +31,15 @@ public class SetOverlayAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        battleMap.getNodeGraphLv1().getNodeWeb()[x][y].setDecorationOverlay(new Overlay(tileOverlayType));
-        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("objects/Crater.png", Texture.class))));
+        if(battleMap.getNodeGraphLv1().getNodeWeb()[x][y].getGroundOverlay() == null || battleMap.getNodeGraphLv1().getNodeWeb()[x][y].getGroundOverlay().getTileOverlayType() != TileOverlayType.Water) {
+            battleMap.getNodeGraphLv1().getNodeWeb()[x][y].setDecorationOverlay(new Overlay(tileOverlayType));
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        battleMap.getLayer(layerIndex).setCell(x, y, cell);
+            cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManager.get("objects/Crater.png", Texture.class))));
+
+            battleMap.getLayer(layerIndex).setCell(x, y, cell);
+        }
         return true;
     }
 }

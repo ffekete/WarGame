@@ -32,6 +32,10 @@ public class BattleMapTreeSpreadDecorator implements Decorator {
                 .add(assetManager.get("variation/Tree02.png", Texture.class))
                 .add(assetManager.get("variation/Tree03.png", Texture.class))
                 .add(assetManager.get("variation/Tree04.png", Texture.class))
+                .add(assetManager.get("variation/Tree05.png", Texture.class))
+                .add(assetManager.get("variation/Tree06.png", Texture.class))
+                .add(assetManager.get("variation/Bush01.png", Texture.class))
+                .add(assetManager.get("variation/Bush02.png", Texture.class))
                 .build();
         this.stageElementsStorage = stageElementsStorage;
     }
