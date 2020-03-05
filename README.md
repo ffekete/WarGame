@@ -1,1 +1,2 @@
 # WarGame
+java -jar packr.jar --platform mac --jdk /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home --executable myapp --classpath desktop/build/libs/desktop-1.0.jar --mainclass com.mygdx.wargame.desktop.DesktopLauncher --resources core/assets --vmargs Xmx1G --minimizejre soft --output out-mac --verbose

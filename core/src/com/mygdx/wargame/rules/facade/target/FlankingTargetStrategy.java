@@ -41,24 +41,28 @@ public class FlankingTargetStrategy implements TargetingStrategy {
             flankingNode = findPerfectWaterAreaToCoolDown(mech, battleMap, targets);
             if(flankingNode.isPresent()) {
                 target.setTargetNode(flankingNode.get());
+                System.out.println(mech + " findPerfectWaterAreaToCoolDown");
                 return Optional.of(target);
             }
 
             flankingNode = findPerfectWaterAreaToCoolDown_canBeFlanked(mech, battleMap);
             if(flankingNode.isPresent()) {
                 target.setTargetNode(flankingNode.get());
+                System.out.println(mech + " findPerfectWaterAreaToCoolDown_canBeFlanked");
                 return Optional.of(target);
             }
 
             flankingNode = findPerfectWaterAreaToCoolDown_canBeFlanked_notOnWater(mech, battleMap);
             if(flankingNode.isPresent()) {
                 target.setTargetNode(flankingNode.get());
+                System.out.println(mech + " findPerfectWaterAreaToCoolDown_canBeFlanked_notOnWater");
                 return Optional.of(target);
             }
 
             flankingNode = findPerfectWaterAreaToCoolDown_canBeFlanked_notOnWater_burning(mech, battleMap);
             if(flankingNode.isPresent()) {
                 target.setTargetNode(flankingNode.get());
+                System.out.println(mech + " findPerfectWaterAreaToCoolDown_canBeFlanked_notOnWater_burning");
                 return Optional.of(target);
             }
             System.out.println("But cnnot chill for some reason " + mech);
@@ -69,9 +73,12 @@ public class FlankingTargetStrategy implements TargetingStrategy {
         System.out.println("Attacking instead of chill " + mech);
         Optional<Target> target = targetingStrategy.findTarget(pilot, mech, targets, battleMap, null);
 
+        System.out.println(mech + " found target: " + (target.isPresent() ? target.get() : target));
+
         if (target.isPresent()) {
 
             if (flankingCalculator.isFlankedFromPosition(mech.getX(), mech.getY(), target.get().getMech()) && battleMap.getFireMap()[(int) mech.getX()][(int) mech.getY()] == 0) {
+                System.out.println(mech + " flankingCalculator.isFlankedFromPosition");
                 return target;
             }
 
@@ -81,6 +88,7 @@ public class FlankingTargetStrategy implements TargetingStrategy {
             flankingNode = findNotBurningAccessibleInOneTurnSpace(mech, battleMap, target, minRange);
 
             if (flankingNode.isPresent()) {
+                System.out.println(mech + " findNotBurningAccessibleInOneTurnSpace");
                 target.get().setTargetNode(flankingNode.get());
                 return target;
             } else {
@@ -90,22 +98,27 @@ public class FlankingTargetStrategy implements TargetingStrategy {
 
 
             if (flankingNode.isPresent()) {
+                System.out.println(mech + " getFlankingAreaAroundEnemyInWater");
                 target.get().setTargetNode(flankingNode.get());
             } else {
                 flankingNode = getFlankingAreaAroundEnemyNotBurning(mech, battleMap, target, minRange);
             }
 
             if (flankingNode.isPresent()) {
+                System.out.println(mech + " getFlankingAreaAroundEnemyNotBurning");
                 target.get().setTargetNode(flankingNode.get());
             } else {
                 flankingNode = getFlankingAreaAroundEnemyCoveredWithTrees(mech, battleMap, target, minRange);
             }
 
             if (flankingNode.isPresent()) {
+                System.out.println(mech + " getFlankingAreaAroundEnemyCoveredWithTrees");
                 target.get().setTargetNode(flankingNode.get());
             } else {
                 flankingNode = getFlankingAreaAroundEnemy(mech, battleMap, target, minRange);
             }
+
+            System.out.println(mech + " getFlankingAreaAroundEnemy: " + flankingNode);
 
             flankingNode.ifPresent(node -> target.get().setTargetNode(node));
 
