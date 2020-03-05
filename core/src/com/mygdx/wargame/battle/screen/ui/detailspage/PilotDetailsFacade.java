@@ -18,8 +18,8 @@ import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.pilot.Skill;
+import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.common.pilot.Skill;
 
 import static com.mygdx.wargame.config.Config.*;
 

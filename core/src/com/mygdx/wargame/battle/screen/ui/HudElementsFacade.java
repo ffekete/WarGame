@@ -17,11 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
-import com.mygdx.wargame.component.armor.Armor;
-import com.mygdx.wargame.component.weapon.Weapon;
+import com.mygdx.wargame.common.component.armor.Armor;
+import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 
 import java.util.Arrays;
 import java.util.Optional;

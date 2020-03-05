@@ -23,12 +23,12 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.LayerIndex;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.component.weapon.WeaponType;
-import com.mygdx.wargame.component.weapon.ballistic.MachineGun;
-import com.mygdx.wargame.component.weapon.ballistic.MachineGunMk2;
-import com.mygdx.wargame.component.weapon.ballistic.MachineGunMk3;
-import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.common.component.weapon.Weapon;
+import com.mygdx.wargame.common.component.weapon.WeaponType;
+import com.mygdx.wargame.common.component.weapon.ballistic.MachineGun;
+import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk2;
+import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk3;
+import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 

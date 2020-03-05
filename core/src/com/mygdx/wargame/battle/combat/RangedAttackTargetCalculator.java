@@ -5,7 +5,6 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.action.CenterCameraAction;
@@ -19,12 +18,12 @@ import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.movement.WayPoint;
 import com.mygdx.wargame.battle.unit.action.*;
-import com.mygdx.wargame.component.weapon.Weapon;
-import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.rules.facade.AttackFacade;
+import com.mygdx.wargame.common.component.weapon.Weapon;
+import com.mygdx.wargame.common.mech.AbstractMech;
+import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
+import com.mygdx.wargame.battle.rules.facade.AttackFacade;
 
 public class RangedAttackTargetCalculator implements AttackCalculator {
 

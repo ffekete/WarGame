@@ -17,12 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
-import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.rules.facade.HitChanceCalculatorFacade;
+import com.mygdx.wargame.common.mech.AbstractMech;
+import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.mech.Mech;
+import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
+import com.mygdx.wargame.battle.rules.facade.HitChanceCalculatorFacade;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.ArrayList;

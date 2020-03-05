@@ -2,10 +2,10 @@ package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.rules.facade.AttackFacade;
+import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.mech.Mech;
+import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.battle.rules.facade.AttackFacade;
 import com.mygdx.wargame.util.MathUtils;
 
 public class AttackAction extends Action {

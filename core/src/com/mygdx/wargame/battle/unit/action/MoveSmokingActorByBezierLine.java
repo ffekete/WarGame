@@ -3,7 +3,7 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.wargame.decor.Smoke;
+import com.mygdx.wargame.battle.decor.Smoke;
 
 public class MoveSmokingActorByBezierLine extends MoveActorByBezierLine {
 

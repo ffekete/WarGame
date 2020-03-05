@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,30 +24,23 @@ public class BattleMap {
 
     int width, height;
     private NodeGraph nodeGraphLv1;
-    private ActionLock actionLock;
     private TerrainType terrainType;
-    private AssetManager assetManager;
+
     private TiledMap tiledMap;
     private TextureRegionSelector textureRegionSelector;
-    private int unitSize;
     private int[][] fireMap;
     private World world;
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(int x, int y, ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize, World world) {
-        this.width = x;
-        this.height = y;
+    public BattleMap(ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize, World world) {
+        this.width = BattleMapConfig.WIDTH;
+        this.height = BattleMapConfig.HEIGHT;
         this.world = world;
 
-        fireMap = new int[x][y];
-
-        this.actionLock = actionLock;
+        fireMap = new int[width][height];
         this.terrainType = terrainType;
-        this.assetManager = assetManager;
         this.textureRegionSelector = textureRegionSelector;
-        this.unitSize = unitSize;
-
         tiledMap = new TiledMap();
         MapLayers layers = tiledMap.getLayers();
 
@@ -57,8 +50,8 @@ public class BattleMap {
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 Node node;
 
                 if (nodeGraphLv1.getNodeWeb()[i][j] == null) {

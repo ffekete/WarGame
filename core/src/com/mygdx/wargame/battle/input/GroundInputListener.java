@@ -22,8 +22,8 @@ import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.unit.action.RemoveWayPointAction;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
-import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.common.mech.AbstractMech;
+import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.util.MathUtils;
 
 public class GroundInputListener extends InputListener {

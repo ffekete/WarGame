@@ -21,9 +21,9 @@ import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.localmenu.BigInfoPanelMovementHandler;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
-import com.mygdx.wargame.component.armor.Armor;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.common.component.armor.Armor;
+import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.mech.Mech;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 

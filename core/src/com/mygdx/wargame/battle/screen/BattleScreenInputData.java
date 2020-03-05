@@ -1,7 +1,7 @@
 package com.mygdx.wargame.battle.screen;
 
-import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.common.mech.Mech;
+import com.mygdx.wargame.common.pilot.Pilot;
 
 import java.util.HashMap;
 import java.util.Map;

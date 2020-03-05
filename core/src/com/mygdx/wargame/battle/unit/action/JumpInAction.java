@@ -4,8 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.State;
-import com.mygdx.wargame.decor.Splash;
-import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.battle.decor.Splash;
+import com.mygdx.wargame.common.mech.AbstractMech;
 
 public class JumpInAction extends MoveToAction {
 

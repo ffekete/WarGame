@@ -1,6 +1,6 @@
 package com.mygdx.wargame.battle.screen;
 
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 
 public class TurnProcessingFacadeStore {
 

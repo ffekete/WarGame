@@ -15,8 +15,8 @@ import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.State;
-import com.mygdx.wargame.decor.Birds;
-import com.mygdx.wargame.mech.AbstractMech;
+import com.mygdx.wargame.battle.decor.Birds;
+import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 

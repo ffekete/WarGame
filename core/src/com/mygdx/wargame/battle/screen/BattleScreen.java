@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,7 +27,6 @@ import com.mygdx.wargame.battle.input.GroundInputListener;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.CloudGenerator;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
@@ -45,12 +45,12 @@ import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.rules.calculator.HeatCalculator;
-import com.mygdx.wargame.rules.calculator.MovementSpeedCalculator;
-import com.mygdx.wargame.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.rules.facade.AttackFacade;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
-import com.mygdx.wargame.rules.facade.target.TargetingFacade;
+import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
+import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
+import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
+import com.mygdx.wargame.battle.rules.facade.AttackFacade;
+import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.DrawUtils;
 
 import static com.mygdx.wargame.battle.map.BattleMapConfig.TILE_SIZE;
@@ -78,209 +78,197 @@ public class BattleScreen implements Screen {
     private World world;
     private RayHandler rayHandler;
     private HudElementsFacade hudElementsFacade;
-    private boolean firstRun = true;
+
     private InputMultiplexer inputMultiplexer;
     private StageElementsStorage stageElementsStorage;
     private CloudGenerator cloudGenerator;
+    private ScreenLoader screenLoader;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
     }
 
+    public void load(ScreenLoader screenLoader) {
+        /// Box2D
+        Box2D.init();
+        world = new World(new Vector2(0, 0), true);
+
+        rayHandler = new RayHandler(world);
+        rayHandler.setShadows(true);
+        rayHandler.setAmbientLight(new Color(0.1f, 0.1f, 0f, 0.8f));
+
+        stageElementsStorage = new StageElementsStorage();
+
+        screenConfiguration = new ScreenConfiguration(0, 0, 0);
+
+        camera = new OrthographicCamera();
+        viewport = new StretchViewport(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, camera);
+        viewport.update(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, true);
+        viewport.apply();
+
+        hudCamera = new OrthographicCamera();
+        hudViewport = new StretchViewport(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT, hudCamera);
+
+        this.spriteBatch = new SpriteBatch();
+        spriteBatch.setProjectionMatrix(camera.combined);
+        //spriteBatch.maxSpritesInBatch = 10;
+
+        this.screenLoader = screenLoader;
+        screenLoader.load();
+
+        stage = new Stage(viewport, spriteBatch);
+        hudStage = new Stage(hudViewport, spriteBatch);
+
+        stageElementsStorage.stage = stage;
+        stageElementsStorage.hudStage = hudStage;
+
+        selectionMarker = new SelectionMarker(screenLoader.getAssetManager(), spriteBatch);
+
+        BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
+        BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, screenLoader.getAssetManager());
+
+        BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
+
+        battleMap = new BattleMap(actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE, world);
+
+        inputMultiplexer = new InputMultiplexer();
+
+        HUDMediator hudMediator = new HUDMediator();
+
+        TurnProcessingFacadeStore turnProcessingFacadeStore = new TurnProcessingFacadeStore();
+
+        inputMultiplexer.addProcessor(new BasicInputAdapter(screenConfiguration, actionLock, hudMediator, turnProcessingFacadeStore, stageElementsStorage));
+
+        inputMultiplexer.addProcessor(hudStage);
+        inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
+        MainMenuFacade mainMenuFacade = new MainMenuFacade(screenLoader.getAssetManager(), hudMediator);
+
+        hudMediator.setMainMenuFacade(mainMenuFacade);
+
+        healthInfoPanelFacade = new HealthInfoPanelFacade(screenLoader.getAssetManager());
+        hudMediator.setHealthInfoPanelFacade(healthInfoPanelFacade);
+
+        MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade(hudMediator, screenLoader.getAssetManager());
+        hudMediator.setMechInfoPanelFacade(mechInfoPanelFacade);
+
+        MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade);
+
+        AttackFacade attackFacade = new AttackFacade(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
+
+        battleScreenInputDataStubber.stub(battleScreenInputData, battleMap, turnProcessingFacadeStore);
+
+        this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
+                new TargetingFacade(stageElementsStorage),
+                new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler, hudMediator);
+
+        turnProcessingFacadeStore.setTurnProcessingFacade(turnProcessingFacade);
+        // display
+
+        mechInfoPanelFacade.setTouchable(Touchable.enabled);
+
+        TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(screenLoader.getAssetManager(), stageElementsStorage);
+
+        terrainTypeAwareBattleMapDecorator.decorate(battleMap);
+
+        rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler, hudMediator);
+
+        DetailsPageFacade detailsPageFacade = new DetailsPageFacade(mechInfoPanelFacade, hudMediator, screenLoader.getAssetManager());
+        hudMediator.setDetailsPageFacade(detailsPageFacade);
+
+        targetingPanelFacade = new TargetingPanelFacade(screenLoader.getAssetManager(), rangedAttackTargetCalculator, rangeCalculator);
+        hudMediator.setTargetingPanelFacade(targetingPanelFacade);
+
+        EnemyMechInfoPanelFacade enemyMechInfoPanelFacade = new EnemyMechInfoPanelFacade(stageElementsStorage, actionLock, targetingPanelFacade, rangedAttackTargetCalculator);
+
+        hudMediator.setEnemyMechInfoPanelFacade(enemyMechInfoPanelFacade);
+
+        battleScreenInputData.getGroup1().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
+        battleScreenInputData.getGroup2().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
+
+        stage.addActor(stageElementsStorage.groundLevel);
+        stage.addActor(stageElementsStorage.mechLevel);
+        stage.addActor(stageElementsStorage.airLevel);
+
+        stage.addActor(mechInfoPanelFacade);
+
+        stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager(), targetingPanelFacade, enemyMechInfoPanelFacade));
+
+        battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
+            stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
+            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage, battleMap, hudMediator));
+        }));
+
+        battleScreenInputData.getGroup2().entrySet().forEach((entry -> {
+            stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
+            ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage, battleMap, hudMediator));
+        }));
+
+        stage.addActor(selectionMarker);
+        mechInfoPanelFacade.getWeaponSelectionButton().setVisible(false);
+        mechInfoPanelFacade.getDetailsButton().setVisible(false);
+        mechInfoPanelFacade.getHideMenuButton().setVisible(false);
+        mechInfoPanelFacade.getPilotButton().setVisible(false);
+
+        hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
+        hudMediator.setHudElementsFacade(hudElementsFacade);
+
+        // create
+        detailsPageFacade.create();
+        hudElementsFacade.create();
+        mainMenuFacade.create();
+
+        mainMenuFacade.hide();
+
+        // register components
+        mechInfoPanelFacade.registerComponents(hudStage);
+        enemyMechInfoPanelFacade.registerComponents(hudStage);
+        hudElementsFacade.registerComponents(hudStage);
+        detailsPageFacade.registerComponents(hudStage);
+        mainMenuFacade.registerComponents(hudStage);
+
+
+        float unitScale = 1f / TILE_SIZE;
+        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
+
+        targetingPanelFacade.hide();
+        healthInfoPanelFacade.show();
+
+        healthInfoPanelFacade.getPanel().setPosition(0, 0);
+        healthInfoPanelFacade.getPanel().setSize(60, 60);
+        healthInfoPanelFacade.show();
+        hudStage.addActor(healthInfoPanelFacade.getPanel());
+
+        mechInfoPanelFacade.hideLocalMenu();
+        enemyMechInfoPanelFacade.hideLocalMenu();
+
+        hudStage.setScrollFocus(mechInfoPanelFacade.getIbTable());
+
+        GameEndFacade gameEndFacade = new GameEndFacade(screenLoader.getAssetManager(), actionLock);
+
+        gameEndFacade.create();
+
+        gameEndFacade.register(hudStage);
+
+        gameEndFacade.hide();
+
+        hudMediator.setGameEndFacade(gameEndFacade);
+
+        PilotDetailsFacade pilotDetailsFacade = new PilotDetailsFacade(screenLoader.getAssetManager(), hudMediator);
+
+        pilotDetailsFacade.create();
+        pilotDetailsFacade.register(hudStage);
+        pilotDetailsFacade.hide();
+
+        hudMediator.setPilotDetailsFacade(pilotDetailsFacade);
+
+        this.cloudGenerator = new CloudGenerator(screenLoader.getAssetManager(), stageElementsStorage);
+    }
+
     @Override
     public void show() {
-
-        if(firstRun) {
-            /// Box2D
-            Box2D.init();
-            world = new World(new Vector2(0, 0), true);
-
-            rayHandler = new RayHandler(world);
-            rayHandler.setShadows(true);
-            rayHandler.setAmbientLight(new Color(0.1f, 0.1f, 0f, 0.8f));
-
-            stageElementsStorage = new StageElementsStorage();
-
-            screenConfiguration = new ScreenConfiguration(0, 0, 0);
-
-            camera = new OrthographicCamera();
-            viewport = new StretchViewport(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, camera);
-            viewport.update(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, true);
-            viewport.apply();
-
-            hudCamera = new OrthographicCamera();
-            hudViewport = new StretchViewport(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT, hudCamera);
-
-            this.spriteBatch = new SpriteBatch();
-            spriteBatch.setProjectionMatrix(camera.combined);
-            //spriteBatch.maxSpritesInBatch = 10;
-
-            ScreenLoader screenLoader = new ScreenLoader();
-            screenLoader.load();
-
-            stage = new Stage(viewport, spriteBatch);
-            hudStage = new Stage(hudViewport, spriteBatch);
-
-            stageElementsStorage.stage = stage;
-            stageElementsStorage.hudStage = hudStage;
-
-            selectionMarker = new SelectionMarker(screenLoader.getAssetManager(), spriteBatch);
-
-            BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
-            BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, screenLoader.getAssetManager());
-
-            BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(screenLoader.getAssetManager());
-
-            battleMap = new BattleMap(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, actionLock, TerrainType.Grassland, screenLoader.getAssetManager(), textureRegionSelector, TILE_SIZE, world);
-
-            inputMultiplexer = new InputMultiplexer();
-
-            HUDMediator hudMediator = new HUDMediator();
-
-            TurnProcessingFacadeStore turnProcessingFacadeStore = new TurnProcessingFacadeStore();
-
-            inputMultiplexer.addProcessor(new BasicInputAdapter(screenConfiguration, actionLock, hudMediator, turnProcessingFacadeStore, stageElementsStorage));
-
-            inputMultiplexer.addProcessor(hudStage);
-            inputMultiplexer.addProcessor(stage);
-            Gdx.input.setInputProcessor(inputMultiplexer);
-
-            MainMenuFacade mainMenuFacade = new MainMenuFacade(screenLoader.getAssetManager(), hudMediator);
-
-            hudMediator.setMainMenuFacade(mainMenuFacade);
-
-            healthInfoPanelFacade = new HealthInfoPanelFacade(screenLoader.getAssetManager());
-            hudMediator.setHealthInfoPanelFacade(healthInfoPanelFacade);
-
-            MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade(hudMediator, screenLoader.getAssetManager());
-            hudMediator.setMechInfoPanelFacade(mechInfoPanelFacade);
-
-            MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade);
-
-            AttackFacade attackFacade = new AttackFacade(stageElementsStorage, screenLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
-
-            battleScreenInputDataStubber.stub(battleScreenInputData, battleMap, turnProcessingFacadeStore);
-
-            this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
-                    new TargetingFacade(stageElementsStorage),
-                    new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
-                    battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler, hudMediator);
-
-            turnProcessingFacadeStore.setTurnProcessingFacade(turnProcessingFacade);
-            // display
-
-            mechInfoPanelFacade.setTouchable(Touchable.enabled);
-
-            TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(screenLoader.getAssetManager(), stageElementsStorage);
-
-            terrainTypeAwareBattleMapDecorator.decorate(battleMap);
-
-            rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, screenLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler, hudMediator);
-
-            DetailsPageFacade detailsPageFacade = new DetailsPageFacade(mechInfoPanelFacade, hudMediator, screenLoader.getAssetManager());
-            hudMediator.setDetailsPageFacade(detailsPageFacade);
-
-            targetingPanelFacade = new TargetingPanelFacade(screenLoader.getAssetManager(), rangedAttackTargetCalculator, rangeCalculator);
-            hudMediator.setTargetingPanelFacade(targetingPanelFacade);
-
-            EnemyMechInfoPanelFacade enemyMechInfoPanelFacade = new EnemyMechInfoPanelFacade(stageElementsStorage, actionLock, targetingPanelFacade, rangedAttackTargetCalculator);
-
-            hudMediator.setEnemyMechInfoPanelFacade(enemyMechInfoPanelFacade);
-
-            battleScreenInputData.getGroup1().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
-            battleScreenInputData.getGroup2().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
-
-            stage.addActor(stageElementsStorage.groundLevel);
-            stage.addActor(stageElementsStorage.mechLevel);
-            stage.addActor(stageElementsStorage.airLevel);
-
-            stage.addActor(mechInfoPanelFacade);
-
-            stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, screenLoader.getAssetManager(), targetingPanelFacade, enemyMechInfoPanelFacade));
-
-            battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
-                stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
-                ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage, battleMap, hudMediator));
-            }));
-
-            battleScreenInputData.getGroup2().entrySet().forEach((entry -> {
-                stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
-                ((Actor) entry.getKey()).addListener(new MechClickInputListener(entry.getKey(), entry.getValue(), turnProcessingFacade, rangedAttackTargetCalculator, actionLock, mechInfoPanelFacade.getSmallLabelStyle(), mechInfoPanelFacade.getCheckBoxStyle(), mechInfoPanelFacade, hudStage, stage, stageElementsStorage, battleMap, hudMediator));
-            }));
-
-            stage.addActor(selectionMarker);
-            mechInfoPanelFacade.getWeaponSelectionButton().setVisible(false);
-            mechInfoPanelFacade.getDetailsButton().setVisible(false);
-            mechInfoPanelFacade.getHideMenuButton().setVisible(false);
-            mechInfoPanelFacade.getPilotButton().setVisible(false);
-
-            hudElementsFacade = new HudElementsFacade(screenLoader.getAssetManager(), turnProcessingFacade, actionLock);
-            hudMediator.setHudElementsFacade(hudElementsFacade);
-
-            // create
-            detailsPageFacade.create();
-            hudElementsFacade.create();
-            mainMenuFacade.create();
-
-            mainMenuFacade.hide();
-
-            // register components
-            mechInfoPanelFacade.registerComponents(hudStage);
-            enemyMechInfoPanelFacade.registerComponents(hudStage);
-            hudElementsFacade.registerComponents(hudStage);
-            detailsPageFacade.registerComponents(hudStage);
-            mainMenuFacade.registerComponents(hudStage);
-
-
-            float unitScale = 1f / TILE_SIZE;
-            orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
-
-            targetingPanelFacade.hide();
-            healthInfoPanelFacade.show();
-
-            healthInfoPanelFacade.getPanel().setPosition(0, 0);
-            healthInfoPanelFacade.getPanel().setSize(60, 60);
-            healthInfoPanelFacade.show();
-            hudStage.addActor(healthInfoPanelFacade.getPanel());
-
-            mechInfoPanelFacade.hideLocalMenu();
-            enemyMechInfoPanelFacade.hideLocalMenu();
-
-            hudStage.addListener(new InputListener() {
-                @Override
-                public boolean keyDown(InputEvent event, int keycode) {
-                    if (keycode == Input.Keys.ESCAPE) {
-                        mainMenuFacade.toggle();
-                        event.stop();
-                    }
-                    return true;
-                }
-            });
-            hudStage.setScrollFocus(mechInfoPanelFacade.getIbTable());
-
-            GameEndFacade gameEndFacade = new GameEndFacade(screenLoader.getAssetManager(), actionLock);
-
-            gameEndFacade.create();
-
-            gameEndFacade.register(hudStage);
-
-            gameEndFacade.hide();
-
-            hudMediator.setGameEndFacade(gameEndFacade);
-
-            PilotDetailsFacade pilotDetailsFacade = new PilotDetailsFacade(screenLoader.getAssetManager(), hudMediator);
-
-            pilotDetailsFacade.create();
-            pilotDetailsFacade.register(hudStage);
-            pilotDetailsFacade.hide();
-
-            hudMediator.setPilotDetailsFacade(pilotDetailsFacade);
-
-            this.cloudGenerator = new CloudGenerator(screenLoader.getAssetManager(), stageElementsStorage);
-
-            firstRun = false;
-        }
-
         Gdx.input.setInputProcessor(inputMultiplexer);
         hudElementsFacade.show();
         healthInfoPanelFacade.show();

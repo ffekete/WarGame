@@ -3,7 +3,7 @@ package com.mygdx.wargame.battle.action;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.common.mech.Mech;
 
 public class ZoomOutCameraAction extends TemporalAction {
 

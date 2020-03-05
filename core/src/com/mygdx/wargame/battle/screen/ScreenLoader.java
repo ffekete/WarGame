@@ -7,12 +7,11 @@ public class ScreenLoader {
 
     private AssetManager assetManager;
 
-    public ScreenLoader() {
-        this.assetManager = new AssetManager();
+    public ScreenLoader(AssetManager assetManager) {
+        this.assetManager = assetManager;
     }
 
     public void load() {
-        assetManager = new AssetManager();
 
         assetManager.load("HeatProgressBarBg.png", Texture.class);
         assetManager.load("StabilityProgressBarBg.png", Texture.class);

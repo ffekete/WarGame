@@ -7,7 +7,7 @@ import com.mygdx.wargame.battle.map.Edge;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.decoration.TreeImage;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.ArrayList;
 import java.util.HashMap;

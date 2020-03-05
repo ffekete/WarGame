@@ -11,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.mygdx.wargame.battle.screen.ui.targeting.ColoredImageButton;
-import com.mygdx.wargame.mech.BodyPart;
-import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.pilot.Pilot;
-import com.mygdx.wargame.rules.facade.HitChanceCalculatorFacade;
+import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.mech.Mech;
+import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.battle.rules.facade.HitChanceCalculatorFacade;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -16,9 +16,9 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.mech.AbstractMech;
-import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.pilot.Pilot;
+import com.mygdx.wargame.common.mech.AbstractMech;
+import com.mygdx.wargame.common.mech.Mech;
+import com.mygdx.wargame.common.pilot.Pilot;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 

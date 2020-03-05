@@ -7,7 +7,7 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.movement.MovementMarker;
-import com.mygdx.wargame.mech.Mech;
+import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.util.MapUtils;
 
 import java.util.Map;

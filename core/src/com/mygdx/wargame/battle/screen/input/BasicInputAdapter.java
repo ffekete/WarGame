@@ -3,7 +3,6 @@ package com.mygdx.wargame.battle.screen.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -12,13 +11,11 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.ScreenConfiguration;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.TurnProcessingFacadeStore;
-import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.component.weapon.Status;
-import com.mygdx.wargame.component.weapon.Weapon;
+import com.mygdx.wargame.common.component.weapon.Status;
+import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.mech.Mech;
-import com.mygdx.wargame.util.StageUtils;
+import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +50,11 @@ public class BasicInputAdapter extends InputAdapter {
 
     @Override
     public boolean keyUp(int keycode) {
+
+        if (keycode == Input.Keys.ESCAPE) {
+            hudMediator.getMainMenuFacade().toggle();
+        }
+
         if(keycode == Input.Keys.SPACE) {
             Config.showDirectionMarkers = false;
         }

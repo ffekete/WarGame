@@ -22,7 +22,6 @@ import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.rules.facade.TurnProcessingFacade;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
