@@ -1,9 +1,11 @@
 package com.mygdx.wargame.battle.screen.input;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.ScreenConfiguration;
+import com.mygdx.wargame.config.Config;
 
 import static com.mygdx.wargame.config.Config.SCREEN_SIZE_X;
 import static com.mygdx.wargame.config.Config.SCREEN_SIZE_Y;
@@ -16,6 +18,22 @@ public class BasicMouseHandlingInputAdapter extends InputAdapter {
     public BasicMouseHandlingInputAdapter(ScreenConfiguration screenConfiguration, ActionLock actionLock) {
         this.screenConfiguration = screenConfiguration;
         this.actionLock = actionLock;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == Input.Keys.SPACE) {
+            Config.showDirectionMarkers = true;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode == Input.Keys.SPACE) {
+            Config.showDirectionMarkers = false;
+        }
+        return true;
     }
 
     @Override

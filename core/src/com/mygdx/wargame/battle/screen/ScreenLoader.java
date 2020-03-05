@@ -40,6 +40,7 @@ public class ScreenLoader {
         assetManager.load("Flame.png", Texture.class);
         assetManager.load("Splash.png", Texture.class);
         assetManager.load("InfoIcon.png", Texture.class);
+        assetManager.load("DirectionMarker.png", Texture.class);
 
         assetManager.load("objects/Crater.png", Texture.class);
         assetManager.load("objects/Rocks.png", Texture.class);

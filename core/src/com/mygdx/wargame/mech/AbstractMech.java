@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.decoration.AnimatedGameObjectImage;
+import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
 import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
@@ -14,6 +16,7 @@ import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.component.armor.Armor;
 import com.mygdx.wargame.component.shield.Shield;
 import com.mygdx.wargame.component.weapon.Status;
+import com.mygdx.wargame.config.Config;
 
 import java.util.Random;
 
@@ -41,6 +44,7 @@ AbstractMech extends Actor implements Mech {
     private TextureRegion shieldTextureRegion;
     private TextureRegion selectionTexture;
     private Texture shadow;
+    private AnimatedGameObjectImage directionMarker;
 
     public AbstractMech(int initiative, AssetManager assetManager, BattleMap battleMap) {
         this.initiative = initiative;
@@ -48,6 +52,7 @@ AbstractMech extends Actor implements Mech {
         this.shieldTextureRegion = new TextureRegion(assetManager.get("Shielded.png", Texture.class));
         this.battleMap = battleMap;
         this.shadow = assetManager.get("Shadow.png", Texture.class);
+        this.directionMarker = new AnimatedGameObjectImage(new TextureRegion(assetManager.get("DirectionMarker.png", Texture.class)), 0.1f, 10);
     }
 
     public void setState(State state) {
@@ -152,6 +157,26 @@ AbstractMech extends Actor implements Mech {
             spriteBatch.draw(shieldTextureRegion, x - 0.5f, y - 0.5f, 2f, 2f);
             spriteBatch.setColor(Color.WHITE);
         }
+
+        if(Config.showDirectionMarkers) {
+            switch (direction) {
+                case Up:
+                    directionMarker.setRotation(90);
+                    break;
+                case Down:
+                    directionMarker.setRotation(270);
+                    break;
+                case Left:
+                    directionMarker.setRotation(180);
+                    break;
+                case Right:
+                    directionMarker.setRotation(0);
+                    break;
+            }
+            directionMarker.setPosition(x, y);
+            directionMarker.draw(spriteBatch, 1f);
+        }
+
     }
 
     public int getInitiative() {
