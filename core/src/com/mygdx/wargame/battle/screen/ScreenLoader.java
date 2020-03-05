@@ -92,6 +92,7 @@ public class ScreenLoader {
         assetManager.load("cloud/Cloud01.png", Texture.class);
         assetManager.load("cloud/Cloud02.png", Texture.class);
         assetManager.load("cloud/Cloud03.png", Texture.class);
+        assetManager.load("cloud/Cloud04.png", Texture.class);
 
         assetManager.load("PlasmaBullet.png", Texture.class);
         assetManager.load("CannonBullet.png", Texture.class);

@@ -138,7 +138,7 @@ public class DamageCalculator {
         explosion.setPosition(target.getX(), target.getY());
         sequenceAction.addAction(new AddActorAction(stageElementsStorage.airLevel, explosion));
         sequenceAction.addAction(new DelayAction(1f));
-        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
+        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion, null));
 
         stageElementsStorage.airLevel.addAction(sequenceAction);
     }

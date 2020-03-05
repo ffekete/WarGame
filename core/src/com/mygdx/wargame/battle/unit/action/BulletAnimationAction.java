@@ -187,7 +187,7 @@ BulletAnimationAction extends Action {
                         craterCreated = true;
                     }
                     explosionAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap, rayHandler));
-                    explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion));
+                    explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion, null));
 
                     if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {
                         //explosionAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof explosion"));

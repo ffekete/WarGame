@@ -19,4 +19,6 @@ public class Config {
     public static int treeSpread = 5;
 
     public static boolean showDirectionMarkers = false;
+
+    public static int CLOUD_DENSITY = 500;
 }

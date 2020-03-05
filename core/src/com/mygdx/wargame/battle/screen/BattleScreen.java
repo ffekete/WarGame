@@ -28,6 +28,7 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapConfig;
 import com.mygdx.wargame.battle.map.TerrainType;
+import com.mygdx.wargame.battle.map.decorator.CloudGenerator;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
 import com.mygdx.wargame.battle.screen.input.BasicMouseHandlingInputAdapter;
@@ -80,6 +81,7 @@ public class BattleScreen implements Screen {
     private boolean firstRun = true;
     private InputMultiplexer inputMultiplexer;
     private StageElementsStorage stageElementsStorage;
+    private CloudGenerator cloudGenerator;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -271,6 +273,8 @@ public class BattleScreen implements Screen {
 
             hudMediator.setPilotDetailsFacade(pilotDetailsFacade);
 
+            this.cloudGenerator = new CloudGenerator(screenLoader.getAssetManager(), stageElementsStorage);
+
             firstRun = false;
         }
 
@@ -285,6 +289,8 @@ public class BattleScreen implements Screen {
     public void render(float delta) {
 
         //System.out.println(Gdx.graphics.getFramesPerSecond());
+
+        cloudGenerator.update();
 
         camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
         camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
