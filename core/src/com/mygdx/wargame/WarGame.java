@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.mygdx.wargame.battle.screen.BattleScreen;
 import com.mygdx.wargame.battle.screen.AssetManagerLoader;
 import com.mygdx.wargame.common.ScreenRegister;
+import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.mainmenu.MainMenuScreen;
 import com.mygdx.wargame.options.OptionsScreen;
 import com.mygdx.wargame.summary.SummaryScreen;
@@ -18,6 +19,7 @@ public class WarGame extends Game {
 
     @Override
     public void create() {
+        Config.load();
         screenRegister.setGame(this);
         assetManager = new AssetManager();
         assetManagerLoader = new AssetManagerLoader(assetManager);

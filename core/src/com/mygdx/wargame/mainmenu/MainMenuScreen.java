@@ -22,7 +22,7 @@ public class MainMenuScreen implements Screen {
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(Config.HUD_VIEWPORT_WIDTH.get(), Config.HUD_VIEWPORT_HEIGHT.get(), camera);
         stage = new Stage(viewport);
-        this.mainMenuFacade  = new MainMenuFacade(assetManager);
+        this.mainMenuFacade = new MainMenuFacade(assetManager);
         this.mainMenuFacade.create();
         this.mainMenuFacade.registerComponents(stage);
     }

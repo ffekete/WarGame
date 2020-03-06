@@ -93,9 +93,10 @@ public class OptionsMenuFacade {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Config.SCREEN_SIZE_X = resolutionBox.getSelected().width;
+                Config.cfg.screenSizeX = resolutionBox.getSelected().width;
                 Config.SCREEN_SIZE_Y = resolutionBox.getSelected().height;
-
-                ScreenRegister.I.getOptionsScreen().resize(Config.SCREEN_SIZE_X, Config.SCREEN_SIZE_Y);
+                Config.cfg.screenSizeY = resolutionBox.getSelected().height;
+                Config.save();
             }
         });
 
