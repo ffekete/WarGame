@@ -18,14 +18,16 @@ public class MovementMarkerFactory {
     private StageElementsStorage stageElementsStorage;
     private AssetManager assetManager;
     private MechInfoPanelFacade mechInfoPanelFacade;
+    private BattleMap battleMap;
 
-    public MovementMarkerFactory(StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade) {
+    public MovementMarkerFactory(StageElementsStorage stageElementsStorage, AssetManager assetManager, MechInfoPanelFacade mechInfoPanelFacade, BattleMap battleMap) {
         this.stageElementsStorage = stageElementsStorage;
         this.assetManager = assetManager;
+        this.battleMap = battleMap;
         movementMarkerPool = new Pool<MovementMarker>() {
             @Override
             protected MovementMarker newObject() {
-                return new MovementMarker(assetManager, MovementMarkerFactory.this.mechInfoPanelFacade.getLabelStyle(), stageElementsStorage);
+                return new MovementMarker(assetManager, MovementMarkerFactory.this.mechInfoPanelFacade.getLabelStyle(), stageElementsStorage, MovementMarkerFactory.this.battleMap);
             }
         };
         this.mechInfoPanelFacade = mechInfoPanelFacade;
@@ -40,6 +42,7 @@ public class MovementMarkerFactory {
             MovementMarker movementMarker = movementMarkerPool.obtain();
             movementMarker.setPosition(node.getX(), node.getY());
             movementMarker.setLabel(movementPointsCost);
+            movementMarker.setSize(1, 1);
             stageElementsStorage.groundLevel.addActor(movementMarker);
             stageElementsStorage.movementMarkerList.add(movementMarker);
         });

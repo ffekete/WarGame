@@ -9,10 +9,6 @@ import com.badlogic.gdx.utils.Json;
 import java.util.function.Supplier;
 
 public class Config {
-
-//    public static int SCREEN_SIZE_X = 1366;
-//    public static int SCREEN_SIZE_Y = 768;
-
     public static class Cfg {
         public int screenSizeX = SCREEN_SIZE_X;
         public int screenSizeY = SCREEN_SIZE_Y;

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -34,9 +35,10 @@ import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 public class OptionsMenuFacade {
 
     private TextButton.TextButtonStyle textButtonStyle;
-    private TextButton resumeButton;
     private AssetManager assetManager;
     private Table outerTable;
+    private Table warningTable;
+    private TextButton okButton;
 
     public OptionsMenuFacade(AssetManager assetManager) {
         this.assetManager = assetManager;
@@ -59,7 +61,8 @@ public class OptionsMenuFacade {
 
         List.ListStyle listStyle = new List.ListStyle();
         listStyle.font = FontCreator.getBitmapFont(13);
-        listStyle.selection = new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class));
+        listStyle.selection = new TextureRegionDrawable(assetManager.get("SelectionBg.png", Texture.class));
+        listStyle.background = new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class));
 
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
 
@@ -83,7 +86,6 @@ public class OptionsMenuFacade {
         resolutionBox.setItems(modes);
 
 
-
         resolutionBox.addListener(new ChangeListener() {
             @Override
             public boolean handle(Event event) {
@@ -97,14 +99,18 @@ public class OptionsMenuFacade {
                 Config.SCREEN_SIZE_Y = resolutionBox.getSelected().height;
                 Config.cfg.screenSizeY = resolutionBox.getSelected().height;
                 Config.save();
+                warningTable.setVisible(true);
+                outerTable.setVisible(false);
+
             }
         });
 
-        resumeButton = new TextButton("BACK", textButtonStyle);
+        TextButton resumeButton = new TextButton("BACK", textButtonStyle);
 
         resumeButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // we don't want to load here, just go back
                 ScreenRegister.I.getGame().setScreen(ScreenRegister.I.getLastScreen());
                 return true;
             }
@@ -112,11 +118,28 @@ public class OptionsMenuFacade {
 
         outerTable.add(resolutionBox).row();
         outerTable.add(resumeButton).center().size(300 / SCREEN_HUD_RATIO, 150 / SCREEN_HUD_RATIO);
+
+        warningTable = new Table();
+        warningTable.add(new Label("Changes will apply after the game is restarted!", labelStyle)).row();
+        okButton = new TextButton("", textButtonStyle);
+        warningTable.add(okButton).center();
+
+        warningTable.setVisible(false);
+
+        okButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                warningTable.setVisible(false);
+                outerTable.setVisible(true);
+                return true;
+            }
+        });
     }
 
 
     public void register(Stage stage) {
         stage.addActor(outerTable);
+        stage.addActor(warningTable);
     }
 
 }

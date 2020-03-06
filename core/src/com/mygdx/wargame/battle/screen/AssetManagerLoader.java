@@ -116,6 +116,7 @@ public class AssetManagerLoader {
         assetManager.load("skin/HideButtonUp.png", Texture.class);
         assetManager.load("skin/HideButtonDown.png", Texture.class);
         assetManager.load("skin/SimplePanel.png", Texture.class);
+        assetManager.load("SelectionBg.png", Texture.class);
 
         assetManager.load("localmenu/AttackButton.png", Texture.class);
         assetManager.load("localmenu/CalledShotUp.png", Texture.class);

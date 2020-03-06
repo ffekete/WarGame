@@ -64,7 +64,7 @@ public class GameEndFacade {
         textButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ScreenRegister.I.getGame().setScreen(ScreenRegister.I.getSummaryScreen());
+                ScreenRegister.I.getGame().showSummaryScreen();
                 return true;
             }
         });

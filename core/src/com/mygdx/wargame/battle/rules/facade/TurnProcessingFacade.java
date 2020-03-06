@@ -18,6 +18,12 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
+import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
+import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
+import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
+import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
+import com.mygdx.wargame.battle.rules.facade.target.Target;
+import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
@@ -26,11 +32,6 @@ import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Pilot;
-import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
-import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
-import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.battle.rules.facade.target.Target;
-import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Iterator;
@@ -62,9 +63,10 @@ public class TurnProcessingFacade {
     private RayHandler rayHandler;
     private HUDMediator hudMediator;
     private WeaponSelectionOptimizer weaponSelectionOptimizer;
+    private StabilityDecreaseCalculator stabilityDecreaseCalculator;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera, RayHandler rayHandler, HUDMediator hudMediator) {
+                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, Stage hudStage, AssetManager assetManager, StageElementsStorage stageElementsStorage, MovementMarkerFactory movementMarkerFactory, HeatCalculator heatCalculator, MechInfoPanelFacade mechInfoPanelFacade, Camera camera, RayHandler rayHandler, HUDMediator hudMediator, StabilityDecreaseCalculator stabilityDecreaseCalculator) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -83,7 +85,7 @@ public class TurnProcessingFacade {
         this.camera = camera;
         this.rayHandler = rayHandler;
         this.hudMediator = hudMediator;
-
+        this.stabilityDecreaseCalculator = stabilityDecreaseCalculator;
 
         this.team1.forEach((key, value) -> allSorted.put(key, value));
         this.team2.forEach((key, value) -> allSorted.put(key, value));
@@ -132,10 +134,10 @@ public class TurnProcessingFacade {
             //centerCameraOnNext(stage);
         }
 
-        if(team2.keySet().stream().noneMatch(Mech::isActive)) {
+        if (team2.keySet().stream().noneMatch(Mech::isActive)) {
             hudMediator.getGameEndFacade().setWon(true);
             hudMediator.getGameEndFacade().show();
-        } else  if(team1.keySet().stream().noneMatch(Mech::isActive)){
+        } else if (team1.keySet().stream().noneMatch(Mech::isActive)) {
             hudMediator.getGameEndFacade().setWon(false);
             hudMediator.getGameEndFacade().show();
         } else {
@@ -175,7 +177,7 @@ public class TurnProcessingFacade {
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
                 sequenceAction.addAction(regenerateShields(selectedMech));
                 sequenceAction.addAction(new DelayAction(0.5f));
-                sequenceAction.addAction(reduceStabilityLevel(selectedMech));
+                sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
 
                 // find target
                 Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
@@ -213,7 +215,7 @@ public class TurnProcessingFacade {
                     }
 
 
-                    if(target.get().getMech() != null) {
+                    if (target.get().getMech() != null) {
                         sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
 
                         // then attack
@@ -243,7 +245,7 @@ public class TurnProcessingFacade {
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
                 sequenceAction.addAction(regenerateShields(selectedMech));
                 sequenceAction.addAction(new DelayAction(0.5f));
-                sequenceAction.addAction(reduceStabilityLevel(selectedMech));
+                sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
                 sequenceAction.addAction(new UnlockAction(actionLock, ""));
                 ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
@@ -272,11 +274,11 @@ public class TurnProcessingFacade {
         return sequenceAction;
     }
 
-    private Action reduceStabilityLevel(Mech mech) {
+    private Action reduceStabilityLevel(Mech mech, BattleMap battleMap) {
 
         int stabilityBeforeIncrease = mech.getStability();
 
-        mech.setStability(Math.min(mech.getStability() + 50, 100));
+        mech.setStability(stabilityDecreaseCalculator.calculate(mech, battleMap));
         SequenceAction sequenceAction = new SequenceAction();
         sequenceAction.addAction(new IntAction(stabilityBeforeIncrease, mech::getStability, 1f, hudMediator.getHudElementsFacade().getStabilityValueLabel()));
 
@@ -288,7 +290,7 @@ public class TurnProcessingFacade {
         int shieldBeforeIncrease = mech.getShieldValue();
 
         mech.getAllComponents().forEach(c -> {
-            if(Shield.class.isAssignableFrom(c.getClass())) {
+            if (Shield.class.isAssignableFrom(c.getClass())) {
                 c.update();
             }
         });

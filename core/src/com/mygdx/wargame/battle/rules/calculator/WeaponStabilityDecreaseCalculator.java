@@ -10,11 +10,11 @@ import com.mygdx.wargame.common.pilot.Skill;
 
 import java.util.Random;
 
-public class StabilityCalculator {
+public class WeaponStabilityDecreaseCalculator {
 
     private CriticalHitChanceCalculator criticalHitChanceCalculator;
 
-    public StabilityCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator) {
+    public WeaponStabilityDecreaseCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
     }
 

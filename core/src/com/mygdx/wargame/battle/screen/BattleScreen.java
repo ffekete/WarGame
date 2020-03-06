@@ -27,6 +27,7 @@ import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.CloudGenerator;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
+import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
 import com.mygdx.wargame.battle.screen.input.BasicInputAdapter;
 import com.mygdx.wargame.battle.screen.ui.GameEndFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
@@ -146,7 +147,7 @@ public class BattleScreen implements Screen {
         MechInfoPanelFacade mechInfoPanelFacade = new MechInfoPanelFacade(hudMediator, assetManagerLoader.getAssetManager());
         hudMediator.setMechInfoPanelFacade(mechInfoPanelFacade);
 
-        MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, assetManagerLoader.getAssetManager(), mechInfoPanelFacade);
+        MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, assetManagerLoader.getAssetManager(), mechInfoPanelFacade, battleMap);
 
         AttackFacade attackFacade = new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
 
@@ -155,7 +156,7 @@ public class BattleScreen implements Screen {
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(stageElementsStorage),
                 new MovementSpeedCalculator(), battleScreenInputData.getGroup1(),
-                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, assetManagerLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler, hudMediator);
+                battleScreenInputData.getGroup2(), rangeCalculator, stage, hudStage, assetManagerLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, new HeatCalculator(), mechInfoPanelFacade, camera, rayHandler, hudMediator, new StabilityDecreaseCalculator());
 
         turnProcessingFacadeStore.setTurnProcessingFacade(turnProcessingFacade);
         // display

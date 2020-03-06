@@ -15,7 +15,7 @@ import com.mygdx.wargame.battle.rules.calculator.CriticalHitChanceCalculator;
 import com.mygdx.wargame.battle.rules.calculator.DamageCalculator;
 import com.mygdx.wargame.battle.rules.calculator.EvasionCalculator;
 import com.mygdx.wargame.battle.rules.calculator.HeatDamageCalculator;
-import com.mygdx.wargame.battle.rules.calculator.StabilityCalculator;
+import com.mygdx.wargame.battle.rules.calculator.WeaponStabilityDecreaseCalculator;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Random;
@@ -27,7 +27,7 @@ public class AttackFacade {
     private BodyPartDestructionHandler bodyPartDestructionHandler = new BodyPartDestructionHandler();
     private DamageCalculator damageCalculator;
     private EvasionCalculator evasionCalculator;
-    private StabilityCalculator stabilityCalculator = new StabilityCalculator(criticalHitChanceCalculator);
+    private WeaponStabilityDecreaseCalculator weaponStabilityDecreaseCalculator = new WeaponStabilityDecreaseCalculator(criticalHitChanceCalculator);
     private MechInfoPanelFacade mechInfoPanelFacade;
     private ActionLock actionLock;
     private SequenceAction messageQue = new SequenceAction();
@@ -64,7 +64,7 @@ public class AttackFacade {
                     if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
                         // hit!
                         damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart, messageQue);
-                        int stabilityAfterHit = stabilityCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
+                        int stabilityAfterHit = weaponStabilityDecreaseCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
                         defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
                     }
 

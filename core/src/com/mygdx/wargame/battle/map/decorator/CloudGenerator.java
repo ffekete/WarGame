@@ -3,6 +3,7 @@ package com.mygdx.wargame.battle.map.decorator;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -43,7 +44,9 @@ public class CloudGenerator {
         cloudPool = new Pool<Image>() {
             @Override
             protected Image newObject() {
-                return new Image(samples.get(new Random().nextInt(samples.size())));
+                Image image =  new Image(samples.get(new Random().nextInt(samples.size())));
+                image.setTouchable(Touchable.disabled);
+                return image;
             }
         };
     }
