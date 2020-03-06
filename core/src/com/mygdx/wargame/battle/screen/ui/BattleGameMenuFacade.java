@@ -15,7 +15,7 @@ import com.mygdx.wargame.common.ScreenRegister;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
-public class MainMenuFacade {
+public class BattleGameMenuFacade {
 
     private TextButton resumeGameButton;
     private TextButton exitGameButton;
@@ -33,7 +33,7 @@ public class MainMenuFacade {
 
     private HUDMediator hudMediator;
 
-    public MainMenuFacade(AssetManager assetManager, HUDMediator hudMediator) {
+    public BattleGameMenuFacade(AssetManager assetManager, HUDMediator hudMediator) {
         this.assetManager = assetManager;
         this.hudMediator = hudMediator;
     }
@@ -67,7 +67,7 @@ public class MainMenuFacade {
 
         this.exitGameButton = new TextButton("EXIT", textButtonStyle2);
         exitGameButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
-        this.optionsMenuButton = new TextButton("OPTIONS", textButtonStyle);
+        this.optionsMenuButton = new TextButton("OPTIONS", textButtonStyle3);
         optionsMenuButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
 
         table.add(resumeGameButton).size(400 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
@@ -85,7 +85,7 @@ public class MainMenuFacade {
         exitGameButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ScreenRegister.I.getGame().setScreen(ScreenRegister.I.getSummaryScreen());
+                ScreenRegister.I.getGame().showSummaryScreen();
                 return true;
             }
         });
@@ -93,8 +93,7 @@ public class MainMenuFacade {
         optionsMenuButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                hide();
-                ScreenRegister.I.getGame().setScreen(ScreenRegister.I.getOptionsScreen());
+                ScreenRegister.I.getGame().showOptionsScreen();
                 ScreenRegister.I.setLastScreen(ScreenRegister.I.getBattleScreen());
                 return true;
             }

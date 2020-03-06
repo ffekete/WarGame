@@ -52,7 +52,7 @@ public class BasicInputAdapter extends InputAdapter {
     public boolean keyUp(int keycode) {
 
         if (keycode == Input.Keys.ESCAPE) {
-            hudMediator.getMainMenuFacade().toggle();
+            hudMediator.getBattleGameMenuFacade().toggle();
         }
 
         if(keycode == Input.Keys.SPACE) {

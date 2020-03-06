@@ -1,4 +1,4 @@
-package com.mygdx.wargame.options;
+package com.mygdx.wargame.summary;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -31,14 +31,14 @@ import java.util.Comparator;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
-public class OptionsMenuFacade {
+public class SummaryScreenFacade {
 
     private TextButton.TextButtonStyle textButtonStyle;
     private TextButton resumeButton;
     private AssetManager assetManager;
     private Table outerTable;
 
-    public OptionsMenuFacade(AssetManager assetManager) {
+    public SummaryScreenFacade(AssetManager assetManager) {
         this.assetManager = assetManager;
     }
 
@@ -57,59 +57,17 @@ public class OptionsMenuFacade {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = FontCreator.getBitmapFont(13);
 
-        List.ListStyle listStyle = new List.ListStyle();
-        listStyle.font = FontCreator.getBitmapFont(13);
-        listStyle.selection = new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class));
 
-        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-
-        SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle();
-        selectBoxStyle.background = new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class));
-        selectBoxStyle.font = FontCreator.getBitmapFont(13);
-        selectBoxStyle.listStyle = listStyle;
-        selectBoxStyle.scrollStyle = scrollPaneStyle;
-
-        SelectBox<Graphics.DisplayMode> resolutionBox = new SelectBox<>(selectBoxStyle);
-        Array<Graphics.DisplayMode> modes = new Array<>();
-        Arrays.stream(Gdx.graphics.getDisplayModes()).forEach(mode -> modes.add(mode));
-
-        modes.sort(new Comparator<Graphics.DisplayMode>() {
-            @Override
-            public int compare(Graphics.DisplayMode o1, Graphics.DisplayMode o2) {
-                return Integer.compare(o1.width, o2.width);
-            }
-        });
-
-        resolutionBox.setItems(modes);
-
-
-
-        resolutionBox.addListener(new ChangeListener() {
-            @Override
-            public boolean handle(Event event) {
-                return super.handle(event);
-            }
-
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Config.SCREEN_SIZE_X = resolutionBox.getSelected().width;
-                Config.SCREEN_SIZE_Y = resolutionBox.getSelected().height;
-
-                ScreenRegister.I.getOptionsScreen().resize(Config.SCREEN_SIZE_X, Config.SCREEN_SIZE_Y);
-            }
-        });
-
-        resumeButton = new TextButton("BACK", textButtonStyle);
+        resumeButton = new TextButton("NEXT", textButtonStyle);
 
         resumeButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ScreenRegister.I.getGame().setScreen(ScreenRegister.I.getLastScreen());
+                ScreenRegister.I.getGame().showMainMenuScreen();
                 return true;
             }
         });
 
-        outerTable.add(resolutionBox).row();
         outerTable.add(resumeButton).center().size(300 / SCREEN_HUD_RATIO, 150 / SCREEN_HUD_RATIO);
     }
 

@@ -3,11 +3,11 @@ package com.mygdx.wargame.battle.screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 
-public class ScreenLoader {
+public class AssetManagerLoader {
 
     private AssetManager assetManager;
 
-    public ScreenLoader(AssetManager assetManager) {
+    public AssetManagerLoader(AssetManager assetManager) {
         this.assetManager = assetManager;
     }
 

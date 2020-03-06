@@ -2,7 +2,9 @@ package com.mygdx.wargame.common;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.mygdx.wargame.WarGame;
 import com.mygdx.wargame.battle.screen.BattleScreen;
+import com.mygdx.wargame.mainmenu.MainMenuScreen;
 import com.mygdx.wargame.options.OptionsScreen;
 import com.mygdx.wargame.summary.SummaryScreen;
 
@@ -10,11 +12,12 @@ public class ScreenRegister {
 
     public static final ScreenRegister I = new ScreenRegister();
 
-    private Game game;
+    private WarGame game;
 
     private BattleScreen battleScreen = new BattleScreen();
     private SummaryScreen summaryScreen = new SummaryScreen();
     private OptionsScreen optionsScreen = new OptionsScreen();
+    private MainMenuScreen mainMenuScreen = new MainMenuScreen();
     private Screen lastScreen;
 
     public BattleScreen getBattleScreen() {
@@ -25,11 +28,11 @@ public class ScreenRegister {
         return summaryScreen;
     }
 
-    public Game getGame() {
+    public WarGame getGame() {
         return game;
     }
 
-    public void setGame(Game game) {
+    public void setGame(WarGame game) {
         this.game = game;
     }
 
@@ -43,5 +46,9 @@ public class ScreenRegister {
 
     public Screen getLastScreen() {
         return lastScreen;
+    }
+
+    public MainMenuScreen getMainMenuScreen() {
+        return mainMenuScreen;
     }
 }

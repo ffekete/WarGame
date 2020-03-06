@@ -14,7 +14,7 @@ public class HUDMediator {
     private TargetingPanelFacade targetingPanelFacade;
     private HealthInfoPanelFacade healthInfoPanelFacade;
     private DetailsPageFacade detailsPageFacade;
-    private MainMenuFacade mainMenuFacade;
+    private BattleGameMenuFacade battleGameMenuFacade;
     private GameEndFacade gameEndFacade;
     private PilotDetailsFacade pilotDetailsFacade;
 
@@ -78,12 +78,12 @@ public class HUDMediator {
         this.detailsPageFacade = detailsPageFacade;
     }
 
-    public MainMenuFacade getMainMenuFacade() {
-        return mainMenuFacade;
+    public BattleGameMenuFacade getBattleGameMenuFacade() {
+        return battleGameMenuFacade;
     }
 
-    public void setMainMenuFacade(MainMenuFacade mainMenuFacade) {
-        this.mainMenuFacade = mainMenuFacade;
+    public void setBattleGameMenuFacade(BattleGameMenuFacade battleGameMenuFacade) {
+        this.battleGameMenuFacade = battleGameMenuFacade;
     }
 
     public GameEndFacade getGameEndFacade() {

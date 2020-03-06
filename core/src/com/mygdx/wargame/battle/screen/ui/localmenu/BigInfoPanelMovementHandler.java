@@ -18,7 +18,7 @@ public class BigInfoPanelMovementHandler {
             ParallelAction parallelAction = new ParallelAction();
 
             SizeToAction sizeToAction = new SizeToAction();
-            sizeToAction.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT);
+            sizeToAction.setSize(HUD_VIEWPORT_WIDTH.get(),HUD_VIEWPORT_HEIGHT.get());
             sizeToAction.setDuration(0.25f);
             parallelAction.addAction(sizeToAction);
 

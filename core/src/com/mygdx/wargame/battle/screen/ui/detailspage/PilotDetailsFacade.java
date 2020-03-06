@@ -124,7 +124,7 @@ public class PilotDetailsFacade {
         });
 
         skillTable = new Table();
-        skillTable.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT / 2);
+        skillTable.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get() / 2);
         perkTable = new Table();
 
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
@@ -147,7 +147,7 @@ public class PilotDetailsFacade {
 
         skillTable.pad(60 / SCREEN_HUD_RATIO);
 
-        perkTable.setSize(HUD_VIEWPORT_WIDTH, HUD_VIEWPORT_HEIGHT / 2);
+        perkTable.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get() / 2);
         perkTable.pad(60 / SCREEN_HUD_RATIO);
 
         //outerTable.setDebug(true);
@@ -217,14 +217,14 @@ public class PilotDetailsFacade {
             outerTable.clear();
             outerTable.add(perksButton).colspan(2).row();
             //outerTable.add(skillsButton).row();
-            outerTable.add(skillScrollPane).minHeight(HUD_VIEWPORT_HEIGHT - 340 / SCREEN_HUD_RATIO).row();
+            outerTable.add(skillScrollPane).minHeight(HUD_VIEWPORT_HEIGHT.get() - 340 / SCREEN_HUD_RATIO).row();
             outerTable.add(exitPanelButton).colspan(2).center().size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
             //skillTable.setFillParent(true);
         } else {
             outerTable.clear();
             //outerTable.add(perksButton);
             outerTable.add(skillsButton).colspan(2).row();
-            outerTable.add(perkScrollPane).minHeight(HUD_VIEWPORT_HEIGHT -340 / SCREEN_HUD_RATIO).row();
+            outerTable.add(perkScrollPane).minHeight(HUD_VIEWPORT_HEIGHT.get() -340 / SCREEN_HUD_RATIO).row();
             outerTable.add(exitPanelButton).colspan(3).center().size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
             //perkTable.setFillParent(true);
         }

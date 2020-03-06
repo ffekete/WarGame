@@ -2,32 +2,52 @@ package com.mygdx.wargame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.BattleMapConfig;
-import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.screen.BattleScreen;
-import com.mygdx.wargame.battle.screen.BattleScreenInputDataStubber;
-import com.mygdx.wargame.battle.screen.ScreenLoader;
+import com.mygdx.wargame.battle.screen.AssetManagerLoader;
 import com.mygdx.wargame.common.ScreenRegister;
+import com.mygdx.wargame.mainmenu.MainMenuScreen;
+import com.mygdx.wargame.options.OptionsScreen;
+import com.mygdx.wargame.summary.SummaryScreen;
 
 public class WarGame extends Game {
 
     private final ScreenRegister screenRegister = ScreenRegister.I;
 
+    private AssetManager assetManager;
+    private AssetManagerLoader assetManagerLoader;
+
     @Override
     public void create() {
         screenRegister.setGame(this);
+        assetManager = new AssetManager();
+        assetManagerLoader = new AssetManagerLoader(assetManager);
+        assetManagerLoader.load();
+
+        ScreenRegister.I.getMainMenuScreen().load(assetManager);
+        this.setScreen(ScreenRegister.I.getMainMenuScreen());
+    }
+
+    public void showBattleScreen() {
         BattleScreen battleScreen = screenRegister.getBattleScreen();
-
-        AssetManager assetManager = new AssetManager();
-        ScreenLoader screenLoader = new ScreenLoader(assetManager);
-
-        battleScreen.load(screenLoader);
+        battleScreen.load(assetManagerLoader);
         this.setScreen(battleScreen);
     }
 
+    public void showOptionsScreen() {
+        OptionsScreen optionsScreen = screenRegister.getOptionsScreen();
+        optionsScreen.load(assetManager);
+        this.setScreen(optionsScreen);
+    }
+
+    public void showMainMenuScreen() {
+        MainMenuScreen mainMenuScreen = screenRegister.getMainMenuScreen();
+        mainMenuScreen.load(assetManager);
+        this.setScreen(mainMenuScreen);
+    }
+
+    public void showSummaryScreen() {
+        SummaryScreen summaryScreen = screenRegister.getSummaryScreen();
+        summaryScreen.load(assetManager);
+        this.setScreen(summaryScreen);
+    }
 }

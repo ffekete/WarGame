@@ -95,7 +95,7 @@ public class EnemyMechInfoPanelFacade {
                 hideLocalMenu();
                 targetingPanelFacade.hide();
                 stageElementsStorage.hudStage.addActor(targetingPanelFacade.getPanel(attackingPilot, attackingMech, defendingPilot, defendingMech));
-                targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250 / SCREEN_HUD_RATIO, 0), Config.HUD_VIEWPORT_WIDTH), Math.min(Math.max(aimedAttackButton.getY() - 100 / SCREEN_HUD_RATIO, 0), Config.HUD_VIEWPORT_HEIGHT));
+                targetingPanelFacade.getPanel().setPosition(Math.min(Math.max(aimedAttackButton.getX() - 250 / SCREEN_HUD_RATIO, 0), Config.HUD_VIEWPORT_WIDTH.get()), Math.min(Math.max(aimedAttackButton.getY() - 100 / SCREEN_HUD_RATIO, 0), Config.HUD_VIEWPORT_HEIGHT.get()));
                 targetingPanelFacade.getPanel().setSize(200 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO);
                 targetingPanelFacade.getPanel().setVisible(true);
                 //EnemyMechInfoPanelFacade.this.rangedAttackTargetCalculator.calculate(attackingPilot, (AbstractMech) attackingMech, (AbstractMech) defendingMech, defendingPilot, null);

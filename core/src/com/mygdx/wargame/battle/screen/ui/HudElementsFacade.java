@@ -122,15 +122,15 @@ public class HudElementsFacade {
             }
         });
 
-        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH - (80 / SCREEN_HUD_RATIO), 0);
+        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (80 / SCREEN_HUD_RATIO), 0);
         endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
 
         upperHud = new Table();
         upperHud.left();
 
         //upperHud.setDebug(true);
-        upperHud.setSize(HUD_VIEWPORT_WIDTH, 60 / SCREEN_HUD_RATIO);
-        upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT - 60 / SCREEN_HUD_RATIO);
+        upperHud.setSize(HUD_VIEWPORT_WIDTH.get(), 60 / SCREEN_HUD_RATIO);
+        upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT.get() - 60 / SCREEN_HUD_RATIO);
 
         shieldTooltipTable = new Table();
         shieldToolTip = new Tooltip<Table>(shieldTooltipTable);
