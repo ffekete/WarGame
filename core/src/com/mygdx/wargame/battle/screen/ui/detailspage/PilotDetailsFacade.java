@@ -82,7 +82,7 @@ public class PilotDetailsFacade {
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
 
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32 ,16);
 
         TextButton.TextButtonStyle anotherButtonStyle = new TextButton.TextButtonStyle();
         anotherButtonStyle.font = FontCreator.getBitmapFont(13);

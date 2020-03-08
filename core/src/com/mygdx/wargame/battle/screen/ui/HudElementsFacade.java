@@ -17,11 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
+import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.weapon.Weapon;
-import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.common.mech.BodyPart;
-import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.config.Config;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -77,6 +77,11 @@ public class HudElementsFacade {
     private Label pilotNameLabel;
     private Label mechNameLabel;
 
+    private ImageButton showMovementMarkersButton;
+    private ImageButton dontShowMovementMarkersButton;
+
+    private Table sidePanel;
+
     public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, ActionLock actionLock) {
         this.assetManager = assetManager;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -99,6 +104,9 @@ public class HudElementsFacade {
         imageButtonStyle.imageUp = new TextureRegionDrawable(assetManager.get("skin/EndTurnButtonUp.png", Texture.class));
         imageButtonStyle.imageDown = new TextureRegionDrawable(assetManager.get("skin/EndTurnButtonDown.png", Texture.class));
 
+        sidePanel = new Table();
+        sidePanel.background(new TextureRegionDrawable(assetManager.get("hud/SidePanel.png", Texture.class)));
+
         endTurnButton = new ImageButton(imageButtonStyle);
 
         endTurnButton.addAction(new Action() {
@@ -106,8 +114,17 @@ public class HudElementsFacade {
             public boolean act(float delta) {
                 if (!actionLock.isLocked() && turnProcessingFacade.isNextPlayerControlled()) {
                     endTurnButton.setVisible(true);
+                    if (!showMovementMarkers) {
+                        showMovementMarkersButton.setVisible(true);
+                        dontShowMovementMarkersButton.setVisible(false);
+                    } else {
+                        showMovementMarkersButton.setVisible(false);
+                        dontShowMovementMarkersButton.setVisible(true);
+                    }
                 } else {
                     endTurnButton.setVisible(false);
+                    showMovementMarkersButton.setVisible(false);
+                    dontShowMovementMarkersButton.setVisible(false);
                 }
                 return false;
             }
@@ -115,15 +132,15 @@ public class HudElementsFacade {
 
         endTurnButton.addListener(new ClickListener() {
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void clicked(InputEvent event, float x, float y) {
                 turnProcessingFacade.getNext().getKey().setMoved(true);
                 turnProcessingFacade.getNext().getKey().setAttacked(true);
-                return true;
             }
         });
 
         endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (80 / SCREEN_HUD_RATIO), 0);
         endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+
 
         upperHud = new Table();
         upperHud.left();
@@ -229,22 +246,72 @@ public class HudElementsFacade {
         upperHud.add(mechNameLabel).padRight(20 / SCREEN_HUD_RATIO);
         upperHud.add(pilotNameLabel).padRight(20 / SCREEN_HUD_RATIO);
 
+        ImageButton.ImageButtonStyle showMarkersStyle = new ImageButton.ImageButtonStyle();
+        showMarkersStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class));
+        showMarkersStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class));
+
+        ImageButton.ImageButtonStyle dontShowMarkersStyle = new ImageButton.ImageButtonStyle();
+        dontShowMarkersStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/HideMovementMarkersSmallButtonUp.png", Texture.class));
+        dontShowMarkersStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/HideMovementMarkersSmallButtonDown.png", Texture.class));
+
+        showMovementMarkersButton = new ImageButton(showMarkersStyle);
+        dontShowMovementMarkersButton = new ImageButton(dontShowMarkersStyle);
+
+        showMovementMarkersButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cfg.showMovementMarkers = true;
+                Config.save();
+                showMovementMarkers = true;
+                populateSidePanel();
+            }
+        });
+
+        dontShowMovementMarkersButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cfg.showMovementMarkers = false;
+                Config.save();
+                showMovementMarkers = false;
+                populateSidePanel();
+            }
+        });
+
+        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (256 / SCREEN_HUD_RATIO) - 20 / SCREEN_HUD_RATIO, 0);
+        sidePanel.setSize(280 / SCREEN_HUD_RATIO, 280 / SCREEN_HUD_RATIO);
+
+        //sidePanel.add(endTurnButton).size(128 / SCREEN_HUD_RATIO, 128 / SCREEN_HUD_RATIO);
+        populateSidePanel();
+
         show();
     }
 
     public void registerComponents(Stage stage) {
-        stage.addActor(endTurnButton);
         stage.addActor(upperHud);
+        stage.addActor(sidePanel);
+        //stage.addActor(dontShowMovementMarkersButton);
     }
 
     public void hide() {
-        endTurnButton.setVisible(false);
         upperHud.setVisible(false);
+        sidePanel.setVisible(false);
     }
 
     public void show() {
-        endTurnButton.setVisible(true);
         upperHud.setVisible(true);
+        sidePanel.setVisible(true);
+    }
+
+    private void populateSidePanel() {
+        sidePanel.clear();
+        sidePanel.add(endTurnButton);
+
+        if (!showMovementMarkers) {
+            sidePanel.add(showMovementMarkersButton);
+        } else {
+            sidePanel.add(dontShowMovementMarkersButton);
+        }
     }
 
     public void update() {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -30,6 +31,8 @@ public class MainMenuFacade {
 
     private Table table;
 
+    private boolean stopRestart = false;
+
 
     public MainMenuFacade(AssetManager assetManager) {
         this.assetManager = assetManager;
@@ -46,19 +49,25 @@ public class MainMenuFacade {
         textButtonStyle.font = FontCreator.getBitmapFont(15);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.05f, 1000);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
 
         this.textButtonStyle2 = new TextButton.TextButtonStyle();
         textButtonStyle2.font = FontCreator.getBitmapFont(15);
         textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle2.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.05f, 1000);
+        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
 
         this.textButtonStyle3 = new TextButton.TextButtonStyle();
         textButtonStyle3.font = FontCreator.getBitmapFont(15);
         textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle3.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.05f, 1000);
+        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, 128, 64);
+        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle3.over = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
 
         this.newGameGameButton = new TextButton("NEW GAME", textButtonStyle);
 
@@ -66,16 +75,30 @@ public class MainMenuFacade {
         exitGameButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
         this.optionsMenuButton = new TextButton("OPTIONS", textButtonStyle2);
         optionsMenuButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
+        optionsMenuButton.center();
 
-        table.add(newGameGameButton).size(300 / SCREEN_HUD_RATIO, 150 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        table.add(optionsMenuButton).size(300 / SCREEN_HUD_RATIO, 150 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        table.add(exitGameButton).size(300 / SCREEN_HUD_RATIO, 150 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        table.add(newGameGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        table.add(optionsMenuButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        table.add(exitGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
 
         newGameGameButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 ScreenRegister.I.getGame().showBattleScreen();
                 return true;
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (!stopRestart) {
+                    ((AnimatedDrawable) newGameGameButton.getBackground()).restart();
+                    stopRestart = true;
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                stopRestart = false;
             }
         });
 
@@ -84,6 +107,19 @@ public class MainMenuFacade {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.exit(0);
                 return true;
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (!stopRestart) {
+                    ((AnimatedDrawable) exitGameButton.getBackground()).restart();
+                    stopRestart = true;
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                stopRestart = false;
             }
         });
 
@@ -94,6 +130,19 @@ public class MainMenuFacade {
                 ScreenRegister.I.setLastScreen(ScreenRegister.I.getMainMenuScreen());
                 ScreenRegister.I.getGame().showOptionsScreen();
                 return true;
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (!stopRestart) {
+                    ((AnimatedDrawable) optionsMenuButton.getBackground()).restart();
+                    stopRestart = true;
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                stopRestart = false;
             }
         });
 

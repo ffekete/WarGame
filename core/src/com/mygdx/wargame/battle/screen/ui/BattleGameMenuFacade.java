@@ -49,19 +49,19 @@ public class BattleGameMenuFacade {
         textButtonStyle.font = FontCreator.getBitmapFont(20);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32 ,16);
 
         this.textButtonStyle2 = new TextButton.TextButtonStyle();
         textButtonStyle2.font = FontCreator.getBitmapFont(20);
         textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle2.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32, 16);
 
         this.textButtonStyle3 = new TextButton.TextButtonStyle();
         textButtonStyle3.font = FontCreator.getBitmapFont(20);
         textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle3.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32 ,16);
 
         this.resumeGameButton = new TextButton("RESUME", textButtonStyle);
 

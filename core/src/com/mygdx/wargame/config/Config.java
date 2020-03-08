@@ -31,6 +31,12 @@ public class Config {
         public int getTreeSpread() {
             return treeSpread;
         }
+
+        public boolean showMovementMarkers = true;
+
+        public boolean isShowMovementMarkers() {
+            return showMovementMarkers;
+        }
     }
 
     public static Cfg cfg = new Cfg();
@@ -52,6 +58,8 @@ public class Config {
 
     public static int CLOUD_DENSITY = 500;
 
+    public static boolean showMovementMarkers = true;
+
     public static void load() {
         try {
             FileHandle file = Gdx.files.getFileHandle("configuration.json", Files.FileType.Local);
@@ -64,6 +72,7 @@ public class Config {
             SCREEN_SIZE_Y = cfg.screenSizeY;
             CLOUD_DENSITY = cfg.cloudDensity;
             treeSpread = cfg.treeSpread;
+            showMovementMarkers = cfg.showMovementMarkers;
 
         } catch (GdxRuntimeException gre) {
             cfg = new Cfg();

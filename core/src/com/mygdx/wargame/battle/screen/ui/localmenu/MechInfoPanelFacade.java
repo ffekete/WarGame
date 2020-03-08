@@ -133,7 +133,7 @@ public class MechInfoPanelFacade extends Actor {
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
 
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(this.assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(this.assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32, 16);
 
 
         TextButton exitWeaponSelectionPanelButton = new TextButton("Exit", textButtonStyle);

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.ScalableLabel;
+import com.mygdx.wargame.config.Config;
 
 public class MovementMarker extends Actor implements Pool.Poolable {
     private AssetManager assetManager;
@@ -34,7 +35,7 @@ public class MovementMarker extends Actor implements Pool.Poolable {
         this.addListener(new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                setColor("BB");
+                setColor("88");
                 override = true;
             }
 
@@ -48,8 +49,15 @@ public class MovementMarker extends Actor implements Pool.Poolable {
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
+        if(!Config.showMovementMarkers) {
+            label.setVisible(false);
+            return;
+        }
+
+        label.setVisible(true);
+
         if(!override) {
-            setColor("33");
+            setColor("11");
         }
 
         batch.setColor(this.getColor());

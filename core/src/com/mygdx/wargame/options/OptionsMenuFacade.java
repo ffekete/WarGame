@@ -50,7 +50,7 @@ public class OptionsMenuFacade {
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
 
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32, 16);
 
         outerTable = new Table();
         outerTable.setFillParent(true);

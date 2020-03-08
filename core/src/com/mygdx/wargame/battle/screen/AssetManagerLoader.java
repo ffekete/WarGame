@@ -123,6 +123,16 @@ public class AssetManagerLoader {
         assetManager.load("localmenu/DetailsButton.png", Texture.class);
         assetManager.load("localmenu/ExitLocalMenuButton.png", Texture.class);
         assetManager.load("localmenu/PilotButton.png", Texture.class);
+
+        assetManager.load("hud/HideMovementMarkersSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/HideMovementMarkersSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/SidePanel.png", Texture.class);
+
+        assetManager.load("skin/MainMenuButtonUp.png", Texture.class);
+        assetManager.load("skin/MainMenuButtonDown.png", Texture.class);
+        assetManager.load("skin/MainMenuButtonOver.png", Texture.class);
         assetManager.finishLoading();
     }
 

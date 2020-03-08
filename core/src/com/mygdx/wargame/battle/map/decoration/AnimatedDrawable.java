@@ -16,17 +16,20 @@ public class AnimatedDrawable extends TextureRegionDrawable {
     private TextureRegion textureRegion;
     private float counter = 0f;
     private int step;
+    private int frameWidth;
+    private int frameHeight;
 
-    public AnimatedDrawable(TextureRegion textureRegion, float speed, int idle) {
-        super(getTextureRegion(textureRegion));
+    public AnimatedDrawable(TextureRegion textureRegion, float speed, int idle, int width, int height) {
+        super(getTextureRegion(textureRegion, width, height));
         this.idle = idle;
         this.speed = speed;
 
-        this.speed = speed;
-        size = textureRegion.getTexture().getWidth() / 32;
+        size = textureRegion.getTexture().getWidth() / width;
         this.idle = idle;
         this.idleCounter = new Random().nextInt(idle);
         this.textureRegion = textureRegion;
+        this.frameWidth = width;
+        this.frameHeight = height;
     }
 
     @Override
@@ -46,12 +49,17 @@ public class AnimatedDrawable extends TextureRegionDrawable {
             idleCounter = (idleCounter + 1) % idle;
         }
 
-        textureRegion.setRegion(step * 32, 0, 32, 16);
+        textureRegion.setRegion(step * frameWidth, 0, frameWidth, frameHeight);
         batch.draw(textureRegion, x, y, width, height);
     }
 
-    private static TextureRegion getTextureRegion(TextureRegion texture) {
-        texture.setRegion(0, 0, 32, 16);
+    private static TextureRegion getTextureRegion(TextureRegion texture, int frameWidth, int frameHeight) {
+        texture.setRegion(0, 0, frameWidth, frameHeight);
         return texture;
+    }
+
+    public void restart() {
+        idleCounter = 0;
+        step = 0;
     }
 }
