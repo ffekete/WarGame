@@ -48,7 +48,8 @@ public class SummaryScreenFacade {
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
 
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32 ,16);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64 ,32);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64 ,32);
 
         outerTable = new Table();
         outerTable.setFillParent(true);

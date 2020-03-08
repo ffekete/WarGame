@@ -98,8 +98,8 @@ public class DetailsPageFacade {
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
 
 
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("details/ButtonBg.png", Texture.class)), 0.1f, 1000, 32 ,16);
-
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64 ,32);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64 ,32);
 
         TextButton exitMechInfoTablePanelButton = new TextButton("Exit", textButtonStyle);
 

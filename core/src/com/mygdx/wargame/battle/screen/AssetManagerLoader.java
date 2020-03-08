@@ -52,9 +52,6 @@ public class AssetManagerLoader {
         assetManager.load("details/RightLegIcon.png", Texture.class);
         assetManager.load("details/ShieldIcon.png", Texture.class);
         assetManager.load("details/ShieldComponentIcon.png", Texture.class);
-        assetManager.load("details/ButtonBg.png", Texture.class);
-        assetManager.load("details/ButtonBgDown.png", Texture.class);
-        assetManager.load("details/ButtonBgOver.png", Texture.class);
 
         assetManager.load("targeting/TargetHead.png", Texture.class);
         assetManager.load("targeting/TargetTorso.png", Texture.class);
@@ -117,6 +114,8 @@ public class AssetManagerLoader {
         assetManager.load("skin/HideButtonDown.png", Texture.class);
         assetManager.load("skin/SimplePanel.png", Texture.class);
         assetManager.load("SelectionBg.png", Texture.class);
+        assetManager.load("skin/ButtonUp.png", Texture.class);
+        assetManager.load("skin/ButtonDown.png", Texture.class);
 
         assetManager.load("localmenu/AttackButton.png", Texture.class);
         assetManager.load("localmenu/CalledShotUp.png", Texture.class);
