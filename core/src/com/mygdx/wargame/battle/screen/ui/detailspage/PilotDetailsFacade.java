@@ -75,7 +75,8 @@ public class PilotDetailsFacade {
         pilotNameLabel = new Label("N/A", labelStyle);
         outerTable = new Table();
         outerTable.background(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
-        outerTable.setFillParent(true);
+        outerTable.setSize(HUD_VIEWPORT_WIDTH.get() * 0.75f, HUD_VIEWPORT_HEIGHT.get());
+        outerTable.setPosition((HUD_VIEWPORT_WIDTH.get() - (HUD_VIEWPORT_WIDTH.get() * 0.75f))/ 2f, 0);
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(13);
