@@ -3,6 +3,8 @@ package com.mygdx.wargame.battle.map.decorator;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -57,7 +59,7 @@ public class CloudGenerator {
 
             boolean flip = new Random().nextBoolean();
             SequenceAction sequenceAction = addCloud(y, "FFFFFF66", flip);
-            SequenceAction sequenceAction2 = addCloud(y - 5, "00000044", flip);
+            SequenceAction sequenceAction2 = addShadow(y - 5, "00000044", flip, sequenceAction.getActor());
 
             stageElementsStorage.airLevel.addAction(sequenceAction);
             stageElementsStorage.airLevel.addAction(sequenceAction2);
@@ -69,9 +71,35 @@ public class CloudGenerator {
         moveToAction.setPosition(BattleMapConfig.WIDTH, y);
         moveToAction.setStartPosition(0, y);
 
-        moveToAction.setDuration(50f);
+        moveToAction.setDuration(200f);
 
         Image image = cloudPool.obtain();
+
+        image.setSize(2 * image.getWidth() / 16, 2 * image.getHeight() / 16);
+
+        image.setColor(Color.valueOf(color));
+        image.setPosition(0, y);
+
+        image.setRotation(flipx ? 180 : 0);
+
+        moveToAction.setActor(image);
+
+        SequenceAction sequenceAction = new SequenceAction();
+        sequenceAction.addAction(new AddActorAction(stageElementsStorage.airLevel, image));
+        sequenceAction.addAction(moveToAction);
+        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, image, cloudPool));
+        sequenceAction.setActor(image);
+        return sequenceAction;
+    }
+
+    private SequenceAction addShadow(float y, String color, boolean flipx, Actor forThis) {
+        MoveToAction moveToAction = new MoveToAction();
+        moveToAction.setPosition(BattleMapConfig.WIDTH, y);
+        moveToAction.setStartPosition(0, y);
+
+        moveToAction.setDuration(200f);
+
+        Image image = new Image(((Image)forThis).getDrawable());
 
         image.setSize(2 * image.getWidth() / 16, 2 * image.getHeight() / 16);
 
