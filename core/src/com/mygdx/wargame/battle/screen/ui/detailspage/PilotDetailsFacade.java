@@ -172,6 +172,8 @@ public class PilotDetailsFacade {
         perkTable.setSize((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
         perkTable.pad(60 / SCREEN_HUD_RATIO);
 
+        outerTable.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
+
         //outerTable.setDebug(true);
     }
 

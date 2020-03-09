@@ -23,7 +23,7 @@ import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.config.Config;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+import static com.mygdx.wargame.config.Config.*;
 
 public class MechInfoPanelFacade extends Actor {
 
@@ -136,7 +136,6 @@ public class MechInfoPanelFacade extends Actor {
         textButtonStyle.up = new AnimatedDrawable(new TextureRegion(this.assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64, 32);
         textButtonStyle.down = new AnimatedDrawable(new TextureRegion(this.assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64, 32);
 
-
         TextButton exitWeaponSelectionPanelButton = new TextButton("Exit", textButtonStyle);
 
         exitWeaponSelectionPanelButton.addListener(new InputListener() {
@@ -158,6 +157,7 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionContainer.fillX().pad(30 / SCREEN_HUD_RATIO);
 
         weaponSelectionContainer.setSize(0, 0);
+        weaponSelectionContainer.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
         weaponSelectionScrollPane.setScrollbarsVisible(true);
 
 

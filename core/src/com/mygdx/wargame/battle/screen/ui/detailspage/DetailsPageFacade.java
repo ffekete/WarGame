@@ -25,7 +25,7 @@ import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+import static com.mygdx.wargame.config.Config.*;
 
 public class DetailsPageFacade {
 
@@ -114,6 +114,7 @@ public class DetailsPageFacade {
         });
 
         mechInfoOuterTable = new Table();
+        mechInfoOuterTable.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
         mechInfoInnerTable = new Table();
 
         mechInfoOuterTable.add(mechInfoInnerTable).center().fill().row();
