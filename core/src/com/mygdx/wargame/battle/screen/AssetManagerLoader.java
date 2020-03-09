@@ -128,6 +128,12 @@ public class AssetManagerLoader {
         assetManager.load("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class);
         assetManager.load("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class);
         assetManager.load("hud/SidePanel.png", Texture.class);
+        assetManager.load("hud/HideMovementDirectionsSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/HideMovementDirectionsSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/ShowMovementDirectionsSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/ShowMovementDirectionsSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/MainMenuSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/MainMenuSmallButtonDown.png", Texture.class);
 
         assetManager.load("skin/MainMenuButtonUp.png", Texture.class);
         assetManager.load("skin/MainMenuButtonDown.png", Texture.class);

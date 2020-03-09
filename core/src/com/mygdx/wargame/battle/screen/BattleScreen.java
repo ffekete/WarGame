@@ -206,7 +206,7 @@ public class BattleScreen implements Screen {
         mechInfoPanelFacade.getHideMenuButton().setVisible(false);
         mechInfoPanelFacade.getPilotButton().setVisible(false);
 
-        hudElementsFacade = new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, actionLock);
+        hudElementsFacade = new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, actionLock, hudMediator);
         hudMediator.setHudElementsFacade(hudElementsFacade);
 
         // create

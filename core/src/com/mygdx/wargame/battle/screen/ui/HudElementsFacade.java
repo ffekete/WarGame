@@ -80,12 +80,20 @@ public class HudElementsFacade {
     private ImageButton showMovementMarkersButton;
     private ImageButton dontShowMovementMarkersButton;
 
+    private ImageButton showMovementDirectionsButton;
+    private ImageButton hideMovementDirectionsButton;
+
+    private ImageButton mainMenuButton;
+
     private Table sidePanel;
 
-    public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, ActionLock actionLock) {
+    private HUDMediator hudMediator;
+
+    public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, ActionLock actionLock, HUDMediator hudMediator) {
         this.assetManager = assetManager;
         this.turnProcessingFacade = turnProcessingFacade;
         this.actionLock = actionLock;
+        this.hudMediator = hudMediator;
     }
 
     public void create() {
@@ -281,9 +289,38 @@ public class HudElementsFacade {
         sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (256 / SCREEN_HUD_RATIO) - 20 / SCREEN_HUD_RATIO, 0);
         sidePanel.setSize(280 / SCREEN_HUD_RATIO, 280 / SCREEN_HUD_RATIO);
 
-        //sidePanel.add(endTurnButton).size(128 / SCREEN_HUD_RATIO, 128 / SCREEN_HUD_RATIO);
-        populateSidePanel();
+        ImageButton.ImageButtonStyle showDirectionsStyle = new ImageButton.ImageButtonStyle();
+        showDirectionsStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/ShowMovementDirectionsSmallButtonUp.png", Texture.class));
+        showDirectionsStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/ShowMovementDirectionsSmallButtonDown.png", Texture.class));
 
+        ImageButton.ImageButtonStyle hideDirectionsStyle = new ImageButton.ImageButtonStyle();
+        hideDirectionsStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/HideMovementDirectionsSmallButtonUp.png", Texture.class));
+        hideDirectionsStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/HideMovementDirectionsSmallButtonDown.png", Texture.class));
+
+        showMovementDirectionsButton = new ImageButton(showDirectionsStyle);
+        hideMovementDirectionsButton = new ImageButton(hideDirectionsStyle);
+
+        ImageButton.ImageButtonStyle mainMenuButtonStyle = new ImageButton.ImageButtonStyle();
+        mainMenuButtonStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/MainMenuSmallButtonUp.png", Texture.class));
+        mainMenuButtonStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/MainMenuSmallButtonDown.png", Texture.class));
+
+        mainMenuButton = new ImageButton(mainMenuButtonStyle);
+
+        mainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hudMediator.getBattleGameMenuFacade().toggle();
+            }
+        });
+
+        showMovementDirectionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Config.showDirectionMarkers = !Config.showDirectionMarkers;
+            }
+        });
+
+        populateSidePanel();
         show();
     }
 
@@ -312,6 +349,16 @@ public class HudElementsFacade {
         } else {
             sidePanel.add(dontShowMovementMarkersButton);
         }
+        sidePanel.row();
+
+        if (showDirectionMarkers) {
+            sidePanel.add(hideMovementDirectionsButton);
+        } else {
+            sidePanel.add(showMovementDirectionsButton);
+        }
+
+        sidePanel.add(mainMenuButton);
+
     }
 
     public void update() {
