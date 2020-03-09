@@ -103,6 +103,7 @@ public class AssetManagerLoader {
         assetManager.load("EnemyMarker.png", Texture.class);
         assetManager.load("MovementMarker.png", Texture.class);
 
+        assetManager.load("skin/NarrowInfoPanel.png", Texture.class);
         assetManager.load("skin/ScrollBarKnob.png", Texture.class);
         assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);

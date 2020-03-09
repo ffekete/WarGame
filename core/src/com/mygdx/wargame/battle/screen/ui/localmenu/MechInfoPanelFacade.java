@@ -68,7 +68,7 @@ public class MechInfoPanelFacade extends Actor {
         checkBoxStyle.checkboxOff = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/CheckboxUnchecked.png")));
 
         ScrollPane.ScrollPaneStyle weaponsListScrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-        weaponsListScrollPaneStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png")));
+        //weaponsListScrollPaneStyle.background = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/PanelBackground.png")));
 
         Drawable scrollKnob = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/ScrollBarKnob.png")));
         weaponsListScrollPaneStyle.vScrollKnob = scrollKnob;
@@ -154,7 +154,7 @@ public class MechInfoPanelFacade extends Actor {
         weaponSelectionOuterTable.add(exitWeaponSelectionPanelButton).size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).colspan(2).pad(60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
 
         weaponSelectionContainer = new Container<>(weaponSelectionOuterTable);
-        weaponSelectionContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/BigInfoPanel.png"))));
+        weaponSelectionContainer.setBackground(new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/NarrowInfoPanel.png"))));
         weaponSelectionContainer.fillX().pad(30 / SCREEN_HUD_RATIO);
 
         weaponSelectionContainer.setSize(0, 0);

@@ -18,16 +18,16 @@ public class WeaponSelectionPanelMovementHandler {
             ParallelAction enlargeAndSetVisibleAction = new ParallelAction();
 
             SizeToAction sizeToAction = new SizeToAction();
-            sizeToAction.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get());
+            //sizeToAction.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get());
 
-            sizeToAction.setSize(HUD_VIEWPORT_WIDTH.get() * 0.75f, HUD_VIEWPORT_HEIGHT.get());
+            sizeToAction.setSize(225, 260);
 
             sizeToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
             moveToAction.setPosition(0, 0);
-            moveToAction.setPosition((HUD_VIEWPORT_WIDTH.get() - (HUD_VIEWPORT_WIDTH.get() * 0.75f))/ 2f, 0);
+            moveToAction.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
             moveToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(moveToAction);
 

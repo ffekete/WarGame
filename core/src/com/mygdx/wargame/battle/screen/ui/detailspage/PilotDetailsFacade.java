@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
+import com.mygdx.wargame.battle.screen.ui.localmenu.PilotInfoPanelMovementHandler;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.common.pilot.Skill;
 
@@ -44,6 +45,8 @@ public class PilotDetailsFacade {
     private TextButton perksButton;
     private Pilot pilot;
     private TextButton exitPanelButton;
+    private PilotInfoPanelMovementHandler pilotInfoPanelMovementHandler = new PilotInfoPanelMovementHandler();
+    private boolean panelHidden = true;
 
     private boolean skillsShown = true;
 
@@ -74,17 +77,17 @@ public class PilotDetailsFacade {
 
         pilotNameLabel = new Label("N/A", labelStyle);
         outerTable = new Table();
-        outerTable.background(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
-        outerTable.setSize(HUD_VIEWPORT_WIDTH.get() * 0.75f, HUD_VIEWPORT_HEIGHT.get());
-        outerTable.setPosition((HUD_VIEWPORT_WIDTH.get() - (HUD_VIEWPORT_WIDTH.get() * 0.75f))/ 2f, 0);
+        outerTable.background(new TextureRegionDrawable(assetManager.get("skin/NarrowInfoPanel.png", Texture.class)));
+        outerTable.setSize(225, 260);
+        outerTable.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(13);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
 
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64 ,32);
-        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64 ,32);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64, 32);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64, 32);
 
         TextButton.TextButtonStyle anotherButtonStyle = new TextButton.TextButtonStyle();
         anotherButtonStyle.font = FontCreator.getBitmapFont(13);
@@ -94,6 +97,8 @@ public class PilotDetailsFacade {
 
         outerTable.add(perksButton);
         outerTable.add(skillsButton).row();
+
+        outerTable.setSize(0,0);
 
         skillsButton.addListener(new ClickListener() {
             @Override
@@ -115,10 +120,25 @@ public class PilotDetailsFacade {
 
         exitPanelButton = new TextButton("Exit", textButtonStyle);
 
+        hudMediator.getMechInfoPanelFacade().getPilotButton().addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // hide all other panels
+                hudMediator.getHealthInfoPanelFacade().hide();
+                hudMediator.getHudElementsFacade().hide();
+                hudMediator.getMechInfoPanelFacade().hideLocalMenu();
+                showText();
+                // show this one
+                panelHidden = pilotInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(hudMediator.getMechInfoPanelFacade().getPilotButton(), outerTable, panelHidden);
+                return true;
+            }
+        });
+
         exitPanelButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                hide();
+                hideText();
+                panelHidden = pilotInfoPanelMovementHandler.moveBigInfoPanelToLocalButton(hudMediator.getMechInfoPanelFacade().getPilotButton(), outerTable, panelHidden);
                 hudMediator.getHudElementsFacade().show();
                 hudMediator.getHealthInfoPanelFacade().show();
                 return true;
@@ -126,7 +146,7 @@ public class PilotDetailsFacade {
         });
 
         skillTable = new Table();
-        skillTable.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get() / 2);
+        skillTable.setSize((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
         perkTable = new Table();
 
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
@@ -149,7 +169,7 @@ public class PilotDetailsFacade {
 
         skillTable.pad(60 / SCREEN_HUD_RATIO);
 
-        perkTable.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get() / 2);
+        perkTable.setSize((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
         perkTable.pad(60 / SCREEN_HUD_RATIO);
 
         //outerTable.setDebug(true);
@@ -219,17 +239,32 @@ public class PilotDetailsFacade {
             outerTable.clear();
             outerTable.add(perksButton).colspan(2).row();
             //outerTable.add(skillsButton).row();
-            outerTable.add(skillScrollPane).minHeight(HUD_VIEWPORT_HEIGHT.get() - 340 / SCREEN_HUD_RATIO).row();
+            outerTable.add(skillScrollPane).minHeight(200).row();
             outerTable.add(exitPanelButton).colspan(2).center().size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
             //skillTable.setFillParent(true);
         } else {
             outerTable.clear();
             //outerTable.add(perksButton);
             outerTable.add(skillsButton).colspan(2).row();
-            outerTable.add(perkScrollPane).minHeight(HUD_VIEWPORT_HEIGHT.get() -340 / SCREEN_HUD_RATIO).row();
+            outerTable.add(perkScrollPane).minHeight(200).row();
             outerTable.add(exitPanelButton).colspan(3).center().size(240 / SCREEN_HUD_RATIO, 120 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
             //perkTable.setFillParent(true);
         }
     }
 
+
+    public void hideText() {
+        skillTable.setVisible(false);
+        perkTable.setVisible(false);
+        perksButton.setVisible(false);
+        skillsButton.setVisible(false);
+
+    }
+
+    public void showText() {
+        skillTable.setVisible(true);
+        perkTable.setVisible(true);
+        perksButton.setVisible(true);
+        skillsButton.setVisible(true);
+    }
 }

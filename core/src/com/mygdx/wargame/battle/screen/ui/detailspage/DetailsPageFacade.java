@@ -122,7 +122,7 @@ public class DetailsPageFacade {
         bigInfoPanelContainer = new Container<>(mechInfoOuterTable);
         //bigInfoPanelContainer.setFillParent(true);
         bigInfoPanelContainer.setSize(0, 0);
-        bigInfoPanelContainer.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
+        bigInfoPanelContainer.setBackground(new TextureRegionDrawable(assetManager.get("skin/NarrowInfoPanel.png", Texture.class)));
         bigInfoPanelContainer.setVisible(false);
     }
 

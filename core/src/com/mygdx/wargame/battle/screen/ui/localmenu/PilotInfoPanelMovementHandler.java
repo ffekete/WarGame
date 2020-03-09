@@ -6,13 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SizeToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import static com.mygdx.wargame.config.Config.*;
+import static com.mygdx.wargame.config.Config.HUD_VIEWPORT_HEIGHT;
+import static com.mygdx.wargame.config.Config.HUD_VIEWPORT_WIDTH;
 
-public class BigInfoPanelMovementHandler {
+public class PilotInfoPanelMovementHandler {
 
-    public boolean moveBigInfoPanelToLocalButton(Actor detailsButton, Actor bigInfoPanelContainer, Table mechInfoTable, boolean bigInfoPanelHidden) {
+    public boolean moveBigInfoPanelToLocalButton(Button button, Table outerTable, boolean bigInfoPanelHidden) {
         if (bigInfoPanelHidden) {
 
             ParallelAction parallelAction = new ParallelAction();
@@ -24,15 +26,12 @@ public class BigInfoPanelMovementHandler {
             parallelAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
-            moveToAction.setPosition(0, 0);
             moveToAction.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
             moveToAction.setDuration(0.25f);
             parallelAction.addAction(moveToAction);
 
-            bigInfoPanelContainer.addAction(parallelAction);
-            mechInfoTable.addAction(parallelAction);
-            bigInfoPanelContainer.setVisible(true);
-            mechInfoTable.setVisible(true);
+            outerTable.addAction(parallelAction);
+            outerTable.setVisible(true);
             return false;
         } else {
             SequenceAction sequenceAction = new SequenceAction();
@@ -46,7 +45,7 @@ public class BigInfoPanelMovementHandler {
             parallelAction.addAction(sizeToAction);
 
             MoveToAction moveToAction = new MoveToAction();
-            moveToAction.setPosition(detailsButton.getX(), detailsButton.getY());
+            moveToAction.setPosition(button.getX(), button.getY());
             moveToAction.setDuration(0.25f);
             parallelAction.addAction(moveToAction);
 
@@ -57,8 +56,8 @@ public class BigInfoPanelMovementHandler {
             sequenceAction.addAction(parallelAction);
             sequenceAction.addAction(visibleAction);
 
-            bigInfoPanelContainer.addAction(sequenceAction);
-            mechInfoTable.setVisible(false);
+            outerTable.addAction(sequenceAction);
+
             return true;
         }
     }
