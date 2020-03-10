@@ -178,12 +178,12 @@ public class MechClickInputListener extends InputListener {
                     mechInfoPanelFacade.getIbTable().add(checkBox).left().padLeft(20 / SCREEN_HUD_RATIO);
 
                     int ammo = w.getAmmo().orElse(-1);
-                    mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
-                    mechInfoPanelFacade.getIbTable().add(new Label("H: " + w.getHeat(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
-                    mechInfoPanelFacade.getIbTable().add(new Label("SD: " + w.getShieldDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
-                    mechInfoPanelFacade.getIbTable().add(new Label("AD: " + w.getArmorDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
-                    mechInfoPanelFacade.getIbTable().add(new Label("BD: " + w.getBodyDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO);
-                    mechInfoPanelFacade.getIbTable().add(new Label("x ( " + w.getDamageMultiplier() + " )", labelStyle));
+                    mechInfoPanelFacade.getIbTable().add(new Label(ammo < 0 ? "A: N/A" : "A: " + ammo, labelStyle)).padRight(15 / SCREEN_HUD_RATIO).left();
+                    mechInfoPanelFacade.getIbTable().add(new Label("H: " + w.getHeat(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO).left();
+                    mechInfoPanelFacade.getIbTable().add(new Label("SD: " + w.getShieldDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO).left();
+                    mechInfoPanelFacade.getIbTable().add(new Label("AD: " + w.getArmorDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO).left();
+                    mechInfoPanelFacade.getIbTable().add(new Label("BD: " + w.getBodyDamage(), labelStyle)).padRight(15 / SCREEN_HUD_RATIO).left();
+                    mechInfoPanelFacade.getIbTable().add(new Label("x ( " + w.getDamageMultiplier() + " )", labelStyle)).left();
 
                     mechInfoPanelFacade.getIbTable().row();
                 });

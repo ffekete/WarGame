@@ -62,7 +62,7 @@ public class FlankingTargetStrategyTest {
         BattleMap.TextureRegionSelector textureRegionSelector = mock(BattleMap.TextureRegionSelector.class);
         when(textureRegionSelector.select(TerrainType.Grassland)).thenReturn(new TextureRegion());
 
-        BattleMap battleMap = new BattleMap(new ActionLock(), TerrainType.Grassland, null, textureRegionSelector, 16, null);
+        BattleMap battleMap = new BattleMap(new ActionLock(), TerrainType.Grassland, null, textureRegionSelector, 16, 16, null);
 
         FlankingTargetStrategy flankingTargetStrategy = new FlankingTargetStrategy(null);
         Optional<Target> target = flankingTargetStrategy.findTarget(new PilotCreator().getPilot(), mech03, ImmutableMap.of(mech01, new Pilot(null, null), mech02, new Pilot(null, null)), battleMap, new WeakestTargetStrategy());

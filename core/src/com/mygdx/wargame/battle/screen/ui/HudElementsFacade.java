@@ -117,27 +117,6 @@ public class HudElementsFacade {
 
         endTurnButton = new ImageButton(imageButtonStyle);
 
-        endTurnButton.addAction(new Action() {
-            @Override
-            public boolean act(float delta) {
-                if (!actionLock.isLocked() && turnProcessingFacade.isNextPlayerControlled()) {
-                    endTurnButton.setVisible(true);
-                    if (!showMovementMarkers) {
-                        showMovementMarkersButton.setVisible(true);
-                        dontShowMovementMarkersButton.setVisible(false);
-                    } else {
-                        showMovementMarkersButton.setVisible(false);
-                        dontShowMovementMarkersButton.setVisible(true);
-                    }
-                } else {
-                    endTurnButton.setVisible(false);
-                    showMovementMarkersButton.setVisible(false);
-                    dontShowMovementMarkersButton.setVisible(false);
-                }
-                return false;
-            }
-        });
-
         endTurnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -317,6 +296,18 @@ public class HudElementsFacade {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Config.showDirectionMarkers = !Config.showDirectionMarkers;
+            }
+        });
+
+        sidePanel.addAction(new Action() {
+            @Override
+            public boolean act(float delta) {
+                if (!actionLock.isLocked() && turnProcessingFacade.isNextPlayerControlled()) {
+                    sidePanel.setVisible(true);
+                } else {
+                    sidePanel.setVisible(false);
+                }
+                return false;
             }
         });
 

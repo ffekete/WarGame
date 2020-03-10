@@ -51,7 +51,7 @@ public class MechInfoPanelFacade extends Actor {
     public MechInfoPanelFacade(HUDMediator hudMediator, AssetManager assetManager) {
         this.assetManager = assetManager;
         font = FontCreator.getBitmapFont();
-        smallFont = FontCreator.getBitmapFont(10);
+        smallFont = FontCreator.getBitmapFont(12);
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = font;

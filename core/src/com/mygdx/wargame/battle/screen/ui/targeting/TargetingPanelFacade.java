@@ -28,7 +28,7 @@ import com.mygdx.wargame.util.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
+import static com.mygdx.wargame.config.Config.*;
 
 public class TargetingPanelFacade {
 
@@ -52,7 +52,7 @@ public class TargetingPanelFacade {
     private HitChanceCalculatorFacade hitChanceCalculatorFacade = new HitChanceCalculatorFacade();
 
     public TargetingPanelFacade(AssetManager assetManager, RangedAttackTargetCalculator rangedAttackTargetCalculator, RangeCalculator rangeCalculator) {
-        panelImage = new Image(assetManager.get("skin/BigInfoPanel.png", Texture.class));
+        panelImage = new Image(assetManager.get("skin/InfoPanel.png", Texture.class));
 
         this.headImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetHead.png", 96 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
         this.torsoImage = new ColoredImageButton(getImageButtonStyle(assetManager, "targeting/TargetTorso.png", 96 / SCREEN_HUD_RATIO, 96 / SCREEN_HUD_RATIO));
@@ -167,7 +167,7 @@ public class TargetingPanelFacade {
         });
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontCreator.getBitmapFont(10);
+        labelStyle.font = FontCreator.getBitmapFont(12);
 
         ImageButton.ImageButtonStyle closeMenuButtonStyle = new ImageButton.ImageButtonStyle();
         closeMenuButtonStyle.imageUp = new TextureRegionDrawable(new Texture(Gdx.files.internal("skin/HideButtonUp.png")));
@@ -197,6 +197,9 @@ public class TargetingPanelFacade {
         panel.add().size(5 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add(leftLegImage).size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
         panel.add().size(20 / SCREEN_HUD_RATIO, 50 / SCREEN_HUD_RATIO);
+
+        panel.setPosition((HUD_VIEWPORT_WIDTH.get() - 225) / 2, (HUD_VIEWPORT_HEIGHT.get() - 260) / 2);
+        panel.setSize(225 * 2, 260 * 2);
     }
 
     private ImageButton.ImageButtonStyle getImageButtonStyle(AssetManager assetManager, String path, float minWidth, float minHeight) {

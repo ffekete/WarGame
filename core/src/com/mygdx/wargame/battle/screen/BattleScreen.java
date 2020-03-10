@@ -8,18 +8,22 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.wargame.battle.combat.RangedAttackTargetCalculator;
-import com.mygdx.wargame.battle.input.GroundInputListener;
 import com.mygdx.wargame.battle.input.MechClickInputListener;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
@@ -27,13 +31,19 @@ import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.decorator.CloudGenerator;
 import com.mygdx.wargame.battle.map.decorator.TerrainTypeAwareBattleMapDecorator;
 import com.mygdx.wargame.battle.map.movement.MovementMarkerFactory;
+import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
+import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
+import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
+import com.mygdx.wargame.battle.rules.facade.AttackFacade;
+import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.input.BasicInputAdapter;
+import com.mygdx.wargame.battle.screen.ui.BattleGameMenuFacade;
 import com.mygdx.wargame.battle.screen.ui.GameEndFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HealthInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
-import com.mygdx.wargame.battle.screen.ui.BattleGameMenuFacade;
 import com.mygdx.wargame.battle.screen.ui.SelectionMarker;
 import com.mygdx.wargame.battle.screen.ui.detailspage.DetailsPageFacade;
 import com.mygdx.wargame.battle.screen.ui.detailspage.PilotDetailsFacade;
@@ -42,12 +52,6 @@ import com.mygdx.wargame.battle.screen.ui.localmenu.MechInfoPanelFacade;
 import com.mygdx.wargame.battle.screen.ui.targeting.TargetingPanelFacade;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
-import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
-import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
-import com.mygdx.wargame.battle.rules.facade.AttackFacade;
-import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
-import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.util.DrawUtils;
 
 import static com.mygdx.wargame.battle.map.BattleMapConfig.TILE_SIZE;
@@ -69,7 +73,7 @@ public class BattleScreen implements Screen {
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private SelectionMarker selectionMarker;
     private ScreenConfiguration screenConfiguration;
-    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+    private IsometricTiledMapRenderer orthogonalTiledMapRenderer;
     private TargetingPanelFacade targetingPanelFacade;
     private HealthInfoPanelFacade healthInfoPanelFacade;
     private World world;
@@ -80,6 +84,8 @@ public class BattleScreen implements Screen {
     private StageElementsStorage stageElementsStorage;
     private CloudGenerator cloudGenerator;
     private AssetManagerLoader assetManagerLoader;
+    private Matrix4 isoTransform;
+    private Matrix4 invIsotransform;
 
     public BattleScreen() {
         this.actionLock = new ActionLock();
@@ -99,7 +105,7 @@ public class BattleScreen implements Screen {
         screenConfiguration = new ScreenConfiguration(0, 0, 0);
 
         camera = new OrthographicCamera();
-        viewport = new StretchViewport(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, camera);
+        viewport = new FitViewport(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, camera);
         viewport.update(Config.VIEWPORT_WIDTH, Config.VIEWPORT_HEIGHT, true);
         viewport.apply();
 
@@ -123,7 +129,7 @@ public class BattleScreen implements Screen {
 
         BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(assetManagerLoader.getAssetManager());
 
-        battleMap = new BattleMap(actionLock, TerrainType.Grassland, assetManagerLoader.getAssetManager(), textureRegionSelector, TILE_SIZE, world);
+        battleMap = new BattleMap(actionLock, TerrainType.Grassland, assetManagerLoader.getAssetManager(), textureRegionSelector, 32, 16, world);
 
         inputMultiplexer = new InputMultiplexer();
 
@@ -165,7 +171,7 @@ public class BattleScreen implements Screen {
 
         TerrainTypeAwareBattleMapDecorator terrainTypeAwareBattleMapDecorator = new TerrainTypeAwareBattleMapDecorator(assetManagerLoader.getAssetManager(), stageElementsStorage);
 
-        terrainTypeAwareBattleMapDecorator.decorate(battleMap);
+        //terrainTypeAwareBattleMapDecorator.decorate(battleMap);
 
         rangedAttackTargetCalculator = new RangedAttackTargetCalculator(battleMap, rangeCalculator, attackFacade, actionLock, stage, hudStage, assetManagerLoader.getAssetManager(), stageElementsStorage, movementMarkerFactory, rayHandler, hudMediator);
 
@@ -179,8 +185,8 @@ public class BattleScreen implements Screen {
 
         hudMediator.setEnemyMechInfoPanelFacade(enemyMechInfoPanelFacade);
 
-        battleScreenInputData.getGroup1().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
-        battleScreenInputData.getGroup2().keySet().forEach(me ->  battleMap.setTemporaryObstacle(me.getX(), me.getY()));
+        battleScreenInputData.getGroup1().keySet().forEach(me -> battleMap.setTemporaryObstacle(me.getX(), me.getY()));
+        battleScreenInputData.getGroup2().keySet().forEach(me -> battleMap.setTemporaryObstacle(me.getX(), me.getY()));
 
         stage.addActor(stageElementsStorage.groundLevel);
         stage.addActor(stageElementsStorage.mechLevel);
@@ -188,7 +194,18 @@ public class BattleScreen implements Screen {
 
         stage.addActor(mechInfoPanelFacade);
 
-        stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, assetManagerLoader.getAssetManager(), targetingPanelFacade, enemyMechInfoPanelFacade));
+        //stage.addListener(new GroundInputListener(turnProcessingFacade, battleMap, actionLock, mechInfoPanelFacade, stageElementsStorage, movementMarkerFactory, assetManagerLoader.getAssetManager(), targetingPanelFacade, enemyMechInfoPanelFacade));
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+
+                Vector2 vector3 = getTileCoordinates(new Vector2(x, y), 32, 16);
+
+                System.out.println(vector3.x + " " + vector3.y);
+                return true;
+            }
+        });
 
         battleScreenInputData.getGroup1().entrySet().forEach((entry -> {
             stageElementsStorage.mechLevel.addActor((Actor) entry.getKey());
@@ -225,7 +242,7 @@ public class BattleScreen implements Screen {
 
 
         float unitScale = 1f / TILE_SIZE;
-        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(battleMap.getTiledMap(), unitScale);
+        orthogonalTiledMapRenderer = new IsometricTiledMapRenderer(battleMap.getTiledMap(), unitScale);
 
         targetingPanelFacade.hide();
         healthInfoPanelFacade.show();
@@ -260,7 +277,6 @@ public class BattleScreen implements Screen {
 
         this.cloudGenerator = new CloudGenerator(assetManagerLoader.getAssetManager(), stageElementsStorage);
     }
-
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -268,6 +284,20 @@ public class BattleScreen implements Screen {
         healthInfoPanelFacade.show();
 
 
+    }
+
+    private Vector2 cartesianToIsometric(Vector2 pt){
+        Vector2 tempPt=new Vector2();
+        tempPt.x=pt.x-pt.y;
+        tempPt.y=(pt.x+pt.y)/2;
+        return (tempPt);
+    }
+
+    Vector2 getTileCoordinates(Vector2 cartPt, int width, float tileHeight){
+        Vector2 tempPt=new Vector2();
+        tempPt.x=(float) Math.floor(cartPt.x/tileHeight);
+        tempPt.y=(float) Math.floor(cartPt.y/tileHeight);
+        return(tempPt);
     }
 
     @Override
@@ -280,7 +310,7 @@ public class BattleScreen implements Screen {
         camera.position.x = Math.min(Math.max(camera.position.x + screenConfiguration.scrollX, 0), SCREEN_SIZE_X);
         camera.position.y = Math.min(Math.max(camera.position.y + screenConfiguration.scrollY, 0), SCREEN_SIZE_Y);
 
-        stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH,  VIEWPORT_HEIGHT));
+        stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
         stageElementsStorage.mechLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
         stageElementsStorage.airLevel.setCullingArea(new Rectangle(camera.position.x - VIEWPORT_WIDTH / 2, camera.position.y - VIEWPORT_HEIGHT / 2, VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
 

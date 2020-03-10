@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.mygdx.wargame.WarGame;
 import com.mygdx.wargame.battle.screen.BattleScreen;
+import com.mygdx.wargame.battle.screenv2.ScreenV2;
 import com.mygdx.wargame.mainmenu.MainMenuScreen;
 import com.mygdx.wargame.options.OptionsScreen;
 import com.mygdx.wargame.summary.SummaryScreen;
@@ -15,10 +16,15 @@ public class ScreenRegister {
     private WarGame game;
 
     private BattleScreen battleScreen = new BattleScreen();
+    private ScreenV2 battleScreenV2 = new ScreenV2();
     private SummaryScreen summaryScreen = new SummaryScreen();
     private OptionsScreen optionsScreen = new OptionsScreen();
     private MainMenuScreen mainMenuScreen = new MainMenuScreen();
     private Screen lastScreen;
+
+    public ScreenV2 getBattleScreenV2() {
+        return battleScreenV2;
+    }
 
     public BattleScreen getBattleScreen() {
         return battleScreen;

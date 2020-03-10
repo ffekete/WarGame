@@ -132,9 +132,9 @@ AbstractMech extends Actor implements Mech {
 
         if (battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay() != null &&
                 battleMap.getNodeGraphLv1().getNodeWeb()[(int) getX()][(int) getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water && state != State.Jump) {
-            texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 10);
+            texture.setRegion(direction.getOffset() * 32 + step * 32, 0, 32, 10);
         } else {
-            texture.setRegion(direction.getOffset() * 16 + step * 16, 0, 16, 16);
+            texture.setRegion(direction.getOffset() * 32 + step * 32, 0, 32, 16);
         }
         texture.flip(direction.isMirrored(), false);
         spriteBatch.setColor(Color.valueOf("FFFFFF"));
@@ -158,7 +158,7 @@ AbstractMech extends Actor implements Mech {
 
         if (getShieldValue() > 0) {
             spriteBatch.setColor(Color.valueOf("FFFFFF55"));
-            shieldTextureRegion.setRegion((shieldStep % 6) * 16, 0, 16, 16);
+            shieldTextureRegion.setRegion((shieldStep % 6) * 32, 0, 32, 16);
             spriteBatch.draw(shieldTextureRegion, x - 0.5f, y - 0.5f, 2f, 2f);
             spriteBatch.setColor(Color.WHITE);
         }

@@ -60,7 +60,7 @@ public class PowerArmor extends AbstractMech {
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.mechTextureRegion = new TextureRegion(assetManager.get("PowerArmor.png", Texture.class), 0, 0, 48, 48);
+        this.mechTextureRegion = new TextureRegion(assetManager.get("Scout.png", Texture.class), 0, 0, 48, 48);
 
         hp.put(BodyPart.LeftArm, getLeftHandMaxHp());
         hp.put(BodyPart.RightArm, getRightHandMaxHp());

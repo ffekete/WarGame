@@ -102,9 +102,6 @@ public class TurnProcessingFacade {
     }
 
     public void process(BattleMap battleMap, Stage stage) {
-
-        //stageElementsStorage.groundLevel.setCullingArea(new Rectangle(camera.position.x-1, camera.position.y -1,camera.position.x + 1, camera.position.y + 1));
-
         //System.out.println(Gdx.graphics.getFramesPerSecond());
 
         if (actionLock.isLocked()) {

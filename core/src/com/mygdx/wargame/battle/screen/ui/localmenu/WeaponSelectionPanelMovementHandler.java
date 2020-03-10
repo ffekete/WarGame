@@ -20,7 +20,7 @@ public class WeaponSelectionPanelMovementHandler {
             SizeToAction sizeToAction = new SizeToAction();
             //sizeToAction.setSize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get());
 
-            sizeToAction.setSize(225, 260);
+            sizeToAction.setSize(225 * 1.3f, 260 * 1.3f);
 
             sizeToAction.setDuration(0.25f);
             enlargeAndSetVisibleAction.addAction(sizeToAction);

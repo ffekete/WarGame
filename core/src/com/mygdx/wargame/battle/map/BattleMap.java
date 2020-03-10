@@ -33,7 +33,7 @@ public class BattleMap {
 
     private Map<Mech, List<Node>> paths = new HashMap<>();
 
-    public BattleMap(ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSize, World world) {
+    public BattleMap(ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSizeX, int unitSizeY, World world) {
         this.width = BattleMapConfig.WIDTH;
         this.height = BattleMapConfig.HEIGHT;
         this.world = world;
@@ -44,9 +44,9 @@ public class BattleMap {
         tiledMap = new TiledMap();
         MapLayers layers = tiledMap.getLayers();
 
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSize, unitSize));
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSize, unitSize));
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSize, unitSize));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSizeX, unitSizeY));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSizeX, unitSizeY));
+        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSizeX, unitSizeY));
 
         this.nodeGraphLv1 = new NodeGraph(width, height);
 
@@ -155,7 +155,7 @@ public class BattleMap {
 
         public TextureRegion select(TerrainType terrainType) {
             TextureRegion t = new TextureRegion(assetManager.get("Grass.png", Texture.class));
-            t.setRegion(new Random().nextInt(2) * 16, new Random().nextInt(2) * 16, 16, 16);
+            t.setRegion(0, 0, 32, 16);
             return t;
         }
     }

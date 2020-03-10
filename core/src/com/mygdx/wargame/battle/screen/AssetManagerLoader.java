@@ -108,6 +108,7 @@ public class AssetManagerLoader {
         assetManager.load("skin/EndTurnButtonUp.png", Texture.class);
         assetManager.load("skin/EndTurnButtonDown.png", Texture.class);
         assetManager.load("skin/BigInfoPanel.png", Texture.class);
+        assetManager.load("skin/InfoPanel.png", Texture.class);
         assetManager.load("skin/CalledShotUp.png", Texture.class);
         assetManager.load("skin/CalledShotDown.png", Texture.class);
         assetManager.load("skin/HideButtonUp.png", Texture.class);

@@ -61,7 +61,7 @@ public class HealthInfoPanelFacade {
         //panel.setDebug(true);
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontCreator.getBitmapFont(10);
+        labelStyle.font = FontCreator.getBitmapFont(12);
 
         this.nameLabel = new Label("N/A", labelStyle);
 
