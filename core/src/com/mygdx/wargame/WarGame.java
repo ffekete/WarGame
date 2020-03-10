@@ -2,10 +2,9 @@ package com.mygdx.wargame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
-import com.mygdx.wargame.battle.screen.BattleScreen;
 import com.mygdx.wargame.battle.screen.AssetManagerLoader;
-import com.mygdx.wargame.battle.screenv2.AssetManagerLoaderV2;
-import com.mygdx.wargame.battle.screenv2.ScreenV2;
+import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
+import com.mygdx.wargame.battle.screen.ScreenV2;
 import com.mygdx.wargame.common.ScreenRegister;
 import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.mainmenu.MainMenuScreen;

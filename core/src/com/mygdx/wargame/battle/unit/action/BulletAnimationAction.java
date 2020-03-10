@@ -2,10 +2,8 @@ package com.mygdx.wargame.battle.unit.action;
 
 import box2dLight.RayHandler;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -14,14 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
-import com.mygdx.wargame.battle.action.AddFireEffectAction;
-import com.mygdx.wargame.battle.action.MoveLightSourceAction;
-import com.mygdx.wargame.battle.action.SetOverlayAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.LayerIndex;
-import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
@@ -121,12 +114,11 @@ BulletAnimationAction extends Action {
                 Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
                 Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
 
-                if( weapon.getType() == WeaponType.Flamer) {
+                if (weapon.getType() == WeaponType.Flamer) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
                     moveActorByBezierLine.setDuration(0.3f);
-                }
-                else if (weapon.getType() == WeaponType.Missile) {
-                    moveActorByBezierLine = new MoveSmokingActorByBezierLine(start.x, start.y, end.x, end.y, true, assetManager);
+                } else if (weapon.getType() == WeaponType.Missile) {
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
                     moveActorByBezierLine.setDuration(0.3f);
                 } else {
                     bullet.setPosition(start.x, start.y);
@@ -158,13 +150,6 @@ BulletAnimationAction extends Action {
                 else
                     moveAndLight.addAction(moveToAction);
 
-                if (weapon.getType() == WeaponType.Plasma)
-                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.1f, 0.6f, 0.4f, 1f)));
-
-
-                if (weapon.getType() == WeaponType.Laser)
-                    moveAndLight.addAction(new MoveLightSourceAction(end.x, end.y, 0.15f, start.x, start.y, rayHandler, new Color(0.6f, 0.0f, 0.0f, 1f)));
-
                 sequenceAction.addAction(moveAndLight);
 
                 if (weapon.getType() == WeaponType.Missile) {
@@ -176,33 +161,14 @@ BulletAnimationAction extends Action {
 
 
                     ParallelAction waitAndShake = new ParallelAction();
-                    waitAndShake.addAction(new ShakeAction(1f, (Actor) defenderMech));
-                    mapUtils.nrOfTreesOnTile(stageElementsStorage, defenderMech.getX(), defenderMech.getY()).forEach(tree -> waitAndShake.addAction(new ShakeAction(1.1f, tree)));
                     explosionAction.addAction(waitAndShake);
 
 
                     explosionAction.addAction(new DelayAction(0.5f));
-                    if (!craterCreated) {
-                        explosionAction.addAction(new SetOverlayAction(battleMap, (int) defenderMech.getX(), (int) defenderMech.getY(), TileOverlayType.Crater, assetManager, LayerIndex.Decoration));
-                        craterCreated = true;
-                    }
-                    explosionAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap, rayHandler));
+
                     explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion, null));
 
-                    if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {
-                        //explosionAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof explosion"));
-                        finishedByExplosion = true;
-                    }
-
                     stageElementsStorage.airLevel.addAction(explosionAction);
-                }
-
-                if (weapon.getType() == WeaponType.Flamer) {
-                    sequenceAction.addAction(new AddFireEffectAction(stageElementsStorage, assetManager, defenderMech.getX(), defenderMech.getY(), battleMap, rayHandler));
-                }
-
-                if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1 && !finishedByExplosion) {
-                    //sequenceAction.addAction(new UnlockAction(actionLock, attackerMech.getName() + "eof normal attack"));
                 }
 
                 sequenceAction.addAction(new RemoveActorAction());

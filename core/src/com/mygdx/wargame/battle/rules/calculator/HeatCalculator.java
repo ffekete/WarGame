@@ -1,7 +1,6 @@
 package com.mygdx.wargame.battle.rules.calculator;
 
 import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
 import com.mygdx.wargame.common.component.heatsink.HeatSink;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.mech.Mech;
@@ -22,12 +21,10 @@ public class HeatCalculator {
 
         baseValue += heatDissipation;
 
-        if(battleMap.getNodeGraphLv1().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay() != null &&
-                battleMap.getNodeGraphLv1().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
-            baseValue += 20;
-        }
-
-        baseValue -= battleMap.getFireMap()[(int) targetMech.getX()][(int) targetMech.getY()] > 0 ? 20 : 0;
+//        if(battleMap.getNodeGraph().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay() != null &&
+//                battleMap.getNodeGraph().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
+//            baseValue += 20;
+//        }
 
         if (targetPilot.hasPerk(Perks.Engineer)) {
             baseValue += 5;

@@ -97,7 +97,7 @@ public class BattleGameMenuFacade {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 ScreenRegister.I.getGame().showOptionsScreen();
-                ScreenRegister.I.setLastScreen(ScreenRegister.I.getBattleScreen());
+                ScreenRegister.I.setLastScreen(ScreenRegister.I.getBattleScreenV2());
                 return true;
             }
         });
@@ -121,17 +121,11 @@ public class BattleGameMenuFacade {
             hide();
             mainMenuShown = false;
             hudMediator.getHudElementsFacade().show();
-            hudMediator.getHealthInfoPanelFacade().show();
             ScreenRegister.I.getGame().resume();
         } else {
             show();
             mainMenuShown = true;
             hudMediator.getHudElementsFacade().hide();
-//            hudMediator.getMechInfoPanelFacade().hide();
-//            hudMediator.getEnemyMechInfoPanelFacade().hideLocalMenu();
-//            hudMediator.getDetailsPageFacade().hide();
-//            hudMediator.getTargetingPanelFacade().hide();
-            hudMediator.getHealthInfoPanelFacade().hide();
             ScreenRegister.I.getGame().pause();
         }
     }

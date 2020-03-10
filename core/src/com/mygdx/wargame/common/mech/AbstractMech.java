@@ -1,28 +1,14 @@
 package com.mygdx.wargame.common.mech;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.wargame.battle.map.BattleMap;
-import com.mygdx.wargame.battle.map.decoration.AnimatedGameObjectImage;
-import com.mygdx.wargame.battle.map.overlay.TileOverlayType;
-import com.mygdx.wargame.battle.screen.TurnProcessingFacadeStore;
-import com.mygdx.wargame.battle.screenv2.IsometricSprite;
+import com.mygdx.wargame.battle.screen.IsometricSprite;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.component.weapon.Status;
-import com.mygdx.wargame.config.Config;
-import com.mygdx.wargame.battle.rules.calculator.FlankingCalculator;
-
-import java.util.Random;
 
 public abstract class
 AbstractMech extends Actor implements Mech {

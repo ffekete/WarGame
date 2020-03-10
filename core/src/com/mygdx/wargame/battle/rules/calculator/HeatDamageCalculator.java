@@ -2,7 +2,6 @@ package com.mygdx.wargame.battle.rules.calculator;
 
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.mygdx.wargame.battle.action.ShowMessageActor;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
@@ -34,8 +33,6 @@ public class HeatDamageCalculator {
 
         int amount = new Random().nextInt(3) + 1;
         targetMech.setHp(bodyPartToDamage, targetMech.getHp(bodyPartToDamage) - amount);
-
-        sequenceAction.addAction(new ShowMessageActor(labelStyle, targetMech.getX(), targetMech.getY(), "Damaged " + bodyPartToDamage.getName() + " for " + amount + " damage", stageElementsStorage, actionLock));
     }
 
 }

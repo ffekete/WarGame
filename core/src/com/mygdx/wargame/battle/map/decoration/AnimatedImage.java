@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.Random;
 
-public class AnimatedImage extends Image implements Tree {
+public class AnimatedImage extends Image {
 
     private int size;
     private int step = 0;

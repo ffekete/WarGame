@@ -1,13 +1,9 @@
 package com.mygdx.wargame.battle.map;
 
-import com.mygdx.wargame.battle.map.overlay.Overlay;
-
 public class Node {
 
     private int index;
-    private Overlay groundOverlay;
     private float x, y;
-    private Overlay decorationOverlay;
 
     public Node(float x, float y) {
         this.setX(x);
@@ -36,21 +32,5 @@ public class Node {
 
     public void setY(float y) {
         this.y = y;
-    }
-
-    public void setDecorationOverlay(Overlay decorationOverlay) {
-        this.decorationOverlay = decorationOverlay;
-    }
-
-    public void setGroundOverlay(Overlay groundOverlay) {
-        this.groundOverlay = groundOverlay;
-    }
-
-    public Overlay getGroundOverlay() {
-        return groundOverlay;
-    }
-
-    public Overlay getDecorationOverlay() {
-        return decorationOverlay;
     }
 }

@@ -1,170 +1,84 @@
 package com.mygdx.wargame.battle.map;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.common.mech.Mech;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 
 public class BattleMap {
 
-    int width, height;
-    private NodeGraph nodeGraphLv1;
+    public static final int WIDTH = 15;
+    public static final int HEIGHT = 15;
+    private TiledMap tiledMap;
+    private com.mygdx.wargame.battle.map.NodeGraph nodeGraph;
     private TerrainType terrainType;
 
-    private TiledMap tiledMap;
-    private TextureRegionSelector textureRegionSelector;
-    private int[][] fireMap;
-    private World world;
+    public BattleMap(AssetManagerLoaderV2 assetManagerLoaderV2, TerrainType terrainType) {
 
-    private Map<Mech, List<Node>> paths = new HashMap<>();
-
-    public BattleMap(ActionLock actionLock, TerrainType terrainType, AssetManager assetManager, TextureRegionSelector textureRegionSelector, int unitSizeX, int unitSizeY, World world) {
-        this.width = BattleMapConfig.WIDTH;
-        this.height = BattleMapConfig.HEIGHT;
-        this.world = world;
-
-        fireMap = new int[width][height];
         this.terrainType = terrainType;
-        this.textureRegionSelector = textureRegionSelector;
-        tiledMap = new TiledMap();
-        MapLayers layers = tiledMap.getLayers();
 
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSizeX, unitSizeY));
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSizeX, unitSizeY));
-        layers.add(new TiledMapTileLayer(BattleMapConfig.WIDTH, BattleMapConfig.HEIGHT, unitSizeX, unitSizeY));
+        this.tiledMap = new TiledMapGenerator(assetManagerLoaderV2).generate(WIDTH, HEIGHT, terrainType.getTileSets());
+        this.nodeGraph = new NodeGraph(WIDTH, HEIGHT);
 
-        this.nodeGraphLv1 = new NodeGraph(width, height);
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
                 Node node;
 
-                if (nodeGraphLv1.getNodeWeb()[i][j] == null) {
+                if (nodeGraph.getNodeWeb()[i][j] == null) {
                     node = new Node(i, j);
-                    TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                    cell.setTile(new StaticTiledMapTile(this.textureRegionSelector.select(terrainType)));
-                    getLayer(LayerIndex.Ground).setCell(i, j, cell);
-
+                    nodeGraph.addNode(node);
                 } else {
-                    node = nodeGraphLv1.getNodeWeb()[i][j];
+                    node = nodeGraph.getNodeWeb()[i][j];
                 }
 
-                nodeGraphLv1.addNode(node);
-
-                addNodeIfDoesntExists(node, i - 1, j, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i - 1, j - 1, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i - 1, j + 1, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i, j - 1, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i, j + 1, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i + 1, j, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i + 1, j - 1, nodeGraphLv1);
-                addNodeIfDoesntExists(node, i + 1, j + 1, nodeGraphLv1);
+                addNodeIfDoesntExists(node, i - 1, j, nodeGraph);
+                //addNodeIfDoesntExists(node, i - 1, j - 1, nodeGraph);
+                //addNodeIfDoesntExists(node, i - 1, j + 1, nodeGraph);
+                addNodeIfDoesntExists(node, i, j - 1, nodeGraph);
+                addNodeIfDoesntExists(node, i, j + 1, nodeGraph);
+                addNodeIfDoesntExists(node, i + 1, j, nodeGraph);
+                //addNodeIfDoesntExists(node, i + 1, j - 1, nodeGraph);
+                //addNodeIfDoesntExists(node, i + 1, j + 1, nodeGraph);
             }
         }
-        //System.out.println("Done.");
+        System.out.println("done");
+    }
+
+
+    public GraphPath<Node> calculatePath(Node s, Node g) {
+        System.out.println("From: " + s.getX() + " " + s.getY());
+        System.out.println("To: " + g.getX() + " " + g.getY());
+        return nodeGraph.findPath(s, g);
     }
 
     private void addNodeIfDoesntExists(Node node, int i, int j, NodeGraph nodeGraph) {
-        if (i < 0 || i >= width || j < 0 || j >= height) {
+        if (i < 0 || i >= WIDTH || j < 0 || j >= HEIGHT) {
             return;
         }
 
         Node newNode;
         if (nodeGraph.getNodeWeb()[i][j] == null) {
             newNode = new Node(i, j);
-            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-            cell.setTile(new StaticTiledMapTile(textureRegionSelector.select(terrainType)));
-            TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(LayerIndex.Ground.getIndex());
-            layer.setCell(i, j, cell);
             nodeGraph.addNode(newNode);
         } else {
             newNode = nodeGraph.getNodeWeb()[i][j];
         }
 
         nodeGraph.connectCities(node, newNode);
-        //nodeGraph.connectCities(newNode, node);
-    }
-
-    public GraphPath<Node> calculatePath(Node s, Node g) {
-        return nodeGraphLv1.findPath(s, g);
-    }
-
-    public void addPath(Mech man, GraphPath<Node> path) {
-        Iterator<Node> it = path.iterator();
-        paths.computeIfAbsent(man, v -> new LinkedList<>());
-        while (it.hasNext()) {
-            paths.get(man).add(it.next());
-        }
-    }
-
-    public void setPermanentObstacle(float x, float y) {
-        nodeGraphLv1.setImpassable(x, y);
     }
 
     public void setTemporaryObstacle(float x, float y) {
-        nodeGraphLv1.disconnectCities(nodeGraphLv1.getNodeWeb()[(int) x][(int) y]);
-    }
-
-    public List<Node> getPath(Mech abstractMech) {
-        return paths.get(abstractMech);
-    }
-
-    public NodeGraph getNodeGraphLv1() {
-        return nodeGraphLv1;
-    }
-
-    public TerrainType getTerrainType() {
-        return terrainType;
-    }
-
-    public void removePath(Mech key) {
-        paths.computeIfAbsent(key, v -> new ArrayList<>());
-        paths.get(key).clear();
+        nodeGraph.disconnectCities(nodeGraph.getNodeWeb()[(int) x][(int) y]);
     }
 
     public TiledMap getTiledMap() {
         return tiledMap;
     }
 
-    public TiledMapTileLayer getLayer(LayerIndex layerIndex) {
-        return (TiledMapTileLayer) tiledMap.getLayers().get(layerIndex.getIndex());
+    public NodeGraph getNodeGraph() {
+        return nodeGraph;
     }
 
-    public static class TextureRegionSelector {
-
-        private AssetManager assetManager;
-
-        public TextureRegionSelector(AssetManager assetManager) {
-            this.assetManager = assetManager;
-        }
-
-        public TextureRegion select(TerrainType terrainType) {
-            TextureRegion t = new TextureRegion(assetManager.get("Grass.png", Texture.class));
-            t.setRegion(0, 0, 32, 16);
-            return t;
-        }
-    }
-
-    public int[][] getFireMap() {
-        return fireMap;
-    }
-
-    public World getWorld() {
-        return world;
+    public TerrainType getTerrainType() {
+        return terrainType;
     }
 }
