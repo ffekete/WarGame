@@ -3,18 +3,19 @@ package com.mygdx.wargame.battle.screenv2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.screenv2.action.MoveActorAlongPathActionFactory;
+import com.mygdx.wargame.battle.screenv2.map.BattleMap;
 import com.mygdx.wargame.battle.screenv2.render.IsometricTiledMapRendererWithSprites;
-import com.mygdx.wargame.battle.screenv2.tile.TileSets;
+import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.mech.Scout;
 import com.mygdx.wargame.util.DrawUtils;
@@ -41,11 +42,12 @@ public class ScreenV2 implements Screen {
 
         stage = new Stage(viewport);
 
-        TiledMap tiledMap = new TiledMapGenerator(assetManagerLoader).generate(15, 15, TileSets.GrassLand);
+        BattleMap battleMap = new BattleMap(assetManagerLoader);
 
-        isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(tiledMap);
+        isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
 
-        Mech mech = new Scout("Scout", isometricTiledMapRenderer.getBatch(), assetManagerLoader);
+        AbstractMech mech = new Scout("Scout", isometricTiledMapRenderer.getBatch(), assetManagerLoader);
+        mech.resetMovementPoints(10);
 
         isometricTiledMapRenderer.addSprite(mech);
 
@@ -55,10 +57,16 @@ public class ScreenV2 implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
-                IsoMoveToAction moveToAction = new IsoMoveToAction(mech);
-                moveToAction.setPosition(s2c.x, s2c.y);
-                moveToAction.setDuration(1f);
-                stage.addAction(moveToAction);
+
+//                IsoMoveToAction moveToAction = new IsoMoveToAction(mech);
+//                moveToAction.setPosition(s2c.x, s2c.y);
+//                moveToAction.setDuration(1f);
+//                stage.addAction(moveToAction);
+                GraphPath<Node> path = battleMap.calculatePath(
+                        battleMap.getNodeGraph().getNodeWeb()[(int)mech.getX()][(int)mech.getY()],
+                        battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y]
+                );
+                stage.addAction(new MoveActorAlongPathActionFactory().getMovementAction(path, mech));
                 return true;
             }
 

@@ -62,7 +62,7 @@ public class NodeGraph implements IndexedGraph<Node> {
         if (!streetsMap.containsKey(fromNode)) {
             streetsMap.put(fromNode, new Array<Connection<Node>>());
         }
-        if (!streetsMap.get(fromNode).contains(edge, false)) {
+        if (!streetsMap.get(fromNode).contains(edge, true)) {
             streetsMap.get(fromNode).add(edge);
             edges.add(edge);
 
