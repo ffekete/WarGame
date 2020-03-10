@@ -4,14 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.wargame.battle.screenv2.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.battle.screenv2.tile.TileSets;
 import com.mygdx.wargame.util.DrawUtils;
 
 public class ScreenV2 implements Screen {
@@ -21,7 +23,7 @@ public class ScreenV2 implements Screen {
     private Viewport viewport;
 
     private Stage stage;
-    private IsometricTiledMapRenderer isometricTiledMapRenderer;
+    private IsometricTiledMapRendererWithSprites isometricTiledMapRenderer;
     private IsoUtils isoUtils;
 
     public void load(AssetManagerLoaderV2 assetManagerLoader) {
@@ -38,17 +40,31 @@ public class ScreenV2 implements Screen {
 
         stage = new Stage(viewport);
 
+        IsometricSprite sprite = new IsometricSprite(assetManagerLoader.getAssetManager().get("IsometricScout.png", Texture.class));
+        sprite.setPosition(2, 2);
 
-        TiledMap tiledMap = new TiledMapGenerator(assetManagerLoader).generate(15, 15);
+        TiledMap tiledMap = new TiledMapGenerator(assetManagerLoader).generate(15, 15, TileSets.GrassLand);
 
-        isometricTiledMapRenderer = new IsometricTiledMapRenderer(tiledMap);
+        isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(tiledMap);
+
+        isometricTiledMapRenderer.addSprite(sprite);
 
         stage.addListener(new InputListener() {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
-                System.out.println(isoUtils.screenToCell(newCoords.x, newCoords.y, camera));
+
+                Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+
+                System.out.println(s2c);
+
+                //sprite.setPosition(s2c.x, s2c.y);
+
+                IsoMoveToAction moveToAction = new IsoMoveToAction(sprite);
+                moveToAction.setPosition(s2c.x, s2c.y);
+                moveToAction.setDuration(1f);
+                stage.addAction(moveToAction);
                 return true;
             }
 
@@ -67,7 +83,6 @@ public class ScreenV2 implements Screen {
         });
     }
 
-
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
@@ -80,6 +95,8 @@ public class ScreenV2 implements Screen {
         DrawUtils.clearScreen();
 
         viewport.apply();
+
+        stage.act();
 
         isometricTiledMapRenderer.setView(camera);
         isometricTiledMapRenderer.render();

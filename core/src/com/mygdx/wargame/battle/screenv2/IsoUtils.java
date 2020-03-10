@@ -45,6 +45,12 @@ public class IsoUtils {
     }
 
 
+    public Vector2 worldToScreen(float x, float y) {
+        float x0 = (y * TILE_WIDTH / 2f) + (x * TILE_WIDTH / 2f);
+        float y0 = (x * TILE_HEIGHT / 2f) - (y * TILE_HEIGHT / 2f);
+        return new Vector2(x0, -1 * y0);
+    }
+
     public Vector2 screenToCell(float x, float y, Camera camera) {
         Vector2 world = screenToWorld(x, y, camera);
         world.y -= TILE_HEIGHT * 0.5f;

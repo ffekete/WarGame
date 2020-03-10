@@ -13,7 +13,8 @@ public class AssetManagerLoaderV2 {
 
     public void load() {
 
-        assetManager.load("Grass.png", Texture.class);
+        assetManager.load("tiles/Grass.png", Texture.class);
+        assetManager.load("IsometricScout.png", Texture.class);
         assetManager.finishLoading();
     }
 
