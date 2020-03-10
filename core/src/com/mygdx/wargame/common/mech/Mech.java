@@ -1,5 +1,6 @@
 package com.mygdx.wargame.common.mech;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.wargame.battle.unit.Direction;
@@ -16,8 +17,6 @@ public interface Mech extends Comparable<Mech> {
     // true if bodypaert is destroyed
     public boolean setHp(BodyPart bodyPart, int hp);
 
-    public void draw(float x, float y, SpriteBatch spriteBatch, TextureRegion texture);
-
     public float getX();
 
     public float getY();
@@ -27,6 +26,8 @@ public interface Mech extends Comparable<Mech> {
     Team getTeam();
 
     void setTeam(Team team);
+
+    void draw(Batch spriteBatch, float parentAlpha);
 
     Set<Component> getAllComponents();
 

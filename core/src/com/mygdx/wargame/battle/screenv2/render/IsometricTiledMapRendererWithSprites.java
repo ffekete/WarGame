@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRenderer {
     private Sprite sprite;
-    private List<Actor> sprites;
+    private List<Mech> sprites;
     private int drawSpritesAfterLayer = 1;
 
     private Vector2 topRight = new Vector2();
@@ -34,10 +35,10 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
     public IsometricTiledMapRendererWithSprites(TiledMap map) {
         super(map);
         init();
-        sprites = new ArrayList<Actor>();
+        sprites = new ArrayList<Mech>();
     }
 
-    public void addSprite(Actor sprite) {
+    public void addSprite(Mech sprite) {
         sprites.add(sprite);
     }
 
@@ -51,7 +52,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                     renderTileLayer((TiledMapTileLayer) layer);
                     currentLayer++;
                     if (currentLayer == drawSpritesAfterLayer) {
-                        for (Actor sprite : sprites)
+                        for (Mech sprite : sprites)
                             sprite.draw(this.getBatch(), Gdx.graphics.getDeltaTime());
                     }
                 } else {

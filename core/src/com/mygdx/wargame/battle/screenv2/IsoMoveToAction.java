@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.wargame.common.mech.Mech;
 
 /** Moves an actor from its current position to a specific position.
  * @author Nathan Sweet */
@@ -27,15 +28,15 @@ public class IsoMoveToAction extends TemporalAction {
 	private float startX, startY;
 	private float endX, endY;
 	private int alignment = Align.bottomLeft;
-	private IsometricSprite isometricSprite;
+	private Mech mech;
 
-	public IsoMoveToAction(IsometricSprite isometricSprite) {
-		this.isometricSprite = isometricSprite;
+	public IsoMoveToAction(Mech mech) {
+		this.mech = mech;
 	}
 
 	protected void begin () {
-		startX = isometricSprite.getX();
-		startY = isometricSprite.getY();
+		startX = mech.getX();
+		startY = mech.getY();
 	}
 
 	protected void update (float percent) {
@@ -53,7 +54,7 @@ public class IsoMoveToAction extends TemporalAction {
 
 		System.out.println(x + " " + y + " " + percent);
 
-		isometricSprite.setPosition(x, y, alignment);
+		mech.setPosition(x, y);
 	}
 
 	public void reset () {

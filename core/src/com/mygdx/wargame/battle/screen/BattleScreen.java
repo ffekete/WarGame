@@ -125,7 +125,6 @@ public class BattleScreen implements Screen {
         selectionMarker = new SelectionMarker(assetManagerLoader.getAssetManager(), spriteBatch);
 
         BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
-        BattleScreenInputDataStubber battleScreenInputDataStubber = new BattleScreenInputDataStubber(spriteBatch, assetManagerLoader.getAssetManager());
 
         BattleMap.TextureRegionSelector textureRegionSelector = new BattleMap.TextureRegionSelector(assetManagerLoader.getAssetManager());
 
@@ -156,8 +155,6 @@ public class BattleScreen implements Screen {
         MovementMarkerFactory movementMarkerFactory = new MovementMarkerFactory(stageElementsStorage, assetManagerLoader.getAssetManager(), mechInfoPanelFacade, battleMap);
 
         AttackFacade attackFacade = new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), mechInfoPanelFacade, actionLock);
-
-        battleScreenInputDataStubber.stub(battleScreenInputData, battleMap, turnProcessingFacadeStore);
 
         this.turnProcessingFacade = new TurnProcessingFacade(actionLock, attackFacade,
                 new TargetingFacade(stageElementsStorage),

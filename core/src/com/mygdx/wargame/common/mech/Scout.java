@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.TurnProcessingFacadeStore;
+import com.mygdx.wargame.battle.screenv2.AssetManagerLoaderV2;
+import com.mygdx.wargame.battle.screenv2.IsometricSprite;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
@@ -29,7 +31,7 @@ public class Scout extends AbstractMech {
     public static final int TORSO_HP = 30;
     public static final int HEAD_HP = 10;
 
-    private SpriteBatch spriteBatch;
+    private Batch spriteBatch;
     private String name;
     private int movementPoints;
 
@@ -53,14 +55,13 @@ public class Scout extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public Scout(String name, SpriteBatch spriteBatch, AssetManager assetManager, BattleMap battleMap, TurnProcessingFacadeStore turnProcessingFacadeStore) {
-        super(5, assetManager, battleMap, turnProcessingFacadeStore);
+    public Scout(String name, Batch spriteBatch, AssetManagerLoaderV2 assetManagerLoader) {
+        super(10, new IsometricSprite(assetManagerLoader.getAssetManager().get("IsometricScout.png", Texture.class)));
         this.spriteBatch = spriteBatch;
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
-        this.mechTextureRegion = new TextureRegion(assetManager.get("Scout.png", Texture.class), 0, 0, 48, 48);
 
         hp.put(BodyPart.LeftArm, getLeftHandMaxHp());
         hp.put(BodyPart.RightArm, getRightHandMaxHp());
@@ -95,11 +96,6 @@ public class Scout extends AbstractMech {
     @Override
     public int getStabilityResistance() {
         return 0;
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(getX(), getY(), spriteBatch, mechTextureRegion);
     }
 
     @Override
