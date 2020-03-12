@@ -1,8 +1,8 @@
 package com.mygdx.wargame.battle.map.tile;
 
-public class GrassTile implements Tile {
+public class GrassForestTile implements Tile {
     @Override
     public String getPath() {
-        return "tiles/GrassBig.png";
+        return "tiles/GrassBigForest.png";
     }
 }

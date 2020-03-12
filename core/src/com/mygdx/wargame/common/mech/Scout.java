@@ -51,7 +51,7 @@ public class Scout extends AbstractMech {
             .build();
 
     public Scout(String name, Batch spriteBatch, AssetManagerLoaderV2 assetManagerLoader) {
-        super(10, new IsometricSprite(assetManagerLoader.getAssetManager().get("IsometricScout.png", Texture.class)));
+        super(10, new IsometricSprite(assetManagerLoader.getAssetManager().get("mechs/IsometricScout.png", Texture.class)));
         this.spriteBatch = spriteBatch;
         this.name = name;
 

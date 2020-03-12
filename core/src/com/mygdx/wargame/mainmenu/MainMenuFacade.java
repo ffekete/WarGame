@@ -43,31 +43,31 @@ public class MainMenuFacade {
         table = new Table();
         table.setFillParent(true);
 
-        table.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
+        //table.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(15);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
 
         this.textButtonStyle2 = new TextButton.TextButtonStyle();
         textButtonStyle2.font = FontCreator.getBitmapFont(15);
         textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle2.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
 
         this.textButtonStyle3 = new TextButton.TextButtonStyle();
         textButtonStyle3.font = FontCreator.getBitmapFont(15);
         textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle3.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, 128, 64);
-        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle3.over = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, 128, 64);
+        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle3.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
 
         this.newGameGameButton = new TextButton("NEW GAME", textButtonStyle);
 

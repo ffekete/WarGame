@@ -55,7 +55,7 @@ public class GameEndFacade {
         resultTable.pad(40 / SCREEN_HUD_RATIO);
         resultTable.add(resultLabel).center().row();
         resultTable.add(textButton).size(200 / SCREEN_HUD_RATIO, 100 / SCREEN_HUD_RATIO).center().pad(40 / SCREEN_HUD_RATIO);
-        resultTable.background(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
+        //resultTable.background(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
         resultTable.setSize(HUD_VIEWPORT_WIDTH.get() / 2f, HUD_VIEWPORT_HEIGHT.get() / 2f);
 
         outerTable.add(resultTable).center().size(HUD_VIEWPORT_WIDTH.get() / 2f, HUD_VIEWPORT_HEIGHT.get() / 2f);

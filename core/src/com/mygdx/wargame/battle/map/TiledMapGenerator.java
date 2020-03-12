@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.map.tile.Tile;
 import com.mygdx.wargame.battle.map.tile.TileSets;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
+import com.mygdx.wargame.battle.screen.IsoUtils;
 
 import java.util.Random;
 
@@ -22,7 +23,7 @@ public class TiledMapGenerator {
     public TiledMap generate(int width, int height, TileSets tileSet) {
         TiledMap tiledMap = new TiledMap();
 
-        TiledMapTileLayer groundLayer = new TiledMapTileLayer(width, height, 32, 16);
+        TiledMapTileLayer groundLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
         groundLayer.setName("groundLayer");
 
 

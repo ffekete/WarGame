@@ -43,7 +43,7 @@ public class BattleGameMenuFacade {
         table = new Table();
         table.setFillParent(true);
 
-        table.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
+        //table.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(20);

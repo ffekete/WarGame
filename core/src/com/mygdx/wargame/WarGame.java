@@ -2,7 +2,6 @@ package com.mygdx.wargame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
-import com.mygdx.wargame.battle.screen.AssetManagerLoader;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.ScreenV2;
 import com.mygdx.wargame.common.ScreenRegister;
@@ -17,7 +16,6 @@ public class WarGame extends Game {
 
     private AssetManager assetManager;
     private AssetManagerLoaderV2 assetManagerLoaderV2;
-    private AssetManagerLoader assetManagerLoader;
 
     @Override
     public void create() {
@@ -25,10 +23,8 @@ public class WarGame extends Game {
         screenRegister.setGame(this);
         assetManager = new AssetManager();
         assetManagerLoaderV2 = new AssetManagerLoaderV2(assetManager);
-        assetManagerLoader = new AssetManagerLoader(assetManager);
 
         assetManagerLoaderV2.load();
-        assetManagerLoader.load();
 
         ScreenRegister.I.getMainMenuScreen().load(assetManager);
 

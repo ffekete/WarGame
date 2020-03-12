@@ -6,8 +6,8 @@ import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 
 public class BattleMap {
 
-    public static final int WIDTH = 15;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 10;
+    public static final int HEIGHT = 10;
     private TiledMap tiledMap;
     private com.mygdx.wargame.battle.map.NodeGraph nodeGraph;
     private TerrainType terrainType;

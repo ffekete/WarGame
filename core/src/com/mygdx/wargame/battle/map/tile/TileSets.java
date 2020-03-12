@@ -9,6 +9,10 @@ public enum TileSets {
     GrassLand(
             ImmutableSet.<Class<? extends Tile>>builder()
                     .add(GrassTile.class)
+                    .add(GrassCityTile.class)
+                    .add(GrassForestLakeTile.class)
+                    .add(GrassForestTile.class)
+                    .add(GrassMountainTile.class)
                     .build()
     ),
     Desert(

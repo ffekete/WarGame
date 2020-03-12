@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Vector3;
 
 public class IsoUtils {
 
-    private static final float TILE_WIDTH = 32;
-    private static final float TILE_HEIGHT = 16;
+    public static final int TILE_WIDTH = 128;
+    public static final int TILE_HEIGHT = 64;
 
     private Matrix4 isoTransform;
     private Matrix4 invIsotransform;

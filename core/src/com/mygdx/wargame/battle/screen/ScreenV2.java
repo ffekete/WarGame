@@ -51,7 +51,7 @@ public class ScreenV2 implements Screen {
 
         camera = new OrthographicCamera();
 
-        viewport = new FitViewport(480, 270, camera);
+        viewport = new FitViewport(960, 540, camera);
 
         stage = new Stage(viewport);
 
