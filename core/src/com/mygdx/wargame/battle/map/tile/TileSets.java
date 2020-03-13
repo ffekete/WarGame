@@ -13,6 +13,7 @@ public enum TileSets {
                     .add(GrassForestLakeTile.class)
                     .add(GrassForestTile.class)
                     .add(GrassMountainTile.class)
+                    .add(GrassPowerPlantTile.class)
                     .build()
     ),
     Desert(

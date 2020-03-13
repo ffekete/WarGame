@@ -1,29 +1,31 @@
 package com.mygdx.wargame.battle.map.tile;
 
-public class GrassMountainTile implements Tile {
+public class GrassPowerPlantTile implements Tile {
+
+    private TileState tileState = TileState.Destroyed;
 
     @Override
     public String getPath() {
-        return "tiles/GrassBigMountain.png";
+        return "tiles/GrassBigPowerPlant.png";
     }
 
     @Override
     public String getDestroyedPath() {
-        return null;
+        return "tiles/GrassBigPowerPlantDestroyed.png";
     }
 
     @Override
     public boolean canBeDestroyed() {
-        return false;
+        return true;
     }
 
     @Override
     public TileState getTileState() {
-        return TileState.Intact;
+        return tileState;
     }
 
     @Override
     public void setTileState(TileState tileState) {
-
+        this.tileState = tileState;
     }
 }

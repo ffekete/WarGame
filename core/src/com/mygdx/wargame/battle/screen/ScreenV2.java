@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.lock.ActionLock;
@@ -26,6 +28,7 @@ import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
+import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.mech.Scout;
@@ -40,8 +43,10 @@ public class ScreenV2 implements Screen {
     private Viewport viewport;
 
     private Stage stage;
+    private Stage hudStage;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRenderer;
     private IsoUtils isoUtils;
+    private HUDMediator hudMediator;
 
     public void load(AssetManagerLoaderV2 assetManagerLoader) {
 
@@ -54,6 +59,12 @@ public class ScreenV2 implements Screen {
         viewport = new FitViewport(960, 540, camera);
 
         stage = new Stage(viewport);
+
+        Camera hudCamera = new OrthographicCamera();
+        Viewport hudViewPort = new StretchViewport(960, 540, hudCamera);
+        hudViewPort.apply();
+
+        hudStage = new Stage(hudViewPort);
 
         BattleMap battleMap = new BattleMap(assetManagerLoader, TerrainType.Grassland);
 
@@ -68,7 +79,7 @@ public class ScreenV2 implements Screen {
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
         ActionLock actionLock = new ActionLock();
 
-        HUDMediator hudMediator = new HUDMediator();
+        hudMediator = new HUDMediator();
 
         TurnProcessingFacade turnProcessingFacade = new TurnProcessingFacade(actionLock,
                 new AttackFacade(stageElementsStorage,assetManagerLoader.getAssetManager(), actionLock),
@@ -84,6 +95,10 @@ public class ScreenV2 implements Screen {
                 new StabilityDecreaseCalculator(),
                 hudMediator
         );
+
+        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, actionLock, hudMediator));
+        hudMediator.getHudElementsFacade().create();
+        hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
         isometricTiledMapRenderer.addSprite(mech);
 
@@ -124,6 +139,7 @@ public class ScreenV2 implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        hudMediator.getHudElementsFacade().show();
     }
 
 
@@ -132,12 +148,17 @@ public class ScreenV2 implements Screen {
 
         DrawUtils.clearScreen();
 
+        //hudMediator.getHudElementsFacade().update();
+
         viewport.apply();
 
         stage.act();
 
         isometricTiledMapRenderer.setView(camera);
         isometricTiledMapRenderer.render();
+
+        hudStage.act();
+        hudStage.draw();
 
     }
 

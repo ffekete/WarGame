@@ -14,11 +14,15 @@ public class AssetManagerLoaderV2 {
     public void load() {
 
         assetManager.load("tiles/GrassBig.png", Texture.class);
+        assetManager.load("tiles/GrassBigDamaged.png", Texture.class);
         assetManager.load("tiles/GrassBigCity.png", Texture.class);
         assetManager.load("tiles/GrassBigCityDamaged.png", Texture.class);
         assetManager.load("tiles/GrassBigForest.png", Texture.class);
+        assetManager.load("tiles/GrassBigForestDamaged.png", Texture.class);
         assetManager.load("tiles/GrassBigForestLake.png", Texture.class);
         assetManager.load("tiles/GrassBigMountain.png", Texture.class);
+        assetManager.load("tiles/GrassBigPowerPlant.png", Texture.class);
+        assetManager.load("tiles/GrassBigPowerPlantDestroyed.png", Texture.class);
 
         assetManager.load("mechs/IsometricScout.png", Texture.class);
 
@@ -34,6 +38,15 @@ public class AssetManagerLoaderV2 {
 
         assetManager.load("hud/MainMenuSmallButtonUp.png", Texture.class);
         assetManager.load("hud/MainMenuSmallButtonDown.png", Texture.class);
+
+        assetManager.load("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/HideMovementMarkersSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/HideMovementMarkersSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/ShowMovementDirectionsSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/ShowMovementDirectionsSmallButtonDown.png", Texture.class);
+        assetManager.load("hud/HideMovementDirectionsSmallButtonUp.png", Texture.class);
+        assetManager.load("hud/HideMovementDirectionsSmallButtonDown.png", Texture.class);
 
         assetManager.load("mainmenu/MainMenuButtonUp.png", Texture.class);
         assetManager.load("mainmenu/MainMenuButtonDown.png", Texture.class);

@@ -52,7 +52,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                     currentLayer++;
                     if (currentLayer == drawSpritesAfterLayer) {
                         for (Mech sprite : sprites)
-                            sprite.draw(this.getBatch(), Gdx.graphics.getDeltaTime());
+                            sprite.draw(this.getBatch(), 1f);
                     }
                 } else {
                     for (MapObject object : layer.getObjects()) {

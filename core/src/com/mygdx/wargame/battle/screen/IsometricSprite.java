@@ -32,6 +32,6 @@ public class IsometricSprite extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         Vector2 v2 = isoUtils.worldToScreen(getX(), getY());
-        batch.draw(sprite.getTexture(), v2.x, v2.y);
+        batch.draw(sprite.getTexture(), v2.x + 10, v2.y + 20);
     }
 }

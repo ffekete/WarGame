@@ -109,11 +109,11 @@ public class HudElementsFacade {
         };
 
         ImageButton.ImageButtonStyle imageButtonStyle = new ImageButton.ImageButtonStyle();
-        imageButtonStyle.imageUp = new TextureRegionDrawable(assetManager.get("skin/EndTurnButtonUp.png", Texture.class));
-        imageButtonStyle.imageDown = new TextureRegionDrawable(assetManager.get("skin/EndTurnButtonDown.png", Texture.class));
+        imageButtonStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/EndTurnButtonUp.png", Texture.class));
+        imageButtonStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/EndTurnButtonDown.png", Texture.class));
 
         sidePanel = new Table();
-        sidePanel.background(new TextureRegionDrawable(assetManager.get("hud/SidePanel.png", Texture.class)));
+        //sidePanel.background(new TextureRegionDrawable(assetManager.get("hud/SidePanel.png", Texture.class)));
 
         endTurnButton = new ImageButton(imageButtonStyle);
 
@@ -139,11 +139,11 @@ public class HudElementsFacade {
         shieldTooltipTable = new Table();
         shieldToolTip = new Tooltip<Table>(shieldTooltipTable);
         shieldToolTip.setInstant(true);
-        shieldTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        //shieldTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         shieldTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
         shieldTooltipTable.add(new Label("Shield protects against energy based attacks.\nIt slowly regenerates over time until the component is destroyed.", labelStyle));
 
-        shieldImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldComponentIcon.png", Texture.class)), 0.15f, 100);
+        shieldImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/ShieldIcon.png", Texture.class)), 0.15f, 100);
         upperHud.add(shieldImage);
         shieldValueLabel = labelPool.obtain();
 
@@ -152,7 +152,7 @@ public class HudElementsFacade {
 
         upperHud.add(shieldValueLabel).width(60 / SCREEN_HUD_RATIO).right();
 
-        armorImage = new AnimatedImage(new TextureRegion(assetManager.get("details/ShieldIcon.png", Texture.class)), 0.15f, 100);
+        armorImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/ArmorIcon.png", Texture.class)), 0.15f, 100);
         armorValueLabel = labelPool.obtain();
         upperHud.add(armorImage);
         upperHud.add(armorValueLabel).width(60 / SCREEN_HUD_RATIO).right();
@@ -160,7 +160,7 @@ public class HudElementsFacade {
         armorTooltipTable = new Table();
         armorToolTip = new Tooltip<>(armorTooltipTable);
         armorToolTip.setInstant(true);
-        armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        //armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         armorTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         armorValueLabel.addListener(armorToolTip);
@@ -175,7 +175,7 @@ public class HudElementsFacade {
         ammoTooltipTable = new Table();
         ammoToolTip = new Tooltip<Table>(ammoTooltipTable);
         ammoToolTip.setInstant(true);
-        ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        //ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         ammoTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
         ammoValueLabel.addListener(ammoToolTip);
         ammoImage.addListener(ammoToolTip);
@@ -189,7 +189,7 @@ public class HudElementsFacade {
         healthTooltipTable = new Table();
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
         healthToolTip.setInstant(true);
-        healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        //healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         healthTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         healthValueLabel.addListener(healthToolTip);
@@ -204,7 +204,7 @@ public class HudElementsFacade {
         heatTooltipTable = new Table();
         heatToolTip = new Tooltip<Table>(heatTooltipTable);
         heatToolTip.setInstant(true);
-        heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        //heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         heatTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         heatValueLabel.addListener(heatToolTip);
@@ -220,7 +220,7 @@ public class HudElementsFacade {
         stabilityTooltipTable = new Table();
         stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
         stabilityToolTip.setInstant(true);
-        stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        //stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         stabilityTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         stabilityValueLabel.addListener(stabilityToolTip);

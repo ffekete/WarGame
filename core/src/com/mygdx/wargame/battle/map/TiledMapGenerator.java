@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.mygdx.wargame.battle.map.decoration.AnimatedDrawableTile;
+import com.mygdx.wargame.battle.map.decoration.AnimatedTiledMapTile;
 import com.mygdx.wargame.battle.map.tile.Tile;
 import com.mygdx.wargame.battle.map.tile.TileSets;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
@@ -33,16 +35,16 @@ public class TiledMapGenerator {
             for (int j = 0; j < height; j++) {
                 TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-                Tile path = null;
+                Tile tile = null;
                 try {
-                    path = ((Class<? extends Tile>) tileSet.getTexturePaths().toArray()[new Random().nextInt(tileSet.getTexturePaths().size())]).newInstance();
+                    tile = ((Class<? extends Tile>) tileSet.getTexturePaths().toArray()[new Random().nextInt(tileSet.getTexturePaths().size())]).newInstance();
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
 
-                cell.setTile(new StaticTiledMapTile(new TextureRegion(assetManagerLoaderV2.getAssetManager().get(path.getPath(), Texture.class))));
+                cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
                 TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
                 layer.setCell(i, j, cell);
             }
