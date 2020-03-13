@@ -16,7 +16,6 @@ public class BattleMap {
 
         this.terrainType = terrainType;
 
-        this.tiledMap = new TiledMapGenerator(assetManagerLoaderV2).generate(WIDTH, HEIGHT, terrainType.getTileSets());
         this.nodeGraph = new NodeGraph(WIDTH, HEIGHT);
 
         for (int i = 0; i < WIDTH; i++) {
@@ -31,15 +30,15 @@ public class BattleMap {
                 }
 
                 addNodeIfDoesntExists(node, i - 1, j, nodeGraph);
-                //addNodeIfDoesntExists(node, i - 1, j - 1, nodeGraph);
-                //addNodeIfDoesntExists(node, i - 1, j + 1, nodeGraph);
                 addNodeIfDoesntExists(node, i, j - 1, nodeGraph);
                 addNodeIfDoesntExists(node, i, j + 1, nodeGraph);
                 addNodeIfDoesntExists(node, i + 1, j, nodeGraph);
-                //addNodeIfDoesntExists(node, i + 1, j - 1, nodeGraph);
-                //addNodeIfDoesntExists(node, i + 1, j + 1, nodeGraph);
+
             }
         }
+
+        this.tiledMap = new TiledMapGenerator(assetManagerLoaderV2).generate(nodeGraph, WIDTH, HEIGHT, terrainType.getTileSets());
+
         System.out.println("done");
     }
 

@@ -2,7 +2,7 @@ package com.mygdx.wargame.battle.map.tile;
 
 public class GrassPowerPlantTile implements Tile {
 
-    private TileState tileState = TileState.Destroyed;
+    private TileState tileState = TileState.Intact;
 
     @Override
     public String getPath() {
@@ -27,5 +27,10 @@ public class GrassPowerPlantTile implements Tile {
     @Override
     public void setTileState(TileState tileState) {
         this.tileState = tileState;
+    }
+
+    @Override
+    public boolean isImpassable() {
+        return false;
     }
 }

@@ -22,7 +22,7 @@ public class TiledMapGenerator {
         this.assetManagerLoaderV2 = assetManagerLoaderV2;
     }
 
-    public TiledMap generate(int width, int height, TileSets tileSet) {
+    public TiledMap generate(NodeGraph nodeGraph, int width, int height, TileSets tileSet) {
         TiledMap tiledMap = new TiledMap();
 
         TiledMapTileLayer groundLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
@@ -46,6 +46,9 @@ public class TiledMapGenerator {
 
                 cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
                 TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
+                if(tile.isImpassable()) {
+                    nodeGraph.setImpassable(i, j);
+                }
                 layer.setCell(i, j, cell);
             }
         }

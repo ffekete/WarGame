@@ -6,4 +6,5 @@ public interface Tile {
     boolean canBeDestroyed();
     TileState getTileState();
     void setTileState(TileState tileState);
+    boolean isImpassable();
 }

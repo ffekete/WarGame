@@ -28,4 +28,9 @@ public class GrassForestTile implements Tile {
     public void setTileState(TileState tileState) {
         this.tileState = tileState;
     }
+
+    @Override
+    public boolean isImpassable() {
+        return false;
+    }
 }

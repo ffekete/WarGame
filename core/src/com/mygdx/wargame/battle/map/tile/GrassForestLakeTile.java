@@ -28,4 +28,9 @@ public class GrassForestLakeTile implements Tile {
     public void setTileState(TileState tileState) {
 
     }
+
+    @Override
+    public boolean isImpassable() {
+        return false;
+    }
 }
