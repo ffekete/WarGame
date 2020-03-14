@@ -31,7 +31,7 @@ import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
-import com.mygdx.wargame.common.mech.Scout;
+import com.mygdx.wargame.common.mech.Templar;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.common.pilot.PilotCreator;
 import com.mygdx.wargame.util.DrawUtils;
@@ -41,6 +41,7 @@ public class ScreenV2 implements Screen {
     private OrthographicCamera camera;
 
     private Viewport viewport;
+    private Viewport hudViewPort;
 
     private Stage stage;
     private Stage hudStage;
@@ -61,8 +62,7 @@ public class ScreenV2 implements Screen {
         stage = new Stage(viewport);
 
         Camera hudCamera = new OrthographicCamera();
-        Viewport hudViewPort = new StretchViewport(960, 540, hudCamera);
-        hudViewPort.apply();
+        hudViewPort = new StretchViewport(960, 540, hudCamera);
 
         hudStage = new Stage(hudViewPort);
 
@@ -70,10 +70,10 @@ public class ScreenV2 implements Screen {
 
         isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
 
-        AbstractMech mech = new Scout("Scout", isometricTiledMapRenderer.getBatch(), assetManagerLoader);
+        AbstractMech mech = new Templar("Scout", isometricTiledMapRenderer.getBatch(), assetManagerLoader);
         mech.resetMovementPoints(10);
 
-        AbstractMech mech2 = new Scout("Scout", isometricTiledMapRenderer.getBatch(), assetManagerLoader);
+        AbstractMech mech2 = new Templar("Scout", isometricTiledMapRenderer.getBatch(), assetManagerLoader);
         mech.resetMovementPoints(10);
 
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
@@ -156,6 +156,8 @@ public class ScreenV2 implements Screen {
 
         isometricTiledMapRenderer.setView(camera);
         isometricTiledMapRenderer.render();
+
+        hudViewPort.apply();
 
         hudStage.act();
         hudStage.draw();

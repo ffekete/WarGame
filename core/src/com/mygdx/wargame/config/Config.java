@@ -49,8 +49,8 @@ public class Config {
 
     public static final int SCREEN_HUD_RATIO = 4;
 
-    public static Supplier<Integer> HUD_VIEWPORT_WIDTH = () -> SCREEN_SIZE_X / SCREEN_HUD_RATIO;
-    public static Supplier<Integer> HUD_VIEWPORT_HEIGHT = () -> SCREEN_SIZE_Y / SCREEN_HUD_RATIO;
+    public static Supplier<Integer> HUD_VIEWPORT_WIDTH = () -> 960;
+    public static Supplier<Integer> HUD_VIEWPORT_HEIGHT = () -> 540;
 
     public static int treeSpread = 5;
 

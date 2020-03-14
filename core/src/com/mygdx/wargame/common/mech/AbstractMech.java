@@ -2,6 +2,7 @@ package com.mygdx.wargame.common.mech;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.battle.screen.IsometricSprite;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
@@ -24,9 +25,9 @@ AbstractMech extends Actor implements Mech {
     private boolean moved;
     private boolean active;
 
-    protected IsometricSprite isometricSprite;
+    protected IsometricAnimatedSprite isometricSprite;
 
-    public AbstractMech(int initiative, IsometricSprite isometricSprite) {
+    public AbstractMech(int initiative, IsometricAnimatedSprite isometricSprite) {
         this.initiative = initiative;
         this.isometricSprite = isometricSprite;
     }

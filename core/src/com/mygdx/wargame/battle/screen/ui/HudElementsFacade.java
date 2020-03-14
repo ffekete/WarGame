@@ -125,16 +125,16 @@ public class HudElementsFacade {
             }
         });
 
-        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (80 / SCREEN_HUD_RATIO), 0);
-        endTurnButton.setSize(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (20), 0);
+        endTurnButton.setSize(20, 20);
 
 
         upperHud = new Table();
         upperHud.left();
 
         //upperHud.setDebug(true);
-        upperHud.setSize(HUD_VIEWPORT_WIDTH.get(), 60 / SCREEN_HUD_RATIO);
-        upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT.get() - 60 / SCREEN_HUD_RATIO);
+        upperHud.setSize(HUD_VIEWPORT_WIDTH.get(), 15);
+        upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT.get() - 15);
 
         shieldTooltipTable = new Table();
         shieldToolTip = new Tooltip<Table>(shieldTooltipTable);
@@ -150,12 +150,12 @@ public class HudElementsFacade {
         shieldImage.addListener(shieldToolTip);
         shieldValueLabel.addListener(shieldToolTip);
 
-        upperHud.add(shieldValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+        upperHud.add(shieldValueLabel).width(15).right();
 
         armorImage = new AnimatedImage(new TextureRegion(assetManager.get("hud/ArmorIcon.png", Texture.class)), 0.15f, 100);
         armorValueLabel = labelPool.obtain();
         upperHud.add(armorImage);
-        upperHud.add(armorValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+        upperHud.add(armorValueLabel).width(15).right();
 
         armorTooltipTable = new Table();
         armorToolTip = new Tooltip<>(armorTooltipTable);
@@ -170,7 +170,7 @@ public class HudElementsFacade {
         ammoValueLabel = labelPool.obtain();
 
         upperHud.add(ammoImage);
-        upperHud.add(ammoValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+        upperHud.add(ammoValueLabel).width(15).right();
 
         ammoTooltipTable = new Table();
         ammoToolTip = new Tooltip<Table>(ammoTooltipTable);
@@ -184,7 +184,7 @@ public class HudElementsFacade {
         healthValueLabel = labelPool.obtain();
 
         upperHud.add(healthImage);
-        upperHud.add(healthValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+        upperHud.add(healthValueLabel).width(15).right();
 
         healthTooltipTable = new Table();
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
@@ -199,7 +199,7 @@ public class HudElementsFacade {
         heatValueLabel = labelPool.obtain();
 
         upperHud.add(heatImage);
-        upperHud.add(heatValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+        upperHud.add(heatValueLabel).width(15).right();
 
         heatTooltipTable = new Table();
         heatToolTip = new Tooltip<Table>(heatTooltipTable);
@@ -215,7 +215,7 @@ public class HudElementsFacade {
         stabilityValueLabel = labelPool.obtain();
 
         upperHud.add(stabilityImage);
-        upperHud.add(stabilityValueLabel).width(60 / SCREEN_HUD_RATIO).right();
+        upperHud.add(stabilityValueLabel).width(15).right();
 
         stabilityTooltipTable = new Table();
         stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
@@ -230,8 +230,8 @@ public class HudElementsFacade {
         mechNameLabel = labelPool.obtain();
         pilotNameLabel = labelPool.obtain();
 
-        upperHud.add(mechNameLabel).padRight(20 / SCREEN_HUD_RATIO);
-        upperHud.add(pilotNameLabel).padRight(20 / SCREEN_HUD_RATIO);
+        upperHud.add(mechNameLabel).padRight(5);
+        upperHud.add(pilotNameLabel).padRight(5);
 
         ImageButton.ImageButtonStyle showMarkersStyle = new ImageButton.ImageButtonStyle();
         showMarkersStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class));
@@ -265,8 +265,8 @@ public class HudElementsFacade {
             }
         });
 
-        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (256 / SCREEN_HUD_RATIO) - 20 / SCREEN_HUD_RATIO, 0);
-        sidePanel.setSize(280 / SCREEN_HUD_RATIO, 280 / SCREEN_HUD_RATIO);
+        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (64) - 5, 0);
+        sidePanel.setSize(70, 70);
 
         ImageButton.ImageButtonStyle showDirectionsStyle = new ImageButton.ImageButtonStyle();
         showDirectionsStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/ShowMovementDirectionsSmallButtonUp.png", Texture.class));
@@ -364,7 +364,7 @@ public class HudElementsFacade {
             Label partLabel = labelPool.obtain();
             partLabel.setText(bodyPart.name());
             armorLabel.setText(turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0) + " / " + turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a, b) -> a + b).orElse(0));
-            armorTooltipTable.add(partLabel).padRight(40 / SCREEN_HUD_RATIO);
+            armorTooltipTable.add(partLabel).padRight(20);
             armorTooltipTable.add(armorLabel).row();
         });
 
@@ -374,7 +374,7 @@ public class HudElementsFacade {
             nameLabel.setText(w.getShortName());
             Label ammoLabel = labelPool.obtain();
             ammoLabel.setText("" + (w.getAmmo().isPresent() ? w.getAmmo().get() : "N/A"));
-            ammoTooltipTable.add(nameLabel).padRight(40 / SCREEN_HUD_RATIO);
+            ammoTooltipTable.add(nameLabel).padRight(20);
             ammoTooltipTable.add(ammoLabel).row();
         });
 

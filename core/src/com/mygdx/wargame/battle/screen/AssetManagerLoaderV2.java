@@ -24,7 +24,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("tiles/GrassBigPowerPlant.png", Texture.class);
         assetManager.load("tiles/GrassBigPowerPlantDestroyed.png", Texture.class);
 
-        assetManager.load("mechs/IsometricScout.png", Texture.class);
+        assetManager.load("mechs/Templar.png", Texture.class);
 
         assetManager.load("hud/ArmorIcon.png", Texture.class);
         assetManager.load("hud/ShieldIcon.png", Texture.class);
