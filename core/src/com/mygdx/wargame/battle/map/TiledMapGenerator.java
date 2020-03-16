@@ -27,9 +27,11 @@ public class TiledMapGenerator {
 
         TiledMapTileLayer groundLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
         groundLayer.setName("groundLayer");
-
-
         tiledMap.getLayers().add(groundLayer);
+
+        TiledMapTileLayer pathLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
+        pathLayer.setName("pathLayer");
+        tiledMap.getLayers().add(pathLayer);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {

@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.google.common.collect.ImmutableMap;
+import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -27,7 +28,6 @@ import com.mygdx.wargame.battle.rules.facade.AttackFacade;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
@@ -66,7 +66,7 @@ public class ScreenV2 implements Screen {
 
         hudStage = new Stage(hudViewPort);
 
-        BattleMap battleMap = new BattleMap(assetManagerLoader, TerrainType.Grassland);
+        BattleMap battleMap = new BattleMap(assetManagerLoader, TerrainType.Grassland, assetManagerLoader);
 
         isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
 
@@ -82,7 +82,7 @@ public class ScreenV2 implements Screen {
         hudMediator = new HUDMediator();
 
         TurnProcessingFacade turnProcessingFacade = new TurnProcessingFacade(actionLock,
-                new AttackFacade(stageElementsStorage,assetManagerLoader.getAssetManager(), actionLock),
+                new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock),
                 new TargetingFacade(stageElementsStorage),
                 new MovementSpeedCalculator(),
                 ImmutableMap.<Mech, Pilot>builder().put(mech, new PilotCreator().getPilot()).build(),
@@ -105,30 +105,53 @@ public class ScreenV2 implements Screen {
         stage.addListener(new InputListener() {
 
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+
+                battleMap.clearMarkers();
+
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
-//                IsoMoveToAction moveToAction = new IsoMoveToAction(mech);
-//                moveToAction.setPosition(s2c.x, s2c.y);
-//                moveToAction.setDuration(1f);
-//                stage.addAction(moveToAction);
                 GraphPath<Node> path = battleMap.calculatePath(
-                        battleMap.getNodeGraph().getNodeWeb()[(int)mech.getX()][(int)mech.getY()],
-                        battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y]
+                        battleMap.getNodeGraph().getNodeWeb()[(int) mech.getX()][(int) mech.getY()],
+                        battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
+                );
+                path.forEach(p -> {
+                    battleMap.toggleMarker((int)p.getX(), (int)p.getY(), true);
+                    battleMap.addMarker((int)p.getX(), (int)p.getY());
+
+                   // stage.addActor(new MovementPathMarker(assetManagerLoader.getAssetManager().get("info/MovementPath.png", Texture.class), battleMap));
+                });
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+
+                GraphPath<Node> path = battleMap.calculatePath(
+                        battleMap.getNodeGraph().getNodeWeb()[(int) mech.getX()][(int) mech.getY()],
+                        battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
                 );
                 stage.addAction(new MoveActorAlongPathActionFactory().getMovementAction(path, mech));
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+                System.out.println(s2c);
                 return true;
             }
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.S) {
-                    camera.position.y--;
+                    camera.position.y -= 10;
                 }
 
                 if (keycode == Input.Keys.W) {
-                    camera.position.y++;
+                    camera.position.y += 10;
                 }
 
                 return true;

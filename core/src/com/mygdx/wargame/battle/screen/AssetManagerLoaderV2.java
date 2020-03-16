@@ -26,6 +26,8 @@ public class AssetManagerLoaderV2 {
 
         assetManager.load("mechs/Templar.png", Texture.class);
 
+        assetManager.load("info/PathMarker.png", Texture.class);
+
         assetManager.load("hud/ArmorIcon.png", Texture.class);
         assetManager.load("hud/ShieldIcon.png", Texture.class);
         assetManager.load("hud/AmmoIcon.png", Texture.class);
