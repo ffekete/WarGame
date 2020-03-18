@@ -3,28 +3,27 @@ package com.mygdx.wargame.battle.action;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.common.mech.AbstractMech;
 
 public class MoveActorAlongPathActionFactory {
 
-    public MoveActorAlongPathActionFactory() {
+    private BattleMap battleMap;
 
+    public MoveActorAlongPathActionFactory(BattleMap battleMap) {
+        this.battleMap = battleMap;
     }
 
     public ParallelAction getMovementAction(GraphPath<Node> paths, AbstractMech mech) {
 
-        ParallelAction moveAndFollowCamera = new ParallelAction();
+        ParallelAction moveParallelAction = new ParallelAction();
         SequenceAction moveToAction = new SequenceAction();
 
-        Node last = paths.get(paths.getCount() - 1);
-        Node node = null;
+        Node node;
         for (int i = 1; i < paths.getCount(); i++) {
-            Node latest = paths.get(i - 1);
             node = paths.get(i);
 
-            float nx = node.getX();
-            float ny = node.getY();
 
             if (mech.getMovementPoints() > 0) {
                 mech.consumeMovementPoint(1);
@@ -33,14 +32,16 @@ public class MoveActorAlongPathActionFactory {
 
                 moveToActionStep = new IsoMoveToAction(mech);
                 moveToActionStep.setPosition(node.getX(), node.getY());
-                moveToActionStep.setDuration(1.1f);
+                moveToActionStep.setDuration(0.01f);
 
                 moveToAction.addAction(moveToActionStep);
             }
         }
 
-        moveAndFollowCamera.addAction(moveToAction);
+        moveToAction.addAction(new RemovePathMarkersAction(battleMap));
 
-        return moveAndFollowCamera;
+        moveParallelAction.addAction(moveToAction);
+
+        return moveParallelAction;
     }
 }

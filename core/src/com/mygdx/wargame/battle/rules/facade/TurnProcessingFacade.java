@@ -1,16 +1,12 @@
 package com.mygdx.wargame.battle.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.mygdx.wargame.battle.action.CenterCameraAction;
 import com.mygdx.wargame.battle.action.IntAction;
-import com.mygdx.wargame.battle.action.ZoomOutCameraAction;
+import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -20,10 +16,15 @@ import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
 import com.mygdx.wargame.battle.rules.facade.target.Target;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
+import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
-import com.mygdx.wargame.battle.unit.action.*;
+import com.mygdx.wargame.battle.unit.action.AttackAction;
+import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
+import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
+import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
+import com.mygdx.wargame.battle.unit.action.LockAction;
+import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
@@ -37,27 +38,27 @@ import java.util.TreeMap;
 
 public class TurnProcessingFacade {
 
-    private Map<Mech, Pilot> allSorted = new TreeMap<>();
+    private Map<AbstractMech, Pilot> allSorted = new TreeMap<>();
     private ActionLock actionLock;
     private AttackFacade attackFacade;
     private TargetingFacade targetingFacade;
     private MovementSpeedCalculator movementSpeedCalculator;
-    private Map<Mech, Pilot> team1;
-    private Map<Mech, Pilot> team2;
-    private Iterator<Map.Entry<Mech, Pilot>> iterator;
-    Map.Entry<Mech, Pilot> next = null;
+    private Map<AbstractMech, Pilot> team1;
+    private Map<AbstractMech, Pilot> team2;
+    private Iterator<Map.Entry<AbstractMech, Pilot>> iterator;
+    private Map.Entry<AbstractMech, Pilot> next = null;
     private RangeCalculator rangeCalculator;
-    private Stage stage;
-    private AssetManager assetManager;
     private StageElementsStorage stageElementsStorage;
     private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
     private HeatCalculator heatCalculator;
     private WeaponSelectionOptimizer weaponSelectionOptimizer;
     private StabilityDecreaseCalculator stabilityDecreaseCalculator;
     private HUDMediator hudMediator;
+    private BattleMap battleMap;
+    private AssetManagerLoaderV2 assetManagerLoaderV2;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<Mech, Pilot> team1, Map<Mech, Pilot> team2, RangeCalculator rangeCalculator, Stage stage, AssetManager assetManager, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator) {
+                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -67,27 +68,28 @@ public class TurnProcessingFacade {
         this.team1 = team1;
         this.team2 = team2;
         this.rangeCalculator = rangeCalculator;
-        this.stage = stage;
-        this.assetManager = assetManager;
+
         this.stageElementsStorage = stageElementsStorage;
         this.heatCalculator = heatCalculator;
         this.stabilityDecreaseCalculator = stabilityDecreaseCalculator;
+        this.battleMap = battleMap;
+        this.assetManagerLoaderV2 = assetManagerLoaderV2;
 
-        this.team1.forEach((key, value) -> allSorted.put(key, value));
-        this.team2.forEach((key, value) -> allSorted.put(key, value));
+        this.team1.forEach((key, value) -> allSorted.put((AbstractMech) key, value));
+        this.team2.forEach((key, value) -> allSorted.put((AbstractMech) key, value));
 
         iterator = allSorted.entrySet().iterator();
 
-        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory();
+        this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(this.battleMap);
 
         this.weaponSelectionOptimizer = new WeaponSelectionOptimizer();
     }
 
-    public Map.Entry<Mech, Pilot> getNext() {
+    public Map.Entry<AbstractMech, Pilot> getNext() {
         return next;
     }
 
-    public void process(BattleMap battleMap, Stage stage) {
+    public void process(BattleMap battleMap) {
         //System.out.println(Gdx.graphics.getFramesPerSecond());
 
         if (actionLock.isLocked()) {
@@ -123,7 +125,7 @@ public class TurnProcessingFacade {
 
             //hudMediator.getHudElementsFacade().update();
 
-            Mech selectedMech = next.getKey();
+            AbstractMech selectedMech = next.getKey();
             Pilot selectedPilot = next.getValue();
 
             if (!selectedMech.isActive()) {
@@ -141,8 +143,6 @@ public class TurnProcessingFacade {
 
                 // lock all actions
                 sequenceAction.addAction(new LockAction(actionLock));
-
-                sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
 
                 // reconnect graph so that attacker can move
                 battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
@@ -189,13 +189,12 @@ public class TurnProcessingFacade {
 
 
                     if (target.get().getMech() != null) {
-                        sequenceAction.addAction(new ZoomOutCameraAction(stageElementsStorage, selectedMech, target.get().getMech(), (OrthographicCamera) stage.getCamera()));
 
                         // then attack
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                         attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                        //attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), stage, assetManager, actionLock, minRange, stageElementsStorage, battleMap));
+                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, battleMap));
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
@@ -212,7 +211,6 @@ public class TurnProcessingFacade {
 
                 SequenceAction sequenceAction = new SequenceAction();
                 sequenceAction.addAction(new LockAction(actionLock));
-                sequenceAction.addAction(centerCameraOnNext(stageElementsStorage));
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
                 sequenceAction.addAction(regenerateShields(selectedMech));
                 sequenceAction.addAction(new DelayAction(0.5f));
@@ -222,15 +220,6 @@ public class TurnProcessingFacade {
             }
         }
 
-    }
-
-    private Action centerCameraOnNext(StageElementsStorage stageElementsStorage) {
-        CenterCameraAction centerCameraAction = new CenterCameraAction(stageElementsStorage, actionLock);
-        centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
-        //centerCameraAction.setStartPosition(stageElementsStorage.stage.getCamera().position.x, stage.getCamera().position.y);
-        centerCameraAction.setPosition(next.getKey().getX(), next.getKey().getY());
-        centerCameraAction.setDuration(1);
-        return centerCameraAction;
     }
 
     private Action reduceHeatLevel(Pilot pilot, Mech mech, BattleMap battleMap) {

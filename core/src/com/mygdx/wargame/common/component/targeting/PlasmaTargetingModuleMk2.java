@@ -5,7 +5,7 @@ import com.mygdx.wargame.common.component.weapon.WeaponType;
 
 public class PlasmaTargetingModuleMk2 implements TargetingModule {
 
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getAdditionalAccuracy(WeaponType weaponType) {

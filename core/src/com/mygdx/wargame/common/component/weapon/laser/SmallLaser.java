@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Item
 public class SmallLaser implements Weapon {
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public String getShortName() {

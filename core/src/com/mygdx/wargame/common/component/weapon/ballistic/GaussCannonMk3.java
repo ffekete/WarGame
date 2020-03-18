@@ -12,7 +12,7 @@ import java.util.Optional;
 public class GaussCannonMk3 implements Weapon {
     private static final int MAX_AMMO = 12;
     private int ammo = MAX_AMMO;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getShieldDamage() {

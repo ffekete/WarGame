@@ -9,7 +9,7 @@ public class SmallShieldModule implements Shield {
     private static final int MAX_VALUE = 10;
     private int value = MAX_VALUE;
 
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getShieldValue() {

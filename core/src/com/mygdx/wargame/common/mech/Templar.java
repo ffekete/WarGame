@@ -1,12 +1,10 @@
 package com.mygdx.wargame.common.mech;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
-import com.mygdx.wargame.battle.screen.IsometricSprite;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
@@ -27,7 +25,6 @@ public class Templar extends AbstractMech {
     public static final int TORSO_HP = 30;
     public static final int HEAD_HP = 10;
 
-    private Batch spriteBatch;
     private String name;
     private int movementPoints;
 
@@ -51,9 +48,8 @@ public class Templar extends AbstractMech {
             .put(BodyPart.Head, new HashSet<>())
             .build();
 
-    public Templar(String name, Batch spriteBatch, AssetManagerLoaderV2 assetManagerLoader) {
+    public Templar(String name, AssetManagerLoaderV2 assetManagerLoader) {
         super(10, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Templar.png", Texture.class)));
-        this.spriteBatch = spriteBatch;
         this.name = name;
 
         setTouchable(Touchable.enabled);

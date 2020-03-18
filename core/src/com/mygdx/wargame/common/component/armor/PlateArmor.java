@@ -6,7 +6,7 @@ public class PlateArmor implements Armor {
 
     private static final int MAX_HP = 20;
     private int hp = 20;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getHitPoint() {

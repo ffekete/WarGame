@@ -39,19 +39,14 @@ BulletAnimationAction extends Action {
     private boolean done = false;
     private int minRange;
     private StageElementsStorage stageElementsStorage;
-    private BattleMap battleMap;
-    private RayHandler rayHandler;
-    private MapUtils mapUtils = new MapUtils();
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, Stage stage, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap, RayHandler rayHandler) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
         this.actionLock = actionLock;
         this.minRange = minRange;
         this.stageElementsStorage = stageElementsStorage;
-        this.battleMap = battleMap;
-        this.rayHandler = rayHandler;
     }
 
     @Override
@@ -75,9 +70,6 @@ BulletAnimationAction extends Action {
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
 
         int delay = -1;
-
-        boolean finishedByExplosion = false;
-        boolean craterCreated = false;
 
         for (int i = 0; i < selectedWeapons.size(); i++) {
 
@@ -153,7 +145,7 @@ BulletAnimationAction extends Action {
                 sequenceAction.addAction(moveAndLight);
 
                 if (weapon.getType() == WeaponType.Missile) {
-                    MissileExplosion explosion = new MissileExplosion(assetManager, rayHandler);
+                    MissileExplosion explosion = new MissileExplosion(assetManager);
                     explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
                     SequenceAction explosionAction = new SequenceAction();
                     explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));

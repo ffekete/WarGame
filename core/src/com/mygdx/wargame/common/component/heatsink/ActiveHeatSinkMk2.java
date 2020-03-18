@@ -4,7 +4,7 @@ import com.mygdx.wargame.common.component.weapon.Status;
 
 public class ActiveHeatSinkMk2 implements HeatSink {
 
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getHeatDissipation() {

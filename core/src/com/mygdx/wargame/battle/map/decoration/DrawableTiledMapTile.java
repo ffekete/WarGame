@@ -19,7 +19,7 @@ public class DrawableTiledMapTile implements TiledMapTile {
 
     private MapObjects objects;
 
-    private DrawableTile drawableTile;
+    private MovementPathTile movementPathTile;
 
     private float offsetX;
 
@@ -63,7 +63,7 @@ public class DrawableTiledMapTile implements TiledMapTile {
 
     @Override
     public TextureRegion getTextureRegion() {
-        return drawableTile.getRegion();
+        return movementPathTile.getRegion();
     }
 
     @Override
@@ -91,8 +91,8 @@ public class DrawableTiledMapTile implements TiledMapTile {
         this.offsetY = offsetY;
     }
 
-    public DrawableTiledMapTile(DrawableTile drawableTile) {
-        this.drawableTile = drawableTile;
+    public DrawableTiledMapTile(MovementPathTile movementPathTile) {
+        this.movementPathTile = movementPathTile;
     }
 
 }

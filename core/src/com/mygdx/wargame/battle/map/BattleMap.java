@@ -4,10 +4,8 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.mygdx.wargame.battle.map.decoration.DrawableTile;
+import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
-import com.mygdx.wargame.battle.map.info.MovementPathMarker;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 
 public class BattleMap {
@@ -108,7 +106,7 @@ public class BattleMap {
 
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        cell.setTile(new DrawableTiledMapTile(new DrawableTile(assetManagerLoaderV2.getAssetManager().get("info/PathMarker.png", Texture.class), this, x, y)));
+        cell.setTile(new DrawableTiledMapTile(new MovementPathTile(assetManagerLoaderV2.getAssetManager().get("info/PathMarker.png", Texture.class), this, x, y)));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("pathLayer");
         layer.setCell(x, y, cell);
     }

@@ -6,7 +6,7 @@ public class LivingMetalArmor implements Armor {
 
     private static final int MAX_HP = 10;
     private int hp = 10;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getHitPoint() {

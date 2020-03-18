@@ -11,7 +11,7 @@ import java.util.Optional;
 @Item
 public class MediumIonCannon implements Weapon {
 
-    private Status status;
+    private Status status = Status.Selected;
 
 
     @Override

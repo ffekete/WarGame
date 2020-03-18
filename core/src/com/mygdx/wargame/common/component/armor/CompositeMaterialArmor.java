@@ -5,7 +5,7 @@ import com.mygdx.wargame.common.component.weapon.Status;
 public class CompositeMaterialArmor implements Armor {
     private static final int MAX_HP = 20;
     private int hp = 20;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getHitPoint() {

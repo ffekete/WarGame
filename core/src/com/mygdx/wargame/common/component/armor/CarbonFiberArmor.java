@@ -5,7 +5,7 @@ import com.mygdx.wargame.common.component.weapon.Status;
 public class CarbonFiberArmor implements Armor {
     private static final int MAX_HP = 25;
     private int hp = 25;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getHitPoint() {

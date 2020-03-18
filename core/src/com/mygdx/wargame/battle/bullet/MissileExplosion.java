@@ -1,6 +1,5 @@
 package com.mygdx.wargame.battle.bullet;
 
-import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -14,11 +13,9 @@ public class MissileExplosion extends Actor {
     private TextureRegion texture;
     private float delay = 0f;
     private int col = 0;
-    private RayHandler rayHandler;
 
-    public MissileExplosion(AssetManager assetManager, RayHandler rayHandler) {
+    public MissileExplosion(AssetManager assetManager) {
         this.texture = new TextureRegion(assetManager.get("MissileExplosion.png", Texture.class));
-        this.rayHandler = rayHandler;
     }
 
     @Override

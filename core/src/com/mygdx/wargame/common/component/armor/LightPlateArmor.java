@@ -5,7 +5,7 @@ import com.mygdx.wargame.common.component.weapon.Status;
 public class LightPlateArmor implements Armor {
     private static final int MAX_HP = 8;
     private int hp = MAX_HP;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getHitPoint() {

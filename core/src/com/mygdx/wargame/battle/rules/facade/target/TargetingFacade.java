@@ -2,6 +2,7 @@ package com.mygdx.wargame.battle.rules.facade.target;
 
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Perks;
 import com.mygdx.wargame.common.pilot.Pilot;
@@ -20,7 +21,7 @@ public class TargetingFacade {
         this.stageElementsStorage = stageElementsStorage;
     }
 
-    public Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap) {
+    public Optional<Target> findTarget(Pilot pilot, AbstractMech mech, Map<AbstractMech, Pilot> targets, BattleMap battleMap) {
 
         this.flankingTargetStrategy = new FlankingTargetStrategy(stageElementsStorage);
 

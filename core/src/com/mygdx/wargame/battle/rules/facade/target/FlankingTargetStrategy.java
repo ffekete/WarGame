@@ -5,6 +5,7 @@ import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.rules.calculator.FlankingCalculator;
 import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.util.MapUtils;
@@ -27,7 +28,7 @@ public class FlankingTargetStrategy implements TargetingStrategy {
     }
 
     @Override
-    public Optional<Target> findTarget(Pilot pilot, Mech mech, Map<Mech, Pilot> targets, BattleMap battleMap, TargetingStrategy targetingStrategy) {
+    public Optional<Target> findTarget(Pilot pilot, AbstractMech mech, Map<AbstractMech, Pilot> targets, BattleMap battleMap, TargetingStrategy targetingStrategy) {
 
         Optional<Node> flankingNode;
 

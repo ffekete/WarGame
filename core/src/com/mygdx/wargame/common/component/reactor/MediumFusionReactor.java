@@ -6,7 +6,7 @@ import com.mygdx.wargame.common.component.weapon.Status;
 @Item
 public class MediumFusionReactor implements Reactor {
 
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getPowerLevel() {

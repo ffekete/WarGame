@@ -1,9 +1,7 @@
 package com.mygdx.wargame.battle.map.render;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -22,9 +20,8 @@ import java.util.List;
 import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRenderer {
-    private Sprite sprite;
-    private List<Mech> sprites;
-    private int drawSpritesAfterLayer = 1;
+    private List<Mech> mechs;
+    private int drawSpritesAfterLayer = 2;
 
     private Vector2 topRight = new Vector2();
     private Vector2 bottomLeft = new Vector2();
@@ -34,11 +31,11 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
     public IsometricTiledMapRendererWithSprites(TiledMap map) {
         super(map);
         init();
-        sprites = new ArrayList<Mech>();
+        mechs = new ArrayList<>();
     }
 
     public void addSprite(Mech sprite) {
-        sprites.add(sprite);
+        mechs.add(sprite);
     }
 
     @Override
@@ -51,7 +48,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                     renderTileLayer((TiledMapTileLayer) layer);
                     currentLayer++;
                     if (currentLayer == drawSpritesAfterLayer) {
-                        for (Mech sprite : sprites)
+                        for (Mech sprite : mechs)
                             sprite.draw(this.getBatch(), 1f);
                     }
                 } else {

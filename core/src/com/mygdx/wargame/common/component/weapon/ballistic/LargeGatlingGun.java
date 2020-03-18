@@ -13,7 +13,7 @@ public class LargeGatlingGun implements Weapon {
 
     private static final int MAX_AMMO = 800;
     private int ammo = MAX_AMMO;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public String getShortName() {

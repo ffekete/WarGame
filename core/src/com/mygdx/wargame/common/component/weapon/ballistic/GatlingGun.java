@@ -13,7 +13,7 @@ public class GatlingGun implements Weapon {
 
     private static final int MAX_AMMO = 600;
     private int ammo = MAX_AMMO;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getShieldDamage() {

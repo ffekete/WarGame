@@ -8,7 +8,7 @@ public class LargeShieldModule implements Shield {
 
     private static final int MAX_VALUE = 30;
     private int value = MAX_VALUE;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public int getShieldValue() {

@@ -12,7 +12,7 @@ import java.util.Optional;
 public class SwarmMissile implements Weapon {
     private static final int MAX_AMMO = 80;
     private int ammo = MAX_AMMO;
-    private Status status;
+    private Status status = Status.Selected;
 
     @Override
     public String getShortName() {
