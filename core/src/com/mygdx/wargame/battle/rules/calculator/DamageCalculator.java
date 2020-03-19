@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.bullet.Explosion;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.unit.action.AddActorAction;
 import com.mygdx.wargame.battle.unit.action.RemoveCustomActorAction;
@@ -29,13 +30,15 @@ public class DamageCalculator {
     private AssetManager assetManager;
     private ActionLock actionLock;
     private FlankingCalculator flankingCalculator;
+    private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
 
-    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock) {
+    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
         this.bodyPartDestructionHandler = bodyPartDestructionHandler;
         this.stageElementsStorage = stageElementsStorage;
         this.assetManager = assetManager;
         this.actionLock = actionLock;
+        this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         this.flankingCalculator = new FlankingCalculator();
     }
 
@@ -118,9 +121,9 @@ public class DamageCalculator {
 
         Explosion explosion = new Explosion(assetManager);
         explosion.setPosition(target.getX(), target.getY());
-        sequenceAction.addAction(new AddActorAction(stageElementsStorage.airLevel, explosion));
+        sequenceAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));
         sequenceAction.addAction(new DelayAction(1f));
-        sequenceAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion, null));
+        sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
 
         stageElementsStorage.airLevel.addAction(sequenceAction);
     }

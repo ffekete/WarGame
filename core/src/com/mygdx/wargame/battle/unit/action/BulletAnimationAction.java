@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
@@ -39,14 +40,16 @@ BulletAnimationAction extends Action {
     private boolean done = false;
     private int minRange;
     private StageElementsStorage stageElementsStorage;
+    private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, BattleMap battleMap) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
         this.actionLock = actionLock;
         this.minRange = minRange;
         this.stageElementsStorage = stageElementsStorage;
+        this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
     }
 
     @Override
@@ -116,7 +119,7 @@ BulletAnimationAction extends Action {
                     bullet.setPosition(start.x, start.y);
                     moveToAction = new MoveToAction();
                     moveToAction.setPosition(end.x, end.y);
-                    moveToAction.setDuration(0.15f);
+                    moveToAction.setDuration(0.25f);
                 }
 
                 RotateToAction rotateToAction = new RotateToAction();
@@ -131,42 +134,41 @@ BulletAnimationAction extends Action {
                     sequenceAction.addAction(rotateToAction);
 
                 sequenceAction.addAction(delayAction);
-                VisibleAction visibleAction = new VisibleAction();
-                visibleAction.setVisible(true);
-                sequenceAction.addAction(visibleAction);
 
-                ParallelAction moveAndLight = new ParallelAction();
+                sequenceAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, bullet));
 
                 if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer)
-                    moveAndLight.addAction(moveActorByBezierLine);
+                    sequenceAction.addAction(moveActorByBezierLine);
                 else
-                    moveAndLight.addAction(moveToAction);
-
-                sequenceAction.addAction(moveAndLight);
-
-                if (weapon.getType() == WeaponType.Missile) {
-                    MissileExplosion explosion = new MissileExplosion(assetManager);
-                    explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
-                    SequenceAction explosionAction = new SequenceAction();
-                    explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
-                    explosionAction.addAction(new AddActorAction(stageElementsStorage.airLevel, explosion));
+                    sequenceAction.addAction(moveToAction);
 
 
-                    ParallelAction waitAndShake = new ParallelAction();
-                    explosionAction.addAction(waitAndShake);
+//                if (weapon.getType() == WeaponType.Missile) {
+//                    MissileExplosion explosion = new MissileExplosion(assetManager);
+//                    explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
+//                    SequenceAction explosionAction = new SequenceAction();
+//                    explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
+//                    explosionAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));
+//
+//
+//                    ParallelAction waitAndShake = new ParallelAction();
+//                    explosionAction.addAction(waitAndShake);
+//
+//
+//                    explosionAction.addAction(new DelayAction(0.5f));
+//
+//                    explosionAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
+//
+//                    stageElementsStorage.stage.addAction(explosionAction);
+//                }
 
-
-                    explosionAction.addAction(new DelayAction(0.5f));
-
-                    explosionAction.addAction(new RemoveCustomActorAction(stageElementsStorage.airLevel, explosion, null));
-
-                    stageElementsStorage.airLevel.addAction(explosionAction);
-                }
-
+                sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
                 sequenceAction.addAction(new RemoveActorAction());
-                bullet.addAction(sequenceAction);
 
-                stageElementsStorage.airLevel.addActor(bullet);
+                bullet.addAction(sequenceAction);
+                stageElementsStorage.stage.addActor(bullet);
+
+                //isometricTiledMapRendererWithSprites.addObject(bullet);
             }
         }
     }

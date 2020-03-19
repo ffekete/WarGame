@@ -52,8 +52,6 @@ public class IsoMoveToAction extends TemporalAction {
 			y = startY + (endY - startY) * percent;
 		}
 
-		System.out.println(x + " " + y + " " + percent);
-
 		mech.setPosition(x, y);
 	}
 

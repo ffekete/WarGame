@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.calculator.BodyPartDestructionHandler;
 import com.mygdx.wargame.battle.rules.calculator.CriticalHitChanceCalculator;
 import com.mygdx.wargame.battle.rules.calculator.DamageCalculator;
@@ -30,11 +31,13 @@ public class AttackFacade {
     private ActionLock actionLock;
     private SequenceAction messageQue = new SequenceAction();
     private HeatDamageCalculator heatDamageCalculator;
+    private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
 
-    public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock) {
+    public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
 
         this.actionLock = actionLock;
-        damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageElementsStorage, assetManager, this.actionLock);
+        this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
+        damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageElementsStorage, assetManager, this.actionLock, this.isometricTiledMapRendererWithSprites);
         heatDamageCalculator = new HeatDamageCalculator(stageElementsStorage, actionLock);
         this.evasionCalculator = new EvasionCalculator();
     }

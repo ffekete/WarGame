@@ -39,8 +39,6 @@ public class MovementPathMarker extends TextureRegionDrawable {
         if (battleMap.getMarker(x, y - 1)) value += 4;
         if (battleMap.getMarker(x - 1, y)) value += 8;
 
-        System.out.println("Value: " + value);
-        System.out.println("Values: " + (value % 4)  * 128 + " " + (value / 4) * 64);
         textureRegion.setRegion( (value % 4)  * 128, (value / 4) * 64, 128, 64);
 
         return textureRegion;

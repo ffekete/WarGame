@@ -68,12 +68,13 @@ public class BattleScreenV2 implements Screen {
         isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
 
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
+        stageElementsStorage.stage = stage;
         ActionLock actionLock = new ActionLock();
 
         hudMediator = new HUDMediator();
 
         turnProcessingFacade = new TurnProcessingFacade(actionLock,
-                new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock),
+                new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock, isometricTiledMapRenderer),
                 new TargetingFacade(stageElementsStorage),
                 new MovementSpeedCalculator(),
                 battleScreenInputData.getPlayerTeam(),
@@ -83,14 +84,14 @@ public class BattleScreenV2 implements Screen {
                 new HeatCalculator(),
                 new StabilityDecreaseCalculator(),
                 hudMediator,
-                battleMap, assetManagerLoader);
+                battleMap, assetManagerLoader, isometricTiledMapRenderer);
 
         hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, actionLock, hudMediator));
         hudMediator.getHudElementsFacade().create();
         hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
-        battleScreenInputData.getAiTeam().keySet().forEach(isometricTiledMapRenderer::addSprite);
-        battleScreenInputData.getPlayerTeam().keySet().forEach(isometricTiledMapRenderer::addSprite);
+        battleScreenInputData.getAiTeam().keySet().forEach(isometricTiledMapRenderer::addObject);
+        battleScreenInputData.getPlayerTeam().keySet().forEach(isometricTiledMapRenderer::addObject);
 
         stage.addListener(new InputListener() {
 

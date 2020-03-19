@@ -5,19 +5,21 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 
 public class LaserBullet extends AbstractBullet {
 
-    private TextureRegion texture;
+    private IsometricAnimatedSprite isometricAnimatedSprite;
 
     public LaserBullet(AssetManager assetManager) {
-        this.texture = new TextureRegion(assetManager.get("Laser.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Laser.png", Texture.class));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
-        texture.setRegion(0, 0, 32, 32);
-        batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 1f, 1f, getRotation());
+        isometricAnimatedSprite.setPosition(getX(), getY());
+        isometricAnimatedSprite.setRotation(getRotation() - 45);
+        isometricAnimatedSprite.draw(batch, parentAlpha);
     }
 }

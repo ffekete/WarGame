@@ -53,6 +53,11 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mainmenu/MainMenuButtonUp.png", Texture.class);
         assetManager.load("mainmenu/MainMenuButtonDown.png", Texture.class);
         assetManager.load("mainmenu/MainMenuButtonOver.png", Texture.class);
+
+        assetManager.load("bullets/Laser.png", Texture.class);
+
+        assetManager.load("effects/Explosion.png", Texture.class);
+
         assetManager.finishLoading();
     }
 

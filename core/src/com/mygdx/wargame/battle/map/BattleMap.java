@@ -51,8 +51,6 @@ public class BattleMap {
 
 
     public GraphPath<Node> calculatePath(Node s, Node g) {
-        System.out.println("From: " + s.getX() + " " + s.getY());
-        System.out.println("To: " + g.getX() + " " + g.getY());
         return nodeGraph.findPath(s, g);
     }
 

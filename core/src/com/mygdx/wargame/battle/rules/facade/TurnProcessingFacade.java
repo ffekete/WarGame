@@ -10,6 +10,7 @@ import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
@@ -56,9 +57,10 @@ public class TurnProcessingFacade {
     private HUDMediator hudMediator;
     private BattleMap battleMap;
     private AssetManagerLoaderV2 assetManagerLoaderV2;
+    private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2) {
+                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -74,6 +76,7 @@ public class TurnProcessingFacade {
         this.stabilityDecreaseCalculator = stabilityDecreaseCalculator;
         this.battleMap = battleMap;
         this.assetManagerLoaderV2 = assetManagerLoaderV2;
+        this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
 
         this.team1.forEach((key, value) -> allSorted.put((AbstractMech) key, value));
         this.team2.forEach((key, value) -> allSorted.put((AbstractMech) key, value));
@@ -194,14 +197,14 @@ public class TurnProcessingFacade {
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                         attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, battleMap));
+                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites));
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
                     }
                     sequenceAction.addAction(new UnlockAction(actionLock, ""));
 
-                    ((AbstractMech) selectedMech).addAction(sequenceAction);
+                    stageElementsStorage.stage.addAction(sequenceAction);
                 }
 
             } else {
