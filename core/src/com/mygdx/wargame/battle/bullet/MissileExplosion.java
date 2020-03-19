@@ -7,29 +7,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite96;
 
 public class MissileExplosion extends Actor {
 
-    private TextureRegion texture;
+    private IsometricAnimatedSprite96 isometricAnimatedSprite;
     private float delay = 0f;
     private int col = 0;
 
     public MissileExplosion(AssetManager assetManager) {
-        this.texture = new TextureRegion(assetManager.get("MissileExplosion.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite96(assetManager.get("effects/Explosion.png", Texture.class));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        delay += Gdx.graphics.getDeltaTime();
-        if (delay >= 0.07f) {
-            delay = 0;
-            col++;
-            if (col == 10) {
-                col = 0;
-            }
-        }
-        texture.setRegion(col * 16, 0, 16, 16);
-        batch.setColor(Color.valueOf("FFFFFFCC"));
-        batch.draw(texture, getX() - 0.25f, getY() - 0.25f, 1.5f, 1.5f);
+        batch.setColor(Color.WHITE);
+        isometricAnimatedSprite.setPosition(getX(), getY());
+        isometricAnimatedSprite.draw(batch, parentAlpha);
     }
 }

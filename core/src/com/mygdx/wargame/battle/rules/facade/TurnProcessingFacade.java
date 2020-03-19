@@ -202,7 +202,7 @@ public class TurnProcessingFacade {
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
                     }
-                    sequenceAction.addAction(new UnlockAction(actionLock, ""));
+                    //sequenceAction.addAction(new UnlockAction(actionLock, "Eof AI attack"));
 
                     stageElementsStorage.stage.addAction(sequenceAction);
                 }

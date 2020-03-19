@@ -1,10 +1,8 @@
 package com.mygdx.wargame.battle.unit.action;
 
-import box2dLight.RayHandler;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
@@ -14,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
-import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
@@ -23,7 +20,6 @@ import com.mygdx.wargame.common.component.weapon.ballistic.MachineGun;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk2;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk3;
 import com.mygdx.wargame.common.mech.Mech;
-import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.ArrayList;
@@ -71,7 +67,7 @@ BulletAnimationAction extends Action {
     private void startBullet(Mech mech) {
 
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
-
+        boolean finishedByExplosion = false;
         int delay = -1;
 
         for (int i = 0; i < selectedWeapons.size(); i++) {
@@ -108,24 +104,26 @@ BulletAnimationAction extends Action {
                 MoveActorByBezierLine moveActorByBezierLine = null;
                 Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
                 Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
+                float length = (float) MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY());
 
                 if (weapon.getType() == WeaponType.Flamer) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
-                    moveActorByBezierLine.setDuration(0.3f);
+                    moveActorByBezierLine.setDuration(length * 0.3f);
                 } else if (weapon.getType() == WeaponType.Missile) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
-                    moveActorByBezierLine.setDuration(0.3f);
+                    moveActorByBezierLine.setDuration(length * 0.3f);
                 } else {
                     bullet.setPosition(start.x, start.y);
                     moveToAction = new MoveToAction();
                     moveToAction.setPosition(end.x, end.y);
-                    moveToAction.setDuration(0.25f);
+                    moveToAction.setDuration(length * 0.1f);
                 }
 
                 RotateToAction rotateToAction = new RotateToAction();
                 rotateToAction.setRotation(MathUtils.getAngle(new double[]{start.x, start.y}, new double[]{end.x, end.y}));
 
                 SequenceAction sequenceAction = new SequenceAction();
+                sequenceAction.addAction(new LockAction(actionLock));
                 VisibleAction hideAction = new VisibleAction();
                 hideAction.setVisible(false);
                 sequenceAction.addAction(hideAction);
@@ -142,33 +140,37 @@ BulletAnimationAction extends Action {
                 else
                     sequenceAction.addAction(moveToAction);
 
+                if (weapon.getType() == WeaponType.Missile) {
+                    MissileExplosion explosion = new MissileExplosion(assetManager);
+                    explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
+                    SequenceAction explosionAction = new SequenceAction();
+                    explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f * length));
+                    explosionAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));
 
-//                if (weapon.getType() == WeaponType.Missile) {
-//                    MissileExplosion explosion = new MissileExplosion(assetManager);
-//                    explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
-//                    SequenceAction explosionAction = new SequenceAction();
-//                    explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f));
-//                    explosionAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));
-//
-//
-//                    ParallelAction waitAndShake = new ParallelAction();
-//                    explosionAction.addAction(waitAndShake);
-//
-//
-//                    explosionAction.addAction(new DelayAction(0.5f));
-//
-//                    explosionAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
-//
-//                    stageElementsStorage.stage.addAction(explosionAction);
-//                }
+                    ParallelAction waitAndShake = new ParallelAction();
+                    explosionAction.addAction(waitAndShake);
+
+                    explosionAction.addAction(new DelayAction(0.8f));
+
+                    explosionAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
+
+                    if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1) {
+                        explosionAction.addAction(new UnlockAction(actionLock, "Explosion"));
+                        finishedByExplosion = true;
+                    }
+
+                    stageElementsStorage.stage.addAction(explosionAction);
+                }
 
                 sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
+
+                if (i == selectedWeapons.size() - 1 && j == weapon.getDamageMultiplier() - 1 && !finishedByExplosion) {
+                    sequenceAction.addAction(new UnlockAction(actionLock, "Explosion"));
+                }
                 sequenceAction.addAction(new RemoveActorAction());
 
                 bullet.addAction(sequenceAction);
                 stageElementsStorage.stage.addActor(bullet);
-
-                //isometricTiledMapRendererWithSprites.addObject(bullet);
             }
         }
     }

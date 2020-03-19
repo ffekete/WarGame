@@ -9,16 +9,17 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite96;
 
 public class Explosion extends Actor {
 
-    private IsometricAnimatedSprite isometricAnimatedSprite;
+    private IsometricAnimatedSprite96 isometricAnimatedSprite;
     private float delay = 0f;
     private int col = 0;
     private RayHandler rayHandler;
 
     public Explosion(AssetManager assetManager) {
-        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("effects/Explosion.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite96(assetManager.get("effects/Explosion.png", Texture.class));
     }
 
     @Override

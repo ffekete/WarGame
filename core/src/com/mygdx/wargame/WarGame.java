@@ -8,6 +8,7 @@ import com.mygdx.wargame.battle.screen.BattleScreenInputData;
 import com.mygdx.wargame.battle.screen.BattleScreenV2;
 import com.mygdx.wargame.common.ScreenRegister;
 import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
+import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
@@ -57,6 +58,7 @@ public class WarGame extends Game {
         mech2.setPosition(5, 5);
         mech2.setStability(100);
         mech2.addComponent(BodyPart.RightArm, new LargeLaser());
+        mech2.addComponent(BodyPart.LeftArm, new MissileLauncher());
 
 
         battleScreenInputData.setPlayerTeam(ImmutableMap.<AbstractMech, Pilot>builder().put(mech, new PilotCreator().getPilot()).build());

@@ -4,30 +4,23 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 
 public class MissileBullet extends AbstractBullet {
 
-    private TextureRegion texture;
+    private IsometricAnimatedSprite isometricAnimatedSprite;
     private float delay = 0f;
     private int col = 0;
 
     public MissileBullet(AssetManager assetManager) {
-        this.texture = new TextureRegion(assetManager.get("Missile.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Missile.png", Texture.class));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
-        delay += 0.05f;
-        if (delay == 0.05f) {
-            delay = 0;
-            col++;
-            if (col == 4) {
-                col = 0;
-            }
-        }
-        texture.setRegion(col * 32, 0, 32, 32);
-        batch.draw(texture, getX(), getY(), 0.5f, 0.5f, 1, 1, 1f, 1f, getRotation());
+        isometricAnimatedSprite.setPosition(getX(), getY());
+        isometricAnimatedSprite.setRotation(getRotation() - 45);
+        isometricAnimatedSprite.draw(batch, parentAlpha);
     }
 }
