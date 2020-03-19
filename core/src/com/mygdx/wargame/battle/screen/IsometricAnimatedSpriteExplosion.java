@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class IsometricAnimatedSprite96 extends Actor {
+public class IsometricAnimatedSpriteExplosion extends Actor {
 
     private IsoUtils isoUtils = new IsoUtils();
     private TextureRegion textureRegion;
@@ -15,7 +15,7 @@ public class IsometricAnimatedSprite96 extends Actor {
     private int counter = 0;
     private int nrOfSteps;
 
-    public IsometricAnimatedSprite96(Texture texture) {
+    public IsometricAnimatedSpriteExplosion(Texture texture) {
         super();
         this.textureRegion = new Sprite(texture);
         this.nrOfSteps = texture.getWidth() / 96;

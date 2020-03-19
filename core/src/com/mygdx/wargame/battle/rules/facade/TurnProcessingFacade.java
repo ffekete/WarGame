@@ -267,4 +267,7 @@ public class TurnProcessingFacade {
         return this.next != null && this.team1.containsKey(this.next.getKey());
     }
 
+    public AttackFacade getAttackFacade() {
+        return attackFacade;
+    }
 }

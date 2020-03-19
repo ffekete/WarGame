@@ -10,12 +10,11 @@ public class MoveActorByBezierLine extends TemporalAction {
     private boolean roatate = false;
 
     public MoveActorByBezierLine(float sx, float sy, float ex, float ey, boolean rotate) {
-        float xPts;
-        float yPts;
+
         Vector2[] points = new Vector2[4];
 
-        points[0] = new Vector2(sx, sy - 10);
-        points[3] = new Vector2(ex, ey - 10);
+        points[0] = new Vector2(sx + 20, sy - 20);
+        points[3] = new Vector2(ex + 20, ey - 20);
 
         points[1] = new Vector2(sx, sy);
         points[2] = new Vector2(ex, ey);
@@ -35,7 +34,7 @@ public class MoveActorByBezierLine extends TemporalAction {
         myCatmull.valueAt(out, percent);
         getActor().setPosition(out.x, out.y);
 
-        if(roatate) {
+        if (roatate) {
             myCatmull.derivativeAt(out, percent);
             getActor().setRotation(out.angle());
         }
