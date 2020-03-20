@@ -22,16 +22,6 @@ public class MovementPathMarker extends TextureRegionDrawable {
         this.y = y;
     }
 
-
-    @Override
-    public void draw(Batch batch, float x, float y, float width, float height) {
-        Vector2 v2 = isoUtils.worldToScreen(x, y);
-
-        getFrame((int) x, (int) y);
-
-        batch.draw(textureRegion, v2.x + 10, v2.y + 20);
-    }
-
     public TextureRegion getFrame(int x, int y) {
         int value = 0;
         if (battleMap.getMarker(x, y + 1)) value += 1;

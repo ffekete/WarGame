@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 public class IsoUtils {
 
     public static final int TILE_WIDTH = 128;
-    public static final int TILE_HEIGHT = 64;
+    public static final int TILE_HEIGHT = 128;
 
     private Matrix4 isoTransform;
     private Matrix4 invIsotransform;
@@ -28,7 +28,7 @@ public class IsoUtils {
 
     public Vector2 worldToCell(float x, float y) {
         float halfTileWidth = TILE_WIDTH * 0.5f;
-        float halfTileHeight = TILE_HEIGHT * 0.5f;
+        float halfTileHeight = TILE_HEIGHT * 0.25f;
 
         float row = (1.0f / 2) * (x / halfTileWidth + y / halfTileHeight);
         float col = (1.0f / 2) * (x / halfTileWidth - y / halfTileHeight);
@@ -47,13 +47,13 @@ public class IsoUtils {
 
     public Vector2 worldToScreen(float x, float y) {
         float x0 = (y * TILE_WIDTH / 2f) + (x * TILE_WIDTH / 2f);
-        float y0 = (x * TILE_HEIGHT / 2f) - (y * TILE_HEIGHT / 2f);
+        float y0 = (x * TILE_HEIGHT / 4f) - (y * TILE_HEIGHT / 4f);
         return new Vector2(x0, -1 * y0);
     }
 
     public Vector2 screenToCell(float x, float y, Camera camera) {
         Vector2 world = screenToWorld(x, y, camera);
-        world.y -= TILE_HEIGHT * 0.5f;
+        world.y -= TILE_HEIGHT * 0.25f;
         return worldToCell(world.x, world.y);
     }
 }

@@ -24,7 +24,6 @@ import com.mygdx.wargame.util.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class
 BulletAnimationAction extends Action {
@@ -142,7 +141,7 @@ BulletAnimationAction extends Action {
 
                 if (weapon.getType() == WeaponType.Missile) {
                     MissileExplosion explosion = new MissileExplosion(assetManager);
-                    explosion.setPosition(defenderMech.getX() - new Random().nextFloat() + 0.5f, defenderMech.getY() - new Random().nextFloat() + 0.5f);
+                    explosion.setPosition(defenderMech.getX(), defenderMech.getY());
                     SequenceAction explosionAction = new SequenceAction();
                     explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f * length));
                     explosionAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));

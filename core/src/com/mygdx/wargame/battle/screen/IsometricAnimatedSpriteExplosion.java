@@ -45,6 +45,6 @@ public class IsometricAnimatedSpriteExplosion extends Actor {
 
         Vector2 v2 = isoUtils.worldToScreen(getX(), getY());
         textureRegion.setRegion(0 + step * 96, 0, 96, 96);
-        batch.draw(textureRegion, v2.x + 20, v2.y + 10, 48, 48, 96, 96, 1, 1, getRotation());
+        batch.draw(textureRegion, v2.x + 32, v2.y, 0, 0, 64, 64, 1, 1, 0);
     }
 }

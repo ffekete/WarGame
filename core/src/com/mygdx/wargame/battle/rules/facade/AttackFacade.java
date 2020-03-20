@@ -62,14 +62,26 @@ public class AttackFacade {
 
                     int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
 
-                    if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
-                        // hit!
-                        damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart, messageQue);
-                        int stabilityAfterHit = weaponStabilityDecreaseCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
-                        defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
-                    }
+                    for (int i = 0; i < weapon.getDamageMultiplier(); i++) {
 
-                    attackingMech.setHeatLevel(attackingMech.getHeatLevel() + weapon.getHeat());
+                        // if no ammo, skip
+                        if (weapon.getAmmo().isPresent() && weapon.getAmmo().get() < 1) {
+                            continue;
+                        }
+
+                        // reduce ammo of weapon
+                        weapon.reduceAmmo();
+
+
+                        if (new Random().nextInt(100) < chance - evasionCalculator.calculate(attackingPilot, attackingMech, defendingPilot, battleMap)) {
+                            // hit!
+                            damageCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, weapon, bodyPart, messageQue);
+                            int stabilityAfterHit = weaponStabilityDecreaseCalculator.calculate(attackingPilot, attackingMech, defendingPilot, defendingMech, battleMap, weapon);
+                            defendingMech.setStability(defendingMech.getStability() - stabilityAfterHit);
+                        }
+
+                        attackingMech.setHeatLevel(attackingMech.getHeatLevel() + weapon.getHeat());
+                    }
                 }
             }
         });

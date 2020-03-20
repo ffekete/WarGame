@@ -105,6 +105,10 @@ public class BattleScreenV2 implements Screen {
         battleScreenInputData.getAiTeam().keySet().forEach(isometricTiledMapRenderer::addObject);
         battleScreenInputData.getPlayerTeam().keySet().forEach(isometricTiledMapRenderer::addObject);
 
+        camera.zoom = 1.4f;
+        camera.position.x = 640;
+        camera.position.y = 20;
+
         stage.addListener(new InputListener() {
 
             @Override
@@ -228,7 +232,8 @@ public class BattleScreenV2 implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+        stage.getViewport().update(width, height, false);
+        hudViewPort.update(width, height, false);
     }
 
     @Override

@@ -1,13 +1,11 @@
 package com.mygdx.wargame.battle.map;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawableTile;
 import com.mygdx.wargame.battle.map.decoration.AnimatedTiledMapTile;
 import com.mygdx.wargame.battle.map.tile.Tile;
+import com.mygdx.wargame.battle.map.tile.TileLayers;
 import com.mygdx.wargame.battle.map.tile.TileSets;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsoUtils;
@@ -33,29 +31,63 @@ public class TiledMapGenerator {
         pathLayer.setName("pathLayer");
         tiledMap.getLayers().add(pathLayer);
 
+        TiledMapTileLayer foliageLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
+        foliageLayer.setName("foliageLayer");
+        tiledMap.getLayers().add(foliageLayer);
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-
-                Tile tile = null;
-                try {
-                    tile = ((Class<? extends Tile>) tileSet.getTexturePaths().toArray()[new Random().nextInt(tileSet.getTexturePaths().size())]).newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                TileLayers tileLayers = processGroundTiles(nodeGraph, tileSet, tiledMap, i, j);
+                if(tileLayers.getFoliageTile() != null) {
+                    processFoliageTiles(nodeGraph, tiledMap, i,j,tileLayers.getFoliageTile());
                 }
-
-                cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
-                TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
-                if(tile.isImpassable()) {
-                    nodeGraph.setImpassable(i, j);
-                }
-                layer.setCell(i, j, cell);
             }
         }
 
         return tiledMap;
+    }
+
+    private void processFoliageTiles(NodeGraph nodeGraph, TiledMap tiledMap, int i, int j, Class<? extends Tile> foliageTile) {
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        Tile tile = null;
+        try {
+            tile = foliageTile.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if(tile != null) {
+            cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
+            TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("foliageLayer");
+            if (tile.isImpassable()) {
+                nodeGraph.setImpassable(i, j);
+            }
+            layer.setCell(i, j, cell);
+        }
+    }
+
+    private TileLayers processGroundTiles(NodeGraph nodeGraph, TileSets tileSet, TiledMap tiledMap, int i, int j) {
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        Tile tile = null;
+        TileLayers tileLayers = null;
+        try {
+            tileLayers = (TileLayers)tileSet.getTexturePaths().toArray()[new Random().nextInt(tileSet.getTexturePaths().size())];
+            tile =  tileLayers.getGroundTile().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
+        if(tile.isImpassable()) {
+            nodeGraph.setImpassable(i, j);
+        }
+        layer.setCell(i, j, cell);
+        return tileLayers;
     }
 
 }

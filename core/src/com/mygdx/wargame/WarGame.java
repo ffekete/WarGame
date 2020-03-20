@@ -11,6 +11,7 @@ import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
 import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.mech.Gunner;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.mech.Templar;
 import com.mygdx.wargame.common.pilot.Pilot;
@@ -46,11 +47,12 @@ public class WarGame extends Game {
 
         BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
 
-        AbstractMech mech = new Templar("Player",  assetManagerLoaderV2);
+        AbstractMech mech = new Gunner("Player",  assetManagerLoaderV2);
         mech.setActive(true);
         mech.setPosition(0,0);
         mech.setStability(100);
-        mech.addComponent(BodyPart.LeftArm, new LargeLaser());
+        mech.addComponent(BodyPart.LeftArm, new MissileLauncher());
+        mech.addComponent(BodyPart.RightArm, new MissileLauncher());
 
 
         AbstractMech mech2 = new Templar("AI", assetManagerLoaderV2);
@@ -58,7 +60,7 @@ public class WarGame extends Game {
         mech2.setPosition(5, 5);
         mech2.setStability(100);
         mech2.addComponent(BodyPart.RightArm, new LargeLaser());
-        mech2.addComponent(BodyPart.LeftArm, new MissileLauncher());
+        mech2.addComponent(BodyPart.LeftArm, new LargeLaser());
 
 
         battleScreenInputData.setPlayerTeam(ImmutableMap.<AbstractMech, Pilot>builder().put(mech, new PilotCreator().getPilot()).build());

@@ -1,49 +1,60 @@
 package com.mygdx.wargame.battle.map.tile;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+import java.util.List;
 import java.util.Set;
 
 public enum TileSets {
 
     GrassLand(
-            ImmutableSet.<Class<? extends Tile>>builder()
-                    .add(GrassTile.class)
-                    .add(GrassCityTile.class)
-                    .add(GrassForestLakeTile.class)
-                    .add(GrassForestTile.class)
-                    .add(GrassMountainTile.class)
-                    .add(GrassPowerPlantTile.class)
+            ImmutableList.<TileLayers>builder()
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+                    .add(new TileLayers(GrassTile.class, null))
+//                    .add(GrassCityTile.class)
+//                    .add(GrassForestLakeTile.class)
+//                    .add(GrassForestTile.class)
+                    .add(new TileLayers(GrassTile.class, GrassMountainTile.class))
+//                    .add(GrassPowerPlantTile.class)
                     .build()
     ),
     Desert(
-            ImmutableSet.<Class<? extends Tile>>builder()
-                    .add(GrassTile.class)
+            ImmutableList.<TileLayers>builder()
+                    .add(new TileLayers(GrassTile.class, null))
                     .build()
     ),
     Swamp(
-            ImmutableSet.<Class<? extends Tile>>builder()
-                    .add(GrassTile.class)
+            ImmutableList.<TileLayers>builder()
+                    .add(new TileLayers(GrassTile.class, null))
                     .build()
     ),
     Jungle(
-            ImmutableSet.<Class<? extends Tile>>builder()
-                    .add(GrassTile.class)
+            ImmutableList.<TileLayers>builder()
+                    .add(new TileLayers(GrassTile.class, null))
                     .build()
     ),
     Snow(
-            ImmutableSet.<Class<? extends Tile>>builder()
-                    .add(GrassTile.class)
+            ImmutableList.<TileLayers>builder()
+                    .add(new TileLayers(GrassTile.class, null))
                     .build()
     );
 
-    private Set<Class<? extends Tile>> texturePaths;
+    private List<TileLayers> texturePaths;
 
-    TileSets(Set<Class<? extends Tile>> texturePaths) {
+    TileSets(List<TileLayers> texturePaths) {
         this.texturePaths = texturePaths;
     }
 
-    public Set<Class<? extends Tile>> getTexturePaths() {
+    public List<TileLayers> getTexturePaths() {
         return texturePaths;
     }
 }

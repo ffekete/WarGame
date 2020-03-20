@@ -111,7 +111,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
         final float color = Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
 
         float tileWidth = layer.getTileWidth() * unitScale;
-        float tileHeight = layer.getTileHeight() * unitScale;
+        float tileHeight = layer.getTileHeight() * unitScale / 2f;
 
         final float layerOffsetX = layer.getRenderOffsetX() * unitScale;
         // offset in tiled is y down, so we flip it
@@ -140,7 +140,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
         for (int row = row2; row >= row1; row--) {
             for (int col = col1; col <= col2; col++) {
                 float x = (col * halfTileWidth) + (row * halfTileWidth);
-                float y = (row * halfTileHeight) - (col * halfTileHeight);
+                float y = (row * halfTileHeight) - (col * halfTileHeight) -32;
 
                 final TiledMapTileLayer.Cell cell = layer.getCell(col, row);
                 if (cell == null) continue;

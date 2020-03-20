@@ -16,12 +16,6 @@ public class MovementPathTile extends TextureRegionDrawable {
     }
 
     @Override
-    public void draw(Batch batch, float x, float y, float width, float height) {
-        movementPathMarker.draw(batch, x, y, width, height);
-        
-    }
-
-    @Override
     public TextureRegion getRegion() {
         return movementPathMarker.getFrame(movementPathMarker.getX(), movementPathMarker.getY());
     }

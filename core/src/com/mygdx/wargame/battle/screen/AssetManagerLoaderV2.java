@@ -25,6 +25,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("tiles/GrassBigPowerPlantDestroyed.png", Texture.class);
 
         assetManager.load("mechs/Templar.png", Texture.class);
+        assetManager.load("mechs/Gunner.png", Texture.class);
 
         assetManager.load("info/PathMarker.png", Texture.class);
 
