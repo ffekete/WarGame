@@ -57,56 +57,41 @@ public class NodeGraphTest {
         Node n1 = new Node(1, 1);
         nodeGraph.addNode(n1);
 
-        Node n2 = new Node(0, 1);
+        Node n2 = new Node(1, 2);
         nodeGraph.addNode(n2);
 
         Node n3 = new Node(1, 0);
         nodeGraph.addNode(n3);
 
-        Node n4 = new Node(0, 0);
+        Node n4 = new Node(0, 1);
         nodeGraph.addNode(n4);
 
-        Node n5 = new Node(2, 0);
+        Node n5 = new Node(2, 1);
         nodeGraph.addNode(n5);
-
-        Node n6 = new Node(0, 2);
-        nodeGraph.addNode(n6);
-
-        Node n7 = new Node(2, 2);
-        nodeGraph.addNode(n7);
-
-        Node n8 = new Node(2, 1);
-        nodeGraph.addNode(n8);
-
-        Node n9 = new Node(1, 2);
-        nodeGraph.addNode(n9);
 
         nodeGraph.connectCities(n1, n2);
         nodeGraph.connectCities(n1, n3);
         nodeGraph.connectCities(n1, n4);
         nodeGraph.connectCities(n1, n5);
-        nodeGraph.connectCities(n1, n6);
-        nodeGraph.connectCities(n1, n7);
-        nodeGraph.connectCities(n1, n8);
-        nodeGraph.connectCities(n1, n9);
 
-        assertThat(nodeGraph.getEdges().size, is(8));
-        assertThat(nodeGraph.getNodes().size, is(9));
-        assertThat(nodeGraph.streetsMap.get(n1).size, is(8));
-        assertThat(nodeGraph.getNodeEdges().get(n1).size, is(8));
+        assertThat(nodeGraph.getEdges().size, is(4));
+        assertThat(nodeGraph.getNodes().size, is(5));
+        assertThat(nodeGraph.streetsMap.get(n1).size, is(4));
+        assertThat(nodeGraph.getNodeEdges().get(n1).size, is(4));
 
         nodeGraph.disconnectCities(n1);
 
         assertThat(nodeGraph.getEdges().size, is(0));
-        assertThat(nodeGraph.getNodes().size, is(9));
+        assertThat(nodeGraph.getNodes().size, is(5));
         assertThat(nodeGraph.streetsMap.get(n1).size, is(0));
         assertThat(nodeGraph.getNodeEdges().get(n1).size, is(0));
 
         nodeGraph.reconnectCities(n1);
 
         assertThat(nodeGraph.getEdges().size, is(8));
-        assertThat(nodeGraph.getNodes().size, is(9));
-        assertThat(nodeGraph.streetsMap.get(n1).size, is(8));
-        assertThat(nodeGraph.getNodeEdges().get(n1).size, is(8));
+        assertThat(nodeGraph.getNodes().size, is(5));
+        assertThat(nodeGraph.streetsMap.get(n1).size, is(4));
+        assertThat(nodeGraph.streetsMap.get(n2).size, is(1));
+        assertThat(nodeGraph.getNodeEdges().get(n1).size, is(4));
     }
 }

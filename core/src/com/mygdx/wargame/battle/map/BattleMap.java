@@ -68,6 +68,7 @@ public class BattleMap {
         }
 
         nodeGraph.connectCities(node, newNode);
+        nodeGraph.connectCities(newNode, node);
     }
 
     public void setTemporaryObstacle(float x, float y) {

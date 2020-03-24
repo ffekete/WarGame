@@ -15,8 +15,8 @@ public class AssetManagerLoaderV2 {
 
         assetManager.load("tiles/GrassBig.png", Texture.class);
         assetManager.load("tiles/GrassBigDamaged.png", Texture.class);
-        assetManager.load("tiles/GrassBigCity.png", Texture.class);
-        assetManager.load("tiles/GrassBigCityDamaged.png", Texture.class);
+        assetManager.load("tiles/GrassBigBuilding.png", Texture.class);
+
         assetManager.load("tiles/GrassBigForest.png", Texture.class);
         assetManager.load("tiles/GrassBigForestDamaged.png", Texture.class);
         assetManager.load("tiles/GrassBigForestLake.png", Texture.class);

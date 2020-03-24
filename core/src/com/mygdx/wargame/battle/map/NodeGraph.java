@@ -8,6 +8,8 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import java.util.Arrays;
+
 public class NodeGraph implements IndexedGraph<Node> {
 
     private int width, height;
@@ -40,22 +42,29 @@ public class NodeGraph implements IndexedGraph<Node> {
         int x = (int) fromNode.getX();
         int y = (int) fromNode.getY();
 
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
+        if (y + 1 < height) {
+            connectCities(nodeWeb[x][y + 1], fromNode);
+            connectCities(fromNode, nodeWeb[x][y + 1]);
+        }
 
-                if (i == 1 && j == 1)
-                    continue;
+        if (y - 1 >= 0) {
+            connectCities(nodeWeb[x][y - 1], fromNode);
+            connectCities(fromNode, nodeWeb[x][y - 1]);
+        }
 
-                if (x + i < 0 || y + j < 0 || x + i >= width || y + j >= height)
-                    continue;
+        if (x - 1 >= 0) {
+            connectCities(nodeWeb[x - 1][y], fromNode);
+            connectCities(fromNode, nodeWeb[x - 1][y]);
+        }
 
-                connectCities(fromNode, nodeWeb[x + i][y + j]);
-            }
+        if (x + 1 < width) {
+            connectCities(nodeWeb[x + 1][y], fromNode);
+            connectCities(fromNode, nodeWeb[x + 1][y]);
         }
     }
 
     public void connectCities(Node fromNode, Node toNode) {
-        if (impassable[(int) fromNode.getX()][(int) fromNode.getY()] && impassable[(int) toNode.getX()][(int) toNode.getY()])
+        if (impassable[(int) fromNode.getX()][(int) fromNode.getY()] || impassable[(int) toNode.getX()][(int) toNode.getY()])
             return;
 
         Edge edge = new Edge(fromNode, toNode);
@@ -74,9 +83,34 @@ public class NodeGraph implements IndexedGraph<Node> {
     }
 
     public void disconnectCities(Node fromNode) {
+
+        System.out.println("----");
+        streetsMap.forEach(entry -> {
+            if (entry.key != fromNode) {
+
+                Arrays.stream(entry.value.items)
+                        .filter(connection -> connection != null && connection.getToNode() == fromNode)
+                        .forEach(nodeConnection -> {
+                            streetsMap.get(entry.key).removeValue(nodeConnection, true);
+                            System.out.println("Removing: " + nodeConnection);
+                        });
+
+            }
+        });
+        System.out.println("----");
+
         streetsMap.get(fromNode).clear();
+
+        Arrays.stream(edges.items).filter(
+                edge -> edge != null && edge.getToNode() == fromNode
+        ).forEach(edge -> {
+            edges.removeValue(edge, true);
+        });
+
+
         edges.removeAll(nodeEdges.get(fromNode), true);
         nodeEdges.get(fromNode).clear();
+
     }
 
     public GraphPath<Node> findPath(Node startNode, Node toNode) {

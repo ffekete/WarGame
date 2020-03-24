@@ -102,8 +102,14 @@ public class BattleScreenV2 implements Screen {
         hudMediator.getHudElementsFacade().create();
         hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
-        battleScreenInputData.getAiTeam().keySet().forEach(isometricTiledMapRenderer::addObject);
-        battleScreenInputData.getPlayerTeam().keySet().forEach(isometricTiledMapRenderer::addObject);
+        battleScreenInputData.getAiTeam().keySet().forEach(mech -> {
+            isometricTiledMapRenderer.addObject(mech);
+            battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
+        });
+        battleScreenInputData.getPlayerTeam().keySet().forEach(mech -> {
+            isometricTiledMapRenderer.addObject(mech);
+            battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
+        });
 
         camera.zoom = 1.4f;
         camera.position.x = 640;
@@ -130,6 +136,13 @@ public class BattleScreenV2 implements Screen {
                             battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
                             battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
                     );
+
+                    System.out.println("move: " + path.getCount());
+                    if(path.getCount() == 0) {
+                        battleMap.clearMarkers();
+                        return;
+                    }
+
                     path.forEach(p -> {
                         battleMap.toggleMarker((int) p.getX(), (int) p.getY(), true);
                         battleMap.addMarker((int) p.getX(), (int) p.getY());
@@ -167,7 +180,14 @@ public class BattleScreenV2 implements Screen {
                             battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
                             battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
                     );
+
+                    if(path.getCount() == 0) {
+                        return;
+                    }
+                    System.out.println( battleMap.getNodeGraph().getConnections(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]));
+
                     stage.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
+                    battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y]);
                 }
             }
 
@@ -175,7 +195,7 @@ public class BattleScreenV2 implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
-                System.out.println(s2c);
+                battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int)turnProcessingFacade.getNext().getKey().getX()][(int)turnProcessingFacade.getNext().getKey().getY()]);
                 return true;
             }
 

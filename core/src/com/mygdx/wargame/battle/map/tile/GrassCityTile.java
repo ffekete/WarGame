@@ -6,12 +6,12 @@ public class GrassCityTile implements Tile {
 
     @Override
     public String getPath() {
-        return "tiles/GrassBigCity.png";
+        return "tiles/GrassBigBuilding.png";
     }
 
     @Override
     public String getDestroyedPath() {
-        return "tiles/GrassBigCityDamaged.png";
+        return "tiles/GrassBigBuilding.png";
     }
 
     @Override
@@ -31,6 +31,6 @@ public class GrassCityTile implements Tile {
 
     @Override
     public boolean isImpassable() {
-        return false;
+        return true;
     }
 }
