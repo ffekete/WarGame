@@ -23,7 +23,7 @@ public enum TileSets {
 //                    .add(GrassCityTile.class)
 //                    .add(GrassForestLakeTile.class)
 //                    .add(GrassForestTile.class)
-                    .add(new TileLayers(GrassTile.class, GrassMountainTile.class))
+                    .add(new TileLayers(GrassMountainTile.class, null))
 //                    .add(GrassPowerPlantTile.class)
                     .build()
     ),

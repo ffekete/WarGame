@@ -19,6 +19,8 @@ import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class MainMenuFacade {
 
+    public static final int MAIN_MENU_BUTTON_WIDTH = 256;
+    public static final int MAIN_MENU_BUTTON_HEIGHT = 128;
     private TextButton newGameGameButton;
     private TextButton exitGameButton;
     private TextButton optionsMenuButton;
@@ -43,31 +45,37 @@ public class MainMenuFacade {
         table = new Table();
         table.setFillParent(true);
 
-        //table.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
+        table.setBackground(new TextureRegionDrawable(assetManager.get("mainmenu/BackGround.jpg", Texture.class)));
+
+        Table innerTable = new Table();
+        table.add(innerTable);
+
+        TextureRegionDrawable textureRegionDrawable = new TextureRegionDrawable(assetManager.get("mainmenu/MainMenuButtonBackground.png", Texture.class));
+        innerTable.setBackground(textureRegionDrawable.tint(Color.valueOf("FFFFFFAA")));
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = FontCreator.getBitmapFont(15);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.textButtonStyle2 = new TextButton.TextButtonStyle();
         textButtonStyle2.font = FontCreator.getBitmapFont(15);
         textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle2.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.textButtonStyle3 = new TextButton.TextButtonStyle();
         textButtonStyle3.font = FontCreator.getBitmapFont(15);
         textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle3.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, 128, 64);
-        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 100, 128, 64);
-        textButtonStyle3.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 100, 128, 64);
+        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle3.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.newGameGameButton = new TextButton("NEW GAME", textButtonStyle);
 
@@ -77,9 +85,9 @@ public class MainMenuFacade {
         optionsMenuButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
         optionsMenuButton.center();
 
-        table.add(newGameGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        table.add(optionsMenuButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        table.add(exitGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        innerTable.add(newGameGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        innerTable.add(optionsMenuButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        innerTable.add(exitGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
 
         newGameGameButton.addListener(new ClickListener() {
             @Override
