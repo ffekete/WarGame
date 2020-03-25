@@ -22,7 +22,13 @@ public enum TileSets {
                     .add(new TileLayers(GrassTile.class, null))
                     .add(new TileLayers(GrassCityTile.class, null))
 //                    .add(GrassForestLakeTile.class)
-//                    .add(GrassForestTile.class)
+
+                    .add(new TileLayers(GrassForestTile.class, null))
+                    .add(new TileLayers(GrassForestTile.class, null))
+                    .add(new TileLayers(GrassForestTile.class, null))
+                    .add(new TileLayers(GrassForestTile.class, null))
+                    .add(new TileLayers(GrassForestTile.class, null))
+
                     .add(new TileLayers(GrassMountainTile.class, null))
 //                    .add(GrassPowerPlantTile.class)
                     .build()

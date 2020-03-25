@@ -77,7 +77,7 @@ public class Gunner extends AbstractMech {
 
     @Override
     public int getMaxMovementPoints() {
-        return 7;
+        return 3;
     }
 
     @Override

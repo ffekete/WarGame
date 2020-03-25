@@ -95,4 +95,7 @@ public class AnimatedTiledMapTile implements TiledMapTile {
         this.animatedDrawableTile = animatedDrawableTile;
     }
 
+    public AnimatedDrawableTile getAnimatedDrawableTile() {
+        return animatedDrawableTile;
+    }
 }

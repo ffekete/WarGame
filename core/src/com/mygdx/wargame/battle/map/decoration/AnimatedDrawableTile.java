@@ -131,4 +131,8 @@ public class AnimatedDrawableTile extends TextureRegionDrawable {
             idleCounter = (idleCounter + 1) % idle;
         }
     }
+
+    public Tile getTile() {
+        return tile;
+    }
 }

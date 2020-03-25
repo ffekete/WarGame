@@ -28,6 +28,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mechs/Gunner.png", Texture.class);
 
         assetManager.load("info/PathMarker.png", Texture.class);
+        assetManager.load("info/MovementMarker.png", Texture.class);
 
         assetManager.load("hud/ArmorIcon.png", Texture.class);
         assetManager.load("hud/ShieldIcon.png", Texture.class);
@@ -41,6 +42,10 @@ public class AssetManagerLoaderV2 {
 
         assetManager.load("hud/MainMenuSmallButtonUp.png", Texture.class);
         assetManager.load("hud/MainMenuSmallButtonDown.png", Texture.class);
+
+        assetManager.load("hud/SmallButtonUp.png", Texture.class);
+        assetManager.load("hud/SmallButtonDown.png", Texture.class);
+        assetManager.load("hud/SmallButtonOver.png", Texture.class);
 
         assetManager.load("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class);
         assetManager.load("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class);

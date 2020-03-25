@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.action.DestroyTileAction;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
@@ -36,8 +38,9 @@ BulletAnimationAction extends Action {
     private int minRange;
     private StageElementsStorage stageElementsStorage;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
+    private BattleMap battleMap;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
@@ -45,6 +48,7 @@ BulletAnimationAction extends Action {
         this.minRange = minRange;
         this.stageElementsStorage = stageElementsStorage;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
+        this.battleMap = battleMap;
     }
 
     @Override
@@ -143,7 +147,7 @@ BulletAnimationAction extends Action {
                     MissileExplosion explosion = new MissileExplosion(assetManager);
                     explosion.setPosition(defenderMech.getX(), defenderMech.getY());
                     SequenceAction explosionAction = new SequenceAction();
-                    explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f * length));
+                    //explosionAction.addAction(new DelayAction(0.25f * delay + 0.3f * length));
                     explosionAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));
 
                     ParallelAction waitAndShake = new ParallelAction();
@@ -158,7 +162,9 @@ BulletAnimationAction extends Action {
                         finishedByExplosion = true;
                     }
 
-                    stageElementsStorage.stage.addAction(explosionAction);
+                    explosionAction.addAction(new DestroyTileAction(battleMap, (int)end.x, (int)end.y));
+
+                    sequenceAction.addAction(explosionAction);
                 }
 
                 sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));

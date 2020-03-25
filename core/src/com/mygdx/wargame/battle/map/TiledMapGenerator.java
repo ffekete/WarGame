@@ -84,7 +84,8 @@ public class TiledMapGenerator {
         cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
         if(tile.isImpassable()) {
-            nodeGraph.setImpassable(i, j);
+            nodeGraph.
+                    setImpassable(i, j);
         }
         layer.setCell(i, j, cell);
         return tileLayers;

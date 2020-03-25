@@ -49,7 +49,7 @@ public class Templar extends AbstractMech {
             .build();
 
     public Templar(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(10, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Templar.png", Texture.class)));
+        super(20, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Templar.png", Texture.class)));
         this.name = name;
 
         setTouchable(Touchable.enabled);
@@ -77,7 +77,7 @@ public class Templar extends AbstractMech {
 
     @Override
     public int getMaxMovementPoints() {
-        return 7;
+        return 2;
     }
 
     @Override

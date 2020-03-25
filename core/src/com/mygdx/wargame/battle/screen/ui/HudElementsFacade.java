@@ -11,11 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.common.component.armor.Armor;
@@ -30,7 +32,7 @@ import static com.mygdx.wargame.config.Config.*;
 
 public class HudElementsFacade {
 
-    private ImageButton endTurnButton;
+    private TextButton endTurnButton;
     private AssetManager assetManager;
     private TurnProcessingFacade turnProcessingFacade;
     private ActionLock actionLock;
@@ -77,13 +79,13 @@ public class HudElementsFacade {
     private Label pilotNameLabel;
     private Label mechNameLabel;
 
-    private ImageButton showMovementMarkersButton;
-    private ImageButton dontShowMovementMarkersButton;
+    private TextButton showMovementMarkersButton;
+    private TextButton dontShowMovementMarkersButton;
 
-    private ImageButton showMovementDirectionsButton;
-    private ImageButton hideMovementDirectionsButton;
+    private TextButton showMovementDirectionsButton;
+    private TextButton hideMovementDirectionsButton;
 
-    private ImageButton mainMenuButton;
+    private TextButton mainMenuButton;
 
     private Table sidePanel;
 
@@ -99,7 +101,7 @@ public class HudElementsFacade {
     public void create() {
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontCreator.getBitmapFont(12);
+        labelStyle.font = FontCreator.getBitmapFont(11);
 
         labelPool = new Pool<Label>() {
             @Override
@@ -108,14 +110,16 @@ public class HudElementsFacade {
             }
         };
 
-        ImageButton.ImageButtonStyle imageButtonStyle = new ImageButton.ImageButtonStyle();
-        imageButtonStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/EndTurnButtonUp.png", Texture.class));
-        imageButtonStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/EndTurnButtonDown.png", Texture.class));
+        TextButton.TextButtonStyle endTurnButtonStyle = new TextButton.TextButtonStyle();
+        endTurnButtonStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        endTurnButtonStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonDown.png", Texture.class));
+        endTurnButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        endTurnButtonStyle.font = labelStyle.font;
 
         sidePanel = new Table();
         //sidePanel.background(new TextureRegionDrawable(assetManager.get("hud/SidePanel.png", Texture.class)));
 
-        endTurnButton = new ImageButton(imageButtonStyle);
+        endTurnButton = new TextButton("end turn", endTurnButtonStyle);
 
         endTurnButton.addListener(new ClickListener() {
             @Override
@@ -233,16 +237,20 @@ public class HudElementsFacade {
         upperHud.add(mechNameLabel).padRight(5);
         upperHud.add(pilotNameLabel).padRight(5);
 
-        ImageButton.ImageButtonStyle showMarkersStyle = new ImageButton.ImageButtonStyle();
-        showMarkersStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class));
-        showMarkersStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class));
+        TextButton.TextButtonStyle showMarkersStyle = new TextButton.TextButtonStyle();
+        showMarkersStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        showMarkersStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonDown.png", Texture.class));
+        showMarkersStyle.font = labelStyle.font;
+        showMarkersStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
 
-        ImageButton.ImageButtonStyle dontShowMarkersStyle = new ImageButton.ImageButtonStyle();
-        dontShowMarkersStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/HideMovementMarkersSmallButtonUp.png", Texture.class));
-        dontShowMarkersStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/HideMovementMarkersSmallButtonDown.png", Texture.class));
+        TextButton.TextButtonStyle dontShowMarkersStyle = new TextButton.TextButtonStyle();
+        dontShowMarkersStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        dontShowMarkersStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        dontShowMarkersStyle.font = labelStyle.font;
+        dontShowMarkersStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
 
-        showMovementMarkersButton = new ImageButton(showMarkersStyle);
-        dontShowMovementMarkersButton = new ImageButton(dontShowMarkersStyle);
+        showMovementMarkersButton = new TextButton("show markers", showMarkersStyle);
+        dontShowMovementMarkersButton = new TextButton("no markers", dontShowMarkersStyle);
 
         showMovementMarkersButton.addListener(new ClickListener() {
 
@@ -265,25 +273,31 @@ public class HudElementsFacade {
             }
         });
 
-        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (64) - 5, 0);
+        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (128) - 5, 0);
         sidePanel.setSize(70, 70);
 
-        ImageButton.ImageButtonStyle showDirectionsStyle = new ImageButton.ImageButtonStyle();
-        showDirectionsStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/ShowMovementDirectionsSmallButtonUp.png", Texture.class));
-        showDirectionsStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/ShowMovementDirectionsSmallButtonDown.png", Texture.class));
+        TextButton.TextButtonStyle showDirectionsStyle = new TextButton.TextButtonStyle();
+        showDirectionsStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        showDirectionsStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        showDirectionsStyle.font = labelStyle.font;
+        showDirectionsStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
 
-        ImageButton.ImageButtonStyle hideDirectionsStyle = new ImageButton.ImageButtonStyle();
-        hideDirectionsStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/HideMovementDirectionsSmallButtonUp.png", Texture.class));
-        hideDirectionsStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/HideMovementDirectionsSmallButtonDown.png", Texture.class));
+        TextButton.TextButtonStyle hideDirectionsStyle = new TextButton.TextButtonStyle();
+        hideDirectionsStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        hideDirectionsStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        hideDirectionsStyle.font = labelStyle.font;
+        hideDirectionsStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
 
-        showMovementDirectionsButton = new ImageButton(showDirectionsStyle);
-        hideMovementDirectionsButton = new ImageButton(hideDirectionsStyle);
+        showMovementDirectionsButton = new TextButton("directions", showDirectionsStyle);
+        hideMovementDirectionsButton = new TextButton("no directions", hideDirectionsStyle);
 
-        ImageButton.ImageButtonStyle mainMenuButtonStyle = new ImageButton.ImageButtonStyle();
-        mainMenuButtonStyle.imageUp = new TextureRegionDrawable(assetManager.get("hud/MainMenuSmallButtonUp.png", Texture.class));
-        mainMenuButtonStyle.imageDown = new TextureRegionDrawable(assetManager.get("hud/MainMenuSmallButtonDown.png", Texture.class));
+        TextButton.TextButtonStyle mainMenuButtonStyle = new TextButton.TextButtonStyle();
+        mainMenuButtonStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        mainMenuButtonStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        mainMenuButtonStyle.font = labelStyle.font;
+        mainMenuButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
 
-        mainMenuButton = new ImageButton(mainMenuButtonStyle);
+        mainMenuButton = new TextButton("menu", mainMenuButtonStyle);
 
         mainMenuButton.addListener(new ClickListener() {
             @Override
@@ -296,6 +310,15 @@ public class HudElementsFacade {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Config.showDirectionMarkers = !Config.showDirectionMarkers;
+                populateSidePanel();
+            }
+        });
+
+        hideMovementDirectionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Config.showDirectionMarkers = !Config.showDirectionMarkers;
+                populateSidePanel();
             }
         });
 

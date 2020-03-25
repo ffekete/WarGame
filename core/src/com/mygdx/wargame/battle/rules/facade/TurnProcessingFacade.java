@@ -197,7 +197,7 @@ public class TurnProcessingFacade {
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                         attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites));
+                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap));
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
