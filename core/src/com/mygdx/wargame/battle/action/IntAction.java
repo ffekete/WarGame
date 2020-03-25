@@ -16,15 +16,17 @@ public class IntAction extends TemporalAction {
     private Supplier<Integer> end;
     private int value;
     private Label label;
+    private String prefix;
 
     /**
      * Creates an IntAction that transitions from start to end.
      */
-    public IntAction(int start, Supplier<Integer> end, float duration, Label label) {
+    public IntAction(int start, Supplier<Integer> end, float duration, Label label, String prefix) {
         super(duration);
         this.start = start;
         this.end = end;
         this.label = label;
+        this.prefix = prefix;
     }
 
     protected void begin() {
@@ -43,7 +45,7 @@ public class IntAction extends TemporalAction {
             value = end.get();
         else
             value = (int) (start + (end.get() - start) * percent);
-        label.setText(value);
+        label.setText(prefix + value);
     }
 
     /**

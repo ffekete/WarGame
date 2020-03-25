@@ -11,11 +11,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.wargame.battle.action.IntAction;
 import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
@@ -174,10 +175,19 @@ public class BattleScreenV2 implements Screen {
                     ParallelAction attackActions = new ParallelAction();
                     attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
                     attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), minRange));
-                    attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap));
+                    attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+
+                    int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
+                    int ammoBeforeAttack = turnProcessingFacade.getNext().getKey().getAmmoCount();
                     AttackAction attackAction = new AttackAction(turnProcessingFacade.getAttackFacade(), turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue(), mechAtCoordinates.get(), pilotAtCoordinates.get().getValue(), battleMap, minRange, null);
+
                     sequenceAction.addAction(attackActions);
                     sequenceAction.addAction(attackAction);
+                    sequenceAction.addAction(new IntAction(ammoBeforeAttack, turnProcessingFacade.getNext().getKey()::getAmmoCount, 1f, hudMediator.getHudElementsFacade().getAmmoImage().getLabel(), "ammo: "));
+                    sequenceAction.addAction(new DelayAction(0.5f));
+                    sequenceAction.addAction(new IntAction(heatBeforeAttack, turnProcessingFacade.getNext().getKey()::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatImage().getLabel(), "heat: "));
+                    sequenceAction.addAction(new DelayAction(5f));
+
                     stageElementsStorage.stage.addAction(sequenceAction);
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int)turnProcessingFacade.getNext().getKey().getX()][(int)turnProcessingFacade.getNext().getKey().getY()]);
                 } else {
@@ -191,6 +201,7 @@ public class BattleScreenV2 implements Screen {
                     }
 
                     battleMap.clearMovementMarkers();
+                    battleMap.clearPathMarkers();
 
                     stage.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y]);

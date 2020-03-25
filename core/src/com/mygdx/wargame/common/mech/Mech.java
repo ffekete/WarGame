@@ -100,4 +100,6 @@ public interface Mech extends Comparable<Mech> {
     Direction getDirection();
 
     int getMaxHp(BodyPart bodyPart);
+
+    int getAmmoCount();
 }

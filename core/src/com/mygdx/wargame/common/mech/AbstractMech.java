@@ -10,6 +10,9 @@ import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.component.weapon.Status;
+import com.mygdx.wargame.common.component.weapon.Weapon;
+
+import java.util.Optional;
 
 public abstract class
 AbstractMech extends Actor implements Mech {
@@ -157,5 +160,12 @@ AbstractMech extends Actor implements Mech {
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
         isometricSprite.setPosition(x, y);
+    }
+
+    @Override
+    public int getAmmoCount() {
+        return getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(w -> ((Weapon) w).getAmmo()).reduce((a, b) -> {
+            return Optional.of(a.orElse(0) + b.orElse(0));
+        }).orElse(Optional.of(0)).get();
     }
 }

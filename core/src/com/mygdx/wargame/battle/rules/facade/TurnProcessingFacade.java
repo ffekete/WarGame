@@ -156,9 +156,11 @@ public class TurnProcessingFacade {
                 selectedMech.resetMovementPoints(movementPoints);
 
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
+                sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(regenerateShields(selectedMech));
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
+                sequenceAction.addAction(new DelayAction(0.5f));
 
                 // find target
                 Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
@@ -198,7 +200,7 @@ public class TurnProcessingFacade {
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                         attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
-                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap));
+                        attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
@@ -223,9 +225,12 @@ public class TurnProcessingFacade {
                 SequenceAction sequenceAction = new SequenceAction();
                 sequenceAction.addAction(new LockAction(actionLock));
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
+                sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(regenerateShields(selectedMech));
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
+                sequenceAction.addAction(new DelayAction(0.5f));
+                sequenceAction.addAction(new DelayAction(5));
                 sequenceAction.addAction(new UnlockAction(actionLock, ""));
                 ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
@@ -241,7 +246,7 @@ public class TurnProcessingFacade {
         mech.setHeatLevel(Math.max(mech.getHeatLevel() - reduceAmount, 0));
         SequenceAction sequenceAction = new SequenceAction();
 
-        sequenceAction.addAction(new IntAction(heatBeforeReducing, mech::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatValueLabel()));
+        sequenceAction.addAction(new IntAction(heatBeforeReducing, mech::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatImage().getLabel(), "heat: "));
         return sequenceAction;
     }
 
@@ -251,7 +256,7 @@ public class TurnProcessingFacade {
 
         mech.setStability(stabilityDecreaseCalculator.calculate(mech, battleMap));
         SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(new IntAction(stabilityBeforeIncrease, mech::getStability, 1f, hudMediator.getHudElementsFacade().getStabilityValueLabel()));
+        sequenceAction.addAction(new IntAction(stabilityBeforeIncrease, mech::getStability, 1f, hudMediator.getHudElementsFacade().getStabilityImage().getLabel(), "stability: "));
 
         return sequenceAction;
     }
@@ -267,7 +272,7 @@ public class TurnProcessingFacade {
         });
 
         SequenceAction sequenceAction = new SequenceAction();
-        sequenceAction.addAction(new IntAction(shieldBeforeIncrease, mech::getShieldValue, 1f, hudMediator.getHudElementsFacade().getShieldValueLabel()));
+        sequenceAction.addAction(new IntAction(shieldBeforeIncrease, mech::getShieldValue, 1f, hudMediator.getHudElementsFacade().getShieldImage().getLabel(), "shield: "));
         return sequenceAction;
     }
 

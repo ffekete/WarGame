@@ -32,11 +32,11 @@ public class MoveActorByBezierLine extends TemporalAction {
 
 
         myCatmull.valueAt(out, percent);
-        getActor().setPosition(out.x, out.y);
+        getTarget().setPosition(out.x, out.y);
 
         if (roatate) {
             myCatmull.derivativeAt(out, percent);
-            getActor().setRotation(out.angle());
+            getTarget().setRotation(out.angle());
         }
     }
 }
