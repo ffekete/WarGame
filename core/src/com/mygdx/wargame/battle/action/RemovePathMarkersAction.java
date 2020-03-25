@@ -13,7 +13,7 @@ public class RemovePathMarkersAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        battleMap.clearMarkers();
+        battleMap.clearPathMarkers();
         return true;
     }
 }

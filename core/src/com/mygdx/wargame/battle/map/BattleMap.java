@@ -4,6 +4,7 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.mygdx.wargame.battle.map.decoration.MovementMarkerDrawable;
 import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
@@ -101,7 +102,29 @@ public class BattleMap {
         this.markers[x][y] = value;
     }
 
-    public void addMarker(int x, int y) {
+    public void addMovementMarker(int x, int y) {
+
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
+        cell.setTile(new DrawableTiledMapTile(new MovementMarkerDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementMarker.png", Texture.class))));
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("movementMarkersLayer");
+        layer.setCell(x, y, cell);
+    }
+
+    public void clearMovementMarkers() {
+        tiledMap.getLayers().get("movementMarkersLayer").getObjects().forEach(o -> tiledMap.getLayers().get("movementMarkersLayer").getObjects().remove(o));
+
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("movementMarkersLayer");
+
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                markers[i][j] = false;
+                layer.setCell(i, j, null);
+            }
+        }
+    }
+
+    public void addPathMarker(int x, int y) {
 
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
@@ -110,7 +133,7 @@ public class BattleMap {
         layer.setCell(x, y, cell);
     }
 
-    public void clearMarkers() {
+    public void clearPathMarkers() {
          tiledMap.getLayers().get("pathLayer").getObjects().forEach(o -> tiledMap.getLayers().get("pathLayer").getObjects().remove(o));
 
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("pathLayer");

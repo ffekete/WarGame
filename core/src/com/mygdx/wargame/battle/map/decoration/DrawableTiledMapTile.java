@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * @brief Represents a non changing {@link TiledMapTile} (can be cached)
@@ -19,7 +20,7 @@ public class DrawableTiledMapTile implements TiledMapTile {
 
     private MapObjects objects;
 
-    private MovementPathTile movementPathTile;
+    private TextureRegionDrawable textureRegionDrawable;
 
     private float offsetX;
 
@@ -63,7 +64,7 @@ public class DrawableTiledMapTile implements TiledMapTile {
 
     @Override
     public TextureRegion getTextureRegion() {
-        return movementPathTile.getRegion();
+        return textureRegionDrawable.getRegion();
     }
 
     @Override
@@ -91,8 +92,8 @@ public class DrawableTiledMapTile implements TiledMapTile {
         this.offsetY = offsetY;
     }
 
-    public DrawableTiledMapTile(MovementPathTile movementPathTile) {
-        this.movementPathTile = movementPathTile;
+    public DrawableTiledMapTile(TextureRegionDrawable textureRegionDrawable) {
+        this.textureRegionDrawable = textureRegionDrawable;
     }
 
 }

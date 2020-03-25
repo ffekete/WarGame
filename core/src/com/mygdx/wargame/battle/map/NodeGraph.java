@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class NodeGraph implements IndexedGraph<Node> {
 
@@ -42,6 +44,15 @@ public class NodeGraph implements IndexedGraph<Node> {
         int x = (int) fromNode.getX();
         int y = (int) fromNode.getY();
 
+        reconnect(x, y, fromNode);
+    }
+
+    public void reconnectCities(int x, int y) {
+        Node fromNode = nodeWeb[x][y];
+        reconnect(x, y, fromNode);
+    }
+
+    private void reconnect(int x, int y, Node fromNode) {
         if (y + 1 < height) {
             connectCities(nodeWeb[x][y + 1], fromNode);
             connectCities(fromNode, nodeWeb[x][y + 1]);
@@ -83,23 +94,38 @@ public class NodeGraph implements IndexedGraph<Node> {
     }
 
     public void disconnectCities(Node fromNode) {
-
-        System.out.println("----");
-        streetsMap.forEach(entry -> {
-            if (entry.key != fromNode) {
-
-                Arrays.stream(entry.value.items)
-                        .filter(connection -> connection != null && connection.getToNode() == fromNode)
-                        .forEach(nodeConnection -> {
-                            streetsMap.get(entry.key).removeValue(nodeConnection, true);
-                            System.out.println("Removing: " + nodeConnection);
-                        });
-
-            }
-        });
-        System.out.println("----");
-
+        int x = (int)fromNode.getX();
+        int y = (int)fromNode.getY();
+        disconnect(fromNode, x, y - 1);
+        disconnect(fromNode, x, y + 1);
+        disconnect(fromNode, x - 1, y);
+        disconnect(fromNode, x + 1, y);
         streetsMap.get(fromNode).clear();
+
+    }
+
+    public void disconnectCities(int x, int y) {
+        Node fromNode = nodeWeb[x][y];
+
+        disconnect(fromNode, x, y - 1);
+        disconnect(fromNode, x, y + 1);
+        disconnect(fromNode, x - 1, y);
+        disconnect(fromNode, x + 1, y);
+        streetsMap.get(fromNode).clear();
+    }
+
+    private void disconnect(Node fromNode, int x, int y) {
+        if (x < 0 || y < 0 || x >= BattleMap.WIDTH || y >= BattleMap.HEIGHT) {
+            return;
+        }
+        Node neighbour = nodeWeb[x][y];
+        List<Connection<Node>> nodeConnections = Arrays.stream(streetsMap.get(neighbour).items)
+                .filter(edge -> edge != null && edge.getToNode() == fromNode)
+                .collect(Collectors.toList());
+
+        nodeConnections.forEach(nodeConnection -> {
+            streetsMap.get(neighbour).removeValue(nodeConnection, true);
+        });
 
         Arrays.stream(edges.items).filter(
                 edge -> edge != null && edge.getToNode() == fromNode
@@ -111,7 +137,12 @@ public class NodeGraph implements IndexedGraph<Node> {
         edges.removeAll(nodeEdges.get(fromNode), true);
         nodeEdges.get(fromNode).clear();
 
+        nodeEdges.forEach(edges -> {
+            Arrays.stream(edges.value.items).filter(edge -> edge != null && edge.getToNode() == fromNode)
+                    .forEach(entry -> nodeEdges.get(edges.key).removeValue(entry, true));
+        });
     }
+
 
     public GraphPath<Node> findPath(Node startNode, Node toNode) {
         GraphPath<Node> cityPath = new DefaultGraphPath<>();

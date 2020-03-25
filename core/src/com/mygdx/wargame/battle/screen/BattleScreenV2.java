@@ -123,13 +123,13 @@ public class BattleScreenV2 implements Screen {
                 if(actionLock.isLocked())
                     return;
 
-                battleMap.clearMarkers();
+                battleMap.clearPathMarkers();
 
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
                 if(s2c.x < 0 || s2c.x >= BattleMap.WIDTH || s2c.y < 0 || s2c.y >= BattleMap.HEIGHT) {
-                    battleMap.clearMarkers();
+                    battleMap.clearPathMarkers();
                     return;
                 }
 
@@ -143,13 +143,13 @@ public class BattleScreenV2 implements Screen {
                     );
 
                     if(path.getCount() == 0) {
-                        battleMap.clearMarkers();
+                        battleMap.clearPathMarkers();
                         return;
                     }
 
                     path.forEach(p -> {
                         battleMap.toggleMarker((int) p.getX(), (int) p.getY(), true);
-                        battleMap.addMarker((int) p.getX(), (int) p.getY());
+                        battleMap.addPathMarker((int) p.getX(), (int) p.getY());
 
                         // stage.addActor(new MovementPathMarker(assetManagerLoader.getAssetManager().get("info/MovementPath.png", Texture.class), battleMap));
                     });
@@ -189,6 +189,8 @@ public class BattleScreenV2 implements Screen {
                     if(path.getCount() == 0) {
                         return;
                     }
+
+                    battleMap.clearMovementMarkers();
 
                     stage.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y]);

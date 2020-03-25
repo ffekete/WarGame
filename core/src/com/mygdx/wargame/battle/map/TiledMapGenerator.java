@@ -27,6 +27,11 @@ public class TiledMapGenerator {
         groundLayer.setName("groundLayer");
         tiledMap.getLayers().add(groundLayer);
 
+        TiledMapTileLayer movementMarkersLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
+        movementMarkersLayer.setName("movementMarkersLayer");
+        tiledMap.getLayers().add(movementMarkersLayer);
+        movementMarkersLayer.setOpacity(0.3f);
+
         TiledMapTileLayer pathLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
         pathLayer.setName("pathLayer");
         tiledMap.getLayers().add(pathLayer);
@@ -84,8 +89,7 @@ public class TiledMapGenerator {
         cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
         if(tile.isImpassable()) {
-            nodeGraph.
-                    setImpassable(i, j);
+            nodeGraph.setImpassable(i, j);
         }
         layer.setCell(i, j, cell);
         return tileLayers;

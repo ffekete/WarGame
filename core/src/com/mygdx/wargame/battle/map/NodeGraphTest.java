@@ -20,23 +20,34 @@ public class NodeGraphTest {
         Node n3 = new Node(1, 2);
         nodeGraph.addNode(n3);
 
-        Node n4 = new Node(2, 2);
+        Node n4 = new Node(0, 1);
         nodeGraph.addNode(n4);
 
-        nodeGraph.connectCities(n1, n2);
-        nodeGraph.connectCities(n1, n3);
-        nodeGraph.connectCities(n1, n4);
+        Node n5 = new Node(1, 0);
+        nodeGraph.addNode(n5);
 
-        assertThat(nodeGraph.getEdges().size, is(3));
-        assertThat(nodeGraph.getNodes().size, is(4));
-        assertThat(nodeGraph.streetsMap.get(n1).size, is(3));
-        assertThat(nodeGraph.getNodeEdges().get(n1).size, is(3));
+        nodeGraph.connectCities(n1, n2);
+        nodeGraph.connectCities(n2, n1);
+
+        nodeGraph.connectCities(n1, n3);
+        nodeGraph.connectCities(n3, n1);
+
+        nodeGraph.connectCities(n1, n4);
+        nodeGraph.connectCities(n4, n1);
+
+        nodeGraph.connectCities(n1, n5);
+        nodeGraph.connectCities(n5, n1);
+
+        assertThat(nodeGraph.getEdges().size, is(8));
+        assertThat(nodeGraph.getNodes().size, is(5));
+        assertThat(nodeGraph.streetsMap.get(n1).size, is(4));
+        assertThat(nodeGraph.getNodeEdges().get(n1).size, is(4));
 
 
         nodeGraph.disconnectCities(n1);
 
         assertThat(nodeGraph.getEdges().size, is(0));
-        assertThat(nodeGraph.getNodes().size, is(4));
+        assertThat(nodeGraph.getNodes().size, is(5));
         assertThat(nodeGraph.streetsMap.get(n1).size, is(0));
         assertThat(nodeGraph.getNodeEdges().get(n1).size, is(0));
 
@@ -45,7 +56,7 @@ public class NodeGraphTest {
         nodeGraph.connectCities(n1, n4);
 
         assertThat(nodeGraph.getEdges().size, is(3));
-        assertThat(nodeGraph.getNodes().size, is(4));
+        assertThat(nodeGraph.getNodes().size, is(5));
         assertThat(nodeGraph.streetsMap.get(n1).size, is(3));
         assertThat(nodeGraph.getNodeEdges().get(n1).size, is(3));
     }
@@ -70,11 +81,18 @@ public class NodeGraphTest {
         nodeGraph.addNode(n5);
 
         nodeGraph.connectCities(n1, n2);
-        nodeGraph.connectCities(n1, n3);
-        nodeGraph.connectCities(n1, n4);
-        nodeGraph.connectCities(n1, n5);
+        nodeGraph.connectCities(n2, n1);
 
-        assertThat(nodeGraph.getEdges().size, is(4));
+        nodeGraph.connectCities(n1, n3);
+        nodeGraph.connectCities(n3, n1);
+
+        nodeGraph.connectCities(n1, n4);
+        nodeGraph.connectCities(n4, n1);
+
+        nodeGraph.connectCities(n1, n5);
+        nodeGraph.connectCities(n5, n1);
+
+        assertThat(nodeGraph.getEdges().size, is(8));
         assertThat(nodeGraph.getNodes().size, is(5));
         assertThat(nodeGraph.streetsMap.get(n1).size, is(4));
         assertThat(nodeGraph.getNodeEdges().get(n1).size, is(4));

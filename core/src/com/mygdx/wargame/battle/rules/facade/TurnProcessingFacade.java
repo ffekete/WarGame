@@ -30,6 +30,7 @@ import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Iterator;
@@ -211,6 +212,13 @@ public class TurnProcessingFacade {
                 // wait for "next" button press
                 int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
                 selectedMech.resetMovementPoints(movementPoints);
+
+                battleMap.getNodeGraph().reconnectCities((int)selectedMech.getX(), (int)selectedMech.getY());
+                Map<Node, Integer> allAvailable = new MapUtils().getAllAvailableWithMovementPointsCost(battleMap, selectedMech);
+                battleMap.getNodeGraph().disconnectCities((int)selectedMech.getX(), (int)selectedMech.getY());
+                allAvailable.forEach((k,v) -> {
+                    battleMap.addMovementMarker((int)k.getX(), (int)k.getY());
+                });
 
                 SequenceAction sequenceAction = new SequenceAction();
                 sequenceAction.addAction(new LockAction(actionLock));
