@@ -15,8 +15,6 @@ import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.common.ScreenRegister;
 
-import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
-
 public class MainMenuFacade {
 
     public static final int MAIN_MENU_BUTTON_WIDTH = 256;
@@ -54,7 +52,7 @@ public class MainMenuFacade {
         innerTable.setBackground(textureRegionDrawable.tint(Color.valueOf("FFFFFFAA")));
 
         this.textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.font = FontCreator.getBitmapFont(15);
+        textButtonStyle.font = FontCreator.getBitmapFont(18);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
         textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
@@ -62,7 +60,7 @@ public class MainMenuFacade {
         textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.textButtonStyle2 = new TextButton.TextButtonStyle();
-        textButtonStyle2.font = FontCreator.getBitmapFont(15);
+        textButtonStyle2.font = FontCreator.getBitmapFont(18);
         textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle2.overFontColor = Color.valueOf("00FF00");
         textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
@@ -70,7 +68,7 @@ public class MainMenuFacade {
         textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.textButtonStyle3 = new TextButton.TextButtonStyle();
-        textButtonStyle3.font = FontCreator.getBitmapFont(15);
+        textButtonStyle3.font = FontCreator.getBitmapFont(18);
         textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle3.overFontColor = Color.valueOf("00FF00");
         textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
@@ -80,14 +78,14 @@ public class MainMenuFacade {
         this.newGameGameButton = new TextButton("NEW GAME", textButtonStyle);
 
         this.exitGameButton = new TextButton("EXIT", textButtonStyle3);
-        exitGameButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
+        exitGameButton.pad(5, 15, 5, 15);
         this.optionsMenuButton = new TextButton("OPTIONS", textButtonStyle2);
-        optionsMenuButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
+        optionsMenuButton.pad(5, 15, 5, 15);
         optionsMenuButton.center();
 
-        innerTable.add(newGameGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        innerTable.add(optionsMenuButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        innerTable.add(exitGameButton).size(400 / SCREEN_HUD_RATIO, 250 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        innerTable.add(newGameGameButton).size(100, 65).pad(5).row();
+        innerTable.add(optionsMenuButton).size(100, 65).pad(5).row();
+        innerTable.add(exitGameButton).size(100, 65).pad(5).row();
 
         newGameGameButton.addListener(new ClickListener() {
             @Override

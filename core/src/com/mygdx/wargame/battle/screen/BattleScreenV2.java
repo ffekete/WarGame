@@ -66,7 +66,7 @@ public class BattleScreenV2 implements Screen {
 
         camera = new OrthographicCamera();
 
-        viewport = new FitViewport(960, 540, camera);
+        viewport = new StretchViewport(960, 540, camera);
 
         stage = new Stage(viewport);
 
