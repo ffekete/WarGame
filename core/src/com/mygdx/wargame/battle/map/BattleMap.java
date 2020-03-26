@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.mygdx.wargame.battle.map.decoration.MovementDirectionDrawable;
-import com.mygdx.wargame.battle.map.decoration.MovementMarkerDrawable;
+import com.mygdx.wargame.battle.map.decoration.DrawableMarker;
 import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
@@ -104,11 +104,32 @@ public class BattleMap {
         this.markers[x][y] = value;
     }
 
+    public void addRangeMarker(int x, int y) {
+
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
+        cell.setTile(new DrawableTiledMapTile(new DrawableMarker(assetManagerLoaderV2.getAssetManager().get("info/RangeMarker.png", Texture.class))));
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("rangeMarkersLayer");
+        layer.setCell(x, y, cell);
+    }
+
+    public void clearRangeMarkers() {
+        tiledMap.getLayers().get("rangeMarkersLayer").getObjects().forEach(o -> tiledMap.getLayers().get("rangeMarkersLayer").getObjects().remove(o));
+
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("rangeMarkersLayer");
+
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                layer.setCell(i, j, null);
+            }
+        }
+    }
+
     public void addMovementMarker(int x, int y) {
 
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        cell.setTile(new DrawableTiledMapTile(new MovementMarkerDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementMarker.png", Texture.class))));
+        cell.setTile(new DrawableTiledMapTile(new DrawableMarker(assetManagerLoaderV2.getAssetManager().get("info/MovementMarker.png", Texture.class))));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("movementMarkersLayer");
         layer.setCell(x, y, cell);
     }
@@ -120,7 +141,6 @@ public class BattleMap {
 
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                markers[i][j] = false;
                 layer.setCell(i, j, null);
             }
         }

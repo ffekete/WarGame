@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.battle.map.BattleMap;
 
-public class MovementMarkerDrawable extends TextureRegionDrawable {
+public class DrawableMarker extends TextureRegionDrawable {
 
     private TextureRegion textureRegion;
 
-    public MovementMarkerDrawable(Texture texture) {
+    public DrawableMarker(Texture texture) {
         this.textureRegion = new TextureRegion(texture);
     }
 

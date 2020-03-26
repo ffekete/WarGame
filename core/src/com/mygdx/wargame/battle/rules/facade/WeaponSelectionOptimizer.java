@@ -11,6 +11,10 @@ public class WeaponSelectionOptimizer {
 
     public void doIt(Mech mech) {
 
+        if(!mech.isRangedAttack()) {
+            mech.setRangedAttack(true);
+        }
+
         // deactivate all that is not destroyed yet
         mech.getAllComponents().stream()
                 .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
@@ -33,6 +37,10 @@ public class WeaponSelectionOptimizer {
             do {
                 deSelectTheMaxHeatingWeapon(mech);
             } while(mech.getHeatLevel() + getAllHeat(mech) >= 100 || mech.getSelectedWeapons().isEmpty());
+        }
+
+        if(mech.getHeatLevel() >= 100) {
+            mech.setRangedAttack(false);
         }
     }
 

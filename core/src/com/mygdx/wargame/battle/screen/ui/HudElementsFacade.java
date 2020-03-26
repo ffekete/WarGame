@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
+import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.mech.BodyPart;
@@ -94,6 +95,8 @@ public class HudElementsFacade {
 
     private HUDMediator hudMediator;
 
+    private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
+
     public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, ActionLock actionLock, HUDMediator hudMediator) {
         this.assetManager = assetManager;
         this.turnProcessingFacade = turnProcessingFacade;
@@ -131,6 +134,8 @@ public class HudElementsFacade {
             public void clicked(InputEvent event, float x, float y) {
                 turnProcessingFacade.getNext().getKey().setMoved(true);
                 turnProcessingFacade.getNext().getKey().setAttacked(true);
+                turnProcessingFacade.getBattleMap().clearRangeMarkers();
+                turnProcessingFacade.getBattleMap().clearMovementMarkers();
             }
         });
 
@@ -307,6 +312,8 @@ public class HudElementsFacade {
             public void clicked(InputEvent event, float x, float y) {
                 turnProcessingFacade.getNext().getKey().setRangedAttack(true);
                 populateSidePanel();
+                weaponRangeMarkerUpdater.updateWeaponRangeMarkers(turnProcessingFacade.getBattleMap(), turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue());
+
             }
         });
 
@@ -315,6 +322,7 @@ public class HudElementsFacade {
             public void clicked(InputEvent event, float x, float y) {
                 turnProcessingFacade.getNext().getKey().setRangedAttack(false);
                 populateSidePanel();
+                weaponRangeMarkerUpdater.updateWeaponRangeMarkers(turnProcessingFacade.getBattleMap(), turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue());
             }
         });
 

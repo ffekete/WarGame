@@ -28,6 +28,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mechs/Gunner.png", Texture.class);
 
         assetManager.load("info/PathMarker.png", Texture.class);
+        assetManager.load("info/RangeMarker.png", Texture.class);
         assetManager.load("info/MovementMarker.png", Texture.class);
         assetManager.load("info/MovementDirectionUp.png", Texture.class);
         assetManager.load("info/MovementDirectionDown.png", Texture.class);

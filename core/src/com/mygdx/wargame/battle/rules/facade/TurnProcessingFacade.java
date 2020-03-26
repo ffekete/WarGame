@@ -54,6 +54,7 @@ public class TurnProcessingFacade {
     private BattleMap battleMap;
     private AssetManagerLoaderV2 assetManagerLoaderV2;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
+    private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
                                 Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
@@ -82,6 +83,8 @@ public class TurnProcessingFacade {
         this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(this.battleMap);
 
         this.weaponSelectionOptimizer = new WeaponSelectionOptimizer();
+
+        this.weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
     }
 
     public Map.Entry<AbstractMech, Pilot> getNext() {
@@ -219,6 +222,8 @@ public class TurnProcessingFacade {
                     battleMap.addMovementMarker((int)k.getX(), (int)k.getY());
                 });
 
+                weaponRangeMarkerUpdater.updateWeaponRangeMarkers(battleMap, selectedMech, selectedPilot);
+
                 SequenceAction sequenceAction = new SequenceAction();
                 sequenceAction.addAction(new LockAction(actionLock));
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
@@ -232,7 +237,6 @@ public class TurnProcessingFacade {
                 ((AbstractMech) selectedMech).addAction(sequenceAction);
             }
         }
-
     }
 
     private Action reduceHeatLevel(Pilot pilot, Mech mech, BattleMap battleMap) {
@@ -279,5 +283,9 @@ public class TurnProcessingFacade {
 
     public AttackFacade getAttackFacade() {
         return attackFacade;
+    }
+
+    public BattleMap getBattleMap() {
+        return battleMap;
     }
 }

@@ -32,6 +32,11 @@ public class TiledMapGenerator {
         tiledMap.getLayers().add(movementMarkersLayer);
         movementMarkersLayer.setOpacity(0.3f);
 
+        TiledMapTileLayer rangeMarkersLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
+        rangeMarkersLayer.setName("rangeMarkersLayer");
+        tiledMap.getLayers().add(rangeMarkersLayer);
+        rangeMarkersLayer.setOpacity(0.3f);
+
         TiledMapTileLayer directionLayer = new TiledMapTileLayer(width, height, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT);
         directionLayer.setName("directionLayer");
         tiledMap.getLayers().add(directionLayer);

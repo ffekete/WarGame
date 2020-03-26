@@ -20,8 +20,11 @@ public class RangeCalculator {
         return baseRange;
     }
 
-    public int calculateAllWeaponsRange(Pilot targetingPilot, Mech TargetingMech) {
-        Optional<Integer> range = TargetingMech.getSelectedWeapons()
+    public int calculateAllWeaponsRange(Pilot targetingPilot, Mech targetingMech) {
+        if(!targetingMech.isRangedAttack()) {
+            return 1;
+        }
+        Optional<Integer> range = targetingMech.getSelectedWeapons()
                 .stream()
                 .map(w -> calculate(targetingPilot, w))
                 .min(new Comparator<Integer>() {
