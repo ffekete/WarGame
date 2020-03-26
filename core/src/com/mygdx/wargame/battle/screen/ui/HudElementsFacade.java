@@ -32,6 +32,8 @@ import static com.mygdx.wargame.config.Config.*;
 
 public class HudElementsFacade {
 
+    public static final int SMALL_BUTTON_WIDTH = 110;
+    public static final int SMALL_BUTTON_HEIGHT = 40;
     private TextButton endTurnButton;
     private AssetManager assetManager;
     private TurnProcessingFacade turnProcessingFacade;
@@ -101,7 +103,7 @@ public class HudElementsFacade {
     public void create() {
 
         labelStyle = new Label.LabelStyle();
-        labelStyle.font = FontCreator.getBitmapFont(11);
+        labelStyle.font = FontCreator.getBitmapFont(16);
 
         labelPool = new Pool<Label>() {
             @Override
@@ -115,6 +117,8 @@ public class HudElementsFacade {
         endTurnButtonStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonDown.png", Texture.class));
         endTurnButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
         endTurnButtonStyle.font = labelStyle.font;
+        endTurnButtonStyle.overFontColor = Color.valueOf("00FF00");
+        endTurnButtonStyle.fontColor = Color.valueOf("FFFFFF");
 
         sidePanel = new Table();
         //sidePanel.background(new TextureRegionDrawable(assetManager.get("hud/SidePanel.png", Texture.class)));
@@ -128,10 +132,6 @@ public class HudElementsFacade {
                 turnProcessingFacade.getNext().getKey().setAttacked(true);
             }
         });
-
-        endTurnButton.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (20), 0);
-        endTurnButton.setSize(20, 20);
-
 
         upperHud = new Table();
         upperHud.left();
@@ -153,17 +153,18 @@ public class HudElementsFacade {
         upperHudIconStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonDown.png", Texture.class));
         upperHudIconStyle.font = labelStyle.font;
         upperHudIconStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
-
+        upperHudIconStyle.overFontColor = Color.valueOf("00FF00");
+        upperHudIconStyle.fontColor = Color.valueOf("FFFFFF");
 
         shieldImage = new TextButton("", upperHudIconStyle);
-        upperHud.add(shieldImage);
+        upperHud.add(shieldImage).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         shieldValueLabel = labelPool.obtain();
 
         shieldImage.addListener(shieldToolTip);
 
         armorImage = new TextButton("", upperHudIconStyle);
         armorValueLabel = labelPool.obtain();
-        upperHud.add(armorImage);
+        upperHud.add(armorImage).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         armorTooltipTable = new Table();
         armorToolTip = new Tooltip<>(armorTooltipTable);
@@ -177,7 +178,7 @@ public class HudElementsFacade {
         ammoImage = new TextButton("", upperHudIconStyle);
         ammoValueLabel = labelPool.obtain();
 
-        upperHud.add(ammoImage);
+        upperHud.add(ammoImage).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         ammoTooltipTable = new Table();
         ammoToolTip = new Tooltip<Table>(ammoTooltipTable);
@@ -190,7 +191,7 @@ public class HudElementsFacade {
         healthImage = new TextButton("", upperHudIconStyle);
         healthValueLabel = labelPool.obtain();
 
-        upperHud.add(healthImage);
+        upperHud.add(healthImage).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         healthTooltipTable = new Table();
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
@@ -204,7 +205,7 @@ public class HudElementsFacade {
         heatImage = new TextButton("", upperHudIconStyle);
         heatValueLabel = labelPool.obtain();
 
-        upperHud.add(heatImage);
+        upperHud.add(heatImage).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         heatTooltipTable = new Table();
         heatToolTip = new Tooltip<Table>(heatTooltipTable);
@@ -219,7 +220,7 @@ public class HudElementsFacade {
         stabilityImage = new TextButton("", upperHudIconStyle);
         stabilityValueLabel = labelPool.obtain();
 
-        upperHud.add(stabilityImage);
+        upperHud.add(stabilityImage).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         stabilityTooltipTable = new Table();
         stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
@@ -242,12 +243,17 @@ public class HudElementsFacade {
         showMarkersStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonDown.png", Texture.class));
         showMarkersStyle.font = labelStyle.font;
         showMarkersStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        showMarkersStyle.overFontColor = Color.valueOf("00FF00");
+        showMarkersStyle.fontColor = Color.valueOf("FFFFFF");
 
         TextButton.TextButtonStyle dontShowMarkersStyle = new TextButton.TextButtonStyle();
         dontShowMarkersStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         dontShowMarkersStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         dontShowMarkersStyle.font = labelStyle.font;
         dontShowMarkersStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        dontShowMarkersStyle.overFontColor = Color.valueOf("00FF00");
+        dontShowMarkersStyle.fontColor = Color.valueOf("FFFFFF");
+
 
         showMovementMarkersButton = new TextButton("show markers", showMarkersStyle);
         dontShowMovementMarkersButton = new TextButton("no markers", dontShowMarkersStyle);
@@ -273,20 +279,24 @@ public class HudElementsFacade {
             }
         });
 
-        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (128) - 5, 0);
-        sidePanel.setSize(70, 70);
+        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (SMALL_BUTTON_WIDTH * 2) - 10, 0);
+        sidePanel.setSize(200, 200);
 
         TextButton.TextButtonStyle showDirectionsStyle = new TextButton.TextButtonStyle();
         showDirectionsStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         showDirectionsStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         showDirectionsStyle.font = labelStyle.font;
         showDirectionsStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        showDirectionsStyle.overFontColor = Color.valueOf("00FF00");
+        showDirectionsStyle.fontColor = Color.valueOf("FFFFFF");
 
         TextButton.TextButtonStyle hideDirectionsStyle = new TextButton.TextButtonStyle();
         hideDirectionsStyle.up = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         hideDirectionsStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         hideDirectionsStyle.font = labelStyle.font;
         hideDirectionsStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        hideDirectionsStyle.overFontColor = Color.valueOf("00FF00");
+        hideDirectionsStyle.fontColor = Color.valueOf("FFFFFF");
 
         showMovementDirectionsButton = new TextButton("directions", showDirectionsStyle);
         hideMovementDirectionsButton = new TextButton("no directions", hideDirectionsStyle);
@@ -296,6 +306,8 @@ public class HudElementsFacade {
         mainMenuButtonStyle.down = new TextureRegionDrawable(assetManager.get("hud/SmallButtonUp.png", Texture.class));
         mainMenuButtonStyle.font = labelStyle.font;
         mainMenuButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        mainMenuButtonStyle.overFontColor = Color.valueOf("00FF00");
+        mainMenuButtonStyle.fontColor = Color.valueOf("FFFFFF");
 
         mainMenuButton = new TextButton("menu", mainMenuButtonStyle);
 
@@ -356,22 +368,22 @@ public class HudElementsFacade {
 
     private void populateSidePanel() {
         sidePanel.clear();
-        sidePanel.add(endTurnButton);
+        sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         if (!showMovementMarkers) {
-            sidePanel.add(showMovementMarkersButton);
+            sidePanel.add(showMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         } else {
-            sidePanel.add(dontShowMovementMarkersButton);
+            sidePanel.add(dontShowMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         }
         sidePanel.row();
 
         if (showDirectionMarkers) {
-            sidePanel.add(hideMovementDirectionsButton);
+            sidePanel.add(hideMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         } else {
-            sidePanel.add(showMovementDirectionsButton);
+            sidePanel.add(showMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         }
 
-        sidePanel.add(mainMenuButton);
+        sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
     }
 

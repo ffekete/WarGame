@@ -32,12 +32,15 @@ import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
+import com.mygdx.wargame.battle.unit.action.AddDirectionMarkerAction;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
 import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
 import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
+import com.mygdx.wargame.battle.unit.action.RemoveDirectionMarkerAction;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.pilot.Pilot;
+import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.util.DrawUtils;
 
 import java.util.Map;
@@ -72,7 +75,7 @@ public class BattleScreenV2 implements Screen {
         stage = new Stage(viewport);
 
         Camera hudCamera = new OrthographicCamera();
-        hudViewPort = new StretchViewport(960, 540, hudCamera);
+        hudViewPort = new StretchViewport(Config.HUD_VIEWPORT_WIDTH.get(), Config.HUD_VIEWPORT_HEIGHT.get(), hudCamera);
 
         hudStage = new Stage(hudViewPort);
 
@@ -105,10 +108,12 @@ public class BattleScreenV2 implements Screen {
 
         battleScreenInputData.getAiTeam().keySet().forEach(mech -> {
             isometricTiledMapRenderer.addObject(mech);
+            battleMap.addDirectionMarker(mech.getDirection(), (int)mech.getX(), (int)mech.getY());
             battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
         battleScreenInputData.getPlayerTeam().keySet().forEach(mech -> {
             isometricTiledMapRenderer.addObject(mech);
+            battleMap.addDirectionMarker(mech.getDirection(), (int)mech.getX(), (int)mech.getY());
             battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
 
@@ -174,6 +179,8 @@ public class BattleScreenV2 implements Screen {
                     int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
                     ParallelAction attackActions = new ParallelAction();
                     attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
+                    attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
+                    attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
                     attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), minRange));
                     attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
 

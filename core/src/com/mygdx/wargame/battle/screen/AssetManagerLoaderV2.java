@@ -29,6 +29,10 @@ public class AssetManagerLoaderV2 {
 
         assetManager.load("info/PathMarker.png", Texture.class);
         assetManager.load("info/MovementMarker.png", Texture.class);
+        assetManager.load("info/MovementDirectionUp.png", Texture.class);
+        assetManager.load("info/MovementDirectionDown.png", Texture.class);
+        assetManager.load("info/MovementDirectionLeft.png", Texture.class);
+        assetManager.load("info/MovementDirectionRight.png", Texture.class);
 
         assetManager.load("hud/ArmorIcon.png", Texture.class);
         assetManager.load("hud/ShieldIcon.png", Texture.class);

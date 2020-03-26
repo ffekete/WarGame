@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.wargame.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRenderer {
     private List<Actor> objects;
-    private int drawSpritesAfterLayer = 2;
+    private int drawSpritesAfterLayer = 3;
 
     private Vector2 topRight = new Vector2();
     private Vector2 bottomLeft = new Vector2();
@@ -47,6 +48,13 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
         beginRender();
         int currentLayer = 0;
         for (MapLayer layer : map.getLayers()) {
+
+            if(layer.getName().equals("directionLayer") && !Config.showDirectionMarkers)
+                continue;
+
+            if(layer.getName().equals("movementMarkersLayer") && !Config.showMovementMarkers)
+                continue;
+
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
                     renderTileLayer((TiledMapTileLayer) layer);

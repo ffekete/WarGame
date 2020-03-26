@@ -4,10 +4,12 @@ import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.mygdx.wargame.battle.map.decoration.MovementDirectionDrawable;
 import com.mygdx.wargame.battle.map.decoration.MovementMarkerDrawable;
 import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
+import com.mygdx.wargame.battle.unit.Direction;
 
 public class BattleMap {
 
@@ -122,6 +124,34 @@ public class BattleMap {
                 layer.setCell(i, j, null);
             }
         }
+    }
+
+    public void addDirectionMarker(Direction direction, int x, int y) {
+
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+
+        switch (direction) {
+            case Up:
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionUp.png", Texture.class))));
+                break;
+            case Down:
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionDown.png", Texture.class))));
+                break;
+            case Left:
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionLeft.png", Texture.class))));
+                break;
+            case Right:
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionRight.png", Texture.class))));
+                break;
+        }
+
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("directionLayer");
+        layer.setCell(x, y, cell);
+    }
+
+    public void removeDirectionMarker(int x, int y) {
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("directionLayer");
+        layer.setCell(x, y, null);
     }
 
     public void addPathMarker(int x, int y) {

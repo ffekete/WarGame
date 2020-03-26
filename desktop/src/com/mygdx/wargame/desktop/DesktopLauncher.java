@@ -13,8 +13,8 @@ public class
 DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1920;
-        config.height = 1080;
+        config.width = SCREEN_SIZE_X;
+        config.height = SCREEN_SIZE_Y;
         config.fullscreen = false;
 
         new LwjglApplication(new WarGame(), config);
@@ -22,6 +22,5 @@ DesktopLauncher {
         SCREEN_SIZE_X = Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor()).width;
         SCREEN_SIZE_Y = Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor()).height;
         System.out.println(HUD_VIEWPORT_WIDTH.get() + " " + HUD_VIEWPORT_HEIGHT.get());
-        //ScreenRegister.I.getMainMenuScreen().resize(HUD_VIEWPORT_WIDTH.get(), HUD_VIEWPORT_HEIGHT.get());
     }
 }

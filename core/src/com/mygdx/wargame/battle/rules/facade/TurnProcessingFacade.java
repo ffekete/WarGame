@@ -20,12 +20,7 @@ import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.battle.unit.action.AttackAction;
-import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
-import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
-import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
-import com.mygdx.wargame.battle.unit.action.LockAction;
-import com.mygdx.wargame.battle.unit.action.UnlockAction;
+import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
@@ -199,6 +194,8 @@ public class TurnProcessingFacade {
                         // then attack
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
+                        attackActions.addAction(new RemoveDirectionMarkerAction(selectedMech.getX(), selectedMech.getY(), battleMap));
+                        attackActions.addAction(new AddDirectionMarkerAction(selectedMech, battleMap));
                         attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech(), minRange));
                         attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);

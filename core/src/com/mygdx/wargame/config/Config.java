@@ -44,13 +44,10 @@ public class Config {
     public static int SCREEN_SIZE_X = 1920;
     public static int SCREEN_SIZE_Y = 1080;
 
-    public static final int VIEWPORT_WIDTH = 30;
-    public static final int VIEWPORT_HEIGHT = 17;
-
     public static final int SCREEN_HUD_RATIO = 4;
 
-    public static Supplier<Integer> HUD_VIEWPORT_WIDTH = () -> 960;
-    public static Supplier<Integer> HUD_VIEWPORT_HEIGHT = () -> 540;
+    public static Supplier<Integer> HUD_VIEWPORT_WIDTH = () -> (int)(1920 * 0.75f);
+    public static Supplier<Integer> HUD_VIEWPORT_HEIGHT = () -> (int)(1080 * 0.75f);;
 
     public static int treeSpread = 5;
 
