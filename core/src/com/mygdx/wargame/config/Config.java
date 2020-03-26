@@ -37,6 +37,8 @@ public class Config {
         public boolean isShowMovementMarkers() {
             return showMovementMarkers;
         }
+
+        public boolean showRangeMarkers = true;
     }
 
     public static Cfg cfg = new Cfg();
@@ -57,6 +59,8 @@ public class Config {
 
     public static boolean showMovementMarkers = true;
 
+    public static boolean showRangeMarkers = true;
+
     public static void load() {
         try {
             FileHandle file = Gdx.files.getFileHandle("configuration.json", Files.FileType.Local);
@@ -70,6 +74,7 @@ public class Config {
             CLOUD_DENSITY = cfg.cloudDensity;
             treeSpread = cfg.treeSpread;
             showMovementMarkers = cfg.showMovementMarkers;
+            showRangeMarkers = cfg.showRangeMarkers;
 
         } catch (GdxRuntimeException gre) {
             cfg = new Cfg();

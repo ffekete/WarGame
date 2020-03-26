@@ -55,6 +55,9 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
             if(layer.getName().equals("movementMarkersLayer") && !Config.showMovementMarkers)
                 continue;
 
+            if(layer.getName().equals("rangeMarkersLayer") && !Config.showRangeMarkers)
+                continue;
+
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
                     renderTileLayer((TiledMapTileLayer) layer);

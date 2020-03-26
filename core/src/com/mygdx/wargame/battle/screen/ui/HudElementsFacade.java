@@ -89,6 +89,9 @@ public class HudElementsFacade {
     private TextButton rangedAttackButton;
     private TextButton selectWeaponButton;
 
+    private TextButton showRageMarkersButton;
+    private TextButton hideRageMarkersButton;
+
     private TextButton mainMenuButton;
 
     private Table sidePanel;
@@ -326,6 +329,28 @@ public class HudElementsFacade {
             }
         });
 
+        showRageMarkersButton = new TextButton("show range", sidePanelButtonStyle);
+        hideRageMarkersButton = new TextButton("hide range", sidePanelButtonStyle);
+
+        showRageMarkersButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cfg.showRangeMarkers = !cfg.showRangeMarkers;
+                Config.save();
+                showRangeMarkers = cfg.showRangeMarkers;
+                populateSidePanel();
+            }
+        });
+
+        hideRageMarkersButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cfg.showRangeMarkers = !cfg.showRangeMarkers;
+                Config.save();
+                showRangeMarkers = cfg.showRangeMarkers;
+                populateSidePanel();
+            }
+        });
 
         populateSidePanel();
         show();
@@ -351,11 +376,6 @@ public class HudElementsFacade {
         sidePanel.clear();
         sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
-        if (!showMovementMarkers) {
-            sidePanel.add(showMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        } else {
-            sidePanel.add(dontShowMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        }
         sidePanel.row();
 
         if (showDirectionMarkers) {
@@ -368,12 +388,28 @@ public class HudElementsFacade {
 
         sidePanel.row();
 
+        if (showRangeMarkers) {
+            sidePanel.add(hideRageMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        } else {
+            sidePanel.add(showRageMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        }
+
+        if (!showMovementMarkers) {
+            sidePanel.add(showMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        } else {
+            sidePanel.add(dontShowMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        }
+        sidePanel.row();
+
+        sidePanel.row();
+
         if(turnProcessingFacade.getNext() != null && turnProcessingFacade.getNext().getKey().isRangedAttack()) {
             sidePanel.add(rangedAttackButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
             sidePanel.add(selectWeaponButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         } else {
             sidePanel.add(meleeAttackButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         }
+
     }
 
     public void update() {
