@@ -27,6 +27,7 @@ AbstractMech extends Actor implements Mech {
     private boolean attacked;
     private boolean moved;
     private boolean active;
+    private boolean rangedAttack;
 
     protected IsometricAnimatedSprite isometricSprite;
 
@@ -167,5 +168,15 @@ AbstractMech extends Actor implements Mech {
         return getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(w -> ((Weapon) w).getAmmo()).reduce((a, b) -> {
             return Optional.of(a.orElse(0) + b.orElse(0));
         }).orElse(Optional.of(0)).get();
+    }
+
+    @Override
+    public boolean isRangedAttack() {
+        return rangedAttack;
+    }
+
+    @Override
+    public void setRangedAttack(boolean rangedAttack) {
+        this.rangedAttack = rangedAttack;
     }
 }

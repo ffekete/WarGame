@@ -102,4 +102,7 @@ public interface Mech extends Comparable<Mech> {
     int getMaxHp(BodyPart bodyPart);
 
     int getAmmoCount();
+
+    boolean isRangedAttack();
+    void setRangedAttack(boolean rangedAttack);
 }
