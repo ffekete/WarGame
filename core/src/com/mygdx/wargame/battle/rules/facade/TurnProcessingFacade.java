@@ -1,15 +1,20 @@
 package com.mygdx.wargame.battle.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.CreateSelectionMarkerAction;
 import com.mygdx.wargame.battle.action.IntAction;
 import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
+import com.mygdx.wargame.battle.action.RemoveSelectionMarkerAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
+import com.mygdx.wargame.battle.map.decoration.SelectionMarker;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
@@ -18,6 +23,7 @@ import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
 import com.mygdx.wargame.battle.rules.facade.target.Target;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
+import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.unit.action.*;
@@ -33,7 +39,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-public class TurnProcessingFacade {
+public class
+TurnProcessingFacade {
 
     private Map<AbstractMech, Pilot> allSorted = new TreeMap<>();
     private ActionLock actionLock;
@@ -130,6 +137,12 @@ public class TurnProcessingFacade {
             AbstractMech selectedMech = next.getKey();
             Pilot selectedPilot = next.getValue();
 
+            isometricTiledMapRendererWithSprites.removeAll(SelectionMarker.class);
+
+            SelectionMarker selectionMarker = new SelectionMarker(assetManagerLoaderV2.getAssetManager().get("info/SelectionMarker.png", Texture.class));
+            selectionMarker.setPosition(selectedMech.getX() -0.75f, selectedMech.getY() + 0.75f);
+            isometricTiledMapRendererWithSprites.addObject(selectionMarker);
+
             if (!selectedMech.isActive()) {
                 // skip, if deactivated
                 if (iterator.hasNext()) {
@@ -174,7 +187,9 @@ public class TurnProcessingFacade {
                         GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
                                 battleMap.getNodeGraph().getNodeWeb()[(int) target.get().getTargetNode().getX()][(int) target.get().getTargetNode().getY()]);
 
+                        sequenceAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRendererWithSprites));
                         sequenceAction.addAction(moveActorAlongPathActionFactory.getMovementAction(paths, (AbstractMech) selectedMech));
+                        sequenceAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRendererWithSprites, assetManagerLoaderV2, selectedMech));
 
                     } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
                         // reconnect graph so that attacker can move
@@ -207,6 +222,7 @@ public class TurnProcessingFacade {
                     }
                     //sequenceAction.addAction(new UnlockAction(actionLock, "Eof AI attack"));
 
+                    sequenceAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRendererWithSprites));
                     stageElementsStorage.stage.addAction(sequenceAction);
                 }
 

@@ -34,6 +34,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("info/MovementDirectionDown.png", Texture.class);
         assetManager.load("info/MovementDirectionLeft.png", Texture.class);
         assetManager.load("info/MovementDirectionRight.png", Texture.class);
+        assetManager.load("info/SelectionMarker.png", Texture.class);
 
         assetManager.load("hud/ArmorIcon.png", Texture.class);
         assetManager.load("hud/ShieldIcon.png", Texture.class);
@@ -69,8 +70,16 @@ public class AssetManagerLoaderV2 {
 
         assetManager.load("bullets/Laser.png", Texture.class);
         assetManager.load("bullets/Missile.png", Texture.class);
+        assetManager.load("bullets/CannonBullet.png", Texture.class);
 
         assetManager.load("effects/Explosion.png", Texture.class);
+
+        assetManager.load("windows/Window.png", Texture.class);
+
+        assetManager.load("common/CheckboxChecked.png", Texture.class);
+        assetManager.load("common/CheckboxOnChecked.png", Texture.class);
+        assetManager.load("common/CheckboxUnchecked.png", Texture.class);
+        assetManager.load("common/CheckboxOnUnchecked.png", Texture.class);
 
         assetManager.finishLoading();
     }

@@ -17,6 +17,7 @@ import com.mygdx.wargame.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
@@ -41,6 +42,11 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
 
     public void removeObject(Actor object) {
         objects.remove(object);
+    }
+
+    public void removeAll(Class clazz) {
+        objects.removeAll(objects.stream().filter(object -> object.getClass().isAssignableFrom(clazz))
+                .collect(Collectors.toList()));
     }
 
     @Override

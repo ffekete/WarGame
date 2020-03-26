@@ -7,6 +7,8 @@ import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.BattleScreenInputData;
 import com.mygdx.wargame.battle.screen.BattleScreenV2;
 import com.mygdx.wargame.common.ScreenRegister;
+import com.mygdx.wargame.common.component.weapon.ballistic.LargeCannon;
+import com.mygdx.wargame.common.component.weapon.ballistic.SmallCannon;
 import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
 import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
 import com.mygdx.wargame.common.mech.AbstractMech;
@@ -51,8 +53,8 @@ public class WarGame extends Game {
         mech.setActive(true);
         mech.setPosition(0,0);
         mech.setStability(100);
-        mech.addComponent(BodyPart.LeftArm, new MissileLauncher());
-        mech.addComponent(BodyPart.RightArm, new MissileLauncher());
+        mech.addComponent(BodyPart.LeftArm, new LargeCannon());
+        mech.addComponent(BodyPart.RightArm, new SmallCannon());
 
 
         AbstractMech mech2 = new Templar("AI", assetManagerLoaderV2);

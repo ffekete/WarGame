@@ -5,6 +5,7 @@ public class HUDMediator {
     private HudElementsFacade hudElementsFacade;
     private BattleGameMenuFacade battleGameMenuFacade;
     private GameEndFacade gameEndFacade;
+    private WeaponSelectionFacade weaponSelectionFacade;
 
     public HUDMediator() {
     }
@@ -36,5 +37,13 @@ public class HUDMediator {
 
     public void setGameEndFacade(GameEndFacade gameEndFacade) {
         this.gameEndFacade = gameEndFacade;
+    }
+
+    public WeaponSelectionFacade getWeaponSelectionFacade() {
+        return weaponSelectionFacade;
+    }
+
+    public void setWeaponSelectionFacade(WeaponSelectionFacade weaponSelectionFacade) {
+        this.weaponSelectionFacade = weaponSelectionFacade;
     }
 }

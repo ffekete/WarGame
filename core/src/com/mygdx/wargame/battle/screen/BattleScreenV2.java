@@ -16,8 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.wargame.battle.action.CreateSelectionMarkerAction;
 import com.mygdx.wargame.battle.action.IntAction;
 import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
+import com.mygdx.wargame.battle.action.RemoveSelectionMarkerAction;
 import com.mygdx.wargame.battle.action.RepopulateRangeMarkersAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
@@ -34,6 +36,7 @@ import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
+import com.mygdx.wargame.battle.screen.ui.WeaponSelectionFacade;
 import com.mygdx.wargame.battle.unit.action.AddDirectionMarkerAction;
 import com.mygdx.wargame.battle.unit.action.AttackAction;
 import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
@@ -44,6 +47,7 @@ import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.util.DrawUtils;
+import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -64,6 +68,7 @@ public class BattleScreenV2 implements Screen {
     private BattleMap battleMap;
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
+    private WeaponSelectionFacade weaponSelectionFacade;
 
     public void load(AssetManagerLoaderV2 assetManagerLoader, BattleScreenInputData battleScreenInputData) {
 
@@ -168,7 +173,7 @@ public class BattleScreenV2 implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
-                if (actionLock.isLocked() || turnProcessingFacade.getNext().getKey().moved())
+                if (actionLock.isLocked())
                     return;
 
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
@@ -180,6 +185,10 @@ public class BattleScreenV2 implements Screen {
                     SequenceAction sequenceAction = new SequenceAction();
                     Optional<Map.Entry<AbstractMech, Pilot>> pilotAtCoordinates = battleScreenInputData.getAiTeam().entrySet().stream().filter(entry -> mechAtCoordinates.get() == entry.getKey()).findFirst();
                     int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
+                    if(minRange < MathUtils.getDistance(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY())) {
+                        return;
+                    }
+
                     ParallelAction attackActions = new ParallelAction();
                     attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
                     attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
@@ -201,6 +210,11 @@ public class BattleScreenV2 implements Screen {
                     stageElementsStorage.stage.addAction(sequenceAction);
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                 } else {
+
+                    if(turnProcessingFacade.getNext().getKey().moved()) {
+                        return;
+                    }
+
                     GraphPath<Node> path = battleMap.calculatePath(
                             battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
                             battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
@@ -215,8 +229,10 @@ public class BattleScreenV2 implements Screen {
                     battleMap.clearRangeMarkers();
 
                     SequenceAction moveThenUpdateAction = new SequenceAction();
+                    moveThenUpdateAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRenderer));
                     moveThenUpdateAction.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
                     moveThenUpdateAction.addAction(new RepopulateRangeMarkersAction(battleMap, turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey(), weaponRangeMarkerUpdater));
+                    moveThenUpdateAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRenderer, assetManagerLoader, turnProcessingFacade.getNext().getKey()));
 
                     stage.addAction(moveThenUpdateAction);
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]);
@@ -246,6 +262,12 @@ public class BattleScreenV2 implements Screen {
                 return true;
             }
         });
+
+        weaponSelectionFacade = new WeaponSelectionFacade(assetManagerLoader, hudMediator, turnProcessingFacade);
+        weaponSelectionFacade.create();
+        weaponSelectionFacade.registerComponents(hudStage);
+        hudMediator.setWeaponSelectionFacade(weaponSelectionFacade);
+
     }
 
     @Override

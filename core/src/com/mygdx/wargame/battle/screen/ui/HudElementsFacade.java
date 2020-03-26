@@ -92,6 +92,10 @@ public class HudElementsFacade {
     private TextButton showRageMarkersButton;
     private TextButton hideRageMarkersButton;
 
+    private TextButton movedIcon;
+    private TextButton attackedIcon;
+
+
     private TextButton mainMenuButton;
 
     private Table sidePanel;
@@ -236,6 +240,12 @@ public class HudElementsFacade {
         mechNameLabel = labelPool.obtain();
         pilotNameLabel = labelPool.obtain();
 
+        movedIcon = new TextButton("moved: ", sidePanelButtonStyle);
+        attackedIcon = new TextButton("attacked: ", sidePanelButtonStyle);
+
+        upperHud.add(movedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        upperHud.add(attackedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+
         upperHud.add(mechNameLabel).padRight(5);
         upperHud.add(pilotNameLabel).padRight(5);
 
@@ -270,6 +280,17 @@ public class HudElementsFacade {
         hideMovementDirectionsButton = new TextButton("no directions", sidePanelButtonStyle);
 
         selectWeaponButton = new TextButton("select weapon", sidePanelButtonStyle);
+
+        selectWeaponButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                turnProcessingFacade.getBattleMap().clearRangeMarkers();
+                hudMediator.getWeaponSelectionFacade().show();
+                hudMediator.getWeaponSelectionFacade().update(turnProcessingFacade.getNext().getKey());
+                hide();
+            }
+        });
+
         meleeAttackButton = new TextButton("melee", sidePanelButtonStyle);
         rangedAttackButton = new TextButton("ranged", sidePanelButtonStyle);
 
@@ -462,6 +483,9 @@ public class HudElementsFacade {
 
         pilotNameLabel.setText(turnProcessingFacade.getNext().getValue().getName());
         mechNameLabel.setText("(" + turnProcessingFacade.getNext().getKey().getName() + ")");
+
+        movedIcon.setText(turnProcessingFacade.getNext().getKey().moved() ? "moved" : "mp available: " + turnProcessingFacade.getNext().getKey().getMovementPoints());
+        attackedIcon.setText(turnProcessingFacade.getNext().getKey().attacked() ? "attacked" : "not attacked");
     }
 
     private Optional<Integer> getAmmoCount() {
