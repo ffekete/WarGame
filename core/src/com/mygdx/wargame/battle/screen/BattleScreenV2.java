@@ -208,6 +208,7 @@ public class BattleScreenV2 implements Screen {
                     sequenceAction.addAction(new DelayAction(5f));
 
                     stageElementsStorage.stage.addAction(sequenceAction);
+                    battleMap.clearRangeMarkers();
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                 } else {
 
