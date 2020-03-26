@@ -1,48 +1,32 @@
 package com.mygdx.wargame.battle.unit.action;
 
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.mygdx.wargame.battle.unit.State;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.mygdx.wargame.common.mech.Mech;
-import com.mygdx.wargame.util.MathUtils;
 
-public class AttackAnimationAction extends Action {
+public class AttackAnimationAction extends TemporalAction {
 
     private Mech attackerMech;
-    private Mech defenderMech;
-    private double counter = 0;
-    private int duration = 0;
-    private int minRange;
-    private int length = 0;
 
-    public AttackAnimationAction(Mech attackerMech, Mech defenderMech, int minRange) {
-        this.minRange = minRange;
+    private int x, y;
+    private int ox, oy;
+
+    public AttackAnimationAction(Mech attackerMech, Mech defenderMech) {
         this.attackerMech = attackerMech;
-        this.defenderMech = defenderMech;
-        length = attackerMech.getSelectedWeapons().stream()
-                .map(weapon -> weapon.getDamageMultiplier())
-                .reduce((a, b) -> a + b).orElse(999);
+
+        x = (int) (defenderMech.getX() - attackerMech.getX());
+        y = (int) (defenderMech.getY() - attackerMech.getY());
+
+        ox = (int)attackerMech.getX();
+        oy = (int)attackerMech.getY();
+        this.setDuration(0.25f);
     }
 
     @Override
-    public boolean act(float delta) {
-        if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) > minRange) {
-            // not in range, can't do anything
-            return true;
+    protected void update(float percent) {
+        if (percent < 0.99f) {
+            attackerMech.setPosition(ox + x * percent, oy + y * percent);
+        } else {
+            attackerMech.setPosition(ox, oy);
         }
-
-        counter += delta;
-
-        attackerMech.setState(State.Attack);
-
-        if (counter > 0.25f) {
-            duration++;
-            counter = 0.0f;
-        }
-
-        if (duration >= length && duration > 1) {
-            attackerMech.setState(State.Idle);
-            return true;
-        }
-        return false;
     }
 }

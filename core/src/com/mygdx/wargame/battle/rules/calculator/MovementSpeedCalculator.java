@@ -39,9 +39,6 @@ public class MovementSpeedCalculator {
         // terrain
         baseSpeed += battleMap.getTerrainType().getMovementModifier();
 
-        // skills
-        baseSpeed += Math.ceil(pilot.getSkills().get(Skill.Piloting) * 0.1d);
-
         // damage
         if (mech.getHp(BodyPart.LeftLeg) <= 0 || mech.getHp(BodyPart.LeftLeg) <= 0) {
             baseSpeed *= 0.5f;

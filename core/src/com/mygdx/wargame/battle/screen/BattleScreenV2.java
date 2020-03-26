@@ -193,8 +193,12 @@ public class BattleScreenV2 implements Screen {
                     attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
                     attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
                     attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
-                    attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), minRange));
-                    attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+
+                    if(!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
+                        attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
+                    } else {
+                        attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+                    }
 
                     int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
                     int ammoBeforeAttack = turnProcessingFacade.getNext().getKey().getAmmoCount();

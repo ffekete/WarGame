@@ -105,4 +105,6 @@ public interface Mech extends Comparable<Mech> {
 
     boolean isRangedAttack();
     void setRangedAttack(boolean rangedAttack);
+
+    int getMeleeDamage();
 }

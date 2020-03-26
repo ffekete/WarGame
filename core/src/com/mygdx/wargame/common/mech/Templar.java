@@ -191,4 +191,10 @@ public class Templar extends AbstractMech {
     public int getMovementPoints() {
         return this.movementPoints;
     }
+
+
+    @Override
+    public int getMeleeDamage() {
+        return 8;
+    }
 }

@@ -191,4 +191,9 @@ public class Gunner extends AbstractMech {
     public int getMovementPoints() {
         return this.movementPoints;
     }
+
+    @Override
+    public int getMeleeDamage() {
+        return 5;
+    }
 }

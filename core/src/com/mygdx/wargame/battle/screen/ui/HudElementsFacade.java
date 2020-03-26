@@ -486,6 +486,8 @@ public class HudElementsFacade {
 
         movedIcon.setText(turnProcessingFacade.getNext().getKey().moved() ? "moved" : "mp available: " + turnProcessingFacade.getNext().getKey().getMovementPoints());
         attackedIcon.setText(turnProcessingFacade.getNext().getKey().attacked() ? "attacked" : "not attacked");
+
+        meleeAttackButton.setText("melee [" + turnProcessingFacade.getNext().getKey().getMeleeDamage() + " dmg]");
     }
 
     private Optional<Integer> getAmmoCount() {

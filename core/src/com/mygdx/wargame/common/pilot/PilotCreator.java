@@ -45,7 +45,7 @@ public class PilotCreator {
         skills.put(Skill.Lasers, new Random().nextInt(10));
         skills.put(Skill.Missiles, new Random().nextInt(10));
         skills.put(Skill.Evading, new Random().nextInt(10));
-        skills.put(Skill.Piloting, new Random().nextInt(10));
+        skills.put(Skill.Melee, new Random().nextInt(10));
 
         Pilot pilot = new Pilot(skills,
                 new HashSet<>()
