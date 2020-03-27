@@ -13,7 +13,7 @@ public class CannonBullet extends AbstractBullet {
 
 
     public CannonBullet(AssetManager assetManager) {
-        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/CannonBullet.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/CannonBullet.png", Texture.class), 5);
     }
 
     @Override

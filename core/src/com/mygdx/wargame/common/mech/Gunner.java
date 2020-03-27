@@ -49,7 +49,7 @@ public class Gunner extends AbstractMech {
             .build();
 
     public Gunner(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(10, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Gunner.png", Texture.class)));
+        super(10, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Gunner.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);

@@ -21,6 +21,8 @@ import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.config.Config;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class WeaponSelectionFacade {
 
     private Table outerTable;
@@ -78,10 +80,8 @@ public class WeaponSelectionFacade {
         checkBoxStyle.checkboxOver = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("common/CheckboxOnUnchecked.png", Texture.class));
 
         innerTable = new Table();
-        scrollPane = new ScrollPane(innerTable);
-
-        outerTable.add(scrollPane).row();
-        outerTable.add(exitButton).bottom();
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPane = new ScrollPane(innerTable, scrollPaneStyle);
 
     }
 
@@ -98,34 +98,109 @@ public class WeaponSelectionFacade {
     }
 
     public void update(AbstractMech abstractMech) {
+
         innerTable.clear();
+        outerTable.clear();
+        innerTable.setSize(350, 380);
+//
+//        innerTable.setDebug(true);
+//        outerTable.setDebug(true);
+
+        int initialHeat = abstractMech.getHeatLevel();
+        AtomicInteger nextHeatLevel = new AtomicInteger(initialHeat);
+        Label nextHeat = new Label("Heat after firing: " + nextHeatLevel, labelStyle);
+        outerTable.add(new Label("Initial heat: " + initialHeat, labelStyle));
+        outerTable.add(nextHeat).row();
+
+        AtomicInteger initialArmorDamage = new AtomicInteger(abstractMech.getSelectedWeapons().stream().map(weapon -> weapon.getDamageMultiplier() * weapon.getArmorDamage()).reduce((a,b) -> a+b).orElse(0));
+        Label maxArmorDamageLabel = new Label("Total armor damage: " + initialArmorDamage, labelStyle);
+        outerTable.add(maxArmorDamageLabel).colspan(2).pad(5).row();
+
+        AtomicInteger initialShieldDamage = new AtomicInteger(abstractMech.getSelectedWeapons().stream().map(weapon -> weapon.getDamageMultiplier() * weapon.getShieldDamage()).reduce((a,b) -> a+b).orElse(0));
+        Label maxShieldDamageLabel = new Label("Total shield damage: " + initialShieldDamage, labelStyle);
+        outerTable.add(maxShieldDamageLabel).colspan(2).pad(5).row();
+
+        AtomicInteger initialBodyDamage = new AtomicInteger(abstractMech.getSelectedWeapons().stream().map(weapon -> weapon.getDamageMultiplier() * weapon.getBodyDamage()).reduce((a,b) -> a+b).orElse(0));
+        Label maxBodyDamageLabel = new Label("Total body damage: " + initialBodyDamage, labelStyle);
+        outerTable.add(maxBodyDamageLabel).colspan(2).pad(5).row();
+
+        AtomicInteger initialStabilityDamage = new AtomicInteger(abstractMech.getSelectedWeapons().stream().map(weapon -> weapon.getDamageMultiplier() * weapon.getStabilityHit()).reduce((a,b) -> a+b).orElse(0));
+        Label maxStabilityDamageLabel = new Label("Total stability damage: " + initialStabilityDamage, labelStyle);
+        outerTable.add(maxStabilityDamageLabel).colspan(2).pad(5).row();
+
+        AtomicInteger initialHeatDamage = new AtomicInteger(abstractMech.getSelectedWeapons().stream().map(weapon -> weapon.getDamageMultiplier() * weapon.getAdditionalHeatToEnemy()).reduce((a,b) -> a+b).orElse(0));
+        Label maxHeatDamageLabel = new Label("Total heat damage: " + initialHeatDamage, labelStyle);
+        outerTable.add(maxHeatDamageLabel).colspan(2).pad(5).row();
+
+        outerTable.add(scrollPane).colspan(2).size(380, 380).row();
+        outerTable.add(exitButton).colspan(2).bottom();
+
         abstractMech.getAllComponents().stream()
                 .filter(component -> Weapon.class.isAssignableFrom(component.getClass()))
                 .map(component -> (Weapon)component)
                 .filter(weapon -> weapon.getStatus() != Status.Destroyed)
                 .forEach(weapon -> {
-                    CheckBox checkBox = new CheckBox(weapon.getName(), checkBoxStyle);
+                    CheckBox checkBox = new CheckBox("", checkBoxStyle);
 
                     checkBox.setChecked(weapon.getStatus() == Status.Selected);
+                    nextHeatLevel.addAndGet(weapon.getStatus() == Status.Selected ? weapon.getHeat() : 0);
 
                     checkBox.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             if(checkBox.isChecked()) {
                                 weapon.setStatus(Status.Selected);
+                                nextHeatLevel.addAndGet(weapon.getHeat());
+                                initialArmorDamage.addAndGet(weapon.getArmorDamage());
+                                initialShieldDamage.addAndGet(weapon.getShieldDamage());
+                                initialBodyDamage.addAndGet(weapon.getBodyDamage());
+                                initialStabilityDamage.addAndGet(weapon.getStabilityHit());
+                                initialHeatDamage.addAndGet(weapon.getAdditionalHeatToEnemy());
                             } else {
+                                nextHeatLevel.addAndGet(-weapon.getHeat());
+                                initialArmorDamage.addAndGet(-weapon.getArmorDamage());
+                                initialShieldDamage.addAndGet(-weapon.getShieldDamage());
+                                initialBodyDamage.addAndGet(-weapon.getBodyDamage());
+                                initialStabilityDamage.addAndGet(-weapon.getStabilityHit());
+                                initialHeatDamage.addAndGet(-weapon.getAdditionalHeatToEnemy());
+
                                 weapon.setStatus(Status.Active);
                             }
+                            nextHeat.setText("Heat after firing: " + nextHeatLevel);
+                            colorHeatLabel(nextHeatLevel, nextHeat);
+                            maxArmorDamageLabel.setText("Total armor damage: " + initialArmorDamage);
+                            maxShieldDamageLabel.setText("Total shield damage: " + initialShieldDamage);
+                            maxBodyDamageLabel.setText("Total body damage: " + initialBodyDamage);
+                            maxStabilityDamageLabel.setText("Total stability damage: " + initialStabilityDamage);
+                            maxHeatDamageLabel.setText("Total heat damage: " + initialHeatDamage);
                         }
                     });
 
-                    innerTable.add(checkBox).padRight(5);
-                    innerTable.add(new Label("Ammo: " + weapon.getAmmo().orElse(0), labelStyle)).padRight(5);
-                    innerTable.add(new Label("Heat: " + weapon.getHeat(), labelStyle)).padRight(5);
-                    innerTable.add(new Label("Range: " + weapon.getRange(), labelStyle)).padRight(5);
+                    innerTable.add(checkBox).padRight(10);
+                    innerTable.add(new Label(weapon.getName(), labelStyle)).left().padRight(10);
+                    innerTable.add(new Label("Ammo: " + weapon.getAmmo().orElse(0), labelStyle)).left().padRight(10);
+                    innerTable.add(new Label("Heat: " + weapon.getHeat(), labelStyle)).left().padRight(10);
+                    innerTable.add(new Label("Range: " + weapon.getRange(), labelStyle)).left().padRight(10);
                     innerTable.row();
                 });
 
+        nextHeat.setText("Heat after firing: " + nextHeatLevel);
+        colorHeatLabel(nextHeatLevel, nextHeat);
+        maxArmorDamageLabel.setText("Total armor damage: " + initialArmorDamage);
+        maxShieldDamageLabel.setText("Total shield damage: " + initialShieldDamage);
+        maxBodyDamageLabel.setText("Total body damage: " + initialBodyDamage);
+        maxStabilityDamageLabel.setText("Total stability damage: " + initialStabilityDamage);
+
+    }
+
+    private void colorHeatLabel(AtomicInteger nextHeatLevel, Label nextHeat) {
+        if (nextHeatLevel.intValue() >= 100) {
+            nextHeat.setColor(Color.RED);
+        } else if (nextHeatLevel.intValue() >= 75) {
+            nextHeat.setColor(Color.YELLOW);
+        } else {
+            nextHeat.setColor(Color.GREEN);
+        }
     }
 
 }

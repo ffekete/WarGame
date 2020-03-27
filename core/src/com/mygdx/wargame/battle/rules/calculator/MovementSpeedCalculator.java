@@ -15,7 +15,7 @@ public class MovementSpeedCalculator {
         if (mech.getStability() <= 0)
             return 0;
 
-        if (mech.getHp(BodyPart.LeftLeg) <= 0 && mech.getHp(BodyPart.LeftLeg) <= 0)
+        if (mech.getHp(BodyPart.LeftLeg) <= 0 && mech.getHp(BodyPart.RightLeg) <= 0)
             return 0;
 
         int baseSpeed = mech.getMaxMovementPoints();
@@ -40,7 +40,7 @@ public class MovementSpeedCalculator {
         baseSpeed += battleMap.getTerrainType().getMovementModifier();
 
         // damage
-        if (mech.getHp(BodyPart.LeftLeg) <= 0 || mech.getHp(BodyPart.LeftLeg) <= 0) {
+        if (mech.getHp(BodyPart.LeftLeg) <= 0 || mech.getHp(BodyPart.RightLeg) <= 0) {
             baseSpeed *= 0.5f;
         }
 

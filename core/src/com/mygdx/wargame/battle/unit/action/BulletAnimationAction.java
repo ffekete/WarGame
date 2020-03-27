@@ -3,10 +3,10 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
@@ -26,6 +26,7 @@ import com.mygdx.wargame.util.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class
 BulletAnimationAction extends Action {
@@ -119,8 +120,9 @@ BulletAnimationAction extends Action {
                 float length = (float) MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY());
 
                 if (weapon.getType() == WeaponType.Flamer) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
-                    moveActorByBezierLine.setDuration(length * 0.3f);
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, 5, -5, true);
+                    moveActorByBezierLine.setDuration(length * 0.5f);
+                    moveActorByBezierLine.setTarget(bullet);
                 } else if (weapon.getType() == WeaponType.Missile) {
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
                     moveActorByBezierLine.setDuration(length * 0.3f);
@@ -165,12 +167,41 @@ BulletAnimationAction extends Action {
 
                     explosionAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
 
-                    explosionAction.addAction(new DestroyTileAction(battleMap, (int)end.x, (int)end.y));
+                    explosionAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y));
 
                     sequenceAction.addAction(explosionAction);
                 }
 
                 sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
+
+                Actor hitEffect = null;
+                switch (weapon.getType()) {
+                    case Ballistic:
+                        hitEffect = new CannonHitEffect(assetManager);
+                        break;
+                    case Missile:
+                        hitEffect = new MissileHitEffect(assetManager);
+                        break;
+                    case Laser:
+                        hitEffect = new LaserHitEffect(assetManager);
+                        break;
+                    case Plasma:
+                        hitEffect = new PlasmaHitEffect(assetManager);
+                        break;
+                    case Ion:
+                        hitEffect = new IonHitEffect(assetManager);
+                        break;
+                    case Flamer:
+                        hitEffect = new FlamerHitEffect(assetManager);
+                        break;
+                }
+
+                hitEffect.setPosition(end.x, end.y);
+                hitEffect.setRotation(new Random().nextInt(360));
+                sequenceAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, hitEffect));
+                sequenceAction.addAction(new DelayAction(0.25f));
+                sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, hitEffect, null));
+
 
                 parallelAction.addAction(sequenceAction);
             }

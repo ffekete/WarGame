@@ -4,17 +4,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 
-public class FlameBullet extends AbstractBullet {
+public class LaserHitEffect extends AbstractBullet {
 
     private IsometricAnimatedSprite isometricAnimatedSprite;
-    private float delay = 0f;
-    private int col = 0;
 
-    public FlameBullet(AssetManager assetManager) {
-        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/FlamerBullet.png", Texture.class), 3);
+    public LaserHitEffect(AssetManager assetManager) {
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/LaserHit.png", Texture.class), 5);
     }
 
     @Override

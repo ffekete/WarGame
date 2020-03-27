@@ -9,11 +9,9 @@ import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 public class MissileBullet extends AbstractBullet {
 
     private IsometricAnimatedSprite isometricAnimatedSprite;
-    private float delay = 0f;
-    private int col = 0;
 
     public MissileBullet(AssetManager assetManager) {
-        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Missile.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Missile.png", Texture.class), 5);
     }
 
     @Override

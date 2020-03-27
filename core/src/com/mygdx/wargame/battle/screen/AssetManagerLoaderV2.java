@@ -27,6 +27,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mechs/Templar.png", Texture.class);
         assetManager.load("mechs/Gunner.png", Texture.class);
 
+
         assetManager.load("info/PathMarker.png", Texture.class);
         assetManager.load("info/RangeMarker.png", Texture.class);
         assetManager.load("info/MovementMarker.png", Texture.class);
@@ -69,8 +70,16 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mainmenu/MainMenuButtonBackground.png", Texture.class);
 
         assetManager.load("bullets/Laser.png", Texture.class);
+        assetManager.load("bullets/PlasmaBullet.png", Texture.class);
+        assetManager.load("bullets/LaserHit.png", Texture.class);
+        assetManager.load("bullets/PlasmaHit.png", Texture.class);
         assetManager.load("bullets/Missile.png", Texture.class);
         assetManager.load("bullets/CannonBullet.png", Texture.class);
+        assetManager.load("bullets/CannonHit.png", Texture.class);
+        assetManager.load("bullets/IonHit.png", Texture.class);
+        assetManager.load("bullets/IonBullet.png", Texture.class);
+        assetManager.load("bullets/FlamerBullet.png", Texture.class);
+        assetManager.load("bullets/FlamerHit.png", Texture.class);
 
         assetManager.load("effects/Explosion.png", Texture.class);
 

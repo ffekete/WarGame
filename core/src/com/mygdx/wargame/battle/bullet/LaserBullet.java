@@ -12,7 +12,7 @@ public class LaserBullet extends AbstractBullet {
     private IsometricAnimatedSprite isometricAnimatedSprite;
 
     public LaserBullet(AssetManager assetManager) {
-        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Laser.png", Texture.class));
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Laser.png", Texture.class), 5);
     }
 
     @Override

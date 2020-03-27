@@ -9,8 +9,13 @@ import com.mygdx.wargame.battle.screen.BattleScreenV2;
 import com.mygdx.wargame.common.ScreenRegister;
 import com.mygdx.wargame.common.component.weapon.ballistic.LargeCannon;
 import com.mygdx.wargame.common.component.weapon.ballistic.SmallCannon;
+import com.mygdx.wargame.common.component.weapon.flamer.Flamer;
+import com.mygdx.wargame.common.component.weapon.ion.EnhancedSmallIonCannon;
+import com.mygdx.wargame.common.component.weapon.laser.ExtendedRangeLargeLaser;
 import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
+import com.mygdx.wargame.common.component.weapon.laser.SmallLaser;
 import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
+import com.mygdx.wargame.common.component.weapon.plasma.PlasmaCannon;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Gunner;
@@ -53,8 +58,13 @@ public class WarGame extends Game {
         mech.setActive(true);
         mech.setPosition(0,0);
         mech.setStability(100);
-        mech.addComponent(BodyPart.LeftArm, new LargeCannon());
+        mech.addComponent(BodyPart.LeftArm, new PlasmaCannon());
+        mech.addComponent(BodyPart.LeftArm, new EnhancedSmallIonCannon());
+        mech.addComponent(BodyPart.LeftArm, new Flamer());
+
         mech.addComponent(BodyPart.RightArm, new SmallCannon());
+        mech.addComponent(BodyPart.RightArm, new SmallLaser());
+        mech.addComponent(BodyPart.RightArm, new MissileLauncher());
 
 
         AbstractMech mech2 = new Templar("AI", assetManagerLoaderV2);

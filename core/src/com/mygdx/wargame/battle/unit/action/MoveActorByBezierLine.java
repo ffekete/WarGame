@@ -9,6 +9,22 @@ public class MoveActorByBezierLine extends TemporalAction {
     private CatmullRomSpline<Vector2> myCatmull;
     private boolean roatate = false;
 
+    public MoveActorByBezierLine(float sx, float sy, float ex, float ey, float ox, float oy, boolean rotate) {
+
+        Vector2[] points = new Vector2[4];
+
+        points[0] = new Vector2(sx + ox, sy  + oy);
+        points[3] = new Vector2(ex + ox, ey +oy);
+
+        points[1] = new Vector2(sx, sy);
+        points[2] = new Vector2(ex, ey);
+
+        this.roatate = rotate;
+
+
+        myCatmull = new CatmullRomSpline<Vector2>(points, false);
+    }
+
     public MoveActorByBezierLine(float sx, float sy, float ex, float ey, boolean rotate) {
 
         Vector2[] points = new Vector2[4];

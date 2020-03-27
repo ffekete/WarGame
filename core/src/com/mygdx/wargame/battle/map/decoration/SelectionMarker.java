@@ -12,6 +12,6 @@ import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 public class SelectionMarker extends IsometricAnimatedSprite {
 
     public SelectionMarker(Texture texture) {
-        super(texture);
+        super(texture, 30);
     }
 }
