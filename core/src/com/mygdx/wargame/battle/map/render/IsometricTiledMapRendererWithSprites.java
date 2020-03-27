@@ -23,7 +23,7 @@ import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRenderer {
     private List<Actor> objects;
-    private int drawSpritesAfterLayer = 3;
+    private int drawSpritesAfterLayer = 5;
 
     private Vector2 topRight = new Vector2();
     private Vector2 bottomLeft = new Vector2();

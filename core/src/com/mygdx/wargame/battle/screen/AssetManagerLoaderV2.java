@@ -84,6 +84,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("effects/Explosion.png", Texture.class);
 
         assetManager.load("windows/Window.png", Texture.class);
+        assetManager.load("windows/Tooltip.png", Texture.class);
 
         assetManager.load("common/CheckboxChecked.png", Texture.class);
         assetManager.load("common/CheckboxOnChecked.png", Texture.class);

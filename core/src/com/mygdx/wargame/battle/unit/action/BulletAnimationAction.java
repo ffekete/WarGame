@@ -108,6 +108,7 @@ BulletAnimationAction extends Action {
                     bullet = new IonBullet(assetManager);
                 } else if (weapon.getType() == WeaponType.Flamer) {
                     bullet = new FlameBullet(assetManager);
+                    bullet.setRotation(85);
 
                 } else {
                     bullet = new CannonBullet(assetManager);
@@ -117,10 +118,13 @@ BulletAnimationAction extends Action {
                 MoveActorByBezierLine moveActorByBezierLine = null;
                 Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
                 Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
+
+                bullet.setPosition(start.x, start.y);
+
                 float length = (float) MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY());
 
                 if (weapon.getType() == WeaponType.Flamer) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, 5, -5, true);
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, 5, -5, false);
                     moveActorByBezierLine.setDuration(length * 0.5f);
                     moveActorByBezierLine.setTarget(bullet);
                 } else if (weapon.getType() == WeaponType.Missile) {
@@ -158,6 +162,8 @@ BulletAnimationAction extends Action {
                 else
                     sequenceAction.addAction(moveToAction);
 
+                sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
+
                 if (weapon.getType() == WeaponType.Missile) {
                     MissileExplosion explosion = new MissileExplosion(assetManager);
                     explosion.setPosition(defenderMech.getX(), defenderMech.getY());
@@ -171,8 +177,6 @@ BulletAnimationAction extends Action {
 
                     sequenceAction.addAction(explosionAction);
                 }
-
-                sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
 
                 Actor hitEffect = null;
                 switch (weapon.getType()) {

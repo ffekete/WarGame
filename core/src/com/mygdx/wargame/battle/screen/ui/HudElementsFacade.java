@@ -56,6 +56,12 @@ public class HudElementsFacade {
     private Tooltip<Table> ammoToolTip;
     private Table ammoTooltipTable;
 
+    private Tooltip<Table> movementToolTip;
+    private Table movementsTooltipTable;
+
+    private Tooltip<Table> attackToolTip;
+    private Table attackTooltipTable;
+
     private TextButton healthImage;
     private Label healthValueLabel;
 
@@ -157,6 +163,7 @@ public class HudElementsFacade {
         shieldTooltipTable = new Table();
         shieldToolTip = new Tooltip<Table>(shieldTooltipTable);
         shieldToolTip.setInstant(true);
+        shieldTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
         //shieldTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         shieldTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
         shieldTooltipTable.add(new Label("Shield protects against energy based attacks.\nIt slowly regenerates over time until the component is destroyed.", labelStyle));
@@ -174,6 +181,7 @@ public class HudElementsFacade {
         armorTooltipTable = new Table();
         armorToolTip = new Tooltip<>(armorTooltipTable);
         armorToolTip.setInstant(true);
+        armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
         //armorTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         armorTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
@@ -188,10 +196,30 @@ public class HudElementsFacade {
         ammoTooltipTable = new Table();
         ammoToolTip = new Tooltip<Table>(ammoTooltipTable);
         ammoToolTip.setInstant(true);
+        ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
         //ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         ammoTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
         ammoValueLabel.addListener(ammoToolTip);
         ammoImage.addListener(ammoToolTip);
+
+
+        movementsTooltipTable = new Table();
+        movementToolTip = new Tooltip<Table>(movementsTooltipTable);
+        movementToolTip.setInstant(true);
+        movementsTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
+        //ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        movementsTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
+        Label movementTooltipLabel = new Label("Mech movement status. All mechs can move once per turn, \nthe available movement points are displayed here.", labelStyle);
+        movementsTooltipTable.add(movementTooltipLabel);
+
+        attackTooltipTable = new Table();
+        attackToolTip = new Tooltip<Table>(attackTooltipTable);
+        attackToolTip.setInstant(true);
+        attackTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
+        //ammoTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        attackTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
+        Label attackTooltipLabel = new Label("Mech attack status.\nAll mechs can attack once per turn, after movement or before.\nIf attack happens before movement the mech cannot move in the same turn.", labelStyle);
+        attackTooltipTable.add(attackTooltipLabel);
 
         healthImage = new TextButton("", sidePanelButtonStyle);
         healthValueLabel = labelPool.obtain();
@@ -201,6 +229,7 @@ public class HudElementsFacade {
         healthTooltipTable = new Table();
         healthToolTip = new Tooltip<Table>(healthTooltipTable);
         healthToolTip.setInstant(true);
+        healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
         //healthTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         healthTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
@@ -215,6 +244,7 @@ public class HudElementsFacade {
         heatTooltipTable = new Table();
         heatToolTip = new Tooltip<Table>(heatTooltipTable);
         heatToolTip.setInstant(true);
+        heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
         //heatTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
         heatTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
@@ -230,7 +260,7 @@ public class HudElementsFacade {
         stabilityTooltipTable = new Table();
         stabilityToolTip = new Tooltip<Table>(stabilityTooltipTable);
         stabilityToolTip.setInstant(true);
-        //stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("skin/SimplePanel.png", Texture.class))).pad(80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO, 80 / SCREEN_HUD_RATIO);
+        stabilityTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
         stabilityTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
 
         stabilityValueLabel.addListener(stabilityToolTip);
@@ -241,7 +271,10 @@ public class HudElementsFacade {
         pilotNameLabel = labelPool.obtain();
 
         movedIcon = new TextButton("moved: ", sidePanelButtonStyle);
+        movedIcon.addListener(movementToolTip);
+
         attackedIcon = new TextButton("attacked: ", sidePanelButtonStyle);
+        attackedIcon.addListener(attackToolTip);
 
         upperHud.add(movedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         upperHud.add(attackedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
