@@ -20,7 +20,7 @@ public class MovementDirectionDrawable extends TextureRegionDrawable {
     @Override
     public TextureRegion getRegion() {
         counter += Gdx.graphics.getDeltaTime();
-        if(counter > 0.1f) {
+        if(counter > 0.5f) {
             counter = 0;
             step = (step + 1)% size;
         }
