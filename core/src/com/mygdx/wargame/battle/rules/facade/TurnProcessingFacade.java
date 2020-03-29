@@ -40,6 +40,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 public class
+
 TurnProcessingFacade {
 
     private Map<AbstractMech, Pilot> allSorted = new TreeMap<>();
@@ -138,6 +139,10 @@ TurnProcessingFacade {
             Pilot selectedPilot = next.getValue();
 
             isometricTiledMapRendererWithSprites.removeAll(SelectionMarker.class);
+            battleMap.clearRangeMarkers();
+            battleMap.clearMovementMarkers();
+            battleMap.clearPathMarkers();
+            hudMediator.getHudElementsFacade().populateSidePanel();
 
             SelectionMarker selectionMarker = new SelectionMarker(assetManagerLoaderV2.getAssetManager().get("info/SelectionMarker.png", Texture.class));
             selectionMarker.setPosition(selectedMech.getX() -0.75f, selectedMech.getY() + 0.75f);

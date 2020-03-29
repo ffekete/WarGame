@@ -7,21 +7,15 @@ import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.common.component.Component;
-import com.mygdx.wargame.common.component.weapon.Status;
-import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
-import com.mygdx.wargame.common.component.weapon.ballistic.SmallCannon;
+import com.mygdx.wargame.common.component.weapon.ballistic.LargeCannonMk3;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class Gunner extends AbstractMech {
+public class Fighter extends AbstractMech {
 
     public static final int LEFT_HAND_HP = 10;
     public static final int RIGHT_HAND_HP = 10;
@@ -33,16 +27,16 @@ public class Gunner extends AbstractMech {
     private String name;
     private int movementPoints;
 
-    public Gunner(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(10, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Gunner.png", Texture.class), 60));
+    public Fighter(String name, AssetManagerLoaderV2 assetManagerLoader) {
+        super(30, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Fighter.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
 
         bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
-                .put(BodyPart.LeftArm, 3)
-                .put(BodyPart.RightArm, 3)
+                .put(BodyPart.LeftArm, 0)
+                .put(BodyPart.RightArm, 0)
                 .put(BodyPart.LeftLeg, 5)
                 .put(BodyPart.RightLeg, 5)
                 .put(BodyPart.Torso, 3)
@@ -66,24 +60,22 @@ public class Gunner extends AbstractMech {
         hp.put(BodyPart.Head, getHeadMaxHp());
 
         weaponSlots = ImmutableMap.<BodyPart, List<WeaponSlot>>builder()
-                .put(BodyPart.LeftArm, ImmutableList.of(new WeaponSlot(ImmutableList.of(WeaponType.Ballistic)), new WeaponSlot(ImmutableList.of(WeaponType.Ballistic))))
-                .put(BodyPart.RightArm, ImmutableList.of(new WeaponSlot(ImmutableList.of(WeaponType.Ballistic)), new WeaponSlot(ImmutableList.of(WeaponType.Ballistic))))
+                .put(BodyPart.Torso, ImmutableList.of(
+                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma)),
+                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma))))
                 .build();
 
         bodyDefinition = ImmutableMap.<BodyPart, Optional<String>>builder()
-                .put(BodyPart.LeftLeg, Optional.of("Left leg"))
-                .put(BodyPart.RightLeg, Optional.of("Right leg"))
-                .put(BodyPart.Head, Optional.of("Head"))
-                .put(BodyPart.Torso, Optional.of("Torso"))
-                .put(BodyPart.LeftArm, Optional.of("Left arm"))
-                .put(BodyPart.RightArm, Optional.of("Right arm"))
+                .put(BodyPart.LeftLeg, Optional.of("Left wing"))
+                .put(BodyPart.RightLeg, Optional.of("Right wing"))
+                .put(BodyPart.Head, Optional.of("Cockpit"))
+                .put(BodyPart.Torso, Optional.of("Trunk"))
+                .put(BodyPart.LeftArm, Optional.empty())
+                .put(BodyPart.RightArm, Optional.empty())
                 .build();
 
-        addWeapon(BodyPart.LeftArm, new SmallCannon());
-        addWeapon(BodyPart.LeftArm, new SmallCannon());
-
-        addWeapon(BodyPart.RightArm, new SmallCannon());
-        addWeapon(BodyPart.RightArm, new SmallCannon());
+        addWeapon(BodyPart.Torso, new LargeCannonMk3());
+        addWeapon(BodyPart.Torso, new LargeCannonMk3());
     }
 
 
@@ -99,7 +91,7 @@ public class Gunner extends AbstractMech {
 
     @Override
     public int getMaxMovementPoints() {
-        return 3;
+        return 6;
     }
 
     @Override
@@ -109,7 +101,7 @@ public class Gunner extends AbstractMech {
 
     @Override
     public int getStabilityResistance() {
-        return 100;
+        return 0;
     }
 
     @Override
@@ -177,6 +169,6 @@ public class Gunner extends AbstractMech {
 
     @Override
     public int getMeleeDamage() {
-        return 5;
+        return 0;
     }
 }

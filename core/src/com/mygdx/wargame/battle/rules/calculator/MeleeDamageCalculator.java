@@ -18,6 +18,7 @@ import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Perks;
 import com.mygdx.wargame.common.pilot.Pilot;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class MeleeDamageCalculator {
 
         // select body part to damage
         if (targetedBodyPart == null) {
-            bodyPart = BodyPart.values()[new Random().nextInt(BodyPart.values().length)];
+            bodyPart = (BodyPart) targetMech.getDefinedBodyParts().keySet().stream().filter(Objects::nonNull).toArray()[new Random().nextInt((int)targetMech.getDefinedBodyParts().keySet().stream().filter(Objects::nonNull).count())];
         } else {
             bodyPart = targetedBodyPart;
         }

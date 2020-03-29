@@ -9,13 +9,13 @@ import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface Mech extends Comparable<Mech> {
     public int getHp(BodyPart bodyPart);
 
-    // true if bodypaert is destroyed
-    public boolean setHp(BodyPart bodyPart, int hp);
+    public void setHp(BodyPart bodyPart, int hp);
 
     public float getX();
 
@@ -113,4 +113,6 @@ public interface Mech extends Comparable<Mech> {
     Set<Weapon> getAllWeapons(BodyPart bodyPart);
 
     boolean addWeapon(BodyPart bodyPart, Weapon weapon);
+
+    Map<BodyPart, String> getDefinedBodyParts();
 }

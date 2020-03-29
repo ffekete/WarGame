@@ -10,6 +10,7 @@ import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class HeatDamageCalculator {
@@ -26,10 +27,7 @@ public class HeatDamageCalculator {
     }
 
     public void calculate(Mech targetMech, Weapon weapon, SequenceAction sequenceAction) {
-        BodyPart bodyPartToDamage = Arrays.stream(BodyPart.values())
-                .filter(bodyPart -> targetMech.getSelectedWeapons().stream().anyMatch(w -> w == weapon))
-                .findFirst()
-                .get();
+        BodyPart bodyPartToDamage = (BodyPart) targetMech.getDefinedBodyParts().keySet().stream().filter(Objects::nonNull).toArray()[new Random().nextInt((int)targetMech.getDefinedBodyParts().keySet().stream().filter(Objects::nonNull).count())];
 
         int amount = new Random().nextInt(3) + 1;
         targetMech.setHp(bodyPartToDamage, targetMech.getHp(bodyPartToDamage) - amount);

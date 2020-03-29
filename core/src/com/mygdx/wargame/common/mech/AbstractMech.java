@@ -6,16 +6,13 @@ import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.Team;
+import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.mygdx.wargame.common.component.weapon.Status.Destroyed;
@@ -39,9 +36,55 @@ AbstractMech extends Actor implements Mech {
 
     protected IsometricAnimatedSprite isometricSprite;
 
+    protected Map<BodyPart, Optional<String>> bodyDefinition;
+
+    protected Map<BodyPart, Set<Component>> components;
+
+    protected Map<BodyPart, Integer> bodyPartSizeLimitations;
+
+    protected Map<BodyPart, Integer> hp = new HashMap<>();
+
     public AbstractMech(int initiative, IsometricAnimatedSprite isometricSprite) {
         this.initiative = initiative;
         this.isometricSprite = isometricSprite;
+        stability = 100;
+        heatLevel = 0;
+    }
+
+    @Override
+    public int getHp(BodyPart bodyPart) {
+        if(bodyDefinition.get(bodyPart).isPresent())
+            return hp.get(bodyPart);
+        else
+            return 0;
+    }
+
+    @Override
+    public void setHp(BodyPart bodyPart, int hp) {
+        if(bodyDefinition.get(bodyPart).isPresent()) {
+            this.hp.put(bodyPart, hp);
+        }
+    }
+
+    @Override
+    public Set<Component> getAllComponents() {
+        return components.values().stream().filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Component> getComponents(BodyPart bodyPart) {
+        return bodyDefinition.get(bodyPart).isPresent() ? components.get(bodyPart)  : new HashSet<>();
+    }
+
+    @Override
+    public void addComponent(BodyPart bodyPart, Component component) {
+
+        if(!bodyDefinition.get(bodyPart).isPresent())
+            return;
+
+        if (this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
+            return;
+        this.components.get(bodyPart).add(component);
     }
 
     public void setState(State state) {
@@ -207,6 +250,9 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public Set<Weapon> getAllWeapons(BodyPart bodyPart) {
+        if(!weaponSlots.containsKey(bodyPart))
+            return Collections.EMPTY_SET;
+
         return weaponSlots.get(bodyPart).stream()
                 .filter(weaponSlot -> weaponSlot.getWeapon().getStatus() != Destroyed)
                 .map(WeaponSlot::getWeapon)
@@ -227,5 +273,12 @@ AbstractMech extends Actor implements Mech {
         });
 
         return weaponSlot.isPresent();
+    }
+
+    @Override
+    public Map<BodyPart, String> getDefinedBodyParts() {
+        return bodyDefinition.entrySet().stream()
+                .filter(entry -> entry.getValue().isPresent()).collect(Collectors.toMap(entry -> entry.getKey()
+                , entry -> entry.getValue().orElse(null)));
     }
 }

@@ -426,7 +426,7 @@ public class HudElementsFacade {
         sidePanel.setVisible(true);
     }
 
-    private void populateSidePanel() {
+    public void populateSidePanel() {
         sidePanel.clear();
         sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
@@ -477,11 +477,12 @@ public class HudElementsFacade {
         ammoImage.setText("ammo: " + ammoValueLabel.getText());
 
         armorTooltipTable.clear();
-        Arrays.stream(BodyPart.values()).forEach(bodyPart -> {
+        turnProcessingFacade.getNext()
+                .getKey().getDefinedBodyParts().entrySet().forEach(entry -> {
             Label armorLabel = labelPool.obtain();
             Label partLabel = labelPool.obtain();
-            partLabel.setText(bodyPart.name());
-            armorLabel.setText(turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0) + " / " + turnProcessingFacade.getNext().getKey().getComponents(bodyPart).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a, b) -> a + b).orElse(0));
+            partLabel.setText(entry.getValue());
+            armorLabel.setText(turnProcessingFacade.getNext().getKey().getComponents(entry.getKey()).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0) + " / " + turnProcessingFacade.getNext().getKey().getComponents(entry.getKey()).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a, b) -> a + b).orElse(0));
             armorTooltipTable.add(partLabel).padRight(20);
             armorTooltipTable.add(armorLabel).row();
         });
@@ -496,14 +497,14 @@ public class HudElementsFacade {
             ammoTooltipTable.add(ammoLabel).row();
         });
 
-        healthValueLabel.setText("" + (int) (100f * Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getHp(b)).reduce((a, b) -> a + b).orElse(0) / (float) Arrays.stream(BodyPart.values()).map(b -> turnProcessingFacade.getNext().getKey().getMaxHp(b)).reduce((a, b) -> a + b).orElse(0)));
+        healthValueLabel.setText("" + (int) (100f * turnProcessingFacade.getNext().getKey().getDefinedBodyParts().keySet().stream().map(b -> turnProcessingFacade.getNext().getKey().getHp(b)).reduce((a, b) -> a + b).orElse(0) / (float) turnProcessingFacade.getNext().getKey().getDefinedBodyParts().keySet().stream().map(b -> turnProcessingFacade.getNext().getKey().getMaxHp(b)).reduce((a, b) -> a + b).orElse(0)));
         healthImage.setText("HP: " + healthValueLabel.getText() + "%");
         healthTooltipTable.clear();
-        Arrays.stream(BodyPart.values()).forEach(bodyPart -> {
+        turnProcessingFacade.getNext().getKey().getDefinedBodyParts().entrySet().forEach(entry -> {
             Label hpLabel = labelPool.obtain();
             Label partLabel = labelPool.obtain();
-            partLabel.setText(bodyPart.name());
-            hpLabel.setText(+turnProcessingFacade.getNext().getKey().getHp(bodyPart) + " / " + turnProcessingFacade.getNext().getKey().getMaxHp(bodyPart));
+            partLabel.setText(entry.getValue());
+            hpLabel.setText(+turnProcessingFacade.getNext().getKey().getHp(entry.getKey()) + " / " + turnProcessingFacade.getNext().getKey().getMaxHp(entry.getKey()));
             healthTooltipTable.add(partLabel);
             healthTooltipTable.add(hpLabel).row();
         });

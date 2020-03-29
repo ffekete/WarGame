@@ -11,12 +11,14 @@ import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
+import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,32 +34,30 @@ public class Templar extends AbstractMech {
     private String name;
     private int movementPoints;
 
-    private Map<BodyPart, Integer> bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
-            .put(BodyPart.LeftArm, 3)
-            .put(BodyPart.RightArm, 3)
-            .put(BodyPart.LeftLeg, 5)
-            .put(BodyPart.RightLeg, 5)
-            .put(BodyPart.Torso, 3)
-            .put(BodyPart.Head, 3)
-            .build();
-
-    private Map<BodyPart, Integer> hp = new HashMap<>();
-
-    private Map<BodyPart, Set<Component>> components = ImmutableMap.<BodyPart, Set<Component>>builder()
-            .put(BodyPart.LeftArm, new HashSet<>())
-            .put(BodyPart.RightArm, new HashSet<>())
-            .put(BodyPart.LeftLeg, new HashSet<>())
-            .put(BodyPart.RightLeg, new HashSet<>())
-            .put(BodyPart.Torso, new HashSet<>())
-            .put(BodyPart.Head, new HashSet<>())
-            .build();
-
     public Templar(String name, AssetManagerLoaderV2 assetManagerLoader) {
         super(20, new IsometricAnimatedMechSprite(assetManagerLoader.getAssetManager().get("mechs/Templar.png", Texture.class)));
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
+
+        bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
+                .put(BodyPart.LeftArm, 3)
+                .put(BodyPart.RightArm, 3)
+                .put(BodyPart.LeftLeg, 5)
+                .put(BodyPart.RightLeg, 5)
+                .put(BodyPart.Torso, 3)
+                .put(BodyPart.Head, 3)
+                .build();
+
+        components = ImmutableMap.<BodyPart, Set<Component>>builder()
+                .put(BodyPart.LeftArm, new HashSet<>())
+                .put(BodyPart.RightArm, new HashSet<>())
+                .put(BodyPart.LeftLeg, new HashSet<>())
+                .put(BodyPart.RightLeg, new HashSet<>())
+                .put(BodyPart.Torso, new HashSet<>())
+                .put(BodyPart.Head, new HashSet<>())
+                .build();
 
         hp.put(BodyPart.LeftArm, getLeftHandMaxHp());
         hp.put(BodyPart.RightArm, getRightHandMaxHp());
@@ -71,6 +71,17 @@ public class Templar extends AbstractMech {
                 .put(BodyPart.RightArm, ImmutableList.of(new WeaponSlot(ImmutableList.of(WeaponType.Laser))))
                 .build();
 
+        bodyDefinition = ImmutableMap.<BodyPart, Optional<String>>builder()
+                .put(BodyPart.LeftLeg, Optional.of("Left leg"))
+                .put(BodyPart.RightLeg, Optional.of("Right leg"))
+                .put(BodyPart.Head, Optional.of("Head"))
+                .put(BodyPart.Torso, Optional.of("Torso"))
+                .put(BodyPart.LeftArm, Optional.of("Left arm"))
+                .put(BodyPart.RightArm, Optional.of("Right arm"))
+                .build();
+
+        addWeapon(BodyPart.RightArm, new LargeLaser());
+        addWeapon(BodyPart.LeftArm, new LargeLaser());
     }
 
 
@@ -128,35 +139,6 @@ public class Templar extends AbstractMech {
     public int getHeadMaxHp() {
         return HEAD_HP;
     }
-
-    @Override
-    public int getHp(BodyPart bodyPart) {
-        return hp.get(bodyPart);
-    }
-
-    @Override
-    public boolean setHp(BodyPart bodyPart, int hp) {
-        this.hp.put(bodyPart, hp);
-        return this.hp.get(bodyPart) <= 0;
-    }
-
-    @Override
-    public void addComponent(BodyPart bodyPart, Component component) {
-        if (this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
-            return;
-        this.components.get(bodyPart).add(component);
-    }
-
-    @Override
-    public Set<Component> getAllComponents() {
-        return components.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<Component> getComponents(BodyPart bodyPart) {
-        return components.get(bodyPart);
-    }
-
 
     @Override
     public void consumeMovementPoint(int amount) {
