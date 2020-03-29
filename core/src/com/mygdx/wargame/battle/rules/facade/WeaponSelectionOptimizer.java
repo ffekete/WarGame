@@ -16,16 +16,11 @@ public class WeaponSelectionOptimizer {
         }
 
         // deactivate all that is not destroyed yet
-        mech.getAllComponents().stream()
-                .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                .map(c -> ((Weapon)c))
-                .filter(w -> w.getStatus() != Status.Destroyed)
+        mech.getAllWeapons()
                 .forEach(w -> w.setStatus(Status.Active));
 
         // select all that has ammo or does not need ammo
-        mech.getAllComponents().stream()
-                .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                .map(c -> ((Weapon)c))
+        mech.getAllWeapons().stream()
                 .filter(w -> !w.getAmmo().isPresent() || w.getAmmo().get() > 0)
                 .forEach(w -> w.setStatus(Status.Selected));
 

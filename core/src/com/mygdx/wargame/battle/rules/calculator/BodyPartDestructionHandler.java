@@ -9,10 +9,14 @@ public class BodyPartDestructionHandler {
 
     public void destroy(Mech mech, BodyPart bodyPart) {
 
-        //System.out.println("Destroyed " + mech.getName() + " " + bodyPart);
+        System.out.println("Destroyed " + mech.getName() + " " + bodyPart);
 
-        mech.getComponents(bodyPart).forEach(b -> {
-            b.setStatus(Status.Destroyed);
+        mech.getComponents(bodyPart).forEach(c -> {
+            c.setStatus(Status.Destroyed);
+        });
+
+        mech.getAllWeapons(bodyPart).forEach(w -> {
+            w.setStatus(Status.Destroyed);
         });
 
         if (bodyPart == BodyPart.Head || bodyPart == BodyPart.Torso) {

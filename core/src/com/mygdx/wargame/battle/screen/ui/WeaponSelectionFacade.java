@@ -135,10 +135,7 @@ public class WeaponSelectionFacade {
         outerTable.add(scrollPane).colspan(2).size(380, 380).row();
         outerTable.add(exitButton).colspan(2).bottom();
 
-        abstractMech.getAllComponents().stream()
-                .filter(component -> Weapon.class.isAssignableFrom(component.getClass()))
-                .map(component -> (Weapon)component)
-                .filter(weapon -> weapon.getStatus() != Status.Destroyed)
+        abstractMech.getAllWeapons()
                 .forEach(weapon -> {
                     CheckBox checkBox = new CheckBox("", checkBoxStyle);
 

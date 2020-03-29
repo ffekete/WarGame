@@ -58,21 +58,18 @@ public class WarGame extends Game {
         mech.setActive(true);
         mech.setPosition(0,0);
         mech.setStability(100);
-        mech.addComponent(BodyPart.LeftArm, new PlasmaCannon());
-        mech.addComponent(BodyPart.LeftArm, new EnhancedSmallIonCannon());
-        mech.addComponent(BodyPart.LeftArm, new Flamer());
+        mech.addWeapon(BodyPart.LeftArm, new SmallCannon());
+        mech.addWeapon(BodyPart.LeftArm, new SmallCannon());
 
-        mech.addComponent(BodyPart.RightArm, new SmallCannon());
-        mech.addComponent(BodyPart.RightArm, new SmallLaser());
-        mech.addComponent(BodyPart.RightArm, new MissileLauncher());
-
+        mech.addWeapon(BodyPart.RightArm, new SmallCannon());
+        mech.addWeapon(BodyPart.RightArm, new SmallCannon());
 
         AbstractMech mech2 = new Templar("AI", assetManagerLoaderV2);
         mech2.setActive(true);
         mech2.setPosition(5, 5);
         mech2.setStability(100);
-        mech2.addComponent(BodyPart.RightArm, new LargeLaser());
-        mech2.addComponent(BodyPart.LeftArm, new LargeLaser());
+        mech2.addWeapon(BodyPart.RightArm, new LargeLaser());
+        mech2.addWeapon(BodyPart.LeftArm, new LargeLaser());
 
 
         battleScreenInputData.setPlayerTeam(ImmutableMap.<AbstractMech, Pilot>builder().put(mech, new PilotCreator().getPilot()).build());

@@ -2,6 +2,7 @@ package com.mygdx.wargame.common.mech;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedMechSprite;
@@ -9,10 +10,12 @@ import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
+import com.mygdx.wargame.common.component.weapon.WeaponType;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +65,11 @@ public class Templar extends AbstractMech {
         hp.put(BodyPart.RightLeg, getRightLegMaxHp());
         hp.put(BodyPart.Torso, getTorsoMaxHp());
         hp.put(BodyPart.Head, getHeadMaxHp());
+
+        weaponSlots = ImmutableMap.<BodyPart, List<WeaponSlot>>builder()
+                .put(BodyPart.LeftArm, ImmutableList.of(new WeaponSlot(ImmutableList.of(WeaponType.Laser))))
+                .put(BodyPart.RightArm, ImmutableList.of(new WeaponSlot(ImmutableList.of(WeaponType.Laser))))
+                .build();
 
     }
 
@@ -137,16 +145,6 @@ public class Templar extends AbstractMech {
         if (this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
             return;
         this.components.get(bodyPart).add(component);
-    }
-
-    @Override
-    public Set<Weapon> getSelectedWeapons() {
-        return components.entrySet().stream()
-                .flatMap(bp -> bp.getValue().stream())
-                .filter(c -> Weapon.class.isAssignableFrom(c.getClass()))
-                .map(c -> (Weapon) c)
-                .filter(w -> w.getStatus().equals(Status.Selected))
-                .collect(Collectors.toSet());
     }
 
     @Override

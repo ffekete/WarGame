@@ -107,4 +107,10 @@ public interface Mech extends Comparable<Mech> {
     void setRangedAttack(boolean rangedAttack);
 
     int getMeleeDamage();
+
+    Set<Weapon> getAllWeapons();
+
+    Set<Weapon> getAllWeapons(BodyPart bodyPart);
+
+    boolean addWeapon(BodyPart bodyPart, Weapon weapon);
 }

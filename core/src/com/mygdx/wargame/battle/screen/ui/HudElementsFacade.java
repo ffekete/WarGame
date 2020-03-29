@@ -487,7 +487,7 @@ public class HudElementsFacade {
         });
 
         ammoTooltipTable.clear();
-        turnProcessingFacade.getNext().getKey().getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(c -> (Weapon) c).forEach(w -> {
+        turnProcessingFacade.getNext().getKey().getAllWeapons().forEach(w -> {
             Label nameLabel = labelPool.obtain();
             nameLabel.setText(w.getShortName());
             Label ammoLabel = labelPool.obtain();
@@ -524,7 +524,7 @@ public class HudElementsFacade {
     }
 
     private Optional<Integer> getAmmoCount() {
-        return turnProcessingFacade.getNext().getKey().getAllComponents().stream().filter(c -> Weapon.class.isAssignableFrom(c.getClass())).map(w -> ((Weapon) w).getAmmo()).reduce((a, b) -> {
+        return turnProcessingFacade.getNext().getKey().getAllWeapons().stream().map(Weapon::getAmmo).reduce((a, b) -> {
             return Optional.of(a.orElse(0) + b.orElse(0));
         }).orElse(Optional.of(0));
     }
