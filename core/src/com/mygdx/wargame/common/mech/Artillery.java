@@ -99,7 +99,7 @@ public class Artillery extends AbstractMech {
 
     @Override
     public int getStabilityResistance() {
-        return 0;
+        return 100;
     }
 
     @Override
@@ -169,4 +169,5 @@ public class Artillery extends AbstractMech {
     public int getMeleeDamage() {
         return 0;
     }
+
 }

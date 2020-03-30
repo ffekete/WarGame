@@ -115,4 +115,6 @@ public interface Mech extends Comparable<Mech> {
     boolean addWeapon(BodyPart bodyPart, Weapon weapon);
 
     Map<BodyPart, String> getDefinedBodyParts();
+
+    boolean canMoveAfterAttack();
 }

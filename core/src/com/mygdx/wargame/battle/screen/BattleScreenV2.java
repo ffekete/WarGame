@@ -16,11 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.wargame.battle.action.CreateSelectionMarkerAction;
-import com.mygdx.wargame.battle.action.IntAction;
-import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
-import com.mygdx.wargame.battle.action.RemoveSelectionMarkerAction;
-import com.mygdx.wargame.battle.action.RepopulateRangeMarkersAction;
+import com.mygdx.wargame.battle.action.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
@@ -173,6 +169,7 @@ public class BattleScreenV2 implements Screen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
+
                 if (actionLock.isLocked())
                     return;
 
@@ -209,10 +206,17 @@ public class BattleScreenV2 implements Screen {
                     sequenceAction.addAction(new IntAction(ammoBeforeAttack, turnProcessingFacade.getNext().getKey()::getAmmoCount, 1f, hudMediator.getHudElementsFacade().getAmmoImage().getLabel(), "ammo: "));
                     sequenceAction.addAction(new DelayAction(0.5f));
                     sequenceAction.addAction(new IntAction(heatBeforeAttack, turnProcessingFacade.getNext().getKey()::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatImage().getLabel(), "heat: "));
-                    sequenceAction.addAction(new DelayAction(5f));
 
+                    sequenceAction.addAction(new ClearRangeMarkersAction(battleMap));
+
+                    if(turnProcessingFacade.getNext().getKey().canMoveAfterAttack()) {
+                        sequenceAction.addAction(new ClearMovementMarkersAction(battleMap));
+
+                        sequenceAction.addAction(new AddMovementMarkersAction(battleMap, turnProcessingFacade.getNext().getKey()));
+                    }
+                    sequenceAction.addAction(new DelayAction(5f));
                     stageElementsStorage.stage.addAction(sequenceAction);
-                    battleMap.clearRangeMarkers();
+                    //battleMap.clearRangeMarkers();
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                 } else {
 
@@ -238,11 +242,11 @@ public class BattleScreenV2 implements Screen {
                     moveThenUpdateAction.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
                     moveThenUpdateAction.addAction(new RepopulateRangeMarkersAction(battleMap, turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey(), weaponRangeMarkerUpdater));
                     moveThenUpdateAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRenderer, assetManagerLoader, turnProcessingFacade.getNext().getKey()));
-
+                    moveThenUpdateAction.addAction(new SetMovedAction(turnProcessingFacade.getNext().getKey()));
                     stage.addAction(moveThenUpdateAction);
                     battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]);
 
-                    turnProcessingFacade.getNext().getKey().setMoved(true);
+                    //turnProcessingFacade.getNext().getKey().setMoved(true);
                 }
             }
 

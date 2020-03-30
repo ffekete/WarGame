@@ -281,4 +281,10 @@ AbstractMech extends Actor implements Mech {
                 .filter(entry -> entry.getValue().isPresent()).collect(Collectors.toMap(entry -> entry.getKey()
                 , entry -> entry.getValue().orElse(null)));
     }
+
+
+    @Override
+    public boolean canMoveAfterAttack() {
+        return false;
+    }
 }

@@ -28,7 +28,7 @@ public class Tank extends AbstractMech {
     private int movementPoints;
 
     public Tank(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(30, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Tank.png", Texture.class), 60));
+        super(20, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Tank.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);
@@ -91,7 +91,7 @@ public class Tank extends AbstractMech {
 
     @Override
     public int getMaxMovementPoints() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Tank extends AbstractMech {
 
     @Override
     public int getStabilityResistance() {
-        return 0;
+        return 100;
     }
 
     @Override

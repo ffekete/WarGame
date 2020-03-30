@@ -1,9 +1,12 @@
 package com.mygdx.wargame.battle.rules.facade;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.map.decoration.SelectionMarker;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.calculator.BodyPartDestructionHandler;
 import com.mygdx.wargame.battle.rules.calculator.CriticalHitChanceCalculator;
@@ -13,13 +16,16 @@ import com.mygdx.wargame.battle.rules.calculator.HeatDamageCalculator;
 import com.mygdx.wargame.battle.rules.calculator.MeleeDamageCalculator;
 import com.mygdx.wargame.battle.rules.calculator.WeaponStabilityDecreaseCalculator;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Perks;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.common.pilot.Skill;
+import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
+import java.util.Map;
 import java.util.Random;
 
 public class AttackFacade {
@@ -35,6 +41,8 @@ public class AttackFacade {
     private HeatDamageCalculator heatDamageCalculator;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
     private MeleeDamageCalculator meleeDamageCalculator;
+    private AssetManager assetManager;
+    private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater;
 
     public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
 
@@ -44,6 +52,8 @@ public class AttackFacade {
         heatDamageCalculator = new HeatDamageCalculator(stageElementsStorage, actionLock);
         this.evasionCalculator = new EvasionCalculator();
         this.meleeDamageCalculator = new MeleeDamageCalculator(bodyPartDestructionHandler);
+        this.assetManager = assetManager;
+        this.weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
     }
 
     public void attack(Pilot attackingPilot, Mech attackingMech, Pilot defendingPilot, Mech defendingMech, BattleMap battleMap, BodyPart bodyPart) {
@@ -102,7 +112,11 @@ public class AttackFacade {
         }
 
         attackingMech.setAttacked(true);
-        attackingMech.setMoved(true);
+        if(attackingMech.canMoveAfterAttack() && attackingMech.getRemainingMovementPoints() > 0) {
+            attackingMech.setMoved(false);
+        } else {
+            attackingMech.setMoved(true);
+        }
 
         if (defendingMech.getHp(BodyPart.Torso) <= 0 || defendingMech.getHp(BodyPart.Head) <= 0) {
             defendingMech.setActive(false);

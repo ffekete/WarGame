@@ -28,7 +28,7 @@ public class Fighter extends AbstractMech {
     private int movementPoints;
 
     public Fighter(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(30, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Fighter.png", Texture.class), 60));
+        super(5, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Fighter.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);
@@ -170,5 +170,10 @@ public class Fighter extends AbstractMech {
     @Override
     public int getMeleeDamage() {
         return 0;
+    }
+
+    @Override
+    public boolean canMoveAfterAttack() {
+        return true;
     }
 }
