@@ -1,5 +1,6 @@
 package com.mygdx.wargame.common.mech;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
@@ -11,6 +12,7 @@ import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
+import com.mygdx.wargame.config.Config;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,6 +37,7 @@ AbstractMech extends Actor implements Mech {
     protected Map<BodyPart, List<WeaponSlot>> weaponSlots;
 
     protected IsometricAnimatedSprite isometricSprite;
+    protected IsometricAnimatedSprite enemyMarker;
 
     protected Map<BodyPart, Optional<String>> bodyDefinition;
 
@@ -44,16 +47,17 @@ AbstractMech extends Actor implements Mech {
 
     protected Map<BodyPart, Integer> hp = new HashMap<>();
 
-    public AbstractMech(int initiative, IsometricAnimatedSprite isometricSprite) {
+    public AbstractMech(int initiative, IsometricAnimatedSprite isometricSprite, IsometricAnimatedSprite enemyMarker) {
         this.initiative = initiative;
         this.isometricSprite = isometricSprite;
         stability = 100;
         heatLevel = 0;
+        this.enemyMarker = enemyMarker;
     }
 
     @Override
     public int getHp(BodyPart bodyPart) {
-        if(bodyDefinition.get(bodyPart).isPresent())
+        if (bodyDefinition.get(bodyPart).isPresent())
             return hp.get(bodyPart);
         else
             return 0;
@@ -61,7 +65,7 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public void setHp(BodyPart bodyPart, int hp) {
-        if(bodyDefinition.get(bodyPart).isPresent()) {
+        if (bodyDefinition.get(bodyPart).isPresent()) {
             this.hp.put(bodyPart, hp);
         }
     }
@@ -73,13 +77,13 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public Set<Component> getComponents(BodyPart bodyPart) {
-        return bodyDefinition.get(bodyPart).isPresent() ? components.get(bodyPart)  : new HashSet<>();
+        return bodyDefinition.get(bodyPart).isPresent() ? components.get(bodyPart) : new HashSet<>();
     }
 
     @Override
     public void addComponent(BodyPart bodyPart, Component component) {
 
-        if(!bodyDefinition.get(bodyPart).isPresent())
+        if (!bodyDefinition.get(bodyPart).isPresent())
             return;
 
         if (this.components.get(bodyPart).size() >= this.bodyPartSizeLimitations.get(bodyPart))
@@ -107,7 +111,21 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public void draw(Batch spriteBatch, float parentAlpha) {
+        if (Config.showTeamMarkers) {
+            enemyMarker.setPosition(getX(), getY());
+
+            if (team == Team.enemy) {
+                spriteBatch.setColor(Color.valueOf("FF000077"));
+            } else {
+                spriteBatch.setColor(Color.valueOf("00FF0077"));
+            }
+
+            enemyMarker.draw(spriteBatch, parentAlpha);
+        }
+        spriteBatch.setColor(Color.valueOf("FFFFFF"));
+
         isometricSprite.draw(spriteBatch, parentAlpha);
+
     }
 
     public int getInitiative() {
@@ -250,7 +268,7 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public Set<Weapon> getAllWeapons(BodyPart bodyPart) {
-        if(!weaponSlots.containsKey(bodyPart))
+        if (!weaponSlots.containsKey(bodyPart))
             return Collections.EMPTY_SET;
 
         return weaponSlots.get(bodyPart).stream()
@@ -279,7 +297,7 @@ AbstractMech extends Actor implements Mech {
     public Map<BodyPart, String> getDefinedBodyParts() {
         return bodyDefinition.entrySet().stream()
                 .filter(entry -> entry.getValue().isPresent()).collect(Collectors.toMap(entry -> entry.getKey()
-                , entry -> entry.getValue().orElse(null)));
+                        , entry -> entry.getValue().orElse(null)));
     }
 
 

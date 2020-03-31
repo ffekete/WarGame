@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedMechSprite;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
+import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.Status;
 import com.mygdx.wargame.common.component.weapon.Weapon;
@@ -35,7 +36,8 @@ public class Templar extends AbstractMech {
     private int movementPoints;
 
     public Templar(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(20, new IsometricAnimatedMechSprite(assetManagerLoader.getAssetManager().get("mechs/Templar.png", Texture.class)));
+        super(20, new IsometricAnimatedMechSprite(assetManagerLoader.getAssetManager().get("mechs/Templar.png", Texture.class)),
+                new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("info/EnemyMarker.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);

@@ -9,6 +9,7 @@ import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
 import com.mygdx.wargame.common.component.weapon.ballistic.LargeCannonMk3;
+import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,19 +29,20 @@ public class Fighter extends AbstractMech {
     private int movementPoints;
 
     public Fighter(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(5, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Fighter.png", Texture.class), 60));
+        super(5, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Fighter.png", Texture.class), 60),
+                new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("info/EnemyMarker.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);
         setSize(1, 1);
 
         bodyPartSizeLimitations = ImmutableMap.<BodyPart, Integer>builder()
-                .put(BodyPart.LeftArm, 0)
-                .put(BodyPart.RightArm, 0)
-                .put(BodyPart.LeftLeg, 5)
-                .put(BodyPart.RightLeg, 5)
-                .put(BodyPart.Torso, 3)
-                .put(BodyPart.Head, 3)
+                .put(BodyPart.LeftArm, 1)
+                .put(BodyPart.RightArm, 1)
+                .put(BodyPart.LeftLeg, 0)
+                .put(BodyPart.RightLeg, 0)
+                .put(BodyPart.Torso, 2)
+                .put(BodyPart.Head, 0)
                 .build();
 
         components = ImmutableMap.<BodyPart, Set<Component>>builder()
@@ -60,8 +62,9 @@ public class Fighter extends AbstractMech {
         hp.put(BodyPart.Head, getHeadMaxHp());
 
         weaponSlots = ImmutableMap.<BodyPart, List<WeaponSlot>>builder()
-                .put(BodyPart.Torso, ImmutableList.of(
-                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma)),
+                .put(BodyPart.LeftLeg, ImmutableList.of(
+                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma))))
+                .put(BodyPart.RightLeg, ImmutableList.of(
                         new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma))))
                 .build();
 
@@ -74,8 +77,8 @@ public class Fighter extends AbstractMech {
                 .put(BodyPart.RightArm, Optional.empty())
                 .build();
 
-        addWeapon(BodyPart.Torso, new LargeCannonMk3());
-        addWeapon(BodyPart.Torso, new LargeCannonMk3());
+        addWeapon(BodyPart.LeftLeg, new MissileLauncher());
+        addWeapon(BodyPart.RightLeg, new MissileLauncher());
     }
 
 

@@ -33,6 +33,7 @@ import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.screen.ui.WeaponSelectionFacade;
+import com.mygdx.wargame.battle.unit.Team;
 import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
@@ -111,11 +112,13 @@ public class BattleScreenV2 implements Screen {
         battleScreenInputData.getAiTeam().keySet().forEach(mech -> {
             isometricTiledMapRenderer.addObject(mech);
             battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
+            mech.setTeam(Team.enemy);
             //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
         battleScreenInputData.getPlayerTeam().keySet().forEach(mech -> {
             isometricTiledMapRenderer.addObject(mech);
             battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
+            mech.setTeam(Team.own);
             //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
 

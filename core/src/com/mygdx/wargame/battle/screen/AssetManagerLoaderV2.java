@@ -40,6 +40,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("info/MovementDirectionLeft.png", Texture.class);
         assetManager.load("info/MovementDirectionRight.png", Texture.class);
         assetManager.load("info/SelectionMarker.png", Texture.class);
+        assetManager.load("info/EnemyMarker.png", Texture.class);
 
         assetManager.load("hud/ArmorIcon.png", Texture.class);
         assetManager.load("hud/ShieldIcon.png", Texture.class);

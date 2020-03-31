@@ -39,6 +39,8 @@ public class Config {
         }
 
         public boolean showRangeMarkers = true;
+
+        public boolean showTeamMarkers = true;
     }
 
     public static Cfg cfg = new Cfg();
@@ -61,6 +63,8 @@ public class Config {
 
     public static boolean showRangeMarkers = true;
 
+    public static boolean showTeamMarkers = true;
+
     public static void load() {
         try {
             FileHandle file = Gdx.files.getFileHandle("configuration.json", Files.FileType.Local);
@@ -75,6 +79,7 @@ public class Config {
             treeSpread = cfg.treeSpread;
             showMovementMarkers = cfg.showMovementMarkers;
             showRangeMarkers = cfg.showRangeMarkers;
+            showTeamMarkers = cfg.showTeamMarkers;
 
         } catch (GdxRuntimeException gre) {
             cfg = new Cfg();

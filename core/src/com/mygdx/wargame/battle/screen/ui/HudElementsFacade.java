@@ -98,6 +98,9 @@ public class HudElementsFacade {
     private TextButton showRageMarkersButton;
     private TextButton hideRageMarkersButton;
 
+    private TextButton showTeamMarkersButton;
+    private TextButton hideTeamMarkersButton;
+
     private TextButton movedIcon;
     private TextButton attackedIcon;
 
@@ -406,6 +409,29 @@ public class HudElementsFacade {
             }
         });
 
+        showTeamMarkersButton = new TextButton("show team", sidePanelButtonStyle);
+        hideTeamMarkersButton = new TextButton("hide team", sidePanelButtonStyle);
+
+        showTeamMarkersButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cfg.showTeamMarkers = !cfg.showTeamMarkers;
+                Config.save();
+                showTeamMarkers = cfg.showTeamMarkers;
+                populateSidePanel();
+            }
+        });
+
+        hideTeamMarkersButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cfg.showTeamMarkers = !cfg.showTeamMarkers;
+                Config.save();
+                showTeamMarkers = cfg.showTeamMarkers;
+                populateSidePanel();
+            }
+        });
+
         populateSidePanel();
         show();
     }
@@ -429,7 +455,7 @@ public class HudElementsFacade {
     public void populateSidePanel() {
         sidePanel.clear();
         sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-
+        sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         sidePanel.row();
 
         if (showDirectionMarkers) {
@@ -438,7 +464,11 @@ public class HudElementsFacade {
             sidePanel.add(showMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         }
 
-        sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        if (showTeamMarkers) {
+            sidePanel.add(hideTeamMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        } else {
+            sidePanel.add(showTeamMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        }
 
         sidePanel.row();
 
