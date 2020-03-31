@@ -1,11 +1,12 @@
 package com.mygdx.wargame.battle.rules.facade;
 
 import com.badlogic.gdx.ai.pfa.GraphPath;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
+import com.mygdx.wargame.battle.action.AddMovementMarkersAction;
+import com.mygdx.wargame.battle.action.AddRangeMarkersAction;
 import com.mygdx.wargame.battle.action.CreateSelectionMarkerAction;
 import com.mygdx.wargame.battle.action.IntAction;
 import com.mygdx.wargame.battle.action.MoveActorAlongPathActionFactory;
@@ -13,8 +14,6 @@ import com.mygdx.wargame.battle.action.RemoveSelectionMarkerAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
-import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
-import com.mygdx.wargame.battle.map.decoration.SelectionMarker;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
@@ -23,7 +22,6 @@ import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
 import com.mygdx.wargame.battle.rules.facade.target.Target;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
-import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.unit.action.*;
@@ -133,20 +131,12 @@ TurnProcessingFacade {
 
         } else {
 
-            //hudMediator.getHudElementsFacade().update();
-
             AbstractMech selectedMech = next.getKey();
             Pilot selectedPilot = next.getValue();
 
-            isometricTiledMapRendererWithSprites.removeAll(SelectionMarker.class);
+
             battleMap.clearRangeMarkers();
             battleMap.clearMovementMarkers();
-            battleMap.clearPathMarkers();
-            hudMediator.getHudElementsFacade().populateSidePanel();
-
-            SelectionMarker selectionMarker = new SelectionMarker(assetManagerLoaderV2.getAssetManager().get("info/SelectionMarker.png", Texture.class));
-            selectionMarker.setPosition(selectedMech.getX() -0.75f, selectedMech.getY() + 0.75f);
-            isometricTiledMapRendererWithSprites.addObject(selectionMarker);
 
             if (!selectedMech.isActive()) {
                 // skip, if deactivated
@@ -154,6 +144,8 @@ TurnProcessingFacade {
                     next = iterator.next();
                 }
             } else if (team2.containsKey(selectedMech)) {
+
+                clearMarkers(battleMap, selectedMech);
 
                 weaponSelectionOptimizer.doIt(selectedMech);
 
@@ -165,12 +157,13 @@ TurnProcessingFacade {
                 sequenceAction.addAction(new LockAction(actionLock));
 
                 // reconnect graph so that attacker can move
-                battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+                //battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 
                 // calculate movement points
                 int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
                 selectedMech.resetMovementPoints(movementPoints);
 
+                sequenceAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRendererWithSprites, assetManagerLoaderV2, selectedMech));
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(regenerateShields(selectedMech));
@@ -186,10 +179,10 @@ TurnProcessingFacade {
                 // move if target too far away
                 if (target.isPresent()) {
                     if (target.get().getTargetNode() != null) {
-                        System.out.println("Found target node");
+                        System.out.println("Found target node " + target.get().getTargetNode().isImpassable());
 
                         // calculate path
-                        GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                        GraphPath<Node> paths = battleMap.calculatePath(selectedMech, battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
                                 battleMap.getNodeGraph().getNodeWeb()[(int) target.get().getTargetNode().getX()][(int) target.get().getTargetNode().getY()]);
 
                         sequenceAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRendererWithSprites));
@@ -198,17 +191,17 @@ TurnProcessingFacade {
 
                     } else if (MathUtils.getDistance(selectedMech.getX(), selectedMech.getY(), target.get().getMech().getX(), target.get().getMech().getY()) > minRange) {
                         // reconnect graph so that attacker can move
-                        battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
+                        //battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
 
                         // calculate path
-                        GraphPath<Node> paths = battleMap.calculatePath(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
+                        GraphPath<Node> paths = battleMap.calculatePath(selectedMech, battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()],
                                 battleMap.getNodeGraph().getNodeWeb()[(int) target.get().getMech().getX()][(int) target.get().getMech().getY()]);
 
                         sequenceAction.addAction(moveActorAlongPathActionFactory.getMovementAction(paths, (AbstractMech) selectedMech));
 
                     } else {
                         // obstacle again, no movement
-                        battleMap.setTemporaryObstacle(selectedMech.getX(), selectedMech.getY());
+                        //battleMap.setTemporaryObstacle(selectedMech.getX(), selectedMech.getY());
                     }
 
 
@@ -235,32 +228,44 @@ TurnProcessingFacade {
                 }
 
             } else {
+
+                clearMarkers(battleMap, selectedMech);
+
                 // wait for "next" button press
                 int movementPoints = movementSpeedCalculator.calculate(selectedPilot, selectedMech, battleMap);
                 selectedMech.resetMovementPoints(movementPoints);
 
-                battleMap.getNodeGraph().reconnectCities((int)selectedMech.getX(), (int)selectedMech.getY());
+                //battleMap.getNodeGraph().reconnectCities((int)selectedMech.getX(), (int)selectedMech.getY());
                 Map<Node, Integer> allAvailable = new MapUtils().getAllAvailableWithMovementPointsCost(battleMap, selectedMech);
-                battleMap.getNodeGraph().disconnectCities((int)selectedMech.getX(), (int)selectedMech.getY());
+                //battleMap.getNodeGraph().disconnectCities((int)selectedMech.getX(), (int)selectedMech.getY());
                 allAvailable.forEach((k,v) -> {
                     battleMap.addMovementMarker((int)k.getX(), (int)k.getY());
                 });
 
-                weaponRangeMarkerUpdater.updateWeaponRangeMarkers(battleMap, selectedMech, selectedPilot);
+                //weaponRangeMarkerUpdater.updateWeaponRangeMarkers(battleMap, selectedMech, selectedPilot);
 
                 SequenceAction sequenceAction = new SequenceAction();
                 sequenceAction.addAction(new LockAction(actionLock));
+                sequenceAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRendererWithSprites, assetManagerLoaderV2, selectedMech));
+                sequenceAction.addAction(new AddMovementMarkersAction(battleMap, selectedMech));
+                sequenceAction.addAction(new AddRangeMarkersAction(battleMap, selectedMech, selectedPilot));
                 sequenceAction.addAction(reduceHeatLevel(selectedPilot, selectedMech, battleMap));
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(regenerateShields(selectedMech));
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
                 sequenceAction.addAction(new DelayAction(0.5f));
-                sequenceAction.addAction(new DelayAction(5));
                 sequenceAction.addAction(new UnlockAction(actionLock, ""));
-                ((AbstractMech) selectedMech).addAction(sequenceAction);
+                stageElementsStorage.stage.addAction(sequenceAction);
             }
         }
+    }
+
+    private void clearMarkers(BattleMap battleMap, AbstractMech selectedMech) {
+        battleMap.clearRangeMarkers();
+        battleMap.clearMovementMarkers();
+        battleMap.clearPathMarkers();
+        hudMediator.getHudElementsFacade().populateSidePanel();
     }
 
     private Action reduceHeatLevel(Pilot pilot, Mech mech, BattleMap battleMap) {

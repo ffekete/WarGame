@@ -20,10 +20,9 @@ public class RemoveCustomActorAction extends Action {
     @Override
     public boolean act(float delta) {
 
-        System.out.println("Removing actor " + actor);
         isometricTiledMapRendererWithSprites.removeObject(actor);
 
-        if(pool != null)
+        if (pool != null)
             pool.free(actor);
         return true;
     }

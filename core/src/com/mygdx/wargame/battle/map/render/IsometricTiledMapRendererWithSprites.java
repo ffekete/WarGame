@@ -272,4 +272,8 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
             }
         }
     }
+
+    public List<Actor> getObjects() {
+        return objects;
+    }
 }

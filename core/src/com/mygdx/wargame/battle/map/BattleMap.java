@@ -8,8 +8,10 @@ import com.mygdx.wargame.battle.map.decoration.MovementDirectionDrawable;
 import com.mygdx.wargame.battle.map.decoration.DrawableMarker;
 import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
+import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.unit.Direction;
+import com.mygdx.wargame.common.mech.Mech;
 
 public class BattleMap {
 
@@ -26,7 +28,7 @@ public class BattleMap {
         this.terrainType = terrainType;
         this.assetManagerLoaderV2 = assetManagerLoaderV21;
 
-        this.nodeGraph = new NodeGraph(WIDTH, HEIGHT);
+        this.nodeGraph = new NodeGraph(WIDTH, HEIGHT, null);
 
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
@@ -53,8 +55,8 @@ public class BattleMap {
     }
 
 
-    public GraphPath<Node> calculatePath(Node s, Node g) {
-        return nodeGraph.findPath(s, g);
+    public GraphPath<Node> calculatePath(Mech mech, Node s, Node g) {
+        return nodeGraph.findPath(mech, s, g);
     }
 
     private void addNodeIfDoesntExists(Node node, int i, int j, NodeGraph nodeGraph) {

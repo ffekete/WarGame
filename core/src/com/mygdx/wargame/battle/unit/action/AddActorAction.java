@@ -2,8 +2,6 @@ package com.mygdx.wargame.battle.unit.action;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 
 public class AddActorAction extends Action {
@@ -18,7 +16,6 @@ public class AddActorAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        System.out.println("Adding actor " + actor);
         isometricTiledMapRendererWithSprites.addObject(actor);
         return true;
     }

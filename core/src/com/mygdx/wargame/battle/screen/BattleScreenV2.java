@@ -87,6 +87,8 @@ public class BattleScreenV2 implements Screen {
 
         isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
 
+        battleMap.getNodeGraph().setIsometricTiledMapRendererWithSprites(isometricTiledMapRenderer);
+
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
         stageElementsStorage.stage = stage;
         ActionLock actionLock = new ActionLock();
@@ -113,12 +115,12 @@ public class BattleScreenV2 implements Screen {
         battleScreenInputData.getAiTeam().keySet().forEach(mech -> {
             isometricTiledMapRenderer.addObject(mech);
             battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
-            battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
+            //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
         battleScreenInputData.getPlayerTeam().keySet().forEach(mech -> {
             isometricTiledMapRenderer.addObject(mech);
             battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
-            battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
+            //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
 
         camera.zoom = 1.4f;
@@ -148,7 +150,7 @@ public class BattleScreenV2 implements Screen {
 
                 if (!enemyMechAtCoordinates.isPresent() && !ownMechAtCoordinates.isPresent()) {
                     GraphPath<Node> path = battleMap.calculatePath(
-                            battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
+                            turnProcessingFacade.getNext().getKey(), battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
                             battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
                     );
 
@@ -217,14 +219,14 @@ public class BattleScreenV2 implements Screen {
                     sequenceAction.addAction(new DelayAction(5f));
                     stageElementsStorage.stage.addAction(sequenceAction);
                     //battleMap.clearRangeMarkers();
-                    battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
+                    //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                 } else {
 
                     if(turnProcessingFacade.getNext().getKey().moved()) {
                         return;
                     }
 
-                    GraphPath<Node> path = battleMap.calculatePath(
+                    GraphPath<Node> path = battleMap.calculatePath( turnProcessingFacade.getNext().getKey(),
                             battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
                             battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
                     );
@@ -244,7 +246,7 @@ public class BattleScreenV2 implements Screen {
                     moveThenUpdateAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRenderer, assetManagerLoader, turnProcessingFacade.getNext().getKey()));
                     moveThenUpdateAction.addAction(new SetMovedAction(turnProcessingFacade.getNext().getKey()));
                     stage.addAction(moveThenUpdateAction);
-                    battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]);
+                    //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]);
 
                     //turnProcessingFacade.getNext().getKey().setMoved(true);
                 }
@@ -254,7 +256,7 @@ public class BattleScreenV2 implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
-                battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
+                //battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                 return true;
             }
 

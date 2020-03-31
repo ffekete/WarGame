@@ -36,7 +36,7 @@ public class MapUtils {
 
             if (!closedNodes.contains(next)) {
                 closedNodes.add(next);
-                GraphPath graphPath = battleMap.calculatePath(start, next);
+                GraphPath graphPath = battleMap.calculatePath(mech, start, next);
                 if (graphPath.getCount() <= mech.getMovementPoints() + 1 && graphPath.getCount() > 0) {
                     allAvailable.put(next, graphPath.getCount() - 1);
                     edges = battleMap.getNodeGraph().getNodeEdges().get(next);
@@ -69,7 +69,7 @@ public class MapUtils {
 
             if (!closedNodes.contains(next)) {
                 closedNodes.add(next);
-                GraphPath<Node> path = battleMap.calculatePath(start, next);
+                GraphPath<Node> path = battleMap.calculatePath(mech, start, next);
                 if (path.getCount() <= distance + 1 && path.getCount() != 0) {
                     allAvailable.add(next);
                     edges = battleMap.getNodeGraph().getNodeEdges().get(next);

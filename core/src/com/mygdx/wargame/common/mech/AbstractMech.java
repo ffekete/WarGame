@@ -287,4 +287,9 @@ AbstractMech extends Actor implements Mech {
     public boolean canMoveAfterAttack() {
         return false;
     }
+
+    @Override
+    public boolean canFly() {
+        return false;
+    }
 }

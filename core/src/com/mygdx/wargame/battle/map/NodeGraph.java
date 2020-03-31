@@ -3,10 +3,11 @@ package com.mygdx.wargame.battle.map;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.ai.pfa.GraphPath;
-import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,13 +24,19 @@ public class NodeGraph implements IndexedGraph<Node> {
     private ObjectMap<Node, Array<Edge>> nodeEdges = new ObjectMap<>();
     ObjectMap<Node, Array<Connection<Node>>> streetsMap = new ObjectMap<>();
     private int lastNodeIndex = 0;
-    IndexedAStarPathFinder<Node> indexedAStarPathFinder;
+    com.mygdx.wargame.battle.map.IndexedAStarPathFinder<Node> indexedAStarPathFinder;
+    private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
 
-    public NodeGraph(int width, int height) {
+    public NodeGraph(int width, int height, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
         this.width = width;
         this.height = height;
+        this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         nodeWeb = new Node[width][height];
         impassable = new boolean[width][height];
+    }
+
+    public void setIsometricTiledMapRendererWithSprites(IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
+        this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
     }
 
     public void addNode(Node node) {
@@ -144,13 +151,13 @@ public class NodeGraph implements IndexedGraph<Node> {
     }
 
 
-    public GraphPath<Node> findPath(Node startNode, Node toNode) {
+    public GraphPath<Node> findPath(Mech mech, Node startNode, Node toNode) {
         GraphPath<Node> cityPath = new DefaultGraphPath<>();
         if (indexedAStarPathFinder == null) {
-            indexedAStarPathFinder = new IndexedAStarPathFinder<>(this);
+            indexedAStarPathFinder = new IndexedAStarPathFinder<>(this, isometricTiledMapRendererWithSprites);
         }
 
-        indexedAStarPathFinder.searchNodePath(startNode, toNode, nodeHeuristic, cityPath);
+        indexedAStarPathFinder.searchNodePath(mech, startNode, toNode, nodeHeuristic, cityPath);
         return cityPath;
     }
 
@@ -191,7 +198,8 @@ public class NodeGraph implements IndexedGraph<Node> {
 
     public void setImpassable(float x, float y) {
         impassable[(int) x][(int) y] = true;
-        disconnectCities(nodeWeb[(int) x][(int) y]);
+        nodeWeb[(int)x][(int)y].setImpassable(true);
+        //disconnectCities(nodeWeb[(int) x][(int) y]);
     }
 
     public int getWidth() {

@@ -22,9 +22,9 @@ public class AddMovementMarkersAction extends Action {
     @Override
     public boolean act(float delta) {
 
-        battleMap.getNodeGraph().reconnectCities((int)attackingMech.getX(), (int)attackingMech.getY());
+        //battleMap.getNodeGraph().reconnectCities((int)attackingMech.getX(), (int)attackingMech.getY());
         Map<Node, Integer> allAvailable = new MapUtils().getAllAvailableWithMovementPointsCost(battleMap, attackingMech);
-        battleMap.getNodeGraph().disconnectCities((int)attackingMech.getX(), (int)attackingMech.getY());
+        //battleMap.getNodeGraph().disconnectCities((int)attackingMech.getX(), (int)attackingMech.getY());
         allAvailable.forEach((k,v) -> {
             battleMap.addMovementMarker((int)k.getX(), (int)k.getY());
         });

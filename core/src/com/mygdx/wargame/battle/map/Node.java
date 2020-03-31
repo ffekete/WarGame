@@ -4,6 +4,7 @@ public class Node {
 
     private int index;
     private float x, y;
+    private boolean impassable = false;
 
     public Node(float x, float y) {
         this.setX(x);
@@ -32,5 +33,13 @@ public class Node {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public void setImpassable(boolean impassable) {
+        this.impassable = impassable;
+    }
+
+    public boolean isImpassable() {
+        return impassable;
     }
 }

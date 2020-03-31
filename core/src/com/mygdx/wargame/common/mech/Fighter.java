@@ -176,4 +176,9 @@ public class Fighter extends AbstractMech {
     public boolean canMoveAfterAttack() {
         return true;
     }
+
+    @Override
+    public boolean canFly() {
+        return true;
+    }
 }

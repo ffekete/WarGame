@@ -21,6 +21,7 @@ public class CreateSelectionMarkerAction extends Action {
 
     @Override
     public boolean act(float delta) {
+        isometricTiledMapRendererWithSprites.removeAll(SelectionMarker.class);
         SelectionMarker selectionMarker = new SelectionMarker(assetManagerLoaderV2.getAssetManager().get("info/SelectionMarker.png", Texture.class));
         selectionMarker.setPosition(abstractMech.getX() - 0.75f, abstractMech.getY() + 0.75f);
         isometricTiledMapRendererWithSprites.addObject(selectionMarker);

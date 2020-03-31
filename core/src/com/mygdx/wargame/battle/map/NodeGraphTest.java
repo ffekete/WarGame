@@ -9,7 +9,7 @@ public class NodeGraphTest {
 
     @Test
     public void testConnection() {
-        NodeGraph nodeGraph = new NodeGraph(5, 5);
+        NodeGraph nodeGraph = new NodeGraph(5, 5, null);
 
         Node n1 = new Node(1, 1);
         nodeGraph.addNode(n1);
@@ -63,7 +63,7 @@ public class NodeGraphTest {
 
     @Test
     public void reconnect() {
-        NodeGraph nodeGraph = new NodeGraph(5, 5);
+        NodeGraph nodeGraph = new NodeGraph(5, 5, null);
 
         Node n1 = new Node(1, 1);
         nodeGraph.addNode(n1);
