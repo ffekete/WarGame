@@ -33,13 +33,9 @@ import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.screen.ui.WeaponSelectionFacade;
-import com.mygdx.wargame.battle.unit.action.AddDirectionMarkerAction;
-import com.mygdx.wargame.battle.unit.action.AttackAction;
-import com.mygdx.wargame.battle.unit.action.AttackAnimationAction;
-import com.mygdx.wargame.battle.unit.action.BulletAnimationAction;
-import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
-import com.mygdx.wargame.battle.unit.action.RemoveDirectionMarkerAction;
+import com.mygdx.wargame.battle.unit.action.*;
 import com.mygdx.wargame.common.mech.AbstractMech;
+import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.config.Config;
 import com.mygdx.wargame.util.DrawUtils;
@@ -154,7 +150,12 @@ public class BattleScreenV2 implements Screen {
                             battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
                     );
 
-                    if (path.getCount() == 0) {
+                    int nodeToCheck = Math.min(turnProcessingFacade.getNext().getKey().getMovementPoints(), path.getCount() -1);
+                    if (path.getCount() == 0 || path.get( nodeToCheck).isImpassable()  || isometricTiledMapRenderer.getObjects()
+                            .stream()
+                            .filter(o -> Mech.class.isAssignableFrom(o.getClass()))
+                            .map(o -> (Mech) o)
+                            .anyMatch(m -> (int) m.getX() == (int) path.get(nodeToCheck).getX() && (int) m.getY() == (int) path.get(nodeToCheck).getY())) {
                         battleMap.clearPathMarkers();
                         return;
                     }
@@ -182,6 +183,7 @@ public class BattleScreenV2 implements Screen {
 
                 if (mechAtCoordinates.isPresent()) {
                     SequenceAction sequenceAction = new SequenceAction();
+                    sequenceAction.addAction(new LockAction(actionLock));
                     Optional<Map.Entry<AbstractMech, Pilot>> pilotAtCoordinates = battleScreenInputData.getAiTeam().entrySet().stream().filter(entry -> mechAtCoordinates.get() == entry.getKey()).findFirst();
                     int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
                     if(minRange < MathUtils.getDistance(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY())) {
@@ -216,7 +218,8 @@ public class BattleScreenV2 implements Screen {
 
                         sequenceAction.addAction(new AddMovementMarkersAction(battleMap, turnProcessingFacade.getNext().getKey()));
                     }
-                    sequenceAction.addAction(new DelayAction(5f));
+                    sequenceAction.addAction(new DelayAction(1f));
+                    sequenceAction.addAction(new UnlockAction(actionLock, "end of attack"));
                     stageElementsStorage.stage.addAction(sequenceAction);
                     //battleMap.clearRangeMarkers();
                     //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);

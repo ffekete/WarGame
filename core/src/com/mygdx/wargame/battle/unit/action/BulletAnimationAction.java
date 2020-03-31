@@ -62,8 +62,6 @@ BulletAnimationAction extends Action {
 
         if (MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) <= minRange) {
             startBullet(attackerMech);
-        } else {
-            stageElementsStorage.groundLevel.addAction(new UnlockAction(actionLock, attackerMech.getName() + " " + MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY()) + " out of range (" + minRange + ")"));
         }
         done = true;
 
@@ -73,7 +71,6 @@ BulletAnimationAction extends Action {
     private void startBullet(Mech mech) {
 
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
-        boolean finishedByExplosion = false;
         int delay = -1;
 
         ParallelAction parallelAction = new ParallelAction();
@@ -211,7 +208,6 @@ BulletAnimationAction extends Action {
             }
         }
 
-        outerSequenceAction.addAction(new UnlockAction(actionLock, "Explosion"));
         stageElementsStorage.stage.addAction(outerSequenceAction);
     }
 }
