@@ -29,6 +29,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
     private Vector2 bottomLeft = new Vector2();
     private Vector2 topLeft = new Vector2();
     private Vector2 bottomRight = new Vector2();
+    private Color defaultColor = null;
 
     public IsometricTiledMapRendererWithSprites(TiledMap map) {
         super(map);
@@ -73,6 +74,9 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                             object.draw(this.getBatch(), 1f);
                     }
                 } else {
+                    if(defaultColor != null)
+                        batch.setColor(defaultColor);
+
                     for (MapObject object : layer.getObjects()) {
                         renderObject(object);
                     }
@@ -275,5 +279,9 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
 
     public List<Actor> getObjects() {
         return objects;
+    }
+
+    public void setDefaultColor(Color defaultColor) {
+        this.defaultColor = defaultColor;
     }
 }

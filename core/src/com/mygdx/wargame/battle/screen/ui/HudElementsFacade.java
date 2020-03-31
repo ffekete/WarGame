@@ -16,14 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
+import com.mygdx.wargame.battle.rules.facade.DeploymentFacade;
+import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.weapon.Weapon;
-import com.mygdx.wargame.common.mech.BodyPart;
+import com.mygdx.wargame.common.mech.AbstractMech;
+import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.config.Config;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static com.mygdx.wargame.config.Config.*;
@@ -35,6 +37,7 @@ public class HudElementsFacade {
     private TextButton endTurnButton;
     private AssetManager assetManager;
     private TurnProcessingFacade turnProcessingFacade;
+    private DeploymentFacade deploymentFacade;
     private ActionLock actionLock;
 
     private Table upperHud;
@@ -42,7 +45,7 @@ public class HudElementsFacade {
 
     private Tooltip<Table> shieldToolTip;
     private Table shieldTooltipTable;
-    private  TextButton shieldImage;
+    private TextButton shieldImage;
     private Label shieldValueLabel;
 
     private TextButton armorImage;
@@ -113,9 +116,10 @@ public class HudElementsFacade {
 
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
 
-    public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, ActionLock actionLock, HUDMediator hudMediator) {
+    public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, DeploymentFacade deploymentFacade, ActionLock actionLock, HUDMediator hudMediator) {
         this.assetManager = assetManager;
         this.turnProcessingFacade = turnProcessingFacade;
+        this.deploymentFacade = deploymentFacade;
         this.actionLock = actionLock;
         this.hudMediator = hudMediator;
     }
@@ -454,108 +458,125 @@ public class HudElementsFacade {
 
     public void populateSidePanel() {
         sidePanel.clear();
-        sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+
         sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        sidePanel.row();
 
-        if (showDirectionMarkers) {
-            sidePanel.add(hideMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        } else {
-            sidePanel.add(showMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        }
+        if(GameState.state == GameState.State.Battle) {
+            sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.row();
 
-        if (showTeamMarkers) {
-            sidePanel.add(hideTeamMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        } else {
-            sidePanel.add(showTeamMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        }
+            if (showDirectionMarkers) {
+                sidePanel.add(hideMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            } else {
+                sidePanel.add(showMovementDirectionsButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            }
 
-        sidePanel.row();
+            if (showTeamMarkers) {
+                sidePanel.add(hideTeamMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            } else {
+                sidePanel.add(showTeamMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            }
 
-        if (showRangeMarkers) {
-            sidePanel.add(hideRageMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        } else {
-            sidePanel.add(showRageMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        }
+            sidePanel.row();
 
-        if (!showMovementMarkers) {
-            sidePanel.add(showMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        } else {
-            sidePanel.add(dontShowMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        }
-        sidePanel.row();
+            if (showRangeMarkers) {
+                sidePanel.add(hideRageMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            } else {
+                sidePanel.add(showRageMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            }
 
-        sidePanel.row();
+            if (!showMovementMarkers) {
+                sidePanel.add(showMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            } else {
+                sidePanel.add(dontShowMovementMarkersButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            }
+            sidePanel.row();
 
-        if(turnProcessingFacade.getNext() != null && turnProcessingFacade.getNext().getKey().isRangedAttack()) {
-            sidePanel.add(rangedAttackButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-            sidePanel.add(selectWeaponButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        } else {
-            sidePanel.add(meleeAttackButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.row();
+
+            if (turnProcessingFacade.getNext() != null && turnProcessingFacade.getNext().getKey().isRangedAttack()) {
+                sidePanel.add(rangedAttackButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+                sidePanel.add(selectWeaponButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            } else {
+                sidePanel.add(meleeAttackButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            }
         }
 
     }
 
     public void update() {
-        shieldValueLabel.setText(turnProcessingFacade.getNext().getKey().getShieldValue());
-        shieldImage.setText("shield: " + shieldValueLabel.getText());
+        AbstractMech abstractMech;
+        Pilot pilot;
 
-        armorValueLabel.setText(turnProcessingFacade.getNext().getKey().getArmorValue());
-        armorImage.setText("armor: " + armorValueLabel.getText());
+        if (GameState.state == GameState.State.Battle) {
+            abstractMech = turnProcessingFacade.getNext().getKey();
+            pilot = turnProcessingFacade.getNext().getValue();
+        } else {
+            abstractMech = deploymentFacade.getNextMech();
+            pilot = deploymentFacade.getPilot();
+        }
 
-        ammoValueLabel.setText("" + getAmmoCount().orElse(0));
-        ammoImage.setText("ammo: " + ammoValueLabel.getText());
+        if(abstractMech != null) {
+            shieldValueLabel.setText(abstractMech.getShieldValue());
+            shieldImage.setText("shield: " + shieldValueLabel.getText());
 
-        armorTooltipTable.clear();
-        turnProcessingFacade.getNext()
-                .getKey().getDefinedBodyParts().entrySet().forEach(entry -> {
-            Label armorLabel = labelPool.obtain();
-            Label partLabel = labelPool.obtain();
-            partLabel.setText(entry.getValue());
-            armorLabel.setText(turnProcessingFacade.getNext().getKey().getComponents(entry.getKey()).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0) + " / " + turnProcessingFacade.getNext().getKey().getComponents(entry.getKey()).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a, b) -> a + b).orElse(0));
-            armorTooltipTable.add(partLabel).padRight(20);
-            armorTooltipTable.add(armorLabel).row();
-        });
+            armorValueLabel.setText(abstractMech.getArmorValue());
+            armorImage.setText("armor: " + armorValueLabel.getText());
 
-        ammoTooltipTable.clear();
-        turnProcessingFacade.getNext().getKey().getAllWeapons().forEach(w -> {
-            Label nameLabel = labelPool.obtain();
-            nameLabel.setText(w.getShortName());
-            Label ammoLabel = labelPool.obtain();
-            ammoLabel.setText("" + (w.getAmmo().isPresent() ? w.getAmmo().get() : "N/A"));
-            ammoTooltipTable.add(nameLabel).padRight(20);
-            ammoTooltipTable.add(ammoLabel).row();
-        });
+            ammoValueLabel.setText("" + getAmmoCount().orElse(0));
+            ammoImage.setText("ammo: " + ammoValueLabel.getText());
 
-        healthValueLabel.setText("" + (int) (100f * turnProcessingFacade.getNext().getKey().getDefinedBodyParts().keySet().stream().map(b -> turnProcessingFacade.getNext().getKey().getHp(b)).reduce((a, b) -> a + b).orElse(0) / (float) turnProcessingFacade.getNext().getKey().getDefinedBodyParts().keySet().stream().map(b -> turnProcessingFacade.getNext().getKey().getMaxHp(b)).reduce((a, b) -> a + b).orElse(0)));
-        healthImage.setText("HP: " + healthValueLabel.getText() + "%");
-        healthTooltipTable.clear();
-        turnProcessingFacade.getNext().getKey().getDefinedBodyParts().entrySet().forEach(entry -> {
-            Label hpLabel = labelPool.obtain();
-            Label partLabel = labelPool.obtain();
-            partLabel.setText(entry.getValue());
-            hpLabel.setText(+turnProcessingFacade.getNext().getKey().getHp(entry.getKey()) + " / " + turnProcessingFacade.getNext().getKey().getMaxHp(entry.getKey()));
-            healthTooltipTable.add(partLabel);
-            healthTooltipTable.add(hpLabel).row();
-        });
+            armorTooltipTable.clear();
+            abstractMech.getDefinedBodyParts().entrySet().forEach(entry -> {
+                Label armorLabel = labelPool.obtain();
+                Label partLabel = labelPool.obtain();
+                partLabel.setText(entry.getValue());
+                armorLabel.setText(abstractMech.getComponents(entry.getKey()).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getHitPoint()).reduce((a, b) -> a + b).orElse(0) + " / " + abstractMech.getComponents(entry.getKey()).stream().filter(c -> Armor.class.isAssignableFrom(c.getClass())).map(a -> ((Armor) a).getMaxHitpoint()).reduce((a, b) -> a + b).orElse(0));
+                armorTooltipTable.add(partLabel).padRight(20);
+                armorTooltipTable.add(armorLabel).row();
+            });
 
-        heatValueLabel.setText(turnProcessingFacade.getNext().getKey().getHeatLevel());
-        heatImage.setText("heat: " + heatValueLabel.getText());
+            ammoTooltipTable.clear();
+            abstractMech.getAllWeapons().forEach(w -> {
+                Label nameLabel = labelPool.obtain();
+                nameLabel.setText(w.getShortName());
+                Label ammoLabel = labelPool.obtain();
+                ammoLabel.setText("" + (w.getAmmo().isPresent() ? w.getAmmo().get() : "N/A"));
+                ammoTooltipTable.add(nameLabel).padRight(20);
+                ammoTooltipTable.add(ammoLabel).row();
+            });
 
-        stabilityValueLabel.setText(turnProcessingFacade.getNext().getKey().getStability());
-        stabilityImage.setText("stability: " + stabilityValueLabel.getText());
+            healthValueLabel.setText("" + (int) (100f * abstractMech.getDefinedBodyParts().keySet().stream().map(b -> abstractMech.getHp(b)).reduce((a, b) -> a + b).orElse(0) / (float) abstractMech.getDefinedBodyParts().keySet().stream().map(b -> abstractMech.getMaxHp(b)).reduce((a, b) -> a + b).orElse(0)));
+            healthImage.setText("HP: " + healthValueLabel.getText() + "%");
+            healthTooltipTable.clear();
+            abstractMech.getDefinedBodyParts().entrySet().forEach(entry -> {
+                Label hpLabel = labelPool.obtain();
+                Label partLabel = labelPool.obtain();
+                partLabel.setText(entry.getValue());
+                hpLabel.setText(+abstractMech.getHp(entry.getKey()) + " / " + abstractMech.getMaxHp(entry.getKey()));
+                healthTooltipTable.add(partLabel);
+                healthTooltipTable.add(hpLabel).row();
+            });
 
-        pilotNameLabel.setText(turnProcessingFacade.getNext().getValue().getName());
-        mechNameLabel.setText("(" + turnProcessingFacade.getNext().getKey().getName() + ")");
+            heatValueLabel.setText(abstractMech.getHeatLevel());
+            heatImage.setText("heat: " + heatValueLabel.getText());
 
-        movedIcon.setText(turnProcessingFacade.getNext().getKey().moved() ? "moved" : "mp available: " + turnProcessingFacade.getNext().getKey().getMovementPoints());
-        attackedIcon.setText(turnProcessingFacade.getNext().getKey().attacked() ? "attacked" : "not attacked");
+            stabilityValueLabel.setText(abstractMech.getStability());
+            stabilityImage.setText("stability: " + stabilityValueLabel.getText());
 
-        meleeAttackButton.setText("melee [" + turnProcessingFacade.getNext().getKey().getMeleeDamage() + " dmg]");
+            pilotNameLabel.setText(pilot.getName());
+            mechNameLabel.setText("(" + abstractMech.getName() + ")");
+
+            movedIcon.setText(abstractMech.moved() ? "moved" : "mp available: " + abstractMech.getMovementPoints());
+            attackedIcon.setText(abstractMech.attacked() ? "attacked" : "not attacked");
+
+            meleeAttackButton.setText("melee [" + abstractMech.getMeleeDamage() + " dmg]");
+        }
     }
 
     private Optional<Integer> getAmmoCount() {
-        return turnProcessingFacade.getNext().getKey().getAllWeapons().stream().map(Weapon::getAmmo).reduce((a, b) -> {
+        AbstractMech abstractMech = GameState.state == GameState.State.Battle ? turnProcessingFacade.getNext().getKey() : deploymentFacade.getNextMech();
+        return abstractMech.getAllWeapons().stream().map(Weapon::getAmmo).reduce((a, b) -> {
             return Optional.of(a.orElse(0) + b.orElse(0));
         }).orElse(Optional.of(0));
     }

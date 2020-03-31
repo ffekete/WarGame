@@ -111,6 +111,7 @@ AbstractMech extends Actor implements Mech {
 
     @Override
     public void draw(Batch spriteBatch, float parentAlpha) {
+        Color originalColor = spriteBatch.getColor();
         if (Config.showTeamMarkers) {
             enemyMarker.setPosition(getX(), getY());
 
@@ -122,7 +123,7 @@ AbstractMech extends Actor implements Mech {
 
             enemyMarker.draw(spriteBatch, parentAlpha);
         }
-        spriteBatch.setColor(Color.valueOf("FFFFFF"));
+        spriteBatch.setColor(originalColor);
 
         isometricSprite.draw(spriteBatch, parentAlpha);
 
@@ -309,5 +310,9 @@ AbstractMech extends Actor implements Mech {
     @Override
     public boolean canFly() {
         return false;
+    }
+
+    public IsometricAnimatedSprite getIsometricSprite() {
+        return isometricSprite;
     }
 }

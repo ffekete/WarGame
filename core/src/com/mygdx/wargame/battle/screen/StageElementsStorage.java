@@ -8,6 +8,7 @@ public class StageElementsStorage {
     public Group groundLevel = new Group();
     public Group airLevel = new Group();
     public Stage stage;
+    public Stage hudStage;
 
 
 }

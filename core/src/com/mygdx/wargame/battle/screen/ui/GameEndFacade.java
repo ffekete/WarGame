@@ -52,9 +52,9 @@ public class GameEndFacade {
 
         textButton = new TextButton("NEXT >>", textButtonStyle);
         Label resultLabel = new Label(won ? "You won" : "You lost", labelStyle);
-        resultTable.pad(40 / SCREEN_HUD_RATIO);
+        resultTable.pad(5);
         resultTable.add(resultLabel).center().row();
-        resultTable.add(textButton).size(200 / SCREEN_HUD_RATIO, 100 / SCREEN_HUD_RATIO).center().pad(40 / SCREEN_HUD_RATIO);
+        resultTable.add(textButton).size(40, 40).center().pad(5);
         //resultTable.background(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
         resultTable.setSize(HUD_VIEWPORT_WIDTH.get() / 2f, HUD_VIEWPORT_HEIGHT.get() / 2f);
 

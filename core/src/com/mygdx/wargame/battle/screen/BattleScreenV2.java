@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -27,6 +28,8 @@ import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
 import com.mygdx.wargame.battle.rules.facade.AttackFacade;
+import com.mygdx.wargame.battle.rules.facade.DeploymentFacade;
+import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
@@ -62,8 +65,12 @@ public class BattleScreenV2 implements Screen {
     private RangeCalculator rangeCalculator = new RangeCalculator();
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
     private WeaponSelectionFacade weaponSelectionFacade;
+    private DeploymentFacade deploymentFacade;
+    private BattleScreenInputData battleScreenInputData;
 
     public void load(AssetManagerLoaderV2 assetManagerLoader, BattleScreenInputData battleScreenInputData) {
+
+        this.battleScreenInputData = battleScreenInputData;
 
         this.isoUtils = new IsoUtils();
 
@@ -88,9 +95,12 @@ public class BattleScreenV2 implements Screen {
 
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
         stageElementsStorage.stage = stage;
+        stageElementsStorage.hudStage = hudStage;
         ActionLock actionLock = new ActionLock();
 
         hudMediator = new HUDMediator();
+
+        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam());
 
         turnProcessingFacade = new TurnProcessingFacade(actionLock,
                 new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock, isometricTiledMapRenderer),
@@ -105,7 +115,7 @@ public class BattleScreenV2 implements Screen {
                 hudMediator,
                 battleMap, assetManagerLoader, isometricTiledMapRenderer);
 
-        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, actionLock, hudMediator));
+        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, deploymentFacade, actionLock, hudMediator));
         hudMediator.getHudElementsFacade().create();
         hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
@@ -116,8 +126,6 @@ public class BattleScreenV2 implements Screen {
             //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
         battleScreenInputData.getPlayerTeam().keySet().forEach(mech -> {
-            isometricTiledMapRenderer.addObject(mech);
-            battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
             mech.setTeam(Team.own);
             //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
@@ -131,130 +139,151 @@ public class BattleScreenV2 implements Screen {
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
 
-                if (actionLock.isLocked() || turnProcessingFacade.getNext().getKey().moved())
-                    return;
+                if(GameState.state == GameState.State.Deploy) {
 
-                battleMap.clearPathMarkers();
-
-                Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
-                Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
-
-                if (s2c.x < 0 || s2c.x >= BattleMap.WIDTH || s2c.y < 0 || s2c.y >= BattleMap.HEIGHT) {
-                    battleMap.clearPathMarkers();
-                    return;
                 }
 
-                Optional<AbstractMech> enemyMechAtCoordinates = battleScreenInputData.getAiTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
-                Optional<AbstractMech> ownMechAtCoordinates = battleScreenInputData.getPlayerTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
+                if(GameState.state == GameState.State.Battle) {
+                    if (actionLock.isLocked() || turnProcessingFacade.getNext().getKey().moved())
+                        return;
 
-                if (!enemyMechAtCoordinates.isPresent() && !ownMechAtCoordinates.isPresent()) {
-                    GraphPath<Node> path = battleMap.calculatePath(
-                            turnProcessingFacade.getNext().getKey(), battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
-                            battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
-                    );
+                    battleMap.clearPathMarkers();
 
-                    int nodeToCheck = Math.min(turnProcessingFacade.getNext().getKey().getMovementPoints(), path.getCount() -1);
-                    if (path.getCount() == 0 || path.get( nodeToCheck).isImpassable()  || isometricTiledMapRenderer.getObjects()
-                            .stream()
-                            .filter(o -> Mech.class.isAssignableFrom(o.getClass()))
-                            .map(o -> (Mech) o)
-                            .anyMatch(m -> (int) m.getX() == (int) path.get(nodeToCheck).getX() && (int) m.getY() == (int) path.get(nodeToCheck).getY())) {
+                    Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                    Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+
+                    if (s2c.x < 0 || s2c.x >= BattleMap.WIDTH || s2c.y < 0 || s2c.y >= BattleMap.HEIGHT) {
                         battleMap.clearPathMarkers();
                         return;
                     }
 
-                    path.forEach(p -> {
-                        battleMap.toggleMarker((int) p.getX(), (int) p.getY(), true);
-                        battleMap.addPathMarker((int) p.getX(), (int) p.getY());
+                    Optional<AbstractMech> enemyMechAtCoordinates = battleScreenInputData.getAiTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
+                    Optional<AbstractMech> ownMechAtCoordinates = battleScreenInputData.getPlayerTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
 
-                        // stage.addActor(new MovementPathMarker(assetManagerLoader.getAssetManager().get("info/MovementPath.png", Texture.class), battleMap));
-                    });
+                    if (!enemyMechAtCoordinates.isPresent() && !ownMechAtCoordinates.isPresent()) {
+                        GraphPath<Node> path = battleMap.calculatePath(
+                                turnProcessingFacade.getNext().getKey(), battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
+                                battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
+                        );
+
+                        int nodeToCheck = Math.min(turnProcessingFacade.getNext().getKey().getMovementPoints(), path.getCount() - 1);
+                        if (path.getCount() == 0 || path.get(nodeToCheck).isImpassable() || isometricTiledMapRenderer.getObjects()
+                                .stream()
+                                .filter(o -> Mech.class.isAssignableFrom(o.getClass()))
+                                .map(o -> (Mech) o)
+                                .anyMatch(m -> (int) m.getX() == (int) path.get(nodeToCheck).getX() && (int) m.getY() == (int) path.get(nodeToCheck).getY())) {
+                            battleMap.clearPathMarkers();
+                            return;
+                        }
+
+                        path.forEach(p -> {
+                            battleMap.toggleMarker((int) p.getX(), (int) p.getY(), true);
+                            battleMap.addPathMarker((int) p.getX(), (int) p.getY());
+
+                            // stage.addActor(new MovementPathMarker(assetManagerLoader.getAssetManager().get("info/MovementPath.png", Texture.class), battleMap));
+                        });
+                    }
                 }
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
+                if(GameState.state == GameState.State.Battle) {
 
-                if (actionLock.isLocked())
-                    return;
-
-                Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
-                Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
-
-                Optional<AbstractMech> mechAtCoordinates = battleScreenInputData.getAiTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
-
-                if (mechAtCoordinates.isPresent()) {
-                    SequenceAction sequenceAction = new SequenceAction();
-                    sequenceAction.addAction(new LockAction(actionLock));
-                    Optional<Map.Entry<AbstractMech, Pilot>> pilotAtCoordinates = battleScreenInputData.getAiTeam().entrySet().stream().filter(entry -> mechAtCoordinates.get() == entry.getKey()).findFirst();
-                    int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
-                    if(minRange < MathUtils.getDistance(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY())) {
+                    if (actionLock.isLocked())
                         return;
-                    }
 
-                    ParallelAction attackActions = new ParallelAction();
-                    attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
-                    attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
-                    attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
+                    Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                    Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
-                    if(!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
-                        attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
+                    Optional<AbstractMech> mechAtCoordinates = battleScreenInputData.getAiTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
+
+                    if (mechAtCoordinates.isPresent()) {
+                        SequenceAction sequenceAction = new SequenceAction();
+                        sequenceAction.addAction(new LockAction(actionLock));
+                        Optional<Map.Entry<AbstractMech, Pilot>> pilotAtCoordinates = battleScreenInputData.getAiTeam().entrySet().stream().filter(entry -> mechAtCoordinates.get() == entry.getKey()).findFirst();
+                        int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
+                        if (minRange < MathUtils.getDistance(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY())) {
+                            return;
+                        }
+
+                        ParallelAction attackActions = new ParallelAction();
+                        attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
+                        attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
+                        attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
+
+                        if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
+                            attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
+                        } else {
+                            attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+                        }
+
+                        int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
+                        int ammoBeforeAttack = turnProcessingFacade.getNext().getKey().getAmmoCount();
+                        AttackAction attackAction = new AttackAction(turnProcessingFacade.getAttackFacade(), turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue(), mechAtCoordinates.get(), pilotAtCoordinates.get().getValue(), battleMap, minRange, null);
+
+                        sequenceAction.addAction(attackActions);
+                        sequenceAction.addAction(attackAction);
+                        sequenceAction.addAction(new IntAction(ammoBeforeAttack, turnProcessingFacade.getNext().getKey()::getAmmoCount, 1f, hudMediator.getHudElementsFacade().getAmmoImage().getLabel(), "ammo: "));
+                        sequenceAction.addAction(new DelayAction(0.5f));
+                        sequenceAction.addAction(new IntAction(heatBeforeAttack, turnProcessingFacade.getNext().getKey()::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatImage().getLabel(), "heat: "));
+
+                        sequenceAction.addAction(new ClearRangeMarkersAction(battleMap));
+
+                        if (turnProcessingFacade.getNext().getKey().canMoveAfterAttack()) {
+                            sequenceAction.addAction(new ClearMovementMarkersAction(battleMap));
+
+                            sequenceAction.addAction(new AddMovementMarkersAction(battleMap, turnProcessingFacade.getNext().getKey()));
+                        }
+                        sequenceAction.addAction(new DelayAction(1f));
+                        sequenceAction.addAction(new UnlockAction(actionLock, "end of attack"));
+                        stageElementsStorage.stage.addAction(sequenceAction);
+                        //battleMap.clearRangeMarkers();
+                        //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                     } else {
-                        attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+
+                        if (turnProcessingFacade.getNext().getKey().moved()) {
+                            return;
+                        }
+
+                        GraphPath<Node> path = battleMap.calculatePath(turnProcessingFacade.getNext().getKey(),
+                                battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
+                                battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
+                        );
+
+                        if (path.getCount() == 0) {
+                            return;
+                        }
+
+                        battleMap.clearMovementMarkers();
+                        battleMap.clearPathMarkers();
+                        battleMap.clearRangeMarkers();
+
+                        SequenceAction moveThenUpdateAction = new SequenceAction();
+                        moveThenUpdateAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRenderer));
+                        moveThenUpdateAction.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
+                        moveThenUpdateAction.addAction(new RepopulateRangeMarkersAction(battleMap, turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey(), weaponRangeMarkerUpdater));
+                        moveThenUpdateAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRenderer, assetManagerLoader, turnProcessingFacade.getNext().getKey()));
+                        moveThenUpdateAction.addAction(new SetMovedAction(turnProcessingFacade.getNext().getKey()));
+                        stage.addAction(moveThenUpdateAction);
+                        //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]);
+
+                        //turnProcessingFacade.getNext().getKey().setMoved(true);
                     }
+                }
 
-                    int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
-                    int ammoBeforeAttack = turnProcessingFacade.getNext().getKey().getAmmoCount();
-                    AttackAction attackAction = new AttackAction(turnProcessingFacade.getAttackFacade(), turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue(), mechAtCoordinates.get(), pilotAtCoordinates.get().getValue(), battleMap, minRange, null);
+                if(GameState.state == GameState.State.Deploy) {
+                    Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                    Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
-                    sequenceAction.addAction(attackActions);
-                    sequenceAction.addAction(attackAction);
-                    sequenceAction.addAction(new IntAction(ammoBeforeAttack, turnProcessingFacade.getNext().getKey()::getAmmoCount, 1f, hudMediator.getHudElementsFacade().getAmmoImage().getLabel(), "ammo: "));
-                    sequenceAction.addAction(new DelayAction(0.5f));
-                    sequenceAction.addAction(new IntAction(heatBeforeAttack, turnProcessingFacade.getNext().getKey()::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatImage().getLabel(), "heat: "));
-
-                    sequenceAction.addAction(new ClearRangeMarkersAction(battleMap));
-
-                    if(turnProcessingFacade.getNext().getKey().canMoveAfterAttack()) {
-                        sequenceAction.addAction(new ClearMovementMarkersAction(battleMap));
-
-                        sequenceAction.addAction(new AddMovementMarkersAction(battleMap, turnProcessingFacade.getNext().getKey()));
-                    }
-                    sequenceAction.addAction(new DelayAction(1f));
-                    sequenceAction.addAction(new UnlockAction(actionLock, "end of attack"));
-                    stageElementsStorage.stage.addAction(sequenceAction);
-                    //battleMap.clearRangeMarkers();
-                    //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
-                } else {
-
-                    if(turnProcessingFacade.getNext().getKey().moved()) {
+                    if( s2c.x < 0 || s2c.y < 0 || s2c.x >= 10 || s2c.y >= 2 || battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y].isImpassable()) {
                         return;
                     }
 
-                    GraphPath<Node> path = battleMap.calculatePath( turnProcessingFacade.getNext().getKey(),
-                            battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()],
-                            battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]
-                    );
-
-                    if (path.getCount() == 0) {
-                        return;
-                    }
-
-                    battleMap.clearMovementMarkers();
-                    battleMap.clearPathMarkers();
-                    battleMap.clearRangeMarkers();
-
-                    SequenceAction moveThenUpdateAction = new SequenceAction();
-                    moveThenUpdateAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRenderer));
-                    moveThenUpdateAction.addAction(new MoveActorAlongPathActionFactory(battleMap).getMovementAction(path, turnProcessingFacade.getNext().getKey()));
-                    moveThenUpdateAction.addAction(new RepopulateRangeMarkersAction(battleMap, turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey(), weaponRangeMarkerUpdater));
-                    moveThenUpdateAction.addAction(new CreateSelectionMarkerAction(isometricTiledMapRenderer, assetManagerLoader, turnProcessingFacade.getNext().getKey()));
-                    moveThenUpdateAction.addAction(new SetMovedAction(turnProcessingFacade.getNext().getKey()));
-                    stage.addAction(moveThenUpdateAction);
-                    //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) s2c.x][(int) s2c.y]);
-
-                    //turnProcessingFacade.getNext().getKey().setMoved(true);
+                    isometricTiledMapRenderer.addObject(deploymentFacade.getNextMech());
+                    deploymentFacade.getNextMech().setPosition((int)s2c.x, (int)s2c.y);
+                    deploymentFacade.deployed(deploymentFacade.getNextMech());
                 }
             }
 
@@ -276,6 +305,24 @@ public class BattleScreenV2 implements Screen {
                     camera.position.y += 10;
                 }
 
+                return true;
+            }
+
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                if(GameState.state == GameState.State.Deploy && !deploymentFacade.getToDeploy().isEmpty()) {
+                    Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                    Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+
+                    System.out.println(s2c);
+                    if (s2c.x < 0 || s2c.y < 0 || s2c.x >= BattleMap.WIDTH || s2c.y >= 2
+                            || battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y].isImpassable()
+                            || battleScreenInputData.getPlayerTeam().keySet().stream().anyMatch(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y)) {
+                        return false;
+                    }
+
+                    deploymentFacade.getToDeploy().get(0).setPosition(s2c.x, s2c.y);
+                }
                 return true;
             }
         });
@@ -304,11 +351,6 @@ public class BattleScreenV2 implements Screen {
 
         //hudMediator.getHudElementsFacade().update();
 
-
-        turnProcessingFacade.process(battleMap);
-
-        hudMediator.getHudElementsFacade().update();
-
         viewport.apply();
 
         stage.act();
@@ -320,6 +362,14 @@ public class BattleScreenV2 implements Screen {
 
         hudStage.act();
         hudStage.draw();
+
+        if(GameState.state == GameState.State.Deploy) {
+            deploymentFacade.process(battleMap);
+        } else {
+            turnProcessingFacade.process(battleMap);
+        }
+
+        hudMediator.getHudElementsFacade().update();
 
     }
 
