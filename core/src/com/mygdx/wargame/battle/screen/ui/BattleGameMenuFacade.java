@@ -10,12 +10,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
+import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.common.ScreenRegister;
+import com.mygdx.wargame.config.Config;
 
 import static com.mygdx.wargame.config.Config.SCREEN_HUD_RATIO;
 
 public class BattleGameMenuFacade {
+
+    public static final int MAIN_MENU_BUTTON_WIDTH = 256;
+    public static final int MAIN_MENU_BUTTON_HEIGHT = 128;
 
     private TextButton resumeGameButton;
     private TextButton exitGameButton;
@@ -25,6 +31,8 @@ public class BattleGameMenuFacade {
     private TextButton.TextButtonStyle textButtonStyle2;
     private TextButton.TextButtonStyle textButtonStyle3;
 
+    private ActionLock actionLock;
+
     private AssetManager assetManager;
 
     private Table table;
@@ -33,7 +41,8 @@ public class BattleGameMenuFacade {
 
     private HUDMediator hudMediator;
 
-    public BattleGameMenuFacade(AssetManager assetManager, HUDMediator hudMediator) {
+    public BattleGameMenuFacade(ActionLock actionLock, AssetManager assetManager, HUDMediator hudMediator) {
+        this.actionLock = actionLock;
         this.assetManager = assetManager;
         this.hudMediator = hudMediator;
     }
@@ -41,7 +50,11 @@ public class BattleGameMenuFacade {
     public void create() {
 
         table = new Table();
-        table.setFillParent(true);
+
+        table.setSize(400, 600);
+        table.setPosition(Config.HUD_VIEWPORT_WIDTH.get() / 2 - 200, Config.HUD_VIEWPORT_HEIGHT.get() / 2 - 300);
+
+        table.setBackground(new TextureRegionDrawable(assetManager.get("mainmenu/MainMenuButtonBackground.png", Texture.class)));
 
         //table.setBackground(new TextureRegionDrawable(assetManager.get("skin/BigInfoPanel.png", Texture.class)));
 
@@ -49,22 +62,26 @@ public class BattleGameMenuFacade {
         textButtonStyle.font = FontCreator.getBitmapFont(20);
         textButtonStyle.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64 ,32);
-        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64 ,32);
+        textButtonStyle.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+
 
         this.textButtonStyle2 = new TextButton.TextButtonStyle();
         textButtonStyle2.font = FontCreator.getBitmapFont(20);
         textButtonStyle2.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle2.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64, 32);
-        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64, 32);
+        textButtonStyle2.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle2.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle2.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.textButtonStyle3 = new TextButton.TextButtonStyle();
         textButtonStyle3.font = FontCreator.getBitmapFont(20);
         textButtonStyle3.fontColor = Color.valueOf("FFFFFF");
         textButtonStyle3.overFontColor = Color.valueOf("00FF00");
-        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonUp.png", Texture.class)), 0.1f, 1000, 64 ,32);
-        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("skin/ButtonDown.png", Texture.class)), 0.1f, 1000, 64 ,32);
+        textButtonStyle3.up = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonUp.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle3.down = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonDown.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
+        textButtonStyle3.over = new AnimatedDrawable(new TextureRegion(assetManager.get("mainmenu/MainMenuButtonOver.png", Texture.class)), 0.2f, 10, MAIN_MENU_BUTTON_WIDTH, MAIN_MENU_BUTTON_HEIGHT);
 
         this.resumeGameButton = new TextButton("RESUME", textButtonStyle);
 
@@ -81,6 +98,7 @@ public class BattleGameMenuFacade {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 toggle();
+                GameState.paused = false;
                 return true;
             }
         });
@@ -110,10 +128,12 @@ public class BattleGameMenuFacade {
 
     public void show() {
         table.setVisible(true);
+        actionLock.setLocked(true);
     }
 
     public void hide() {
         table.setVisible(false);
+        actionLock.setLocked(false);
     }
 
     public void toggle() {

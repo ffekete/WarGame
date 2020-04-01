@@ -33,6 +33,7 @@ import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
+import com.mygdx.wargame.battle.screen.ui.BattleGameMenuFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
 import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.screen.ui.WeaponSelectionFacade;
@@ -100,6 +101,13 @@ public class BattleScreenV2 implements Screen {
 
         hudMediator = new HUDMediator();
 
+        BattleGameMenuFacade battleGameMenuFacade = new BattleGameMenuFacade(actionLock, assetManagerLoader.getAssetManager(), hudMediator);
+        hudMediator.setBattleGameMenuFacade(battleGameMenuFacade);
+
+        battleGameMenuFacade.create();
+        battleGameMenuFacade.hide();
+        battleGameMenuFacade.registerComponents(hudStage);
+
         deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap, actionLock);
 
         turnProcessingFacade = new TurnProcessingFacade(actionLock,
@@ -120,8 +128,7 @@ public class BattleScreenV2 implements Screen {
         hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
         battleScreenInputData.getAiTeam().keySet().forEach(mech -> {
-            isometricTiledMapRenderer.addObject(mech);
-            battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
+           // battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
             mech.setTeam(Team.enemy);
             //battleMap.setTemporaryObstacle(mech.getX(), mech.getY());
         });
@@ -243,6 +250,7 @@ public class BattleScreenV2 implements Screen {
                         //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                     } else {
 
+
                         if (turnProcessingFacade.getNext().getKey().moved()) {
                             return;
                         }
@@ -274,6 +282,10 @@ public class BattleScreenV2 implements Screen {
                 }
 
                 if(GameState.state == GameState.State.Deploy) {
+
+                    if (actionLock.isLocked())
+                        return;
+
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                     Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
@@ -311,6 +323,9 @@ public class BattleScreenV2 implements Screen {
 
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
+                if (actionLock.isLocked())
+                    return true;
+
                 if(GameState.state == GameState.State.Deploy && !deploymentFacade.getToDeploy().isEmpty()) {
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                     Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
@@ -350,11 +365,10 @@ public class BattleScreenV2 implements Screen {
 
         DrawUtils.clearScreen();
 
-        //hudMediator.getHudElementsFacade().update();
-
         viewport.apply();
 
-        stage.act();
+        if(!GameState.paused)
+            stage.act();
 
         isometricTiledMapRenderer.setView(camera);
         isometricTiledMapRenderer.render();
@@ -382,12 +396,12 @@ public class BattleScreenV2 implements Screen {
 
     @Override
     public void pause() {
-
+        GameState.paused = true;
     }
 
     @Override
     public void resume() {
-
+        GameState.paused = false;
     }
 
     @Override

@@ -343,6 +343,7 @@ public class HudElementsFacade {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hudMediator.getBattleGameMenuFacade().toggle();
+                GameState.paused = true;
             }
         });
 
@@ -467,13 +468,12 @@ public class HudElementsFacade {
     public void populateSidePanel() {
         sidePanel.clear();
 
-        sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-
-
         if(actionLock.isLocked()) {
-            dummyPopulate();
+            //dummyPopulate();
             return;
         }
+
+        sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
         if (GameState.state == GameState.State.Deploy) {
             sidePanel.row();

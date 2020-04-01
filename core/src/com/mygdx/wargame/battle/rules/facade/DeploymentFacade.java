@@ -15,6 +15,7 @@ import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
+import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.common.mech.AbstractMech;
@@ -139,6 +140,10 @@ public class DeploymentFacade {
 
             mech.setPosition(sx, sy);
 
+            isometricTiledMapRendererWithSprites.addObject(mech);
+            mech.setDirection(Direction.Right);
+            battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
+
             while(battleMap.getNodeGraph().getNodeWeb()[sx][sy].isImpassable() ||
                     isometricTiledMapRendererWithSprites.getObjects().stream().filter(o -> Mech.class.isAssignableFrom(o.getClass()))
                             .map(o -> (AbstractMech)o)
@@ -183,6 +188,8 @@ public class DeploymentFacade {
             nextMech = entry.getKey();
             pilot = entry.getValue();
             isometricTiledMapRendererWithSprites.addObject(nextMech);
+            nextMech.setDirection(Direction.Left);
+            battleMap.addDirectionMarker(nextMech.getDirection(), (int) nextMech.getX(), (int) nextMech.getY());
         } else {
 
 
