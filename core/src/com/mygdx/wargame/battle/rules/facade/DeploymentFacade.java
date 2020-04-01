@@ -68,11 +68,11 @@ public class DeploymentFacade {
 
             sequenceAction.addAction(new DelayAction(0.5f));
 
-            MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
+            MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
             moveToAction.setDuration(0.15f);
             sequenceAction.addAction(moveToAction);
 
-            MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
+            MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
             moveToAction3.setDuration(2f);
             sequenceAction.addAction(moveToAction3);
 
@@ -89,15 +89,15 @@ public class DeploymentFacade {
             labelStyle1.font = FontCreator.getBitmapFont(60);
             labelStyle1.fontColor = Color.DARK_GRAY;
             Label label2 = new Label("DEPLOY PHASE", labelStyle1);
-            label2.setPosition(-295, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
+            label2.setPosition(Config.HUD_VIEWPORT_WIDTH.get() + 295, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
 
             sequenceAction1.addAction(new DelayAction(0.5f));
 
-            MoveToAction moveToActionS = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
+            MoveToAction moveToActionS = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 155, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
             moveToActionS.setDuration(0.15f);
             sequenceAction1.addAction(moveToActionS);
 
-            MoveToAction moveToAction3S = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 155, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
+            MoveToAction moveToAction3S = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() / 2f -5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
             moveToAction3S.setDuration(2f);
             sequenceAction1.addAction(moveToAction3S);
 
@@ -247,11 +247,11 @@ public class DeploymentFacade {
 
         sequenceAction.addAction(new DelayAction(0.5f));
 
-        MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
+        MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
         moveToAction.setDuration(0.15f);
         sequenceAction.addAction(moveToAction);
 
-        MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
+        MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
         moveToAction3.setDuration(2f);
         sequenceAction.addAction(moveToAction3);
 
@@ -274,15 +274,15 @@ public class DeploymentFacade {
         labelStyle.fontColor = Color.DARK_GRAY;
 
         Label label = new Label("BATTLE PHASE", labelStyle);
-        label.setPosition(-300 - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
+        label.setPosition(Config.HUD_VIEWPORT_WIDTH.get() +300 - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
 
         sequenceAction.addAction(new DelayAction(0.5f));
 
-        MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
+        MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150 - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
         moveToAction.setDuration(0.15f);
         sequenceAction.addAction(moveToAction);
 
-        MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150 - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
+        MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f -5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
         moveToAction3.setDuration(2f);
         sequenceAction.addAction(moveToAction3);
 
