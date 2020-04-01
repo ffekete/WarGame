@@ -7,10 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -366,18 +362,6 @@ public class HudElementsFacade {
             }
         });
 
-        sidePanel.addAction(new Action() {
-            @Override
-            public boolean act(float delta) {
-                if (!actionLock.isLocked() && turnProcessingFacade.isNextPlayerControlled()) {
-                    sidePanel.setVisible(true);
-                } else {
-                    sidePanel.setVisible(false);
-                }
-                return false;
-            }
-        });
-
         meleeAttackButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -460,6 +444,7 @@ public class HudElementsFacade {
         });
 
         populateSidePanel();
+
         show();
     }
 
@@ -484,13 +469,16 @@ public class HudElementsFacade {
 
         sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
-        if(GameState.state == GameState.State.Deploy) {
+        if(actionLock.isLocked())
+            return;
+
+        if (GameState.state == GameState.State.Deploy) {
             sidePanel.row();
             sidePanel.add(revertDeploymentButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
             sidePanel.add(finishDeploymentButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
         }
 
-        if(GameState.state == GameState.State.Battle) {
+        if (GameState.state == GameState.State.Battle) {
             sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
             sidePanel.row();
 
@@ -535,7 +523,10 @@ public class HudElementsFacade {
 
     public void update() {
         AbstractMech abstractMech;
-        Pilot pilot;
+        Pilot pilot = null;
+
+        if(actionLock.isLocked())
+            return;
 
         if (GameState.state == GameState.State.Battle) {
             abstractMech = turnProcessingFacade.getNext().getKey();
@@ -545,7 +536,7 @@ public class HudElementsFacade {
             pilot = deploymentFacade.getPilot();
         }
 
-        if(abstractMech != null) {
+        if (abstractMech != null) {
             shieldValueLabel.setText(abstractMech.getShieldValue());
             shieldImage.setText("shield: " + shieldValueLabel.getText());
 

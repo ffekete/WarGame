@@ -24,7 +24,6 @@ import com.mygdx.wargame.common.component.shield.Shield;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Pilot;
-import com.mygdx.wargame.util.MapUtils;
 import com.mygdx.wargame.util.MathUtils;
 
 import java.util.Iterator;
@@ -56,9 +55,11 @@ TurnProcessingFacade {
     private AssetManagerLoaderV2 assetManagerLoaderV2;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater;
+    private DeploymentFacade deploymentFacade;
+    private int turnCounter = 1;
 
     public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
+                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, DeploymentFacade deploymentFacade) {
         this.actionLock = actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -75,6 +76,7 @@ TurnProcessingFacade {
         this.battleMap = battleMap;
         this.assetManagerLoaderV2 = assetManagerLoaderV2;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
+        this.deploymentFacade = deploymentFacade;
 
         this.team1.forEach((key, value) -> allSorted.put((AbstractMech) key, value));
         this.team2.forEach((key, value) -> allSorted.put((AbstractMech) key, value));
@@ -112,6 +114,18 @@ TurnProcessingFacade {
                 mech.setMoved(false);
                 mech.setAttacked(false);
             });
+
+            turnCounter++;
+            ParallelAction parallelAction = new ParallelAction();
+
+            SequenceAction sequenceAction = new SequenceAction();
+            deploymentFacade.addMovingLabelShadow(sequenceAction, "TURN " + turnCounter);
+            SequenceAction sequenceAction1 = new SequenceAction();
+            deploymentFacade.addMovingLabel(sequenceAction1, "TURN " + turnCounter);
+            parallelAction.addAction(sequenceAction);
+            parallelAction.addAction(sequenceAction1);
+
+            stageElementsStorage.hudStage.addAction(parallelAction);
 
             next = iterator.next();
             //centerCameraOnNext(stage);

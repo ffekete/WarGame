@@ -5,14 +5,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.battle.screen.ui.FontCreator;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
+import com.mygdx.wargame.battle.unit.action.LockAction;
+import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Pilot;
@@ -42,14 +46,16 @@ public class DeploymentFacade {
     private SpriteBatch spriteBatch;
     private Label deployMessageLabel;
     private BattleMap battleMap;
+    private ActionLock actionLock;
 
-    public DeploymentFacade(IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, StageElementsStorage stageElementsStorage, HUDMediator hudMediator, Map<AbstractMech, Pilot> playerGroup, Map<AbstractMech, Pilot> aiGroup, BattleMap battleMap) {
+    public DeploymentFacade(IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, StageElementsStorage stageElementsStorage, HUDMediator hudMediator, Map<AbstractMech, Pilot> playerGroup, Map<AbstractMech, Pilot> aiGroup, BattleMap battleMap, ActionLock actionLock) {
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         this.stageElementsStorage = stageElementsStorage;
         this.hudMediator = hudMediator;
         this.playerGroup = playerGroup;
         this.aiGroup = aiGroup;
         this.battleMap = battleMap;
+        this.actionLock = actionLock;
         this.shapeRenderer = new ShapeRenderer();
         this.spriteBatch = new SpriteBatch();
         this.battleMap = battleMap;
@@ -57,65 +63,20 @@ public class DeploymentFacade {
 
     public void process() {
         if (startup) {
+
+            addDeployZoneMarkers();
+
             toDeploy.clear();
+
+            ParallelAction parallelAction = new ParallelAction();
             SequenceAction sequenceAction = new SequenceAction();
-            Label.LabelStyle labelStyle = new Label.LabelStyle();
-            labelStyle.font = FontCreator.getBitmapFont(60);
-            labelStyle.fontColor = Color.GREEN;
-
-            Label label = new Label("DEPLOY PHASE", labelStyle);
-            label.setPosition(-300, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
-
-            sequenceAction.addAction(new DelayAction(0.5f));
-
-            MoveToAction moveToAction = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 150, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
-            moveToAction.setDuration(0.15f);
-            sequenceAction.addAction(moveToAction);
-
-            MoveToAction moveToAction3 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get() / 2f, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
-            moveToAction3.setDuration(2f);
-            sequenceAction.addAction(moveToAction3);
-
-            MoveToAction moveToAction2 = getMoveToAction(label, Config.HUD_VIEWPORT_WIDTH.get(), Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
-            moveToAction2.setDuration(0.15f);
-            sequenceAction.addAction(moveToAction2);
-
-            RemoveAction removeAction = new RemoveAction();
-            removeAction.setTarget(label);
-            sequenceAction.addAction(removeAction);
-
+            this.addMovingLabelShadow(sequenceAction, "DEPLOY PHASE");
             SequenceAction sequenceAction1 = new SequenceAction();
-            Label.LabelStyle labelStyle1 = new Label.LabelStyle();
-            labelStyle1.font = FontCreator.getBitmapFont(60);
-            labelStyle1.fontColor = Color.DARK_GRAY;
-            Label label2 = new Label("DEPLOY PHASE", labelStyle1);
-            label2.setPosition(Config.HUD_VIEWPORT_WIDTH.get() + 295, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
-
-            sequenceAction1.addAction(new DelayAction(0.5f));
-
-            MoveToAction moveToActionS = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() / 2f - 155, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
-            moveToActionS.setDuration(0.15f);
-            sequenceAction1.addAction(moveToActionS);
-
-            MoveToAction moveToAction3S = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() / 2f -5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
-            moveToAction3S.setDuration(2f);
-            sequenceAction1.addAction(moveToAction3S);
-
-            MoveToAction moveToAction2S = getMoveToAction(label2, Config.HUD_VIEWPORT_WIDTH.get() - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
-            moveToAction2S.setDuration(0.15f);
-            sequenceAction1.addAction(moveToAction2S);
-
-            RemoveAction removeActionS = new RemoveAction();
-            removeActionS.setTarget(label2);
-            sequenceAction1.addAction(removeAction);
-
+            this.addMovingLabel(sequenceAction1, "DEPLOY PHASE");
+            parallelAction.addAction(sequenceAction);
+            parallelAction.addAction(sequenceAction1);
 
             startup = false;
-
-            stageElementsStorage.hudStage.addActor(label2);
-            stageElementsStorage.hudStage.addActor(label);
-            stageElementsStorage.hudStage.addAction(sequenceAction);
-            stageElementsStorage.hudStage.addAction(sequenceAction1);
 
             toDeploy.addAll(playerGroup.keySet());
 
@@ -123,7 +84,7 @@ public class DeploymentFacade {
             messageLabelStyle.font = FontCreator.getBitmapFont(20);
 
             deployMessageLabel = new Label("Units to deploy:", messageLabelStyle);
-            stageElementsStorage.hudStage.addActor(deployMessageLabel);
+            stageElementsStorage.hudStage.addAction(parallelAction);
             deployMessageLabel.setPosition(20, 80);
 
 
@@ -195,12 +156,14 @@ public class DeploymentFacade {
 
         isometricTiledMapRendererWithSprites.getObjects().remove(nextMech);
 
+        nextMech.setPosition(-1, -1);
+
         iterator = playerGroup.entrySet().iterator();
         nextMech = deployed.get(0);
         deployed.remove(nextMech);
         toDeploy.add(0, nextMech);
 
-        isometricTiledMapRendererWithSprites.getObjects().remove(nextMech);
+        //isometricTiledMapRendererWithSprites.getObjects().remove(nextMech);
 
         while (iterator.hasNext()) {
             Map.Entry<AbstractMech, Pilot> entry = iterator.next();
@@ -228,21 +191,46 @@ public class DeploymentFacade {
 
     public void finishDeployment() {
         stageElementsStorage.hudStage.getActors().removeValue(deployMessageLabel, true);
-        addBattleLabelShadow();
-        addBattleLabel();
 
+        SequenceAction outer = new SequenceAction();
+        outer.addAction(new LockAction(actionLock));
+
+        ParallelAction parallelAction = new ParallelAction();
+
+        SequenceAction sequenceAction = new SequenceAction();
+        addMovingLabelShadow(sequenceAction, "BATTLE PHASE");
+
+        SequenceAction sequenceAction1 = new SequenceAction();
+        addMovingLabel(sequenceAction1, "BATTLE PHASE");
+        parallelAction.addAction(sequenceAction);
+        parallelAction.addAction(sequenceAction1);
+
+        ParallelAction parallelAction1 = new ParallelAction();
+        SequenceAction sequenceAction2 = new SequenceAction();
+        addMovingLabelShadow(sequenceAction2, "TURN 1");
+        SequenceAction sequenceAction3 = new SequenceAction();
+        addMovingLabel(sequenceAction3, "TURN 1");
+
+        parallelAction1.addAction(sequenceAction2);
+        parallelAction1.addAction(sequenceAction3);
+
+        outer.addAction(parallelAction);
+        outer.addAction(parallelAction1);
+
+        outer.addAction(new UnlockAction(actionLock, "End of deployment"));
+
+        stageElementsStorage.hudStage.addAction(outer);
         deployEnemyMechs();
 
         GameState.state = GameState.State.Battle;
     }
 
-    private void addBattleLabel() {
-        SequenceAction sequenceAction = new SequenceAction();
+    public void addMovingLabel(ParallelAction sequenceAction, String text) {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = FontCreator.getBitmapFont(60);
         labelStyle.fontColor = Color.GREEN;
 
-        Label label = new Label("BATTLE PHASE", labelStyle);
+        Label label = new Label(text, labelStyle);
         label.setPosition(-300, Config.HUD_VIEWPORT_HEIGHT.get() / 2f);
 
         sequenceAction.addAction(new DelayAction(0.5f));
@@ -259,21 +247,19 @@ public class DeploymentFacade {
         moveToAction2.setDuration(0.15f);
         sequenceAction.addAction(moveToAction2);
 
-        RemoveAction removeAction = new RemoveAction();
+        RemoveActorAction removeAction = new RemoveActorAction();
         removeAction.setTarget(label);
         sequenceAction.addAction(removeAction);
 
         stageElementsStorage.hudStage.addActor(label);
-        stageElementsStorage.hudStage.addAction(sequenceAction);
     }
 
-    private void addBattleLabelShadow() {
-        SequenceAction sequenceAction = new SequenceAction();
+    public void addMovingLabelShadow(ParallelAction sequenceAction, String text) {
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = FontCreator.getBitmapFont(60);
         labelStyle.fontColor = Color.DARK_GRAY;
 
-        Label label = new Label("BATTLE PHASE", labelStyle);
+        Label label = new Label(text, labelStyle);
         label.setPosition(Config.HUD_VIEWPORT_WIDTH.get() +300 - 5, Config.HUD_VIEWPORT_HEIGHT.get() / 2f - 5);
 
         sequenceAction.addAction(new DelayAction(0.5f));
@@ -290,15 +276,22 @@ public class DeploymentFacade {
         moveToAction2.setDuration(0.15f);
         sequenceAction.addAction(moveToAction2);
 
-        RemoveAction removeAction = new RemoveAction();
+        RemoveActorAction removeAction = new RemoveActorAction();
         removeAction.setTarget(label);
         sequenceAction.addAction(removeAction);
 
         stageElementsStorage.hudStage.addActor(label);
-        stageElementsStorage.hudStage.addAction(sequenceAction);
     }
 
     public List<AbstractMech> getToDeploy() {
         return toDeploy;
+    }
+
+    private void addDeployZoneMarkers() {
+        for(int i = 0; i < 2; i++) {
+            for (int j = 0; j < BattleMap.HEIGHT; j++) {
+                battleMap.addMovementMarker(j,i);
+            }
+        }
     }
 }

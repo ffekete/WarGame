@@ -39,10 +39,10 @@ public class MapUtils {
                 GraphPath graphPath = battleMap.calculatePath(mech, start, next);
                 if (graphPath.getCount() <= mech.getMovementPoints() + 1 && graphPath.getCount() > 0) {
                     allAvailable.put(next, graphPath.getCount() - 1);
-                    edges = battleMap.getNodeGraph().getNodeEdges().get(next);
-                    for (int i = 0; i < edges.size; i++) {
-                        openNodes.add(edges.get(i).getToNode());
-                    }
+                }
+                edges = battleMap.getNodeGraph().getNodeEdges().get(next);
+                for (int i = 0; i < edges.size; i++) {
+                    openNodes.add(edges.get(i).getToNode());
                 }
             }
         }
@@ -72,10 +72,10 @@ public class MapUtils {
                 GraphPath<Node> path = battleMap.calculatePath(mech, start, next);
                 if (path.getCount() <= distance + 1 && path.getCount() != 0) {
                     allAvailable.add(next);
-                    edges = battleMap.getNodeGraph().getNodeEdges().get(next);
-                    for (int i = 0; i < edges.size; i++) {
-                        openNodes.add(edges.get(i).getToNode());
-                    }
+                }
+                edges = battleMap.getNodeGraph().getNodeEdges().get(next);
+                for (int i = 0; i < edges.size; i++) {
+                    openNodes.add(edges.get(i).getToNode());
                 }
             }
         }

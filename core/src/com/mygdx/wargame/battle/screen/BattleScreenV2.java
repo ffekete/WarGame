@@ -100,7 +100,7 @@ public class BattleScreenV2 implements Screen {
 
         hudMediator = new HUDMediator();
 
-        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
+        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap, actionLock);
 
         turnProcessingFacade = new TurnProcessingFacade(actionLock,
                 new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock, isometricTiledMapRenderer),
@@ -113,7 +113,7 @@ public class BattleScreenV2 implements Screen {
                 new HeatCalculator(),
                 new StabilityDecreaseCalculator(),
                 hudMediator,
-                battleMap, assetManagerLoader, isometricTiledMapRenderer);
+                battleMap, assetManagerLoader, isometricTiledMapRenderer, deploymentFacade);
 
         hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, deploymentFacade, actionLock, hudMediator));
         hudMediator.getHudElementsFacade().create();
