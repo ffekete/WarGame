@@ -52,29 +52,29 @@ public class WarGame extends Game {
 
         AbstractMech mech = new Gunner("PlayerMech",  assetManagerLoaderV2);
         mech.setActive(true);
-        mech.setPosition(0,0);
+        mech.setPosition(-1, -1);
 
         AbstractMech mobileArtillery = new MobileArtillery("PlayerMobileArtillery", assetManagerLoaderV2);
         mobileArtillery.setActive(true);
-        mobileArtillery.setPosition(3, 0);
+        mobileArtillery.setPosition(-1, -1);
 
 
         AbstractMech fighter = new Fighter("PlayerFighter", assetManagerLoaderV2);
         fighter.setActive(true);
-        fighter.setPosition(5, 0);
+        fighter.setPosition(-1, -1);
 
 
         AbstractMech tank = new Tank("AITank", assetManagerLoaderV2);
         tank.setActive(true);
-        tank.setPosition(5, 7);
+        tank.setPosition(-1, -1);
 
         AbstractMech artillery = new Artillery("AIArtillery", assetManagerLoaderV2);
         artillery.setActive(true);
-        artillery.setPosition(5, 6);
+        artillery.setPosition(-1, -1);
 
         AbstractMech mech2 = new Templar("AITemplar", assetManagerLoaderV2);
         mech2.setActive(true);
-        mech2.setPosition(5, 5);
+        mech2.setPosition(-1, -1);
 
 
         battleScreenInputData.setPlayerTeam(ImmutableMap.<AbstractMech, Pilot>builder()

@@ -100,7 +100,7 @@ public class BattleScreenV2 implements Screen {
 
         hudMediator = new HUDMediator();
 
-        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam());
+        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
 
         turnProcessingFacade = new TurnProcessingFacade(actionLock,
                 new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock, isometricTiledMapRenderer),
@@ -321,6 +321,7 @@ public class BattleScreenV2 implements Screen {
                         return false;
                     }
 
+                    deploymentFacade.getToDeploy().get(0).setColor(Color.valueOf("FFFFFF"));
                     deploymentFacade.getToDeploy().get(0).setPosition(s2c.x, s2c.y);
                 }
                 return true;
@@ -364,7 +365,7 @@ public class BattleScreenV2 implements Screen {
         hudStage.draw();
 
         if(GameState.state == GameState.State.Deploy) {
-            deploymentFacade.process(battleMap);
+            deploymentFacade.process();
         } else {
             turnProcessingFacade.process(battleMap);
         }

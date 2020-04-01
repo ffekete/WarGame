@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -106,6 +110,9 @@ public class HudElementsFacade {
 
     private TextButton movedIcon;
     private TextButton attackedIcon;
+
+    private TextButton revertDeploymentButton;
+    private TextButton finishDeploymentButton;
 
 
     private TextButton mainMenuButton;
@@ -436,6 +443,22 @@ public class HudElementsFacade {
             }
         });
 
+        revertDeploymentButton = new TextButton("revert last", sidePanelButtonStyle);
+        revertDeploymentButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                deploymentFacade.back();
+            }
+        });
+
+        finishDeploymentButton = new TextButton("finish", sidePanelButtonStyle);
+        finishDeploymentButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                deploymentFacade.finishDeployment();
+            }
+        });
+
         populateSidePanel();
         show();
     }
@@ -460,6 +483,12 @@ public class HudElementsFacade {
         sidePanel.clear();
 
         sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+
+        if(GameState.state == GameState.State.Deploy) {
+            sidePanel.row();
+            sidePanel.add(revertDeploymentButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.add(finishDeploymentButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        }
 
         if(GameState.state == GameState.State.Battle) {
             sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);

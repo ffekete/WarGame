@@ -123,10 +123,10 @@ AbstractMech extends Actor implements Mech {
 
             enemyMarker.draw(spriteBatch, parentAlpha);
         }
-        spriteBatch.setColor(originalColor);
-
+        isometricSprite.setColor(getColor());
         isometricSprite.draw(spriteBatch, parentAlpha);
 
+        spriteBatch.setColor(Color.WHITE);
     }
 
     public int getInitiative() {
