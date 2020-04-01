@@ -143,6 +143,7 @@ TurnProcessingFacade {
             AbstractMech selectedMech = next.getKey();
             Pilot selectedPilot = next.getValue();
 
+            hudMediator.getHudElementsFacade().populateSidePanel();
 
             battleMap.clearRangeMarkers();
             battleMap.clearMovementMarkers();

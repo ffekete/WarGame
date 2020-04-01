@@ -277,7 +277,8 @@ public class BattleScreenV2 implements Screen {
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                     Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
-                    if( s2c.x < 0 || s2c.y < 0 || s2c.x >= 10 || s2c.y >= 2 || battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y].isImpassable()) {
+                    if( s2c.x < 0 || s2c.y < 0 || s2c.x >= 10 || s2c.y >= 2 || battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y].isImpassable()
+                    || battleScreenInputData.getPlayerTeam().keySet().stream().anyMatch(mech -> mech != deploymentFacade.getNextMech() && mech.getX() == s2c.x && mech.getY() == s2c.y)) {
                         return;
                     }
 
@@ -314,7 +315,6 @@ public class BattleScreenV2 implements Screen {
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                     Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
-                    System.out.println(s2c);
                     if (s2c.x < 0 || s2c.y < 0 || s2c.x >= BattleMap.WIDTH || s2c.y >= 2
                             || battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y].isImpassable()
                             || battleScreenInputData.getPlayerTeam().keySet().stream().anyMatch(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y)) {

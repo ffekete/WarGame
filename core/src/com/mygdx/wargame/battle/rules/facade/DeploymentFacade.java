@@ -193,7 +193,6 @@ public class DeploymentFacade {
         stageElementsStorage.hudStage.getActors().removeValue(deployMessageLabel, true);
 
         SequenceAction outer = new SequenceAction();
-        outer.addAction(new LockAction(actionLock));
 
         ParallelAction parallelAction = new ParallelAction();
 
@@ -223,6 +222,8 @@ public class DeploymentFacade {
         deployEnemyMechs();
 
         GameState.state = GameState.State.Battle;
+        actionLock.setLocked(true);
+        hudMediator.getHudElementsFacade().populateSidePanel();
     }
 
     public void addMovingLabel(ParallelAction sequenceAction, String text) {

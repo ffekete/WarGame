@@ -469,16 +469,31 @@ public class HudElementsFacade {
 
         sidePanel.add(mainMenuButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
 
-        if(actionLock.isLocked())
+
+        if(actionLock.isLocked()) {
+            dummyPopulate();
             return;
+        }
 
         if (GameState.state == GameState.State.Deploy) {
             sidePanel.row();
             sidePanel.add(revertDeploymentButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
             sidePanel.add(finishDeploymentButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.row();
+            sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.row();
+            sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+            sidePanel.row();
         }
 
         if (GameState.state == GameState.State.Battle) {
+            if(!turnProcessingFacade.isNextPlayerControlled()) {
+                dummyPopulate();
+                return;
+            }
+
             sidePanel.add(endTurnButton).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
             sidePanel.row();
 
@@ -519,6 +534,20 @@ public class HudElementsFacade {
             }
         }
 
+    }
+
+    private void dummyPopulate() {
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.row();
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.row();
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.row();
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.add().size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        sidePanel.row();
     }
 
     public void update() {

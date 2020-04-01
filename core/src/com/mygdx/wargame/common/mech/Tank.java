@@ -29,7 +29,7 @@ public class Tank extends AbstractMech {
     private int movementPoints;
 
     public Tank(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(20, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Tank.png", Texture.class), 60),
+        super(2, new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("mechs/Tank.png", Texture.class), 60),
                 new IsometricAnimatedSprite(assetManagerLoader.getAssetManager().get("info/EnemyMarker.png", Texture.class), 60));
         this.name = name;
 
