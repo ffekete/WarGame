@@ -180,4 +180,9 @@ public class Gunner extends AbstractMech {
     public int getMeleeDamage() {
         return 5;
     }
+
+    @Override
+    public Role getRole() {
+        return Role.FrontLine;
+    }
 }

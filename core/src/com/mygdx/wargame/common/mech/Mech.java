@@ -119,4 +119,6 @@ public interface Mech extends Comparable<Mech> {
     boolean canMoveAfterAttack();
 
     boolean canFly();
+
+    Role getRole();
 }

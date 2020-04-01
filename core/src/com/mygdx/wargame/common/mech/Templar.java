@@ -180,4 +180,9 @@ public class Templar extends AbstractMech {
     public int getMeleeDamage() {
         return 8;
     }
+
+    @Override
+    public Role getRole() {
+        return Role.FrontLine;
+    }
 }

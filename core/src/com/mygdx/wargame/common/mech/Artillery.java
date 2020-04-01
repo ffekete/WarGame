@@ -171,4 +171,8 @@ public class Artillery extends AbstractMech {
         return 0;
     }
 
+    @Override
+    public Role getRole() {
+        return Role.Artillery;
+    }
 }

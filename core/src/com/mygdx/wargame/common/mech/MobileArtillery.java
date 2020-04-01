@@ -174,4 +174,9 @@ public class MobileArtillery extends AbstractMech {
     public int getMeleeDamage() {
         return 0;
     }
+
+    @Override
+    public Role getRole() {
+        return Role.Artillery;
+    }
 }

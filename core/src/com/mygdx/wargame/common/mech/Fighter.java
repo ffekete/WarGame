@@ -184,4 +184,9 @@ public class Fighter extends AbstractMech {
     public boolean canFly() {
         return true;
     }
+
+    @Override
+    public Role getRole() {
+        return Role.Aircraft;
+    }
 }

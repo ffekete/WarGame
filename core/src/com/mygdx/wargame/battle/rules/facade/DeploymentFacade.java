@@ -20,6 +20,7 @@ import com.mygdx.wargame.battle.unit.action.LockAction;
 import com.mygdx.wargame.battle.unit.action.UnlockAction;
 import com.mygdx.wargame.common.mech.AbstractMech;
 import com.mygdx.wargame.common.mech.Mech;
+import com.mygdx.wargame.common.mech.Role;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.config.Config;
 
@@ -144,15 +145,19 @@ public class DeploymentFacade {
             mech.setDirection(Direction.Right);
             battleMap.addDirectionMarker(mech.getDirection(), (int) mech.getX(), (int) mech.getY());
 
-            while(battleMap.getNodeGraph().getNodeWeb()[sx][sy].isImpassable() ||
+            while(battleMap.getNodeGraph().getNodeWeb()[(int)mech.getX()][(int)mech.getY()].isImpassable() ||
                     isometricTiledMapRendererWithSprites.getObjects().stream().filter(o -> Mech.class.isAssignableFrom(o.getClass()))
                             .map(o -> (AbstractMech)o)
                     .anyMatch(m -> m != mech && (int)m.getX() == mech.getX() && (int)m.getY() == mech.getY())) {
                 int nx = new Random().nextInt(BattleMap.WIDTH);
-                int ny = BattleMap.HEIGHT- new Random().nextInt(2) - 1;
+                int ny = BattleMap.HEIGHT- new Random().nextInt(isBackLine(mech) ? 3 : 2) - 1;
                 mech.setPosition(nx, ny);
             }
         });
+    }
+
+    private boolean isBackLine(AbstractMech mech) {
+        return mech.getRole() == Role.Artillery || mech.getRole() == Role.Aircraft;
     }
 
     public void back() {
@@ -297,7 +302,7 @@ public class DeploymentFacade {
 
     private void addDeployZoneMarkers() {
         for(int i = 0; i < 2; i++) {
-            for (int j = 0; j < BattleMap.HEIGHT; j++) {
+            for (int j = 0; j < BattleMap.WIDTH; j++) {
                 battleMap.addMovementMarker(j,i);
             }
         }
