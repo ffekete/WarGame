@@ -1,10 +1,14 @@
 package com.mygdx.wargame.battle.map;
 
+import com.mygdx.wargame.battle.map.tile.Tile;
+
 public class Node {
 
     private int index;
     private float x, y;
     private boolean impassable = false;
+    private int height;
+    private Tile tile;
 
     public Node(float x, float y) {
         this.setX(x);
@@ -35,11 +39,19 @@ public class Node {
         this.y = y;
     }
 
+    public boolean isImpassable() {
+        return impassable;
+    }
+
     public void setImpassable(boolean impassable) {
         this.impassable = impassable;
     }
 
-    public boolean isImpassable() {
-        return impassable;
+    public Tile getTile() {
+        return tile;
+    }
+
+    public void setTile(Tile tile) {
+        this.tile = tile;
     }
 }

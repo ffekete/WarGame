@@ -33,4 +33,29 @@ public class GrassCityTile implements Tile {
     public boolean isImpassable() {
         return true;
     }
+
+    @Override
+    public int getAppeal() {
+        return 0;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Building on a grassy tile. Nothing special.";
+    }
+
+    @Override
+    public int getTileWorldHeight() {
+        return 32;
+    }
+
+    @Override
+    public int getRangeModifier() {
+        return 0;
+    }
+
+    @Override
+    public int getHitChanceModifierForAttackers() {
+        return 0;
+    }
 }

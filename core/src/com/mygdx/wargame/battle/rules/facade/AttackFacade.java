@@ -84,7 +84,7 @@ public class AttackFacade {
                             }
                         }
 
-                        int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart);
+                        int chance = hitChanceCalculatorFacade.getHitChance(weapon, attackingPilot, attackingMech, defendingMech, bodyPart, battleMap);
 
                         for (int i = 0; i < weapon.getDamageMultiplier(); i++) {
 

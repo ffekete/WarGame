@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.wargame.battle.action.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.BattleMapStore;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
@@ -89,6 +90,7 @@ public class BattleScreenV2 implements Screen {
         hudStage = new Stage(hudViewPort);
 
         battleMap = new BattleMap(assetManagerLoader, TerrainType.Grassland, assetManagerLoader);
+        BattleMapStore.battleMap = battleMap;
 
         isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
 
@@ -210,7 +212,7 @@ public class BattleScreenV2 implements Screen {
                         SequenceAction sequenceAction = new SequenceAction();
                         sequenceAction.addAction(new LockAction(actionLock));
                         Optional<Map.Entry<AbstractMech, Pilot>> pilotAtCoordinates = battleScreenInputData.getAiTeam().entrySet().stream().filter(entry -> mechAtCoordinates.get() == entry.getKey()).findFirst();
-                        int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey());
+                        int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey(), battleMap);
                         if (minRange < MathUtils.getDistance(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY())) {
                             return;
                         }
@@ -294,7 +296,7 @@ public class BattleScreenV2 implements Screen {
                         return;
                     }
 
-                    isometricTiledMapRenderer.addObject(deploymentFacade.getNextMech());
+                    //isometricTiledMapRenderer.addObject(deploymentFacade.getNextMech());
                     deploymentFacade.getNextMech().setPosition((int)s2c.x, (int)s2c.y);
                     deploymentFacade.deployed(deploymentFacade.getNextMech());
                 }

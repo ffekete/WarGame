@@ -2,7 +2,10 @@ package com.mygdx.wargame.common.mech;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.BattleMapStore;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.battle.unit.State;
@@ -123,8 +126,14 @@ AbstractMech extends Actor implements Mech {
 
             enemyMarker.draw(spriteBatch, parentAlpha);
         }
+
         isometricSprite.setColor(getColor());
-        isometricSprite.draw(spriteBatch, parentAlpha);
+        int height = getX() >= 0 && getY() >= 0 && getX() < BattleMap.WIDTH && getY() < BattleMap.HEIGHT ? BattleMapStore.battleMap.getNodeGraph().getNodeWeb()[(int)getX()][(int)getY()].getTile().getTileWorldHeight() : 0;
+
+        if(this.canFly())
+            height += 16;
+
+        isometricSprite.draw(spriteBatch, parentAlpha, height);
 
         spriteBatch.setColor(Color.WHITE);
     }

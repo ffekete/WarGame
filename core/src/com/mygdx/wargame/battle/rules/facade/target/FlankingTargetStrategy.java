@@ -56,7 +56,7 @@ public class FlankingTargetStrategy implements TargetingStrategy {
 
         if (target.isPresent()) {
 
-            int minRange = rangeCalculator.calculateAllWeaponsRange(pilot, mech);
+            int minRange = rangeCalculator.calculateAllWeaponsRange(pilot, mech, battleMap);
             flankingNode = getFlankingAreaAroundEnemy(mech, battleMap, target, minRange);
             System.out.println(mech + " getFlankingAreaAroundEnemy: " + flankingNode);
 

@@ -100,6 +100,7 @@ public class TiledMapGenerator {
         if(tile.isImpassable()) {
             nodeGraph.setImpassable(i, j);
         }
+        nodeGraph.getNodeWeb()[i][j].setTile(tile);
         layer.setCell(i, j, cell);
         return tileLayers;
     }

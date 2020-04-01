@@ -1,5 +1,7 @@
 package com.mygdx.wargame.battle.rules.facade;
 
+import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.BattleMapStore;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
@@ -20,7 +22,7 @@ public class HitChanceCalculatorFacade {
     private IonHitChanceCalculator ionHitChanceCalculator = new IonHitChanceCalculator();
     private PlasmaHitChanceCalculator plasmaHitChanceCalculator = new PlasmaHitChanceCalculator();
 
-    public int getHitChance(Weapon weapon, Pilot attackingPilot, Mech attackingMech, Mech defendingMech, BodyPart targetBodyPart) {
+    public int getHitChance(Weapon weapon, Pilot attackingPilot, Mech attackingMech, Mech defendingMech, BodyPart targetBodyPart, BattleMap battleMap) {
 
         int modifier = 0;
         if (targetBodyPart != null) {
@@ -61,7 +63,7 @@ public class HitChanceCalculatorFacade {
                 chance = flamerHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
                 break;
         }
-        return chance + modifier;
+        return chance + modifier + battleMap.getNodeGraph().getNodeWeb()[(int)defendingMech.getX()][(int)defendingMech.getY()].getTile().getHitChanceModifierForAttackers();
     }
 
 }

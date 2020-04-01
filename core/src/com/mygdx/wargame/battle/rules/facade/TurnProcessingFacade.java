@@ -188,7 +188,7 @@ TurnProcessingFacade {
                 // find target
                 Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
 
-                int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech);
+                int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech, battleMap);
 
                 // move if target too far away
                 if (target.isPresent()) {

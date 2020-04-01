@@ -14,7 +14,7 @@ public class WeaponRangeMarkerUpdater {
 
         battleMap.clearRangeMarkers();
 
-        int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech);
+        int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech, battleMap);
         for(int i = 0; i < BattleMap.WIDTH; i++) {
             for (int j = 0; j < BattleMap.HEIGHT; j++) {
                 if(MathUtils.getDistance(i,j, selectedMech.getX(), selectedMech.getY()) <= minRange) {

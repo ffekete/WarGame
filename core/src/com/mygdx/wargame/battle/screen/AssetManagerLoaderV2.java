@@ -18,11 +18,9 @@ public class AssetManagerLoaderV2 {
         assetManager.load("tiles/GrassBigBuilding.png", Texture.class);
 
         assetManager.load("tiles/GrassBigForest.png", Texture.class);
+        assetManager.load("tiles/GrassBigLow.png", Texture.class);
         assetManager.load("tiles/GrassBigForestDamaged.png", Texture.class);
-        assetManager.load("tiles/GrassBigForestLake.png", Texture.class);
         assetManager.load("tiles/GrassBigMountain.png", Texture.class);
-        assetManager.load("tiles/GrassBigPowerPlant.png", Texture.class);
-        assetManager.load("tiles/GrassBigPowerPlantDestroyed.png", Texture.class);
 
         assetManager.load("mechs/Templar.png", Texture.class);
         assetManager.load("mechs/Gunner.png", Texture.class);
@@ -30,6 +28,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mechs/Artillery.png", Texture.class);
         assetManager.load("mechs/Tank.png", Texture.class);
         assetManager.load("mechs/Fighter.png", Texture.class);
+        assetManager.load("mechs/Shadow.png", Texture.class);
 
 
         assetManager.load("info/PathMarker.png", Texture.class);

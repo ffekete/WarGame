@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.config.Config;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -278,6 +279,12 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
     }
 
     public List<Actor> getObjects() {
+        objects.sort(new Comparator<Actor>() {
+            @Override
+            public int compare(Actor o1, Actor o2) {
+                return Integer.compare((int)o2.getY(), (int)o1.getY());
+            }
+        });
         return objects;
     }
 

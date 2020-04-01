@@ -7,4 +7,9 @@ public interface Tile {
     TileState getTileState();
     void setTileState(TileState tileState);
     boolean isImpassable();
+    int getAppeal();
+    String getDescription();
+    int getTileWorldHeight();
+    int getRangeModifier();
+    int getHitChanceModifierForAttackers();
 }

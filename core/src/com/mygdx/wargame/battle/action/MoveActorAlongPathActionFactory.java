@@ -24,6 +24,11 @@ public class MoveActorAlongPathActionFactory {
         SequenceAction moveToAction = new SequenceAction();
 
         Node node;
+
+        if(paths.getCount() < 1) {
+            return moveParallelAction;
+        }
+
         Node previous = paths.get(0);
         for (int i = 1; i < paths.getCount(); i++) {
             node = paths.get(i);
