@@ -13,4 +13,5 @@ public interface Tile {
     int getHitChanceModifierForDefenders();
     int getStabilityModifier();
     int getHeatDissipationModifier();
+    String getName();
 }

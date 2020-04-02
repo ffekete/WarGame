@@ -9,7 +9,7 @@ public class GrassForestDamagedTile implements Tile {
 
     @Override
     public Tile getDestroyedTile() {
-        return null;
+        return new GrassDamagedTile();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class GrassForestDamagedTile implements Tile {
 
     @Override
     public String getDescription() {
-        return "+15% to hit chance defense for non flying units. -10 heat dissipation for units on this tile.";
+        return "+15% to hit chance \ndefense for non flying units.\n-10 heat dissipation for \nunits on this tile.";
     }
 
     @Override
@@ -55,5 +55,10 @@ public class GrassForestDamagedTile implements Tile {
     @Override
     public int getHeatDissipationModifier() {
         return -10;
+    }
+
+    @Override
+    public String getName() {
+        return "Forest [D]";
     }
 }

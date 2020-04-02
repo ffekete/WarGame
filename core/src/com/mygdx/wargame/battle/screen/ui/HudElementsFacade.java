@@ -3,10 +3,12 @@ package com.mygdx.wargame.battle.screen.ui;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -15,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Pool;
 import com.mygdx.wargame.battle.lock.ActionLock;
+import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.map.BattleMapStore;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
 import com.mygdx.wargame.battle.rules.facade.DeploymentFacade;
 import com.mygdx.wargame.battle.rules.facade.GameState;
@@ -30,7 +34,8 @@ import java.util.Optional;
 
 import static com.mygdx.wargame.config.Config.*;
 
-public class HudElementsFacade {
+public class
+HudElementsFacade {
 
     public static final int SMALL_BUTTON_WIDTH = 110;
     public static final int SMALL_BUTTON_HEIGHT = 40;
@@ -82,6 +87,8 @@ public class HudElementsFacade {
 
     private Tooltip<Table> stabilityToolTip;
     private Table stabilityTooltipTable;
+
+    private Table tileInfoTooltipTable;
 
     private Pool<Label> labelPool;
 
@@ -277,6 +284,14 @@ public class HudElementsFacade {
         stabilityImage.addListener(stabilityToolTip);
         stabilityTooltipTable.add(new Label("When stability level reaches 0 the mech cannot move anymore.", labelStyle));
 
+
+
+        tileInfoTooltipTable = new Table();
+        tileInfoTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
+        tileInfoTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
+        tileInfoTooltipTable.setPosition(HUD_VIEWPORT_WIDTH.get() - 210, HUD_VIEWPORT_HEIGHT.get() - 210);
+        tileInfoTooltipTable.setSize(200, 200);
+
         mechNameLabel = labelPool.obtain();
         pilotNameLabel = labelPool.obtain();
 
@@ -452,7 +467,7 @@ public class HudElementsFacade {
     public void registerComponents(Stage stage) {
         stage.addActor(upperHud);
         stage.addActor(sidePanel);
-        //stage.addActor(dontShowMovementMarkersButton);
+        stage.addActor(tileInfoTooltipTable);
     }
 
     public void hide() {
@@ -620,6 +635,14 @@ public class HudElementsFacade {
             attackedIcon.setText(abstractMech.attacked() ? "attacked" : "not attacked");
 
             meleeAttackButton.setText("melee [" + abstractMech.getMeleeDamage() + " dmg]");
+
+            if(abstractMech.getX() >= 0 && abstractMech.getY() >= 0 && abstractMech.getX() < BattleMap.WIDTH && abstractMech.getY() < BattleMap.HEIGHT) {
+                tileInfoTooltipTable.clear();
+
+                tileInfoTooltipTable.add(new Label(BattleMapStore.battleMap.getTile(abstractMech.getX(), abstractMech.getY()).getName(), labelStyle)).row();
+                tileInfoTooltipTable.add(new Label(BattleMapStore.battleMap.getTile(abstractMech.getX(), abstractMech.getY()).getDescription(), labelStyle)).row();
+                tileInfoTooltipTable.add(new Image(((TiledMapTileLayer)BattleMapStore.battleMap.getTiledMap().getLayers().get("groundLayer")).getCell((int)abstractMech.getX(), (int)abstractMech.getY()).getTile().getTextureRegion()));
+            }
         }
     }
 

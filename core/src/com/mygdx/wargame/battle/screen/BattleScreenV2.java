@@ -141,7 +141,7 @@ public class BattleScreenV2 implements Screen {
 
         camera.zoom = 1.4f;
         camera.position.x = 640;
-        camera.position.y = 20;
+        camera.position.y = 40;
 
         stage.addListener(new InputListener() {
 
@@ -307,19 +307,6 @@ public class BattleScreenV2 implements Screen {
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
                 //battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
-                return true;
-            }
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.S) {
-                    camera.position.y -= 10;
-                }
-
-                if (keycode == Input.Keys.W) {
-                    camera.position.y += 10;
-                }
-
                 return true;
             }
 

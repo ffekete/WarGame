@@ -24,7 +24,7 @@ public class GrassCityTile implements Tile {
 
     @Override
     public String getDescription() {
-        return "Building on a grassy tile. Nothing special.";
+        return "Building on a grassy tile.\nNothing special.";
     }
 
     @Override
@@ -55,5 +55,10 @@ public class GrassCityTile implements Tile {
     @Override
     public int getHeatDissipationModifier() {
         return 0;
+    }
+
+    @Override
+    public String getName() {
+        return "Building";
     }
 }

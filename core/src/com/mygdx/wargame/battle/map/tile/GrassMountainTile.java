@@ -24,7 +24,7 @@ public class GrassMountainTile implements Tile {
 
     @Override
     public String getDescription() {
-        return "Mountain on grass tile. Only aircraft may pass on this tile.";
+        return "Mountain on grass tile.\nOnly aircraft may pass on this tile.";
     }
 
     @Override
@@ -56,6 +56,11 @@ public class GrassMountainTile implements Tile {
     @Override
     public int getHeatDissipationModifier() {
         return 0;
+    }
+
+    @Override
+    public String getName() {
+        return "Mountain";
     }
 }
 

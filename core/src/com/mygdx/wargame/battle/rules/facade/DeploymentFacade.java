@@ -84,12 +84,12 @@ public class DeploymentFacade {
 
             Label.LabelStyle messageLabelStyle= new Label.LabelStyle();
             messageLabelStyle.font = FontCreator.getBitmapFont(20);
+            messageLabelStyle.fontColor = Color.WHITE;
 
             deployMessageLabel = new Label("Units to deploy:", messageLabelStyle);
             stageElementsStorage.hudStage.addAction(parallelAction);
             deployMessageLabel.setPosition(20, 80);
-
-
+            stageElementsStorage.hudStage.addActor(deployMessageLabel);
 
         } else {
             if (nextMech == null) {

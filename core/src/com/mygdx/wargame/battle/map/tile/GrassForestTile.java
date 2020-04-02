@@ -24,7 +24,7 @@ public class GrassForestTile implements Tile {
 
     @Override
     public String getDescription() {
-        return "+10% to hit chance defense for non flying units.";
+        return "+10% to hit chance defense \nfor non flying units.";
     }
 
     @Override
@@ -55,5 +55,10 @@ public class GrassForestTile implements Tile {
     @Override
     public int getHeatDissipationModifier() {
         return 0;
+    }
+
+    @Override
+    public String getName() {
+        return "Forest";
     }
 }

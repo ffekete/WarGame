@@ -57,4 +57,9 @@ public class GrassTile implements Tile {
     public int getHeatDissipationModifier() {
         return 0;
     }
+
+    @Override
+    public String getName() {
+        return "Grass";
+    }
 }

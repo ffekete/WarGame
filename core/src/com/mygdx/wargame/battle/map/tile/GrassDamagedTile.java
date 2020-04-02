@@ -24,7 +24,7 @@ public class GrassDamagedTile implements Tile {
 
     @Override
     public String getDescription() {
-        return "Damaged grass tile. Craters everywhere.";
+        return "Damaged grass tile.\nCraters everywhere.";
     }
 
     @Override
@@ -56,5 +56,10 @@ public class GrassDamagedTile implements Tile {
     @Override
     public int getHeatDissipationModifier() {
         return 0;
+    }
+
+    @Override
+    public String getName() {
+        return "Grass [D]";
     }
 }

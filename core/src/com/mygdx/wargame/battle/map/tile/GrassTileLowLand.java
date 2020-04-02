@@ -24,7 +24,7 @@ public class GrassTileLowLand implements Tile {
 
     @Override
     public String getDescription() {
-        return "Lower lying tile. -1 to attack range for all weapons for non flying units.";
+        return "Lower lying tile. \n-1 to attack range for all \nweapons for non flying units.";
     }
 
     @Override
@@ -56,5 +56,10 @@ public class GrassTileLowLand implements Tile {
     @Override
     public int getHeatDissipationModifier() {
         return 0;
+    }
+
+    @Override
+    public String getName() {
+        return "Grass lowland";
     }
 }

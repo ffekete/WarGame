@@ -73,6 +73,11 @@ BulletAnimationAction extends Action {
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
         int delay = -1;
 
+        Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
+        Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
+
+        boolean tileDamageInflicted = false;
+
         ParallelAction parallelAction = new ParallelAction();
         ParallelAction outerSequenceAction = new SequenceAction();
         outerSequenceAction.addAction(parallelAction);
@@ -113,8 +118,6 @@ BulletAnimationAction extends Action {
 
                 MoveToAction moveToAction = null;
                 MoveActorByBezierLine moveActorByBezierLine = null;
-                Vector2 start = new Vector2(attackerMech.getX(), attackerMech.getY());
-                Vector2 end = new Vector2(defenderMech.getX(), defenderMech.getY());
 
                 bullet.setPosition(start.x, start.y);
 
@@ -170,7 +173,7 @@ BulletAnimationAction extends Action {
 
                     explosionAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
 
-                    explosionAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
+                    tileDamageInflicted = true;
 
                     sequenceAction.addAction(explosionAction);
                 }
@@ -207,6 +210,9 @@ BulletAnimationAction extends Action {
                 parallelAction.addAction(sequenceAction);
             }
         }
+
+        if(tileDamageInflicted)
+            outerSequenceAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
 
         stageElementsStorage.stage.addAction(outerSequenceAction);
     }
