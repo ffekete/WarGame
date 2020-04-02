@@ -1,40 +1,40 @@
 package com.mygdx.wargame.battle.map.tile;
 
-public class GrassMountainTile implements Tile {
+public class GrassDamagedTile implements Tile {
 
     @Override
     public String getPath() {
-        return "tiles/GrassBigMountain.png";
+        return "tiles/GrassBigDamaged.png";
     }
 
     @Override
     public Tile getDestroyedTile() {
-        return null;
+        return new GrassTileLowLand();
     }
 
     @Override
     public boolean isImpassable() {
-        return true;
+        return false;
     }
 
     @Override
     public int getAppeal() {
-        return 0;
+        return 1;
     }
 
     @Override
     public String getDescription() {
-        return "Mountain on grass tile. Only aircraft may pass on this tile.";
+        return "Damaged grass tile. Craters everywhere.";
     }
 
     @Override
     public int getTileWorldHeight() {
-        return 32;
+        return 0;
     }
 
     @Override
     public int getRangeModifier() {
-        return -1;
+        return 0;
     }
 
     @Override
@@ -58,4 +58,3 @@ public class GrassMountainTile implements Tile {
         return 0;
     }
 }
-

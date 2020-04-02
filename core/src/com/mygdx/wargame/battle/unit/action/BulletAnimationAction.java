@@ -170,7 +170,7 @@ BulletAnimationAction extends Action {
 
                     explosionAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
 
-                    explosionAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y));
+                    explosionAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
 
                     sequenceAction.addAction(explosionAction);
                 }

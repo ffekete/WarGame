@@ -119,9 +119,9 @@ AbstractMech extends Actor implements Mech {
             enemyMarker.setPosition(getX(), getY());
 
             if (team == Team.enemy) {
-                spriteBatch.setColor(Color.valueOf("FF000077"));
+                enemyMarker.setColor(Color.valueOf("FF000077"));
             } else {
-                spriteBatch.setColor(Color.valueOf("00FF0077"));
+                enemyMarker.setColor(Color.valueOf("00FF0077"));
             }
 
             enemyMarker.draw(spriteBatch, parentAlpha);
