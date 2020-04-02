@@ -161,6 +161,8 @@ public class BattleScreenV2 implements Screen {
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                     Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
 
+                    hudMediator.getHudElementsFacade().updateTileInfoPanel(s2c.x, s2c.y);
+
                     if (s2c.x < 0 || s2c.x >= BattleMap.WIDTH || s2c.y < 0 || s2c.y >= BattleMap.HEIGHT) {
                         battleMap.clearPathMarkers();
                         return;
@@ -315,9 +317,14 @@ public class BattleScreenV2 implements Screen {
                 if (actionLock.isLocked())
                     return true;
 
+
+                Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
+                Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+
+                hudMediator.getHudElementsFacade().updateTileInfoPanel(s2c.x, s2c.y);
+
                 if(GameState.state == GameState.State.Deploy && !deploymentFacade.getToDeploy().isEmpty()) {
-                    Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
-                    Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);
+
 
                     if (s2c.x < 0 || s2c.y < 0 || s2c.x >= BattleMap.WIDTH || s2c.y >= 2
                             || battleMap.getNodeGraph().getNodeWeb()[(int)s2c.x][(int)s2c.y].isImpassable()

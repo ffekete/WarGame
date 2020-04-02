@@ -3,7 +3,6 @@ package com.mygdx.wargame.battle.screen.ui;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -88,7 +87,7 @@ HudElementsFacade {
     private Tooltip<Table> stabilityToolTip;
     private Table stabilityTooltipTable;
 
-    private Table tileInfoTooltipTable;
+    private Table tileInfoPanelTable;
 
     private Pool<Label> labelPool;
 
@@ -285,12 +284,11 @@ HudElementsFacade {
         stabilityTooltipTable.add(new Label("When stability level reaches 0 the mech cannot move anymore.", labelStyle));
 
 
-
-        tileInfoTooltipTable = new Table();
-        tileInfoTooltipTable.background(new TextureRegionDrawable(assetManager.get("windows/Tooltip.png", Texture.class))).pad(10);
-        tileInfoTooltipTable.setColor(Color.valueOf("FFFFFFEE"));
-        tileInfoTooltipTable.setPosition(HUD_VIEWPORT_WIDTH.get() - 210, HUD_VIEWPORT_HEIGHT.get() - 210);
-        tileInfoTooltipTable.setSize(200, 200);
+        tileInfoPanelTable = new Table();
+        tileInfoPanelTable.background(new TextureRegionDrawable(assetManager.get("hud/TileInfoPanel.png", Texture.class))).pad(10);
+        tileInfoPanelTable.setColor(Color.valueOf("FFFFFFEE"));
+        tileInfoPanelTable.setPosition(HUD_VIEWPORT_WIDTH.get() - 210, HUD_VIEWPORT_HEIGHT.get() - 210);
+        tileInfoPanelTable.setSize(200, 200);
 
         mechNameLabel = labelPool.obtain();
         pilotNameLabel = labelPool.obtain();
@@ -467,7 +465,7 @@ HudElementsFacade {
     public void registerComponents(Stage stage) {
         stage.addActor(upperHud);
         stage.addActor(sidePanel);
-        stage.addActor(tileInfoTooltipTable);
+        stage.addActor(tileInfoPanelTable);
     }
 
     public void hide() {
@@ -483,7 +481,7 @@ HudElementsFacade {
     public void populateSidePanel() {
         sidePanel.clear();
 
-        if(actionLock.isLocked()) {
+        if (actionLock.isLocked()) {
             //dummyPopulate();
             return;
         }
@@ -504,7 +502,7 @@ HudElementsFacade {
         }
 
         if (GameState.state == GameState.State.Battle) {
-            if(!turnProcessingFacade.isNextPlayerControlled()) {
+            if (!turnProcessingFacade.isNextPlayerControlled()) {
                 dummyPopulate();
                 return;
             }
@@ -569,7 +567,7 @@ HudElementsFacade {
         AbstractMech abstractMech;
         Pilot pilot = null;
 
-        if(actionLock.isLocked())
+        if (actionLock.isLocked())
             return;
 
         if (GameState.state == GameState.State.Battle) {
@@ -636,13 +634,17 @@ HudElementsFacade {
 
             meleeAttackButton.setText("melee [" + abstractMech.getMeleeDamage() + " dmg]");
 
-            if(abstractMech.getX() >= 0 && abstractMech.getY() >= 0 && abstractMech.getX() < BattleMap.WIDTH && abstractMech.getY() < BattleMap.HEIGHT) {
-                tileInfoTooltipTable.clear();
+            //updateTileInfoPanel(abstractMech.getX(), abstractMech.getY());
+        }
+    }
 
-                tileInfoTooltipTable.add(new Label(BattleMapStore.battleMap.getTile(abstractMech.getX(), abstractMech.getY()).getName(), labelStyle)).row();
-                tileInfoTooltipTable.add(new Label(BattleMapStore.battleMap.getTile(abstractMech.getX(), abstractMech.getY()).getDescription(), labelStyle)).row();
-                tileInfoTooltipTable.add(new Image(((TiledMapTileLayer)BattleMapStore.battleMap.getTiledMap().getLayers().get("groundLayer")).getCell((int)abstractMech.getX(), (int)abstractMech.getY()).getTile().getTextureRegion()));
-            }
+    public void updateTileInfoPanel(float x, float y) {
+        if (x >= 0 && y >= 0 && x < BattleMap.WIDTH && y < BattleMap.HEIGHT) {
+            tileInfoPanelTable.clear();
+
+            tileInfoPanelTable.add(new Label(BattleMapStore.battleMap.getTile(x, y).getName(), labelStyle)).row();
+            tileInfoPanelTable.add(new Label(BattleMapStore.battleMap.getTile(x, y).getDescription(), labelStyle)).row();
+            tileInfoPanelTable.add(new Image(((TiledMapTileLayer) BattleMapStore.battleMap.getTiledMap().getLayers().get("groundLayer")).getCell((int) x, (int) y).getTile().getTextureRegion()));
         }
     }
 
