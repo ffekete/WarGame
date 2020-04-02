@@ -9,7 +9,11 @@ public class StabilityDecreaseCalculator {
 
         int baseValue = 50;
 
-        return Math.min(targetMech.getStability() + baseValue, 100);
+        int groundModifier = battleMap.getTile(targetMech.getX(), targetMech.getY()).getStabilityModifier();
+
+        int finalValue = Math.min(baseValue - groundModifier, 0);
+
+        return Math.min(targetMech.getStability() + finalValue, 100);
     }
 
 }

@@ -9,6 +9,7 @@ import com.mygdx.wargame.battle.map.decoration.DrawableMarker;
 import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.battle.map.tile.Tile;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.unit.Direction;
 import com.mygdx.wargame.common.mech.Mech;
@@ -196,5 +197,13 @@ public class BattleMap {
                 layer.setCell(i, j, null);
             }
         }
+    }
+
+    public Tile getTile(float x, float y) {
+        return getTile((int)x, (int)y);
+    }
+
+    public Tile getTile(int x, int y) {
+        return nodeGraph.getNodeWeb()[x][y].getTile();
     }
 }

@@ -9,7 +9,11 @@ public interface Tile {
     boolean isImpassable();
     int getAppeal();
     String getDescription();
+
     int getTileWorldHeight();
     int getRangeModifier();
     int getHitChanceModifierForAttackers();
+    int getHitChanceModifierForDefenders();
+    int getStabilityModifier();
+    int getHeatDissipationModifier();
 }

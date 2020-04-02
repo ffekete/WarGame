@@ -21,10 +21,9 @@ public class HeatCalculator {
 
         baseValue += heatDissipation;
 
-//        if(battleMap.getNodeGraph().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay() != null &&
-//                battleMap.getNodeGraph().getNodeWeb()[(int)targetMech.getX()][(int)targetMech.getY()].getGroundOverlay().getTileOverlayType() == TileOverlayType.Water) {
-//            baseValue += 20;
-//        }
+        int groundModifier = battleMap.getTile(targetMech.getX(), targetMech.getY()).getHeatDissipationModifier();
+
+        baseValue += groundModifier;
 
         if (targetPilot.hasPerk(Perks.Engineer)) {
             baseValue += 5;

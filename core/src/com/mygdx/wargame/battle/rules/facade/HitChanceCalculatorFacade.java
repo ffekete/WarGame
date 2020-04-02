@@ -63,7 +63,11 @@ public class HitChanceCalculatorFacade {
                 chance = flamerHitChanceCalculator.calculate(attackingPilot, attackingMech, defendingMech, weapon);
                 break;
         }
-        return chance + modifier + battleMap.getNodeGraph().getNodeWeb()[(int)defendingMech.getX()][(int)defendingMech.getY()].getTile().getHitChanceModifierForAttackers();
+
+        int groundModifier = battleMap.getTile(defendingMech.getX(), defendingMech.getY()).getHitChanceModifierForAttackers();
+        groundModifier += battleMap.getTile(attackingMech.getX(), attackingMech.getY()).getHitChanceModifierForDefenders();
+
+        return chance + modifier + (defendingMech.canFly() ? groundModifier : 0);
     }
 
 }

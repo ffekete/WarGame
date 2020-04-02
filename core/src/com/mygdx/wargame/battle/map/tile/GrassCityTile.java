@@ -58,4 +58,19 @@ public class GrassCityTile implements Tile {
     public int getHitChanceModifierForAttackers() {
         return 0;
     }
+
+    @Override
+    public int getHitChanceModifierForDefenders() {
+        return 0;
+    }
+
+    @Override
+    public int getStabilityModifier() {
+        return 0;
+    }
+
+    @Override
+    public int getHeatDissipationModifier() {
+        return 0;
+    }
 }

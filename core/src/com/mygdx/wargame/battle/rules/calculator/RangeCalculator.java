@@ -35,6 +35,8 @@ public class RangeCalculator {
                     }
                 });
 
-        return range.map(r -> r + battleMap.getNodeGraph().getNodeWeb()[(int)targetingMech.getX()][(int)targetingMech.getY()].getTile().getRangeModifier()).orElse(0);
+        int groundModifier = battleMap.getNodeGraph().getNodeWeb()[(int)targetingMech.getX()][(int)targetingMech.getY()].getTile().getRangeModifier();
+
+        return range.map(r -> r + (targetingMech.canFly() ? 0 : groundModifier)).orElse(0);
     }
 }
