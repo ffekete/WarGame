@@ -83,9 +83,9 @@ public class MainMenuFacade {
         optionsMenuButton.pad(5, 15, 5, 15);
         optionsMenuButton.center();
 
-        innerTable.add(newGameGameButton).size(100, 65).pad(5).row();
-        innerTable.add(optionsMenuButton).size(100, 65).pad(5).row();
-        innerTable.add(exitGameButton).size(100, 65).pad(5).row();
+        innerTable.add(newGameGameButton).size(200, 100).pad(5).row();
+        innerTable.add(optionsMenuButton).size(200, 100).pad(5).row();
+        innerTable.add(exitGameButton).size(200, 100).pad(5).row();
 
         newGameGameButton.addListener(new ClickListener() {
             @Override

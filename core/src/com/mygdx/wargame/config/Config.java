@@ -50,8 +50,8 @@ public class Config {
 
     public static final int SCREEN_HUD_RATIO = 4;
 
-    public static Supplier<Integer> HUD_VIEWPORT_WIDTH = () -> (int)(1920 * 0.75f);
-    public static Supplier<Integer> HUD_VIEWPORT_HEIGHT = () -> (int)(1080 * 0.75f);;
+    public static Supplier<Integer> HUD_VIEWPORT_WIDTH = () -> (int)(1920);
+    public static Supplier<Integer> HUD_VIEWPORT_HEIGHT = () -> (int)(1080 );
 
     public static int treeSpread = 5;
 

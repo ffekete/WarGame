@@ -1,5 +1,6 @@
 package com.mygdx.wargame.common.pilot;
 
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.wargame.common.mech.Mech;
 
 import java.util.Map;
@@ -11,10 +12,12 @@ public class Pilot {
     private Set<Perks> perks;
     private Mech mech;
     private String name;
+    private TextureRegionDrawable textureRegionDrawable;
 
-    public Pilot(Map<Skill, Integer> skills, Set<Perks> perks) {
+    public Pilot(Map<Skill, Integer> skills, Set<Perks> perks, TextureRegionDrawable textureRegionDrawable) {
         this.skills = skills;
         this.perks = perks;
+        this.textureRegionDrawable = textureRegionDrawable;
     }
 
     public Map<Skill, Integer> getSkills() {
@@ -52,5 +55,9 @@ public class Pilot {
 
     public String getName() {
         return name;
+    }
+
+    public TextureRegionDrawable getTextureRegionDrawable() {
+        return textureRegionDrawable;
     }
 }

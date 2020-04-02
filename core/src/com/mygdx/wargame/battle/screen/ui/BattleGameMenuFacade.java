@@ -86,13 +86,13 @@ public class BattleGameMenuFacade {
         this.resumeGameButton = new TextButton("RESUME", textButtonStyle);
 
         this.exitGameButton = new TextButton("EXIT", textButtonStyle2);
-        exitGameButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
+        exitGameButton.pad(5, 15, 5, 15);
         this.optionsMenuButton = new TextButton("OPTIONS", textButtonStyle3);
-        optionsMenuButton.pad(20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO, 20 / SCREEN_HUD_RATIO, 60 / SCREEN_HUD_RATIO);
+        optionsMenuButton.pad(5, 15, 5, 15);
 
-        table.add(resumeGameButton).size(400 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        table.add(optionsMenuButton).size(400 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
-        table.add(exitGameButton).size(400 / SCREEN_HUD_RATIO, 200 / SCREEN_HUD_RATIO).pad(20 / SCREEN_HUD_RATIO).row();
+        table.add(resumeGameButton).size(200, 100).pad(5).row();
+        table.add(optionsMenuButton).size(200, 100).pad(5).row();
+        table.add(exitGameButton).size(200, 100).pad(5).row();
 
         resumeGameButton.addListener(new ClickListener() {
             @Override
@@ -106,7 +106,8 @@ public class BattleGameMenuFacade {
         exitGameButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ScreenRegister.I.getGame().showSummaryScreen();
+                //ScreenRegister.I.getGame().showSummaryScreen();
+                System.exit(1);
                 return true;
             }
         });

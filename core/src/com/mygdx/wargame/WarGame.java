@@ -7,15 +7,6 @@ import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.BattleScreenInputData;
 import com.mygdx.wargame.battle.screen.BattleScreenV2;
 import com.mygdx.wargame.common.ScreenRegister;
-import com.mygdx.wargame.common.component.weapon.ballistic.LargeCannon;
-import com.mygdx.wargame.common.component.weapon.ballistic.SmallCannon;
-import com.mygdx.wargame.common.component.weapon.flamer.Flamer;
-import com.mygdx.wargame.common.component.weapon.ion.EnhancedSmallIonCannon;
-import com.mygdx.wargame.common.component.weapon.laser.ExtendedRangeLargeLaser;
-import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
-import com.mygdx.wargame.common.component.weapon.laser.SmallLaser;
-import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
-import com.mygdx.wargame.common.component.weapon.plasma.PlasmaCannon;
 import com.mygdx.wargame.common.mech.*;
 import com.mygdx.wargame.common.pilot.Pilot;
 import com.mygdx.wargame.common.pilot.PilotCreator;
@@ -78,14 +69,14 @@ public class WarGame extends Game {
 
 
         battleScreenInputData.setPlayerTeam(ImmutableMap.<AbstractMech, Pilot>builder()
-                .put(mech, new PilotCreator().getPilot())
-                .put(mobileArtillery, new PilotCreator().getPilot())
-                .put(fighter, new PilotCreator().getPilot())
+                .put(mech, new PilotCreator(assetManager).getPilot())
+                .put(mobileArtillery, new PilotCreator(assetManager).getPilot())
+                .put(fighter, new PilotCreator(assetManager).getPilot())
                 .build());
         battleScreenInputData.setAiTeam(ImmutableMap.<AbstractMech, Pilot>builder()
-                .put(mech2, new PilotCreator().getPilot())
-                .put(artillery, new PilotCreator().getPilot())
-                .put(tank, new PilotCreator().getPilot())
+                .put(mech2, new PilotCreator(assetManager).getPilot())
+                .put(artillery, new PilotCreator(assetManager).getPilot())
+                .put(tank, new PilotCreator(assetManager).getPilot())
                 .build());
 
 

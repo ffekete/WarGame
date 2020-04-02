@@ -58,6 +58,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("hud/SmallButtonUp.png", Texture.class);
         assetManager.load("hud/SmallButtonDown.png", Texture.class);
         assetManager.load("hud/SmallButtonOver.png", Texture.class);
+        assetManager.load("hud/PilotNameLabel.png", Texture.class);
 
         assetManager.load("hud/ShowMovementMarkersSmallButtonUp.png", Texture.class);
         assetManager.load("hud/ShowMovementMarkersSmallButtonDown.png", Texture.class);
@@ -95,6 +96,11 @@ public class AssetManagerLoaderV2 {
         assetManager.load("common/CheckboxOnChecked.png", Texture.class);
         assetManager.load("common/CheckboxUnchecked.png", Texture.class);
         assetManager.load("common/CheckboxOnUnchecked.png", Texture.class);
+
+        assetManager.load("portraits/Portrait01.png", Texture.class);
+        assetManager.load("portraits/Portrait02.png", Texture.class);
+        assetManager.load("portraits/Portrait03.png", Texture.class);
+        assetManager.load("portraits/Portrait04.png", Texture.class);
 
         assetManager.finishLoading();
     }

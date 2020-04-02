@@ -36,8 +36,8 @@ import static com.mygdx.wargame.config.Config.*;
 public class
 HudElementsFacade {
 
-    public static final int SMALL_BUTTON_WIDTH = 110;
-    public static final int SMALL_BUTTON_HEIGHT = 40;
+    public static final int SMALL_BUTTON_WIDTH = 170;
+    public static final int SMALL_BUTTON_HEIGHT = 60;
     private TextButton endTurnButton;
     private AssetManager assetManager;
     private TurnProcessingFacade turnProcessingFacade;
@@ -91,8 +91,7 @@ HudElementsFacade {
 
     private Pool<Label> labelPool;
 
-    private Label pilotNameLabel;
-    private Label mechNameLabel;
+    private TextButton pilotNameLabel;
 
     private TextButton showMovementMarkersButton;
     private TextButton dontShowMovementMarkersButton;
@@ -122,6 +121,8 @@ HudElementsFacade {
     private Table sidePanel;
 
     private HUDMediator hudMediator;
+
+    private Image pilotPortraitImage;
 
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
 
@@ -173,7 +174,7 @@ HudElementsFacade {
 
         //upperHud.setDebug(true);
         upperHud.setSize(HUD_VIEWPORT_WIDTH.get(), 15);
-        upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT.get() - 35);
+        upperHud.setPosition(0, HUD_VIEWPORT_HEIGHT.get() - 160);
         upperHud.pad(10);
 
         shieldTooltipTable = new Table();
@@ -287,11 +288,14 @@ HudElementsFacade {
         tileInfoPanelTable = new Table();
         tileInfoPanelTable.background(new TextureRegionDrawable(assetManager.get("hud/TileInfoPanel.png", Texture.class))).pad(10);
         tileInfoPanelTable.setColor(Color.valueOf("FFFFFFEE"));
-        tileInfoPanelTable.setPosition(HUD_VIEWPORT_WIDTH.get() - 210, HUD_VIEWPORT_HEIGHT.get() - 210);
-        tileInfoPanelTable.setSize(200, 200);
+        tileInfoPanelTable.setPosition(HUD_VIEWPORT_WIDTH.get() - 360, HUD_VIEWPORT_HEIGHT.get() - 360);
+        tileInfoPanelTable.setSize(350, 350);
 
-        mechNameLabel = labelPool.obtain();
-        pilotNameLabel = labelPool.obtain();
+        TextButton.TextButtonStyle pilotnameLabelStyle= new TextButton.TextButtonStyle();
+        pilotnameLabelStyle.up = new TextureRegionDrawable(assetManager.get("hud/PilotNameLabel.png", Texture.class));
+        pilotnameLabelStyle.font = FontCreator.getBitmapFont(15);
+        pilotNameLabel = new TextButton("", pilotnameLabelStyle);
+        pilotNameLabel.padLeft(15).padRight(15).padBottom(5).padTop(5);
 
         movedIcon = new TextButton("moved: ", sidePanelButtonStyle);
         movedIcon.addListener(movementToolTip);
@@ -299,11 +303,16 @@ HudElementsFacade {
         attackedIcon = new TextButton("attacked: ", sidePanelButtonStyle);
         attackedIcon.addListener(attackToolTip);
 
-        upperHud.add(movedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
-        upperHud.add(attackedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5);
+        upperHud.add(movedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5).center();
+        upperHud.add(attackedIcon).size(SMALL_BUTTON_WIDTH, SMALL_BUTTON_HEIGHT).padLeft(5).padRight(5).center();
 
-        upperHud.add(mechNameLabel).padRight(5);
-        upperHud.add(pilotNameLabel).padRight(5);
+        upperHud.row();
+
+        pilotPortraitImage = new Image();
+        upperHud.add(pilotPortraitImage).size(SMALL_BUTTON_WIDTH - 5, SMALL_BUTTON_WIDTH - 5).pad(5);
+        upperHud.row();
+        upperHud.add(pilotNameLabel).size(SMALL_BUTTON_WIDTH - 5, SMALL_BUTTON_HEIGHT - 5).pad(5);
+
 
         showMovementMarkersButton = new TextButton("show markers", sidePanelButtonStyle);
         dontShowMovementMarkersButton = new TextButton("no markers", sidePanelButtonStyle);
@@ -329,8 +338,8 @@ HudElementsFacade {
             }
         });
 
-        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - (SMALL_BUTTON_WIDTH * 2) - 10, 0);
-        sidePanel.setSize(200, 200);
+        sidePanel.setPosition(Config.HUD_VIEWPORT_WIDTH.get() - 360, 10);
+        sidePanel.setSize(350, 350);
 
         showMovementDirectionsButton = new TextButton("directions", sidePanelButtonStyle);
         hideMovementDirectionsButton = new TextButton("no directions", sidePanelButtonStyle);
@@ -579,6 +588,9 @@ HudElementsFacade {
         }
 
         if (abstractMech != null) {
+
+            pilotPortraitImage.setDrawable(pilot.getTextureRegionDrawable());
+
             shieldValueLabel.setText(abstractMech.getShieldValue());
             shieldImage.setText("shield: " + shieldValueLabel.getText());
 
@@ -626,8 +638,8 @@ HudElementsFacade {
             stabilityValueLabel.setText(abstractMech.getStability());
             stabilityImage.setText("stability: " + stabilityValueLabel.getText());
 
+
             pilotNameLabel.setText(pilot.getName());
-            mechNameLabel.setText("(" + abstractMech.getName() + ")");
 
             movedIcon.setText(abstractMech.moved() ? "moved" : "mp available: " + abstractMech.getMovementPoints());
             attackedIcon.setText(abstractMech.attacked() ? "attacked" : "not attacked");
