@@ -44,6 +44,7 @@ public class PilotCreator {
             .add("portraits/Portrait02.png")
             .add("portraits/Portrait03.png")
             .add("portraits/Portrait04.png")
+            .add("portraits/Portrait05.png")
             .build();
 
     public PilotCreator(AssetManager assetManager) {

@@ -101,6 +101,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("portraits/Portrait02.png", Texture.class);
         assetManager.load("portraits/Portrait03.png", Texture.class);
         assetManager.load("portraits/Portrait04.png", Texture.class);
+        assetManager.load("portraits/Portrait05.png", Texture.class);
 
         assetManager.finishLoading();
     }
