@@ -1,6 +1,7 @@
 package com.mygdx.wargame.battle.map.render;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
@@ -13,18 +14,25 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.google.common.collect.ImmutableMap;
+import com.mygdx.wargame.battle.map.BattleMap;
+import com.mygdx.wargame.battle.screen.IsoUtils;
 import com.mygdx.wargame.config.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRenderer {
+
     private List<Actor> objects;
     private int drawSpritesAfterLayer = 4;
+    private int currentLayer = 0;
 
     private Vector2 topRight = new Vector2();
     private Vector2 bottomLeft = new Vector2();
@@ -32,10 +40,24 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
     private Vector2 bottomRight = new Vector2();
     private Color defaultColor = null;
 
+
+    private class Pair {
+        public Texture texture;
+        public float[] vertices;
+
+        public Pair(Texture texture, float[] vertices) {
+            this.texture = texture;
+            this.vertices = vertices;
+        }
+    }
+
+    private Pair[][][] tilesToRender = new Pair[BattleMap.WIDTH][BattleMap.HEIGHT][6];
+
     public IsometricTiledMapRendererWithSprites(TiledMap map) {
         super(map);
         init();
         objects = new ArrayList<>();
+
     }
 
     public void addObject(Actor object) {
@@ -53,29 +75,34 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
 
     @Override
     public void render() {
+
+        for (int i = 0; i < BattleMap.WIDTH; i++) {
+            for (int j = 0; j < BattleMap.HEIGHT; j++) {
+                for (int k = 0; k < 6; k++) {
+                    tilesToRender[i][j][k] = null;
+                }
+            }
+        }
+
         beginRender();
-        int currentLayer = 0;
+        currentLayer = 0;
         for (MapLayer layer : map.getLayers()) {
 
-            if(layer.getName().equals("directionLayer") && !Config.showDirectionMarkers)
+            if (layer.getName().equals("directionLayer") && !Config.showDirectionMarkers)
                 continue;
 
-            if(layer.getName().equals("movementMarkersLayer") && !Config.showMovementMarkers)
+            if (layer.getName().equals("movementMarkersLayer") && !Config.showMovementMarkers)
                 continue;
 
-            if(layer.getName().equals("rangeMarkersLayer") && !Config.showRangeMarkers)
+            if (layer.getName().equals("rangeMarkersLayer") && !Config.showRangeMarkers)
                 continue;
 
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
                     renderTileLayer((TiledMapTileLayer) layer);
                     currentLayer++;
-                    if (currentLayer == drawSpritesAfterLayer) {
-                        for (Actor object : objects)
-                            object.draw(this.getBatch(), 1f);
-                    }
                 } else {
-                    if(defaultColor != null)
+                    if (defaultColor != null)
                         batch.setColor(defaultColor);
 
                     for (MapObject object : layer.getObjects()) {
@@ -162,7 +189,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
         for (int row = row2; row >= row1; row--) {
             for (int col = col1; col <= col2; col++) {
                 float x = (col * halfTileWidth) + (row * halfTileWidth);
-                float y = (row * halfTileHeight) - (col * halfTileHeight) -32;
+                float y = (row * halfTileHeight) - (col * halfTileHeight) - 32;
 
                 final TiledMapTileLayer.Cell cell = layer.getCell(col, row);
                 if (cell == null) continue;
@@ -272,17 +299,66 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                             }
                         }
                     }
-                    batch.draw(region.getTexture(), vertices, 0, NUM_VERTICES);
+
+                    float[] v = Arrays.copyOf(vertices, vertices.length);
+                    tilesToRender[row][col][currentLayer] = new Pair(region.getTexture(), v);
+
+                    //batch.draw(tilesToRender[row][col][currentLayer], vertices, 0, NUM_VERTICES);
+                }
+            }
+        }
+
+
+        renderAllInOrder();
+
+    }
+    public void renderAllInOrder() {
+
+        float tileWidth = IsoUtils.TILE_WIDTH * unitScale;
+        float tileHeight = IsoUtils.TILE_HEIGHT * unitScale / 2f;
+
+        int row1 = (int) (translateScreenToIso(topLeft).y / tileWidth) - 2;
+        int row2 = (int) (translateScreenToIso(bottomRight).y / tileWidth) + 2;
+
+        int col1 = (int) (translateScreenToIso(bottomLeft).x / tileWidth) - 2;
+        int col2 = (int) (translateScreenToIso(topRight).x / tileWidth) + 2;
+
+        ImmutableMap<Integer, String> layers= ImmutableMap.<Integer, String>builder()
+                .put(0, "groundLayer")
+                .put(1, "movementMarkersLayer")
+                .put(2, "rangeMarkersLayer")
+                .put(3, "directionLayer")
+                .put(4, "pathLayer")
+                .put(5, "foliageLayer")
+                .build();
+
+        for (int row = row2; row >= row1; row--) {
+            for (int col = col1; col <= col2; col++) {
+                for (Map.Entry<Integer, String> entry: layers.entrySet()) {
+                    // itt a sorrend lesz a baj, valszeg nem lesz jo
+//
+                    final TiledMapTileLayer.Cell cell = ((TiledMapTileLayer)map.getLayers().get(entry.getValue())).getCell(col, row);
+                    if (cell != null) {
+                        final TiledMapTile tile = cell.getTile();
+
+                        if (tile != null && tilesToRender[row][col][entry.getKey()] != null) {
+                            batch.draw(tilesToRender[row][col][entry.getKey()].texture, tilesToRender[row][col][entry.getKey()].vertices, 0, NUM_VERTICES);
+                        }
+                    }
+                    if (entry.getKey() == drawSpritesAfterLayer) {
+                        for (Actor object : objects)
+                            if((int)object.getX() == col && (int)object.getY() == row)
+                                object.draw(this.getBatch(), 1f);
+                    }
                 }
             }
         }
     }
-
     public List<Actor> getObjects() {
         objects.sort(new Comparator<Actor>() {
             @Override
             public int compare(Actor o1, Actor o2) {
-                return Integer.compare((int)o2.getY(), (int)o1.getY());
+                return Integer.compare((int) o2.getY(), (int) o1.getY());
             }
         });
         return objects;

@@ -29,7 +29,7 @@ public class GrassTileLowLand implements Tile {
 
     @Override
     public int getTileWorldHeight() {
-        return -8;
+        return -32;
     }
 
     @Override
