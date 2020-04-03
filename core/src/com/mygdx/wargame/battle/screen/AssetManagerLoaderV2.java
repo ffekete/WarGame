@@ -21,6 +21,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("tiles/GrassBigLow.png", Texture.class);
         assetManager.load("tiles/GrassBigForestDamaged.png", Texture.class);
         assetManager.load("tiles/GrassBigMountain.png", Texture.class);
+        assetManager.load("tiles/GrassBigHills.png", Texture.class);
 
         assetManager.load("mechs/Templar.png", Texture.class);
         assetManager.load("mechs/Gunner.png", Texture.class);
