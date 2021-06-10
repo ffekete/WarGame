@@ -84,18 +84,20 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
             }
         }
 
-        beginRender();
         currentLayer = 0;
         for (MapLayer layer : map.getLayers()) {
 
-            if (layer.getName().equals("directionLayer") && !Config.showDirectionMarkers)
-                continue;
+            if (layer.getName().equals("directionLayer") && !Config.showDirectionMarkers) {
+                layer.setVisible(false);
+            }
 
-            if (layer.getName().equals("movementMarkersLayer") && !Config.showMovementMarkers)
-                continue;
+            if (layer.getName().equals("movementMarkersLayer") && !Config.showMovementMarkers) {
+                layer.setVisible(false);
+            }
 
-            if (layer.getName().equals("rangeMarkersLayer") && !Config.showRangeMarkers)
-                continue;
+            if (layer.getName().equals("rangeMarkersLayer") && !Config.showRangeMarkers) {
+                layer.setVisible(false);
+            }
 
             if (layer.isVisible()) {
                 if (layer instanceof TiledMapTileLayer) {
@@ -109,9 +111,17 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                         renderObject(object);
                     }
                 }
+            } else {
+                currentLayer++;
             }
         }
+
+        beginRender();
+
+        renderAllInOrder();
+
         endRender();
+
     }
 
     private Matrix4 isoTransform;
@@ -301,17 +311,13 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                     }
 
                     float[] v = Arrays.copyOf(vertices, vertices.length);
+                    // save for later rendering
                     tilesToRender[row][col][currentLayer] = new Pair(region.getTexture(), v);
-
-                    //batch.draw(tilesToRender[row][col][currentLayer], vertices, 0, NUM_VERTICES);
                 }
             }
         }
-
-
-        renderAllInOrder();
-
     }
+
     public void renderAllInOrder() {
 
         float tileWidth = IsoUtils.TILE_WIDTH * unitScale;
@@ -323,7 +329,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
         int col1 = (int) (translateScreenToIso(bottomLeft).x / tileWidth) - 2;
         int col2 = (int) (translateScreenToIso(topRight).x / tileWidth) + 2;
 
-        ImmutableMap<Integer, String> layers= ImmutableMap.<Integer, String>builder()
+        ImmutableMap<Integer, String> layers = ImmutableMap.<Integer, String>builder()
                 .put(0, "groundLayer")
                 .put(1, "movementMarkersLayer")
                 .put(2, "rangeMarkersLayer")
@@ -334,10 +340,10 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
 
         for (int row = row2; row >= row1; row--) {
             for (int col = col1; col <= col2; col++) {
-                for (Map.Entry<Integer, String> entry: layers.entrySet()) {
+                for (Map.Entry<Integer, String> entry : layers.entrySet()) {
                     // itt a sorrend lesz a baj, valszeg nem lesz jo
 //
-                    final TiledMapTileLayer.Cell cell = ((TiledMapTileLayer)map.getLayers().get(entry.getValue())).getCell(col, row);
+                    final TiledMapTileLayer.Cell cell = ((TiledMapTileLayer) map.getLayers().get(entry.getValue())).getCell(col, row);
                     if (cell != null) {
                         final TiledMapTile tile = cell.getTile();
 
@@ -347,13 +353,14 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                     }
                     if (entry.getKey() == drawSpritesAfterLayer) {
                         for (Actor object : objects)
-                            if((int)object.getX() == col && (int)object.getY() == row)
+                            if ((int) object.getX() == col && (int) object.getY() == row)
                                 object.draw(this.getBatch(), 1f);
                     }
                 }
             }
         }
     }
+
     public List<Actor> getObjects() {
         objects.sort(new Comparator<Actor>() {
             @Override
