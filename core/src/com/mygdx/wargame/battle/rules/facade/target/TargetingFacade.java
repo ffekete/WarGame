@@ -15,15 +15,10 @@ public class TargetingFacade {
     private FirstTargetStrategy firstTargetStrategy = new FirstTargetStrategy();
     private WeakestTargetStrategy weakestTargetStrategy = new WeakestTargetStrategy();
     private FlankingTargetStrategy flankingTargetStrategy;
-    private StageElementsStorage stageElementsStorage;
-
-    public TargetingFacade(StageElementsStorage stageElementsStorage) {
-        this.stageElementsStorage = stageElementsStorage;
-    }
 
     public Optional<Target> findTarget(Pilot pilot, AbstractMech mech, Map<AbstractMech, Pilot> targets, BattleMap battleMap) {
 
-        this.flankingTargetStrategy = new FlankingTargetStrategy(stageElementsStorage);
+        this.flankingTargetStrategy = new FlankingTargetStrategy();
 
         if (pilot.hasPerk(Perks.Cautious)) {
             return flankingTargetStrategy.findTarget(pilot, mech, targets, battleMap, weakestTargetStrategy);

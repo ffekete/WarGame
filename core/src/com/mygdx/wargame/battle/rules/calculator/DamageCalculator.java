@@ -27,18 +27,14 @@ public class DamageCalculator {
 
     private CriticalHitChanceCalculator criticalHitChanceCalculator;
     private BodyPartDestructionHandler bodyPartDestructionHandler;
-    private StageElementsStorage stageElementsStorage;
     private AssetManager assetManager;
-    private ActionLock actionLock;
     private FlankingCalculator flankingCalculator;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
 
-    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
+    public DamageCalculator(CriticalHitChanceCalculator criticalHitChanceCalculator, BodyPartDestructionHandler bodyPartDestructionHandler, AssetManager assetManager, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
         this.criticalHitChanceCalculator = criticalHitChanceCalculator;
         this.bodyPartDestructionHandler = bodyPartDestructionHandler;
-        this.stageElementsStorage = stageElementsStorage;
         this.assetManager = assetManager;
-        this.actionLock = actionLock;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         this.flankingCalculator = new FlankingCalculator();
     }
@@ -104,7 +100,7 @@ public class DamageCalculator {
                 }
             }
 
-        stageElementsStorage.airLevel.addAction(messageQue);
+        StageElementsStorage.airLevel.addAction(messageQue);
     }
 
     private void addExplosion(Mech target) {
@@ -116,7 +112,7 @@ public class DamageCalculator {
         sequenceAction.addAction(new DelayAction(1f));
         sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, explosion, null));
 
-        stageElementsStorage.airLevel.addAction(sequenceAction);
+        StageElementsStorage.airLevel.addAction(sequenceAction);
     }
 
     private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage, SequenceAction messageQue) {

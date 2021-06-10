@@ -21,11 +21,6 @@ public class FlankingTargetStrategy implements TargetingStrategy {
     private MapUtils mapUtils = new MapUtils();
     private FlankingCalculator flankingCalculator = new FlankingCalculator();
     private RangeCalculator rangeCalculator = new RangeCalculator();
-    private StageElementsStorage stageElementsStorage;
-
-    public FlankingTargetStrategy(StageElementsStorage stageElementsStorage) {
-        this.stageElementsStorage = stageElementsStorage;
-    }
 
     @Override
     public Optional<Target> findTarget(Pilot pilot, AbstractMech mech, Map<AbstractMech, Pilot> targets, BattleMap battleMap, TargetingStrategy targetingStrategy) {

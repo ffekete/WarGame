@@ -45,7 +45,6 @@ TurnProcessingFacade {
     private Iterator<Map.Entry<AbstractMech, Pilot>> iterator;
     private Map.Entry<AbstractMech, Pilot> next = null;
     private RangeCalculator rangeCalculator;
-    private StageElementsStorage stageElementsStorage;
     private MoveActorAlongPathActionFactory moveActorAlongPathActionFactory;
     private HeatCalculator heatCalculator;
     private WeaponSelectionOptimizer weaponSelectionOptimizer;
@@ -59,7 +58,7 @@ TurnProcessingFacade {
     private int turnCounter = 1;
 
     public TurnProcessingFacade(AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
-                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, DeploymentFacade deploymentFacade) {
+                                Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, DeploymentFacade deploymentFacade) {
         this.actionLock = GameState.actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
@@ -70,7 +69,6 @@ TurnProcessingFacade {
         this.team2 = team2;
         this.rangeCalculator = rangeCalculator;
 
-        this.stageElementsStorage = stageElementsStorage;
         this.heatCalculator = heatCalculator;
         this.stabilityDecreaseCalculator = stabilityDecreaseCalculator;
         this.battleMap = battleMap;
@@ -125,7 +123,7 @@ TurnProcessingFacade {
             parallelAction.addAction(sequenceAction);
             parallelAction.addAction(sequenceAction1);
 
-            stageElementsStorage.hudStage.addAction(parallelAction);
+            StageElementsStorage.hudStage.addAction(parallelAction);
 
             next = iterator.next();
             //centerCameraOnNext(stage);
@@ -229,7 +227,7 @@ TurnProcessingFacade {
                         if(!selectedMech.isRangedAttack()) {
                             attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech()));
                         } else {
-                            attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
+                            attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
                         }
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
@@ -240,7 +238,7 @@ TurnProcessingFacade {
                     sequenceAction.addAction(new DelayAction(1f));
                     sequenceAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRendererWithSprites));
                     sequenceAction.addAction(new UnlockAction("eof enemy turn"));
-                    stageElementsStorage.stage.addAction(sequenceAction);
+                    StageElementsStorage.stage.addAction(sequenceAction);
                 }
 
             } else {
@@ -266,7 +264,7 @@ TurnProcessingFacade {
                 sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(new UnlockAction("eof player warmup"));
-                stageElementsStorage.stage.addAction(sequenceAction);
+                StageElementsStorage.stage.addAction(sequenceAction);
             }
         }
     }

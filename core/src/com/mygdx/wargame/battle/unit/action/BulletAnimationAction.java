@@ -38,18 +38,16 @@ BulletAnimationAction extends Action {
     private ActionLock actionLock;
     private boolean done = false;
     private int minRange;
-    private StageElementsStorage stageElementsStorage;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
     private BattleMap battleMap;
     private SequenceAction masterSequenceAction;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, int minRange, StageElementsStorage stageElementsStorage, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap, SequenceAction masterSequenceAction) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, int minRange, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap, SequenceAction masterSequenceAction) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
         this.actionLock = GameState.actionLock;
         this.minRange = minRange;
-        this.stageElementsStorage = stageElementsStorage;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         this.battleMap = battleMap;
         this.masterSequenceAction = masterSequenceAction;
@@ -215,6 +213,6 @@ BulletAnimationAction extends Action {
         if(tileDamageInflicted)
             outerSequenceAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
 
-        stageElementsStorage.stage.addAction(outerSequenceAction);
+        StageElementsStorage.stage.addAction(outerSequenceAction);
     }
 }

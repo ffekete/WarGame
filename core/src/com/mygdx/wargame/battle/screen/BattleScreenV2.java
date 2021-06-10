@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -96,9 +97,11 @@ public class BattleScreenV2 implements Screen {
 
         battleMap.getNodeGraph().setIsometricTiledMapRendererWithSprites(isometricTiledMapRenderer);
 
-        StageElementsStorage stageElementsStorage = new StageElementsStorage();
-        stageElementsStorage.stage = stage;
-        stageElementsStorage.hudStage = hudStage;
+        StageElementsStorage.stage = stage;
+        StageElementsStorage.hudStage = hudStage;
+        StageElementsStorage.airLevel = new Group();
+        StageElementsStorage.groundLevel = new Group();
+
         GameState.actionLock = new ActionLock();
 
         hudMediator = new HUDMediator();
@@ -110,16 +113,15 @@ public class BattleScreenV2 implements Screen {
         battleGameMenuFacade.hide();
         battleGameMenuFacade.registerComponents(hudStage);
 
-        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
+        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
 
         turnProcessingFacade = new TurnProcessingFacade(
-                new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), isometricTiledMapRenderer),
-                new TargetingFacade(stageElementsStorage),
+                new AttackFacade(assetManagerLoader.getAssetManager(), isometricTiledMapRenderer),
+                new TargetingFacade(),
                 new MovementSpeedCalculator(),
                 battleScreenInputData.getPlayerTeam(),
                 battleScreenInputData.getAiTeam(),
                 new RangeCalculator(),
-                stageElementsStorage,
                 new HeatCalculator(),
                 new StabilityDecreaseCalculator(),
                 hudMediator,
@@ -227,7 +229,7 @@ public class BattleScreenV2 implements Screen {
                         if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
                             attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
                         } else {
-                            attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+                            attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap, sequenceAction));
                         }
 
                         int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
@@ -249,7 +251,7 @@ public class BattleScreenV2 implements Screen {
                         }
                         sequenceAction.addAction(new DelayAction(1f));
                         sequenceAction.addAction(new UnlockAction("end of attack"));
-                        stageElementsStorage.stage.addAction(sequenceAction);
+                        StageElementsStorage.stage.addAction(sequenceAction);
                         //battleMap.clearRangeMarkers();
                         //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
                     } else {

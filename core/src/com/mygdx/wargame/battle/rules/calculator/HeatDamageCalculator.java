@@ -17,11 +17,10 @@ public class HeatDamageCalculator {
 
     private Label.LabelStyle labelStyle;
     private StageElementsStorage stageElementsStorage;
-    private ActionLock actionLock;
 
-    public HeatDamageCalculator(StageElementsStorage stageElementsStorage, ActionLock actionLock) {
+    public HeatDamageCalculator() {
         this.stageElementsStorage = stageElementsStorage;
-        this.actionLock = actionLock;
+
         labelStyle = new Label.LabelStyle();
         labelStyle.font = FontCreator.getBitmapFont(13);
     }

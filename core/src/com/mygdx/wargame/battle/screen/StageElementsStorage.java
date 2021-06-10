@@ -5,10 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class StageElementsStorage {
 
-    public Group groundLevel = new Group();
-    public Group airLevel = new Group();
-    public Stage stage;
-    public Stage hudStage;
+    public static Group groundLevel;
+    public static Group airLevel;
+    public static Stage stage;
+    public static Stage hudStage;
 
 
 }

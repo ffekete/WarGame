@@ -28,7 +28,6 @@ public class DeploymentFacade {
     private AbstractMech nextMech = null;
     private Pilot pilot;
     private boolean startup = true;
-    private StageElementsStorage stageElementsStorage;
     private HUDMediator hudMediator;
     private Iterator<Map.Entry<AbstractMech, Pilot>> iterator;
     private Map<AbstractMech, Pilot> playerGroup;
@@ -41,9 +40,8 @@ public class DeploymentFacade {
     private BattleMap battleMap;
     private ActionLock actionLock;
 
-    public DeploymentFacade(IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, StageElementsStorage stageElementsStorage, HUDMediator hudMediator, Map<AbstractMech, Pilot> playerGroup, Map<AbstractMech, Pilot> aiGroup, BattleMap battleMap) {
+    public DeploymentFacade(IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, HUDMediator hudMediator, Map<AbstractMech, Pilot> playerGroup, Map<AbstractMech, Pilot> aiGroup, BattleMap battleMap) {
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
-        this.stageElementsStorage = stageElementsStorage;
         this.hudMediator = hudMediator;
         this.playerGroup = playerGroup;
         this.aiGroup = aiGroup;
@@ -78,9 +76,9 @@ public class DeploymentFacade {
             messageLabelStyle.fontColor = Color.WHITE;
 
             deployMessageLabel = new Label("Units to deploy:", messageLabelStyle);
-            stageElementsStorage.hudStage.addAction(parallelAction);
+            StageElementsStorage.hudStage.addAction(parallelAction);
             deployMessageLabel.setPosition(20, 80);
-            stageElementsStorage.hudStage.addActor(deployMessageLabel);
+            StageElementsStorage.hudStage.addActor(deployMessageLabel);
 
         } else {
             if (nextMech == null) {
@@ -193,7 +191,7 @@ public class DeploymentFacade {
     }
 
     public void finishDeployment() {
-        stageElementsStorage.hudStage.getActors().removeValue(deployMessageLabel, true);
+        StageElementsStorage.hudStage.getActors().removeValue(deployMessageLabel, true);
 
         SequenceAction outer = new SequenceAction();
 
@@ -221,7 +219,7 @@ public class DeploymentFacade {
 
         outer.addAction(new UnlockAction("End of deployment"));
 
-        stageElementsStorage.hudStage.addAction(outer);
+        StageElementsStorage.hudStage.addAction(outer);
         deployEnemyMechs();
 
         GameState.state = GameState.State.Battle;
@@ -255,7 +253,7 @@ public class DeploymentFacade {
         removeAction.setTarget(label);
         sequenceAction.addAction(removeAction);
 
-        stageElementsStorage.hudStage.addActor(label);
+        StageElementsStorage.hudStage.addActor(label);
     }
 
     public void addMovingLabelShadow(ParallelAction sequenceAction, String text) {
@@ -284,7 +282,7 @@ public class DeploymentFacade {
         removeAction.setTarget(label);
         sequenceAction.addAction(removeAction);
 
-        stageElementsStorage.hudStage.addActor(label);
+        StageElementsStorage.hudStage.addActor(label);
     }
 
     public List<AbstractMech> getToDeploy() {
