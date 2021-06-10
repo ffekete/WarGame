@@ -15,6 +15,7 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.action.DestroyTileAction;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
@@ -42,11 +43,11 @@ BulletAnimationAction extends Action {
     private BattleMap battleMap;
     private SequenceAction masterSequenceAction;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, ActionLock actionLock, int minRange, StageElementsStorage stageElementsStorage, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap, SequenceAction masterSequenceAction) {
+    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, int minRange, StageElementsStorage stageElementsStorage, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap, SequenceAction masterSequenceAction) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
-        this.actionLock = actionLock;
+        this.actionLock = GameState.actionLock;
         this.minRange = minRange;
         this.stageElementsStorage = stageElementsStorage;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
@@ -144,7 +145,7 @@ BulletAnimationAction extends Action {
                 rotateToAction.setTarget(bullet);
 
                 //SequenceAction sequenceAction = new SequenceAction();
-                sequenceAction.addAction(new LockAction(actionLock));
+                sequenceAction.addAction(new LockAction());
                 VisibleAction hideAction = new VisibleAction();
                 hideAction.setVisible(false);
                 hideAction.setTarget(bullet);

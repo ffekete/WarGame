@@ -99,21 +99,21 @@ public class BattleScreenV2 implements Screen {
         StageElementsStorage stageElementsStorage = new StageElementsStorage();
         stageElementsStorage.stage = stage;
         stageElementsStorage.hudStage = hudStage;
-        ActionLock actionLock = new ActionLock();
+        GameState.actionLock = new ActionLock();
 
         hudMediator = new HUDMediator();
 
-        BattleGameMenuFacade battleGameMenuFacade = new BattleGameMenuFacade(actionLock, assetManagerLoader.getAssetManager(), hudMediator);
+        BattleGameMenuFacade battleGameMenuFacade = new BattleGameMenuFacade(assetManagerLoader.getAssetManager(), hudMediator);
         hudMediator.setBattleGameMenuFacade(battleGameMenuFacade);
 
         battleGameMenuFacade.create();
         battleGameMenuFacade.hide();
         battleGameMenuFacade.registerComponents(hudStage);
 
-        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap, actionLock);
+        deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, stageElementsStorage, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
 
-        turnProcessingFacade = new TurnProcessingFacade(actionLock,
-                new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), actionLock, isometricTiledMapRenderer),
+        turnProcessingFacade = new TurnProcessingFacade(
+                new AttackFacade(stageElementsStorage, assetManagerLoader.getAssetManager(), isometricTiledMapRenderer),
                 new TargetingFacade(stageElementsStorage),
                 new MovementSpeedCalculator(),
                 battleScreenInputData.getPlayerTeam(),
@@ -125,7 +125,7 @@ public class BattleScreenV2 implements Screen {
                 hudMediator,
                 battleMap, assetManagerLoader, isometricTiledMapRenderer, deploymentFacade);
 
-        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, deploymentFacade, actionLock, hudMediator));
+        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, deploymentFacade, hudMediator));
         hudMediator.getHudElementsFacade().create();
         hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
@@ -153,7 +153,7 @@ public class BattleScreenV2 implements Screen {
                 }
 
                 if(GameState.state == GameState.State.Battle) {
-                    if (actionLock.isLocked() || turnProcessingFacade.getNext().getKey().moved())
+                    if (GameState.actionLock.isLocked() || turnProcessingFacade.getNext().getKey().moved())
                         return;
 
                     battleMap.clearPathMarkers();
@@ -202,7 +202,7 @@ public class BattleScreenV2 implements Screen {
 
                 if(GameState.state == GameState.State.Battle) {
 
-                    if (actionLock.isLocked())
+                    if (GameState.actionLock.isLocked())
                         return;
 
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
@@ -212,7 +212,7 @@ public class BattleScreenV2 implements Screen {
 
                     if (mechAtCoordinates.isPresent()) {
                         SequenceAction sequenceAction = new SequenceAction();
-                        sequenceAction.addAction(new LockAction(actionLock));
+                        sequenceAction.addAction(new LockAction());
                         Optional<Map.Entry<AbstractMech, Pilot>> pilotAtCoordinates = battleScreenInputData.getAiTeam().entrySet().stream().filter(entry -> mechAtCoordinates.get() == entry.getKey()).findFirst();
                         int minRange = rangeCalculator.calculateAllWeaponsRange(turnProcessingFacade.getNext().getValue(), turnProcessingFacade.getNext().getKey(), battleMap);
                         if (minRange < MathUtils.getDistance(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY())) {
@@ -227,7 +227,7 @@ public class BattleScreenV2 implements Screen {
                         if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
                             attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
                         } else {
-                            attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
+                            attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, stageElementsStorage, isometricTiledMapRenderer, battleMap, sequenceAction));
                         }
 
                         int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
@@ -248,7 +248,7 @@ public class BattleScreenV2 implements Screen {
                             sequenceAction.addAction(new AddMovementMarkersAction(battleMap, turnProcessingFacade.getNext().getKey()));
                         }
                         sequenceAction.addAction(new DelayAction(1f));
-                        sequenceAction.addAction(new UnlockAction(actionLock, "end of attack"));
+                        sequenceAction.addAction(new UnlockAction("end of attack"));
                         stageElementsStorage.stage.addAction(sequenceAction);
                         //battleMap.clearRangeMarkers();
                         //battleMap.getNodeGraph().disconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) turnProcessingFacade.getNext().getKey().getX()][(int) turnProcessingFacade.getNext().getKey().getY()]);
@@ -287,7 +287,7 @@ public class BattleScreenV2 implements Screen {
 
                 if(GameState.state == GameState.State.Deploy) {
 
-                    if (actionLock.isLocked())
+                    if (GameState.actionLock.isLocked())
                         return;
 
                     Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
@@ -314,9 +314,8 @@ public class BattleScreenV2 implements Screen {
 
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
-                if (actionLock.isLocked())
+                if (GameState.actionLock.isLocked())
                     return true;
-
 
                 Vector2 newCoords = stage.stageToScreenCoordinates(new Vector2(x, y));
                 Vector2 s2c = isoUtils.screenToCell(newCoords.x, newCoords.y, camera);

@@ -58,9 +58,9 @@ TurnProcessingFacade {
     private DeploymentFacade deploymentFacade;
     private int turnCounter = 1;
 
-    public TurnProcessingFacade(ActionLock actionLock, AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
+    public TurnProcessingFacade(AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
                                 Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, StageElementsStorage stageElementsStorage, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, DeploymentFacade deploymentFacade) {
-        this.actionLock = actionLock;
+        this.actionLock = GameState.actionLock;
         this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
         this.movementSpeedCalculator = movementSpeedCalculator;
@@ -164,7 +164,7 @@ TurnProcessingFacade {
                 sequenceAction.reset();
 
                 // lock all actions
-                sequenceAction.addAction(new LockAction(actionLock));
+                sequenceAction.addAction(new LockAction());
 
                 // reconnect graph so that attacker can move
                 //battleMap.getNodeGraph().reconnectCities(battleMap.getNodeGraph().getNodeWeb()[(int) selectedMech.getX()][(int) selectedMech.getY()]);
@@ -229,7 +229,7 @@ TurnProcessingFacade {
                         if(!selectedMech.isRangedAttack()) {
                             attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech()));
                         } else {
-                            attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), actionLock, minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
+                            attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, stageElementsStorage, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
                         }
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
@@ -239,7 +239,7 @@ TurnProcessingFacade {
 
                     sequenceAction.addAction(new DelayAction(1f));
                     sequenceAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRendererWithSprites));
-                    sequenceAction.addAction(new UnlockAction(actionLock, "eof enemy turn"));
+                    sequenceAction.addAction(new UnlockAction("eof enemy turn"));
                     stageElementsStorage.stage.addAction(sequenceAction);
                 }
 
@@ -252,7 +252,7 @@ TurnProcessingFacade {
                 selectedMech.resetMovementPoints(movementPoints);
 
                 SequenceAction sequenceAction = new SequenceAction();
-                sequenceAction.addAction(new LockAction(actionLock));
+                sequenceAction.addAction(new LockAction());
                 sequenceAction.addAction(new ClearRangeMarkersAction(battleMap));
                 sequenceAction.addAction(new ClearMovementMarkersAction(battleMap));
                 sequenceAction.addAction(new RemoveSelectionMarkerAction(isometricTiledMapRendererWithSprites));
@@ -265,7 +265,7 @@ TurnProcessingFacade {
                 sequenceAction.addAction(new DelayAction(0.5f));
                 sequenceAction.addAction(reduceStabilityLevel(selectedMech, battleMap));
                 sequenceAction.addAction(new DelayAction(0.5f));
-                sequenceAction.addAction(new UnlockAction(actionLock, "eof player warmup"));
+                sequenceAction.addAction(new UnlockAction("eof player warmup"));
                 stageElementsStorage.stage.addAction(sequenceAction);
             }
         }

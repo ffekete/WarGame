@@ -41,8 +41,8 @@ public class BattleGameMenuFacade {
 
     private HUDMediator hudMediator;
 
-    public BattleGameMenuFacade(ActionLock actionLock, AssetManager assetManager, HUDMediator hudMediator) {
-        this.actionLock = actionLock;
+    public BattleGameMenuFacade(AssetManager assetManager, HUDMediator hudMediator) {
+        this.actionLock = GameState.actionLock;
         this.assetManager = assetManager;
         this.hudMediator = hudMediator;
     }

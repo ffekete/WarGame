@@ -1,5 +1,7 @@
 package com.mygdx.wargame.battle.rules.facade;
 
+import com.mygdx.wargame.battle.lock.ActionLock;
+
 public class GameState {
 
     public static State state = State.Deploy;
@@ -9,5 +11,7 @@ public class GameState {
         Deploy,
         Battle;
     }
+
+    public static ActionLock actionLock;
 
 }

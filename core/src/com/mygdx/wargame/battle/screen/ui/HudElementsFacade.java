@@ -126,11 +126,11 @@ HudElementsFacade {
 
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
 
-    public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, DeploymentFacade deploymentFacade, ActionLock actionLock, HUDMediator hudMediator) {
+    public HudElementsFacade(AssetManager assetManager, TurnProcessingFacade turnProcessingFacade, DeploymentFacade deploymentFacade, HUDMediator hudMediator) {
         this.assetManager = assetManager;
         this.turnProcessingFacade = turnProcessingFacade;
         this.deploymentFacade = deploymentFacade;
-        this.actionLock = actionLock;
+        this.actionLock = GameState.actionLock;
         this.hudMediator = hudMediator;
     }
 

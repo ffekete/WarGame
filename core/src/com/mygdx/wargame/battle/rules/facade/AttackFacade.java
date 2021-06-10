@@ -44,9 +44,9 @@ public class AttackFacade {
     private AssetManager assetManager;
     private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater;
 
-    public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, ActionLock actionLock, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
+    public AttackFacade(StageElementsStorage stageElementsStorage, AssetManager assetManager, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites) {
 
-        this.actionLock = actionLock;
+        this.actionLock = GameState.actionLock;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         damageCalculator = new DamageCalculator(criticalHitChanceCalculator, bodyPartDestructionHandler, stageElementsStorage, assetManager, this.actionLock, this.isometricTiledMapRendererWithSprites);
         heatDamageCalculator = new HeatDamageCalculator(stageElementsStorage, actionLock);
