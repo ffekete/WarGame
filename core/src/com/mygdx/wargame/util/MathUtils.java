@@ -1,5 +1,7 @@
 package com.mygdx.wargame.util;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class MathUtils {
 
     public static double getDistance(float x, float y, float x2, float y2) {
@@ -14,6 +16,13 @@ public class MathUtils {
         }
 
         return 1 * angle;
+    }
+
+    public static float getAngle(Vector2 s, Vector2 e) {
+        return (float) (Math.atan2(
+                e.y - s.y,
+                e.x - s.x
+        ) * 180.0d / Math.PI);
     }
 
 }

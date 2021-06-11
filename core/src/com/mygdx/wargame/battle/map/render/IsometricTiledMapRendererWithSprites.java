@@ -335,7 +335,37 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                 .put(2, "rangeMarkersLayer")
                 .put(3, "directionLayer")
                 .put(4, "pathLayer")
-                .put(5, "foliageLayer")
+                .build();
+
+        // ground
+        for (int row = row2; row >= row1; row--) {
+            for (int col = col1; col <= col2; col++) {
+                for (Map.Entry<Integer, String> entry : layers.entrySet()) {
+
+                    final TiledMapTileLayer.Cell cell = ((TiledMapTileLayer) map.getLayers().get(entry.getValue())).getCell(col, row);
+                    if (cell != null) {
+                        final TiledMapTile tile = cell.getTile();
+
+                        if (tile != null && tilesToRender[row][col][entry.getKey()] != null) {
+                            batch.draw(tilesToRender[row][col][entry.getKey()].texture, tilesToRender[row][col][entry.getKey()].vertices, 0, NUM_VERTICES);
+                        }
+                    }
+                }
+            }
+        }
+
+        // objects above ground
+        for (int row = row2; row >= row1; row--) {
+            for (int col = col1; col <= col2; col++) {
+                for (Actor object : objects)
+                    if ((int) object.getX() == col && (int) object.getY() == row)
+                        object.draw(this.getBatch(), 1f);
+            }
+        }
+
+        // layers above objects
+        layers = ImmutableMap.<Integer, String>builder()
+                .put(0, "foliageLayer")
                 .build();
 
         for (int row = row2; row >= row1; row--) {
@@ -349,11 +379,6 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
                         if (tile != null && tilesToRender[row][col][entry.getKey()] != null) {
                             batch.draw(tilesToRender[row][col][entry.getKey()].texture, tilesToRender[row][col][entry.getKey()].vertices, 0, NUM_VERTICES);
                         }
-                    }
-                    if (entry.getKey() == drawSpritesAfterLayer) {
-                        for (Actor object : objects)
-                            if ((int) object.getX() == col && (int) object.getY() == row)
-                                object.draw(this.getBatch(), 1f);
                     }
                 }
             }

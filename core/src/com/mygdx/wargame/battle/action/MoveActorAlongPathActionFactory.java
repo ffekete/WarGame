@@ -44,7 +44,7 @@ public class MoveActorAlongPathActionFactory {
 
                 moveToActionStep = new IsoMoveToAction(mech);
                 moveToActionStep.setPosition(node.getX(), node.getY());
-                moveToActionStep.setDuration(0.03f);
+                moveToActionStep.setDuration(0.25f);
 
                 moveToAction.addAction(moveToActionStep);
                 previous = node;

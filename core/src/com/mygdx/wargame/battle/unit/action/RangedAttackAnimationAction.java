@@ -125,12 +125,17 @@ RangedAttackAnimationAction extends Action {
                 float length = (float) MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY());
 
                 if (weapon.getType() == WeaponType.Flamer) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, 5, -5, false);
+                    float angle = start.angle(end);
+
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, 5, -5, angle);
                     moveActorByBezierLine.setDuration(length * 0.5f);
                     moveActorByBezierLine.setTarget(bullet);
 
                 } else if (weapon.getType() == WeaponType.Missile) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, -(length/4f), +(length / 8f) + new Random().nextInt(2), true);
+                    //float angle = start.angle(end);
+                    float angle = MathUtils.getAngle(start, end);
+
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, -(length/4f), +(length / 8f) + new Random().nextInt(2), angle);
                     moveActorByBezierLine.setDuration(length * 0.25f);
                     moveActorByBezierLine.setTarget(bullet);
 
