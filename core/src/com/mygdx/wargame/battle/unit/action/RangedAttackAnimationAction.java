@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 public class
-BulletAnimationAction extends Action {
+RangedAttackAnimationAction extends Action {
 
     private Mech attackerMech;
     private Mech defenderMech;
@@ -40,9 +40,8 @@ BulletAnimationAction extends Action {
     private int minRange;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
     private BattleMap battleMap;
-    private SequenceAction masterSequenceAction;
 
-    public BulletAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, int minRange, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap, SequenceAction masterSequenceAction) {
+    public RangedAttackAnimationAction(Mech attackerMech, Mech defenderMech, AssetManager assetManager, int minRange, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, BattleMap battleMap) {
         this.attackerMech = attackerMech;
         this.defenderMech = defenderMech;
         this.assetManager = assetManager;
@@ -50,7 +49,6 @@ BulletAnimationAction extends Action {
         this.minRange = minRange;
         this.isometricTiledMapRendererWithSprites = isometricTiledMapRendererWithSprites;
         this.battleMap = battleMap;
-        this.masterSequenceAction = masterSequenceAction;
     }
 
     @Override
@@ -87,10 +85,14 @@ BulletAnimationAction extends Action {
 
             for (int j = 0; j < weapon.getDamageMultiplier(); j++) {
 
-                SequenceAction sequenceAction = new SequenceAction();
+                float spreadFactor = 1;
+                float ex = end.x + (spreadFactor / 2f) - new Random().nextFloat() / spreadFactor;
+                float ey = end.y + (spreadFactor / 2f) - new Random().nextFloat() / spreadFactor;
+
+                SequenceAction selectedWeaponFiringAction = new SequenceAction();
 
                 delay++;
-                DelayAction delayAction = new DelayAction(0.25f * delay);
+                DelayAction delayAction = new DelayAction(0.05f * delay);
 
                 AbstractBullet bullet;
                 if (weapon.getType() == WeaponType.Plasma)
@@ -123,49 +125,52 @@ BulletAnimationAction extends Action {
                 float length = (float) MathUtils.getDistance(attackerMech.getX(), attackerMech.getY(), defenderMech.getX(), defenderMech.getY());
 
                 if (weapon.getType() == WeaponType.Flamer) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, 5, -5, false);
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, 5, -5, false);
                     moveActorByBezierLine.setDuration(length * 0.5f);
                     moveActorByBezierLine.setTarget(bullet);
+
                 } else if (weapon.getType() == WeaponType.Missile) {
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, end.x, end.y, true);
-                    moveActorByBezierLine.setDuration(length * 0.3f);
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, -(length/4f), +(length / 8f) + new Random().nextInt(2), true);
+                    moveActorByBezierLine.setDuration(length * 0.25f);
                     moveActorByBezierLine.setTarget(bullet);
+
                 } else {
                     bullet.setPosition(start.x, start.y);
                     moveToAction = new MoveToAction();
-                    moveToAction.setPosition(end.x, end.y);
+                    moveToAction.setPosition(ex, ey);
+
                     moveToAction.setDuration(length * 0.1f);
                     moveToAction.setTarget(bullet);
                 }
 
                 RotateToAction rotateToAction = new RotateToAction();
-                rotateToAction.setRotation(MathUtils.getAngle(new double[]{start.x, start.y}, new double[]{end.x, end.y}));
+                rotateToAction.setRotation(MathUtils.getAngle(new double[]{start.x, start.y}, new double[]{ex, ey}));
                 rotateToAction.setTarget(bullet);
 
                 //SequenceAction sequenceAction = new SequenceAction();
-                sequenceAction.addAction(new LockAction());
+                selectedWeaponFiringAction.addAction(new LockAction());
                 VisibleAction hideAction = new VisibleAction();
                 hideAction.setVisible(false);
                 hideAction.setTarget(bullet);
-                sequenceAction.addAction(hideAction);
+                selectedWeaponFiringAction.addAction(hideAction);
 
                 if (weapon.getType() != WeaponType.Missile && weapon.getType() != WeaponType.Flamer)
-                    sequenceAction.addAction(rotateToAction);
+                    selectedWeaponFiringAction.addAction(rotateToAction);
 
-                sequenceAction.addAction(delayAction);
+                selectedWeaponFiringAction.addAction(delayAction);
 
-                sequenceAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, bullet));
+                selectedWeaponFiringAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, bullet));
 
                 if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer)
-                    sequenceAction.addAction(moveActorByBezierLine);
+                    selectedWeaponFiringAction.addAction(moveActorByBezierLine);
                 else
-                    sequenceAction.addAction(moveToAction);
+                    selectedWeaponFiringAction.addAction(moveToAction);
 
-                sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
+                selectedWeaponFiringAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
 
                 if (weapon.getType() == WeaponType.Missile) {
                     MissileExplosion explosion = new MissileExplosion(assetManager);
-                    explosion.setPosition(defenderMech.getX(), defenderMech.getY());
+                    explosion.setPosition(ex, ey);
                     SequenceAction explosionAction = new SequenceAction();
                     explosionAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, explosion));
                     explosionAction.addAction(new DelayAction(0.8f));
@@ -174,7 +179,7 @@ BulletAnimationAction extends Action {
 
                     tileDamageInflicted = true;
 
-                    sequenceAction.addAction(explosionAction);
+                    selectedWeaponFiringAction.addAction(explosionAction);
                 }
 
                 Actor hitEffect = null;
@@ -199,18 +204,19 @@ BulletAnimationAction extends Action {
                         break;
                 }
 
-                hitEffect.setPosition(end.x, end.y);
+                hitEffect.setPosition(ex, ey);
                 hitEffect.setRotation(new Random().nextInt(360));
-                sequenceAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, hitEffect));
-                sequenceAction.addAction(new DelayAction(0.25f));
-                sequenceAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, hitEffect, null));
+                selectedWeaponFiringAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, hitEffect));
+                selectedWeaponFiringAction.addAction(new DelayAction(0.25f));
+                selectedWeaponFiringAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, hitEffect, null));
 
+                parallelAction.addAction(selectedWeaponFiringAction);
 
-                parallelAction.addAction(sequenceAction);
             }
+            delay += 5;
         }
 
-        if(tileDamageInflicted)
+        if (tileDamageInflicted)
             outerSequenceAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
 
         StageElementsStorage.stage.addAction(outerSequenceAction);

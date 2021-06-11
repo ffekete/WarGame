@@ -1,7 +1,6 @@
 package com.mygdx.wargame.battle.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ai.pfa.GraphPath;
@@ -227,9 +226,9 @@ public class BattleScreenV2 implements Screen {
                         attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
 
                         if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
-                            attackActions.addAction(new AttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
+                            attackActions.addAction(new MeleeAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
                         } else {
-                            attackActions.addAction(new BulletAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap, sequenceAction));
+                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap));
                         }
 
                         int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();

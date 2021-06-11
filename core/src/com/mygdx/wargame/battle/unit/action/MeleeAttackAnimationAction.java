@@ -3,14 +3,14 @@ package com.mygdx.wargame.battle.unit.action;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.mygdx.wargame.common.mech.Mech;
 
-public class AttackAnimationAction extends TemporalAction {
+public class MeleeAttackAnimationAction extends TemporalAction {
 
     private Mech attackerMech;
 
     private int x, y;
     private int ox, oy;
 
-    public AttackAnimationAction(Mech attackerMech, Mech defenderMech) {
+    public MeleeAttackAnimationAction(Mech attackerMech, Mech defenderMech) {
         this.attackerMech = attackerMech;
 
         x = (int) (defenderMech.getX() - attackerMech.getX());

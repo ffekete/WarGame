@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.common.component.Component;

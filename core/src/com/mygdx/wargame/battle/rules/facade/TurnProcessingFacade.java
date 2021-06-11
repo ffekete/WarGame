@@ -225,9 +225,9 @@ TurnProcessingFacade {
                         attackActions.addAction(new RemoveDirectionMarkerAction(selectedMech.getX(), selectedMech.getY(), battleMap));
                         attackActions.addAction(new AddDirectionMarkerAction(selectedMech, battleMap));
                         if(!selectedMech.isRangedAttack()) {
-                            attackActions.addAction(new AttackAnimationAction(selectedMech, target.get().getMech()));
+                            attackActions.addAction(new MeleeAttackAnimationAction(selectedMech, target.get().getMech()));
                         } else {
-                            attackActions.addAction(new BulletAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap, sequenceAction));
+                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap));
                         }
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);

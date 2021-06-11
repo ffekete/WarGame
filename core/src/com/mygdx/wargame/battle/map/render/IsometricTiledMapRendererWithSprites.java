@@ -341,8 +341,7 @@ public class IsometricTiledMapRendererWithSprites extends IsometricTiledMapRende
         for (int row = row2; row >= row1; row--) {
             for (int col = col1; col <= col2; col++) {
                 for (Map.Entry<Integer, String> entry : layers.entrySet()) {
-                    // itt a sorrend lesz a baj, valszeg nem lesz jo
-//
+
                     final TiledMapTileLayer.Cell cell = ((TiledMapTileLayer) map.getLayers().get(entry.getValue())).getCell(col, row);
                     if (cell != null) {
                         final TiledMapTile tile = cell.getTile();
