@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.common.mech.BodyPart;
 
-public class RangedAttackAftermathAction extends Action {
+public class AttackAftermathAction extends Action {
     @Override
     public boolean act(float delta) {
 

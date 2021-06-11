@@ -241,6 +241,7 @@ public class BattleScreenV2 implements Screen {
                         //AttackAction attackAction = new AttackAction(Facades.attackFacade, turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue(), GameState.target.get().getMech(), pilotAtCoordinates.get().getValue(), battleMap, minRange, null);
 
                         sequenceAction.addAction(attackActions);
+                        sequenceAction.addAction(new AttackAftermathAction());
                         //sequenceAction.addAction(attackAction);
                         sequenceAction.addAction(new IntAction(ammoBeforeAttack, turnProcessingFacade.getNext().getKey()::getAmmoCount, 1f, hudMediator.getHudElementsFacade().getAmmoImage().getLabel(), "ammo: "));
                         sequenceAction.addAction(new DelayAction(0.5f));

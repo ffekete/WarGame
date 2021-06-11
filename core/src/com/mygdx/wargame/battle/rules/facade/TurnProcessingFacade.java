@@ -233,6 +233,7 @@ TurnProcessingFacade {
                         }
 
                         sequenceAction.addAction(attackActions);
+                        sequenceAction.addAction(new AttackAftermathAction());
                     }
 
                     sequenceAction.addAction(new DelayAction(1f));

@@ -5,29 +5,21 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.action.DestroyTileAction;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
-import com.mygdx.wargame.battle.rules.facade.Facades;
 import com.mygdx.wargame.battle.rules.facade.GameState;
-import com.mygdx.wargame.battle.screen.IsoUtils;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
-import com.mygdx.wargame.battle.screen.ui.HUDMediator;
-import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGun;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk2;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk3;
-import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.util.MathUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -117,7 +109,7 @@ RangedAttackAnimationAction extends Action {
                 float ex;
                 float ey;
 
-                if(weaponDidHit) {
+                if (weaponDidHit) {
                     ex = end.x + new Random().nextFloat() / 5f;
                     ey = end.y + new Random().nextFloat() / 5f;
                 } else {
@@ -172,8 +164,8 @@ RangedAttackAnimationAction extends Action {
 
                     float angle = MathUtils.getAngle(start, end);
 
-                    float xOffset = flipBezierControlPoint ? -(length/4f) : (length/4f);
-                    float yOffset = flipBezierControlPoint ? -(length/8f) : (length/8f);
+                    float xOffset = flipBezierControlPoint ? -(length / 4f) : (length / 4f);
+                    float yOffset = flipBezierControlPoint ? -(length / 8f) : (length / 8f);
 
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, xOffset, yOffset + new Random().nextInt(2), angle);
                     moveActorByBezierLine.setDuration(length * 0.25f);
@@ -213,7 +205,7 @@ RangedAttackAnimationAction extends Action {
 
                 selectedWeaponFiringAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
 
-                if(weaponDidHit) {
+                if (weaponDidHit) {
                     selectedWeaponFiringAction.addAction(new MechHitAction(weapon, null));
                 }
 
@@ -271,8 +263,6 @@ RangedAttackAnimationAction extends Action {
 
         if (tileDamageInflicted)
             outerSequenceAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
-
-        outerSequenceAction.addAction(new RangedAttackAftermathAction());
 
         StageElementsStorage.stage.addAction(outerSequenceAction);
     }
