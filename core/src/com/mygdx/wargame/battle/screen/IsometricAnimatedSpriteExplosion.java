@@ -19,7 +19,6 @@ public class IsometricAnimatedSpriteExplosion extends Actor {
         super();
         this.textureRegion = new Sprite(texture);
         this.nrOfSteps = texture.getWidth() / 96;
-        System.out.println("Missile steps: " + nrOfSteps);
     }
 
     @Override

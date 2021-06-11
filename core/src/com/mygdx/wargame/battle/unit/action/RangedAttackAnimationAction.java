@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.mygdx.wargame.battle.rules.facade.Facades.attackFacade;
+import static com.mygdx.wargame.battle.rules.facade.GameState.selectedMech;
+import static com.mygdx.wargame.battle.rules.facade.GameState.selectedPilot;
+
 public class
 RangedAttackAnimationAction extends Action {
 
@@ -79,11 +83,15 @@ RangedAttackAnimationAction extends Action {
         ParallelAction outerSequenceAction = new SequenceAction();
         outerSequenceAction.addAction(parallelAction);
 
+        boolean flipBezierControlPoint = false;
+
         for (int i = 0; i < selectedWeapons.size(); i++) {
 
             Weapon weapon = selectedWeapons.get(i);
 
             for (int j = 0; j < weapon.getDamageMultiplier(); j++) {
+
+                // todo do the hit chance calculation here
 
                 float spreadFactor = 1;
                 float ex = end.x + (spreadFactor / 2f) - new Random().nextFloat() / spreadFactor;
@@ -132,10 +140,13 @@ RangedAttackAnimationAction extends Action {
                     moveActorByBezierLine.setTarget(bullet);
 
                 } else if (weapon.getType() == WeaponType.Missile) {
-                    //float angle = start.angle(end);
+
                     float angle = MathUtils.getAngle(start, end);
 
-                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, -(length/4f), +(length / 8f) + new Random().nextInt(2), angle);
+                    float xOffset = flipBezierControlPoint ? -(length/4f) : (length/4f);
+                    float yOffset = flipBezierControlPoint ? -(length/8f) : (length/8f);
+
+                    moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, xOffset, yOffset + new Random().nextInt(2), angle);
                     moveActorByBezierLine.setDuration(length * 0.25f);
                     moveActorByBezierLine.setTarget(bullet);
 
@@ -219,6 +230,7 @@ RangedAttackAnimationAction extends Action {
 
             }
             delay += 5;
+            flipBezierControlPoint = !flipBezierControlPoint;
         }
 
         if (tileDamageInflicted)

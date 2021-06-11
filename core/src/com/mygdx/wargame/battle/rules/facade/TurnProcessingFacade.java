@@ -31,13 +31,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import static com.mygdx.wargame.battle.rules.facade.Facades.attackFacade;
+
 public class
 
 TurnProcessingFacade {
 
     private Map<AbstractMech, Pilot> allSorted = new TreeMap<>();
     private ActionLock actionLock;
-    private AttackFacade attackFacade;
     private TargetingFacade targetingFacade;
     private MovementSpeedCalculator movementSpeedCalculator;
     private Map<AbstractMech, Pilot> team1;
@@ -53,14 +54,12 @@ TurnProcessingFacade {
     private BattleMap battleMap;
     private AssetManagerLoaderV2 assetManagerLoaderV2;
     private IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites;
-    private WeaponRangeMarkerUpdater weaponRangeMarkerUpdater;
     private DeploymentFacade deploymentFacade;
     private int turnCounter = 1;
 
-    public TurnProcessingFacade(AttackFacade attackFacade, TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
+    public TurnProcessingFacade(TargetingFacade targetingFacade, MovementSpeedCalculator movementSpeedCalculator,
                                 Map<AbstractMech, Pilot> team1, Map<AbstractMech, Pilot> team2, RangeCalculator rangeCalculator, HeatCalculator heatCalculator, StabilityDecreaseCalculator stabilityDecreaseCalculator, HUDMediator hudMediator, BattleMap battleMap, AssetManagerLoaderV2 assetManagerLoaderV2, IsometricTiledMapRendererWithSprites isometricTiledMapRendererWithSprites, DeploymentFacade deploymentFacade) {
         this.actionLock = GameState.actionLock;
-        this.attackFacade = attackFacade;
         this.targetingFacade = targetingFacade;
         this.movementSpeedCalculator = movementSpeedCalculator;
         this.hudMediator = hudMediator;
@@ -84,8 +83,6 @@ TurnProcessingFacade {
         this.moveActorAlongPathActionFactory = new MoveActorAlongPathActionFactory(this.battleMap);
 
         this.weaponSelectionOptimizer = new WeaponSelectionOptimizer();
-
-        this.weaponRangeMarkerUpdater = new WeaponRangeMarkerUpdater();
     }
 
     public Map.Entry<AbstractMech, Pilot> getNext() {
@@ -141,6 +138,9 @@ TurnProcessingFacade {
             AbstractMech selectedMech = next.getKey();
             Pilot selectedPilot = next.getValue();
 
+            GameState.selectedMech = selectedMech;
+            GameState.selectedPilot = selectedPilot;
+
             hudMediator.getHudElementsFacade().populateSidePanel();
 
             battleMap.clearRangeMarkers();
@@ -185,6 +185,7 @@ TurnProcessingFacade {
 
                 // find target
                 Optional<Target> target = targetingFacade.findTarget(selectedPilot, selectedMech, team1, battleMap);
+                GameState.target = target;
 
                 int minRange = rangeCalculator.calculateAllWeaponsRange(selectedPilot, selectedMech, battleMap);
 
@@ -224,11 +225,14 @@ TurnProcessingFacade {
                         attackActions.addAction(new ChangeDirectionAction(target.get().getMech().getX(), target.get().getMech().getY(), selectedMech));
                         attackActions.addAction(new RemoveDirectionMarkerAction(selectedMech.getX(), selectedMech.getY(), battleMap));
                         attackActions.addAction(new AddDirectionMarkerAction(selectedMech, battleMap));
-                        if(!selectedMech.isRangedAttack()) {
-                            attackActions.addAction(new MeleeAttackAnimationAction(selectedMech, target.get().getMech()));
-                        } else {
-                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap));
-                        }
+
+                        // todo move this to AttackFacade
+//                        if(!selectedMech.isRangedAttack()) {
+//                            attackActions.addAction(new MeleeAttackAnimationAction(selectedMech, target.get().getMech()));
+//                        } else {
+//                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap));
+//                        }
+
                         AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
                         sequenceAction.addAction(attackAction);
@@ -309,10 +313,6 @@ TurnProcessingFacade {
 
     public boolean isNextPlayerControlled() {
         return this.next != null && this.team1.containsKey(this.next.getKey());
-    }
-
-    public AttackFacade getAttackFacade() {
-        return attackFacade;
     }
 
     public BattleMap getBattleMap() {

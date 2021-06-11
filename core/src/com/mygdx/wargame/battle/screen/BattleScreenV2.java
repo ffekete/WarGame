@@ -28,11 +28,8 @@ import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
 import com.mygdx.wargame.battle.rules.calculator.StabilityDecreaseCalculator;
-import com.mygdx.wargame.battle.rules.facade.AttackFacade;
-import com.mygdx.wargame.battle.rules.facade.DeploymentFacade;
-import com.mygdx.wargame.battle.rules.facade.GameState;
-import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
-import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
+import com.mygdx.wargame.battle.rules.facade.*;
+import com.mygdx.wargame.battle.rules.facade.target.Target;
 import com.mygdx.wargame.battle.rules.facade.target.TargetingFacade;
 import com.mygdx.wargame.battle.screen.ui.BattleGameMenuFacade;
 import com.mygdx.wargame.battle.screen.ui.HUDMediator;
@@ -114,8 +111,10 @@ public class BattleScreenV2 implements Screen {
 
         deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
 
+        AttackFacade attackFacade = new AttackFacade(assetManagerLoader.getAssetManager(), isometricTiledMapRenderer);
+        Facades.attackFacade = attackFacade;
+
         turnProcessingFacade = new TurnProcessingFacade(
-                new AttackFacade(assetManagerLoader.getAssetManager(), isometricTiledMapRenderer),
                 new TargetingFacade(),
                 new MovementSpeedCalculator(),
                 battleScreenInputData.getPlayerTeam(),
@@ -211,6 +210,8 @@ public class BattleScreenV2 implements Screen {
 
                     Optional<AbstractMech> mechAtCoordinates = battleScreenInputData.getAiTeam().keySet().stream().filter(mech -> mech.getX() == s2c.x && mech.getY() == s2c.y).findFirst();
 
+
+
                     if (mechAtCoordinates.isPresent()) {
                         SequenceAction sequenceAction = new SequenceAction();
                         sequenceAction.addAction(new LockAction());
@@ -220,23 +221,25 @@ public class BattleScreenV2 implements Screen {
                             return;
                         }
 
+                        GameState.target = Optional.of(new Target(mechAtCoordinates.get(), pilotAtCoordinates.get().getValue()));
+
                         ParallelAction attackActions = new ParallelAction();
                         attackActions.addAction(new ChangeDirectionAction(mechAtCoordinates.get().getX(), mechAtCoordinates.get().getY(), turnProcessingFacade.getNext().getKey()));
                         attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
                         attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
 
-                        if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
-                            attackActions.addAction(new MeleeAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
-                        } else {
-                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap));
-                        }
+//                        if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
+//                            attackActions.addAction(new MeleeAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
+//                        } else {
+//                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap));
+//                        }
 
                         int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
                         int ammoBeforeAttack = turnProcessingFacade.getNext().getKey().getAmmoCount();
-                        AttackAction attackAction = new AttackAction(turnProcessingFacade.getAttackFacade(), turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue(), mechAtCoordinates.get(), pilotAtCoordinates.get().getValue(), battleMap, minRange, null);
+                        //AttackAction attackAction = new AttackAction(Facades.attackFacade, turnProcessingFacade.getNext().getKey(), turnProcessingFacade.getNext().getValue(), GameState.target.get().getMech(), pilotAtCoordinates.get().getValue(), battleMap, minRange, null);
 
                         sequenceAction.addAction(attackActions);
-                        sequenceAction.addAction(attackAction);
+                        //sequenceAction.addAction(attackAction);
                         sequenceAction.addAction(new IntAction(ammoBeforeAttack, turnProcessingFacade.getNext().getKey()::getAmmoCount, 1f, hudMediator.getHudElementsFacade().getAmmoImage().getLabel(), "ammo: "));
                         sequenceAction.addAction(new DelayAction(0.5f));
                         sequenceAction.addAction(new IntAction(heatBeforeAttack, turnProcessingFacade.getNext().getKey()::getHeatLevel, 1f, hudMediator.getHudElementsFacade().getHeatImage().getLabel(), "heat: "));

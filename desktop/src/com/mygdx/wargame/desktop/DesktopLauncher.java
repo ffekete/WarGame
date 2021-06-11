@@ -21,6 +21,5 @@ DesktopLauncher {
 
         SCREEN_SIZE_X = Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor()).width;
         SCREEN_SIZE_Y = Gdx.graphics.getDisplayMode(Gdx.graphics.getMonitor()).height;
-        System.out.println(HUD_VIEWPORT_WIDTH.get() + " " + HUD_VIEWPORT_HEIGHT.get());
     }
 }

@@ -52,7 +52,6 @@ public class BattleMap {
 
         this.tiledMap = new TiledMapGenerator(assetManagerLoaderV2).generate(nodeGraph, WIDTH, HEIGHT, terrainType.getTileSets());
 
-        System.out.println("done");
     }
 
 

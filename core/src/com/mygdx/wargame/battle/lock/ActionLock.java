@@ -13,7 +13,6 @@ public class ActionLock {
     }
 
     public void setLocked(boolean locked) {
-        System.out.println("Changed to " + locked);
         isLocked = locked;
     }
 
