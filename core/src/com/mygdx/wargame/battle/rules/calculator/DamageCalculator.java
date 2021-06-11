@@ -39,7 +39,7 @@ public class DamageCalculator {
         this.flankingCalculator = new FlankingCalculator();
     }
 
-    public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart, SequenceAction messageQue) {
+    public void calculate(Pilot attackingPilot, Mech attackingMech, Pilot targetPilot, Mech targetMech, Weapon weapon, BodyPart targetedBodyPart) {
         BodyPart bodyPart;
 
             // calculate critical
@@ -63,7 +63,7 @@ public class DamageCalculator {
             boolean isFlanked = flankingCalculator.isFlankedFromPosition(attackingMech.getX(), attackingMech.getY(), targetMech);
 
             if (shieldedValue > 0) {
-                reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1) * (int) (isFlanked ? 1.2f : 1f), messageQue);
+                reduceShieldValue(targetPilot, targetMech, weapon.getShieldDamage() * (critical ? 2 : 1) * (int) (isFlanked ? 1.2f : 1f));
             } else {
 
                 // add heat
@@ -99,8 +99,6 @@ public class DamageCalculator {
                     }
                 }
             }
-
-        StageElementsStorage.airLevel.addAction(messageQue);
     }
 
     private void addExplosion(Mech target) {
@@ -115,7 +113,7 @@ public class DamageCalculator {
         StageElementsStorage.airLevel.addAction(sequenceAction);
     }
 
-    private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage, SequenceAction messageQue) {
+    private void reduceShieldValue(Pilot pilot, Mech mech, int shieldDamage) {
         int maxDamage = shieldDamage;
 
         if (pilot.hasPerk(Perks.Robust)) {

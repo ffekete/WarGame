@@ -15,6 +15,7 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.action.DestroyTileAction;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.battle.rules.facade.Facades;
 import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
@@ -22,6 +23,7 @@ import com.mygdx.wargame.common.component.weapon.WeaponType;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGun;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk2;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGunMk3;
+import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.util.MathUtils;
 
@@ -30,8 +32,7 @@ import java.util.List;
 import java.util.Random;
 
 import static com.mygdx.wargame.battle.rules.facade.Facades.attackFacade;
-import static com.mygdx.wargame.battle.rules.facade.GameState.selectedMech;
-import static com.mygdx.wargame.battle.rules.facade.GameState.selectedPilot;
+import static com.mygdx.wargame.battle.rules.facade.Facades.hitChanceCalculatorFacade;
 
 public class
 RangedAttackAnimationAction extends Action {
@@ -71,6 +72,8 @@ RangedAttackAnimationAction extends Action {
 
     private void startBullet(Mech mech) {
 
+
+
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
         int delay = -1;
 
@@ -89,13 +92,37 @@ RangedAttackAnimationAction extends Action {
 
             Weapon weapon = selectedWeapons.get(i);
 
+            attackFacade.checkHeatDamage(weapon);
+
+            // calculate hit chance
+            int chance = hitChanceCalculatorFacade.getHitChance(weapon, GameState.selectedPilot, GameState.selectedMech, GameState.target.get().getMech(), null, battleMap);
+
             for (int j = 0; j < weapon.getDamageMultiplier(); j++) {
 
-                // todo do the hit chance calculation here
+                if (weapon.getAmmo().isPresent() && weapon.getAmmo().get() == 0) {
+                    // no ammo, skip
+                    continue;
+                }
 
-                float spreadFactor = 1;
-                float ex = end.x + (spreadFactor / 2f) - new Random().nextFloat() / spreadFactor;
-                float ey = end.y + (spreadFactor / 2f) - new Random().nextFloat() / spreadFactor;
+                // reduce ammo of weapon
+                weapon.reduceAmmo();
+
+                boolean weaponDidHit = false;
+
+                if (new Random().nextInt(100) < chance - attackFacade.getEvasionCalculator().calculate(GameState.selectedPilot, GameState.selectedMech, GameState.target.get().getPilot(), battleMap)) {
+                    weaponDidHit = true;
+                }
+
+                float ex;
+                float ey;
+
+                if(weaponDidHit) {
+                    ex = end.x + new Random().nextFloat() / 5f;
+                    ey = end.y + new Random().nextFloat() / 5f;
+                } else {
+                    ex = end.x + (new Random().nextBoolean() ? -0.5f : 0.5f);
+                    ey = end.y + (new Random().nextBoolean() ? -0.5f : 0.5f);
+                }
 
                 SequenceAction selectedWeaponFiringAction = new SequenceAction();
 
@@ -184,6 +211,12 @@ RangedAttackAnimationAction extends Action {
 
                 selectedWeaponFiringAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, bullet, null));
 
+                if(weaponDidHit) {
+                    selectedWeaponFiringAction.addAction(new MechHitAction(weapon, null));
+                }
+
+                selectedWeaponFiringAction.addAction(new SetHeatLevelAction(GameState.selectedMech, weapon.getHeat()));
+
                 if (weapon.getType() == WeaponType.Missile) {
                     MissileExplosion explosion = new MissileExplosion(assetManager);
                     explosion.setPosition(ex, ey);
@@ -226,6 +259,7 @@ RangedAttackAnimationAction extends Action {
                 selectedWeaponFiringAction.addAction(new DelayAction(0.25f));
                 selectedWeaponFiringAction.addAction(new RemoveCustomActorAction(isometricTiledMapRendererWithSprites, hitEffect, null));
 
+
                 parallelAction.addAction(selectedWeaponFiringAction);
 
             }
@@ -235,6 +269,8 @@ RangedAttackAnimationAction extends Action {
 
         if (tileDamageInflicted)
             outerSequenceAction.addAction(new DestroyTileAction(battleMap, (int) end.x, (int) end.y, assetManager));
+
+        outerSequenceAction.addAction(new RangedAttackAftermathAction());
 
         StageElementsStorage.stage.addAction(outerSequenceAction);
     }

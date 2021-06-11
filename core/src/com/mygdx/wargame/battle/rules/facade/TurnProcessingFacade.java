@@ -227,15 +227,15 @@ TurnProcessingFacade {
                         attackActions.addAction(new AddDirectionMarkerAction(selectedMech, battleMap));
 
                         // todo move this to AttackFacade
-//                        if(!selectedMech.isRangedAttack()) {
-//                            attackActions.addAction(new MeleeAttackAnimationAction(selectedMech, target.get().getMech()));
-//                        } else {
-//                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap));
-//                        }
+                        if(!selectedMech.isRangedAttack()) {
+                            attackActions.addAction(new MeleeAttackAnimationAction(selectedMech, target.get().getMech()));
+                        } else {
+                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap));
+                        }
 
-                        AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
+                        //AttackAction attackAction = new AttackAction(attackFacade, selectedMech, selectedPilot, target.get().getMech(), target.get().getPilot(), battleMap, minRange, null);
                         sequenceAction.addAction(attackActions);
-                        sequenceAction.addAction(attackAction);
+                        //sequenceAction.addAction(attackAction);
                     }
                     //sequenceAction.addAction(new UnlockAction(actionLock, "Eof AI attack"));
 

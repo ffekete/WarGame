@@ -112,6 +112,8 @@ public class BattleScreenV2 implements Screen {
         deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
 
         AttackFacade attackFacade = new AttackFacade(assetManagerLoader.getAssetManager(), isometricTiledMapRenderer);
+
+        Facades.hitChanceCalculatorFacade = new HitChanceCalculatorFacade();
         Facades.attackFacade = attackFacade;
 
         turnProcessingFacade = new TurnProcessingFacade(
@@ -228,11 +230,11 @@ public class BattleScreenV2 implements Screen {
                         attackActions.addAction(new RemoveDirectionMarkerAction(turnProcessingFacade.getNext().getKey().getX(), turnProcessingFacade.getNext().getKey().getY(), battleMap));
                         attackActions.addAction(new AddDirectionMarkerAction(turnProcessingFacade.getNext().getKey(), battleMap));
 
-//                        if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
-//                            attackActions.addAction(new MeleeAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
-//                        } else {
-//                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap));
-//                        }
+                        if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
+                            attackActions.addAction(new MeleeAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
+                        } else {
+                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap));
+                        }
 
                         int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();
                         int ammoBeforeAttack = turnProcessingFacade.getNext().getKey().getAmmoCount();
