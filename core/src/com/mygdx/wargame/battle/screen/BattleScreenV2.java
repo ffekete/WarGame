@@ -374,6 +374,8 @@ public class BattleScreenV2 implements Screen {
         isometricTiledMapRenderer.setView(camera);
         isometricTiledMapRenderer.render();
 
+        stage.draw();
+
         hudViewPort.apply();
 
         hudStage.act();

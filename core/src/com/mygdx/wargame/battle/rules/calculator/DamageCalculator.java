@@ -4,9 +4,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.bullet.Explosion;
-import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.battle.unit.action.AddActorAction;
 import com.mygdx.wargame.battle.unit.action.RemoveCustomActorAction;
 import com.mygdx.wargame.common.component.armor.Armor;
@@ -18,7 +19,6 @@ import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.common.pilot.Perks;
 import com.mygdx.wargame.common.pilot.Pilot;
 
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -93,6 +93,8 @@ public class DamageCalculator {
 
                     targetMech.setHp(bodyPart, targetMech.getHp(bodyPart) - damage);
 
+                    HudElementsFacade.createDamageIndicatorFloatingLabelFromString("Body damage: ", Integer.toString(damage), targetMech.getX(), targetMech.getY(), GameState.fireSingleWeaponAction);
+
                     // destroy body part and all of its components
                     if (targetMech.getHp(bodyPart) <= 0) {
                         bodyPartDestructionHandler.destroy(targetMech, bodyPart);
@@ -140,6 +142,8 @@ public class DamageCalculator {
                 int damage = Math.min(s.getShieldValue(), maxDamage);
                 maxDamage -= damage;
                 s.reduceShieldValue(damage);
+
+                HudElementsFacade.createDamageIndicatorFloatingLabelFromString("Shield damage: ", Integer.toString(damage), mech.getX(), mech.getY(), GameState.fireSingleWeaponAction);
             }
         }
     }
@@ -171,6 +175,7 @@ public class DamageCalculator {
                 int damage = Math.min(armor.getHitPoint(), maxDamage);
                 maxDamage -= damage;
                 armor.reduceHitPoint(damage);
+                HudElementsFacade.createDamageIndicatorFloatingLabelFromString("Armor damage: ", Integer.toString(damage), mech.getX(), mech.getY(), GameState.fireSingleWeaponAction);
 
                 if (armor.getHitPoint() <= 0)
                     armor.setStatus(Status.Destroyed);

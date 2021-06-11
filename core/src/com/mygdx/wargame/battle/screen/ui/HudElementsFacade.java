@@ -3,10 +3,15 @@ package com.mygdx.wargame.battle.screen.ui;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,10 +24,16 @@ import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapStore;
 import com.mygdx.wargame.battle.map.decoration.AnimatedDrawable;
+import com.mygdx.wargame.battle.map.decoration.AnimatedImage;
 import com.mygdx.wargame.battle.rules.facade.DeploymentFacade;
 import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.rules.facade.TurnProcessingFacade;
 import com.mygdx.wargame.battle.rules.facade.WeaponRangeMarkerUpdater;
+import com.mygdx.wargame.battle.screen.IsoUtils;
+import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.unit.action.AddActionToStageAction;
+import com.mygdx.wargame.battle.unit.action.AddActorToStageAction;
+import com.mygdx.wargame.battle.unit.action.RemoveActorFromStageAction;
 import com.mygdx.wargame.common.component.armor.Armor;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.mech.AbstractMech;
@@ -46,6 +57,8 @@ HudElementsFacade {
 
     private Table upperHud;
     private Label.LabelStyle labelStyle;
+
+    private static Label.LabelStyle labelStyleForFloatingText;
 
     private Tooltip<Table> shieldToolTip;
     private Table shieldTooltipTable;
@@ -138,6 +151,8 @@ HudElementsFacade {
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = FontCreator.getBitmapFont(16);
+
+        labelStyleForFloatingText = labelStyle;
 
         labelPool = new Pool<Label>() {
             @Override
@@ -666,6 +681,74 @@ HudElementsFacade {
             return Optional.of(a.orElse(0) + b.orElse(0));
         }).orElse(Optional.of(0));
     }
+
+    public Label createFloatingLabelWithIconFromString(String prefix,
+                                                       String suffix,
+                                                       TextureRegion iconTextureRegion,
+                                                       int x,
+                                                       int y,
+                                                       SequenceAction sequenceAction) {
+        Table table = new Table();
+
+        Label label = null;
+
+        label = new Label(prefix, labelStyle);
+        table.setPosition(x + 2, y);
+        table.add(label);
+
+        Image image = new Image(iconTextureRegion);
+
+        image.setSize(64, 64);
+
+        SequenceAction sequenceAction1 = new SequenceAction();
+        sequenceAction1.addAction(Actions.moveTo(x + 2, y + 15, 5));
+        sequenceAction1.addAction(Actions.removeActor());
+        sequenceAction1.setActor(table);
+
+        sequenceAction.addAction(sequenceAction1);
+
+        table.add(image).size(64).pad(0, 2, 0, 2);
+
+        table.add(new Label(suffix, labelStyle));
+        table.setColor(1, 1, 1, 1f);
+
+        StageElementsStorage.hudStage.addActor(table);
+
+        return label;
+    }
+
+    public static Table createDamageIndicatorFloatingLabelFromString(String prefix,
+                                                                     String suffix,
+                                                                     float x,
+                                                                     float y,
+                                                                     ParallelAction sequenceAction) {
+        Table table = new Table();
+
+        Label label = null;
+
+        label = new Label(prefix, labelStyleForFloatingText);
+        Vector2 vector2 = new IsoUtils().worldToScreen(x, y);
+        table.setPosition(vector2.x + 32, vector2.y);
+        table.add(label);
+
+        SequenceAction sequenceAction1 = new SequenceAction();
+        sequenceAction1.addAction(Actions.delay(GameState.messageDelayDuringSingleAttack));
+        sequenceAction1.addAction(new AddActorToStageAction(StageElementsStorage.stage, table));
+        sequenceAction1.addAction(Actions.moveBy(8, 32, 0.5f));
+        sequenceAction1.addAction(new RemoveActorFromStageAction(StageElementsStorage.stage, table));
+        sequenceAction1.setActor(table);
+
+        GameState.messageDelayDuringSingleAttack += 0.33f;
+
+        sequenceAction.addAction(new AddActionToStageAction(StageElementsStorage.stage, sequenceAction1));
+
+
+        table.add(new Label(suffix, labelStyleForFloatingText));
+        table.setColor(1, 1, 1, 1f);
+
+        return table;
+    }
+
 
     public Label getHeatValueLabel() {
         return heatValueLabel;

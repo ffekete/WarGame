@@ -4,12 +4,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.actions.VisibleAction;
+import com.badlogic.gdx.scenes.scene2d.actions.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.wargame.battle.bullet.*;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.map.BattleMap;
@@ -17,7 +14,10 @@ import com.mygdx.wargame.battle.map.action.DestroyTileAction;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.facade.Facades;
 import com.mygdx.wargame.battle.rules.facade.GameState;
+import com.mygdx.wargame.battle.screen.IsoUtils;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.screen.ui.HUDMediator;
+import com.mygdx.wargame.battle.screen.ui.HudElementsFacade;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGun;
@@ -27,6 +27,7 @@ import com.mygdx.wargame.common.mech.BodyPart;
 import com.mygdx.wargame.common.mech.Mech;
 import com.mygdx.wargame.util.MathUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -72,8 +73,6 @@ RangedAttackAnimationAction extends Action {
 
     private void startBullet(Mech mech) {
 
-
-
         List<Weapon> selectedWeapons = new ArrayList<>(mech.getSelectedWeapons());
         int delay = -1;
 
@@ -87,6 +86,8 @@ RangedAttackAnimationAction extends Action {
         outerSequenceAction.addAction(parallelAction);
 
         boolean flipBezierControlPoint = false;
+
+        GameState.messageDelayDuringSingleAttack = 0f;
 
         for (int i = 0; i < selectedWeapons.size(); i++) {
 
@@ -125,6 +126,7 @@ RangedAttackAnimationAction extends Action {
                 }
 
                 SequenceAction selectedWeaponFiringAction = new SequenceAction();
+                GameState.fireSingleWeaponAction = selectedWeaponFiringAction; // save this to use it in DamageCalculator
 
                 delay++;
                 DelayAction delayAction = new DelayAction(0.05f * delay);

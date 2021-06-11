@@ -1,5 +1,6 @@
 package com.mygdx.wargame.battle.rules.facade;
 
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.mygdx.wargame.battle.lock.ActionLock;
 import com.mygdx.wargame.battle.rules.facade.target.Target;
 import com.mygdx.wargame.common.mech.Mech;
@@ -23,5 +24,8 @@ public class GameState {
     public static Pilot selectedPilot;
 
     public static Optional<Target> target;
+
+    public static ParallelAction fireSingleWeaponAction;
+    public static float messageDelayDuringSingleAttack = 0f;
 
 }
