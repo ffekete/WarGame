@@ -73,7 +73,7 @@ public class TiledMapGenerator {
         }
 
         if(tile != null) {
-            cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
+            cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.assetManager, tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
             TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("foliageLayer");
             if (tile.isImpassable()) {
                 nodeGraph.setImpassable(i, j);
@@ -95,7 +95,7 @@ public class TiledMapGenerator {
             e.printStackTrace();
         }
 
-        cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.getAssetManager(), tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
+        cell.setTile(new AnimatedTiledMapTile(new AnimatedDrawableTile(assetManagerLoaderV2.assetManager, tile, 0.1f, 1, IsoUtils.TILE_WIDTH, IsoUtils.TILE_HEIGHT)));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("groundLayer");
         if(tile.isImpassable()) {
             nodeGraph.setImpassable(i, j);

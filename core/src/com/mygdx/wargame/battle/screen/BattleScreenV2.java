@@ -24,6 +24,7 @@ import com.mygdx.wargame.battle.map.BattleMapStore;
 import com.mygdx.wargame.battle.map.Node;
 import com.mygdx.wargame.battle.map.TerrainType;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
+import com.mygdx.wargame.battle.map.render.Renderers;
 import com.mygdx.wargame.battle.rules.calculator.HeatCalculator;
 import com.mygdx.wargame.battle.rules.calculator.MovementSpeedCalculator;
 import com.mygdx.wargame.battle.rules.calculator.RangeCalculator;
@@ -90,6 +91,7 @@ public class BattleScreenV2 implements Screen {
         BattleMapStore.battleMap = battleMap;
 
         isometricTiledMapRenderer = new IsometricTiledMapRendererWithSprites(battleMap.getTiledMap());
+        Renderers.isometricTiledMapRendererWithSprites = isometricTiledMapRenderer;
 
         battleMap.getNodeGraph().setIsometricTiledMapRendererWithSprites(isometricTiledMapRenderer);
 
@@ -102,7 +104,7 @@ public class BattleScreenV2 implements Screen {
 
         hudMediator = new HUDMediator();
 
-        BattleGameMenuFacade battleGameMenuFacade = new BattleGameMenuFacade(assetManagerLoader.getAssetManager(), hudMediator);
+        BattleGameMenuFacade battleGameMenuFacade = new BattleGameMenuFacade(assetManagerLoader.assetManager, hudMediator);
         hudMediator.setBattleGameMenuFacade(battleGameMenuFacade);
 
         battleGameMenuFacade.create();
@@ -111,7 +113,7 @@ public class BattleScreenV2 implements Screen {
 
         deploymentFacade = new DeploymentFacade(isometricTiledMapRenderer, hudMediator, battleScreenInputData.getPlayerTeam(), battleScreenInputData.getAiTeam(), battleMap);
 
-        AttackFacade attackFacade = new AttackFacade(assetManagerLoader.getAssetManager(), isometricTiledMapRenderer);
+        AttackFacade attackFacade = new AttackFacade(assetManagerLoader.assetManager, isometricTiledMapRenderer);
 
         Facades.hitChanceCalculatorFacade = new HitChanceCalculatorFacade();
         Facades.attackFacade = attackFacade;
@@ -127,7 +129,7 @@ public class BattleScreenV2 implements Screen {
                 hudMediator,
                 battleMap, assetManagerLoader, isometricTiledMapRenderer, deploymentFacade);
 
-        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.getAssetManager(), turnProcessingFacade, deploymentFacade, hudMediator));
+        hudMediator.setHudElementsFacade(new HudElementsFacade(assetManagerLoader.assetManager, turnProcessingFacade, deploymentFacade, hudMediator));
         hudMediator.getHudElementsFacade().create();
         hudMediator.getHudElementsFacade().registerComponents(hudStage);
 
@@ -193,7 +195,7 @@ public class BattleScreenV2 implements Screen {
                             battleMap.toggleMarker((int) p.getX(), (int) p.getY(), true);
                             battleMap.addPathMarker((int) p.getX(), (int) p.getY());
 
-                            // stage.addActor(new MovementPathMarker(assetManagerLoader.getAssetManager().get("info/MovementPath.png", Texture.class), battleMap));
+                            // stage.addActor(new MovementPathMarker(assetManagerLoader.assetManager.get("info/MovementPath.png", Texture.class), battleMap));
                         });
                     }
                 }
@@ -233,7 +235,7 @@ public class BattleScreenV2 implements Screen {
                         if (!turnProcessingFacade.getNext().getKey().isRangedAttack()) {
                             attackActions.addAction(new MeleeAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get()));
                         } else {
-                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.getAssetManager(), minRange, isometricTiledMapRenderer, battleMap));
+                            attackActions.addAction(new RangedAttackAnimationAction(turnProcessingFacade.getNext().getKey(), mechAtCoordinates.get(), assetManagerLoader.assetManager, minRange, isometricTiledMapRenderer, battleMap));
                         }
 
                         int heatBeforeAttack = turnProcessingFacade.getNext().getKey().getHeatLevel();

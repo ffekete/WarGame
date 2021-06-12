@@ -229,7 +229,7 @@ TurnProcessingFacade {
                         if(!selectedMech.isRangedAttack()) {
                             attackActions.addAction(new MeleeAttackAnimationAction(selectedMech, target.get().getMech()));
                         } else {
-                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.getAssetManager(), minRange, isometricTiledMapRendererWithSprites, battleMap));
+                            attackActions.addAction(new RangedAttackAnimationAction(selectedMech, target.get().getMech(), assetManagerLoaderV2.assetManager, minRange, isometricTiledMapRendererWithSprites, battleMap));
                         }
 
                         sequenceAction.addAction(attackActions);

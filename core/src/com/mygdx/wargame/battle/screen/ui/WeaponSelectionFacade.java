@@ -44,7 +44,7 @@ public class WeaponSelectionFacade {
 
     public void create() {
         outerTable = new Table();
-        TextureRegionDrawable backGround = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("windows/Window.png", Texture.class));
+        TextureRegionDrawable backGround = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("windows/Window.png", Texture.class));
         outerTable.background(backGround.tint(Color.valueOf("FFFFFFEE")));
         outerTable.setVisible(false);
         outerTable.setSize(400, 600);
@@ -54,9 +54,9 @@ public class WeaponSelectionFacade {
         labelStyle.font = FontCreator.getBitmapFont(16);
 
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.up = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("hud/SmallButtonUp.png", Texture.class));
-        buttonStyle.down = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("hud/SmallButtonDown.png", Texture.class));
-        buttonStyle.over = new AnimatedDrawable(new TextureRegion(assetManagerLoaderV2.getAssetManager().get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
+        buttonStyle.up = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("hud/SmallButtonUp.png", Texture.class));
+        buttonStyle.down = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("hud/SmallButtonDown.png", Texture.class));
+        buttonStyle.over = new AnimatedDrawable(new TextureRegion(assetManagerLoaderV2.assetManager.get("hud/SmallButtonOver.png", Texture.class)), 0.1f, 150, 64, 32);
         buttonStyle.font = labelStyle.font;
         buttonStyle.overFontColor = Color.valueOf("00FF00");
         buttonStyle.fontColor = Color.valueOf("FFFFFF");
@@ -74,10 +74,10 @@ public class WeaponSelectionFacade {
 
         checkBoxStyle = new CheckBox.CheckBoxStyle();
         checkBoxStyle.font = labelStyle.font;
-        checkBoxStyle.checkboxOn = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("common/CheckboxChecked.png", Texture.class));
-        checkBoxStyle.checkboxOff = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("common/CheckboxUnchecked.png", Texture.class));
-        checkBoxStyle.checkboxOnOver = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("common/CheckboxOnChecked.png", Texture.class));
-        checkBoxStyle.checkboxOver = new TextureRegionDrawable(assetManagerLoaderV2.getAssetManager().get("common/CheckboxOnUnchecked.png", Texture.class));
+        checkBoxStyle.checkboxOn = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("common/CheckboxChecked.png", Texture.class));
+        checkBoxStyle.checkboxOff = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("common/CheckboxUnchecked.png", Texture.class));
+        checkBoxStyle.checkboxOnOver = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("common/CheckboxOnChecked.png", Texture.class));
+        checkBoxStyle.checkboxOver = new TextureRegionDrawable(assetManagerLoaderV2.assetManager.get("common/CheckboxOnUnchecked.png", Texture.class));
 
         innerTable = new Table();
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();

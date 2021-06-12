@@ -8,7 +8,6 @@ import com.mygdx.wargame.battle.map.decoration.MovementDirectionDrawable;
 import com.mygdx.wargame.battle.map.decoration.DrawableMarker;
 import com.mygdx.wargame.battle.map.decoration.MovementPathTile;
 import com.mygdx.wargame.battle.map.decoration.DrawableTiledMapTile;
-import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.map.tile.Tile;
 import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.unit.Direction;
@@ -110,7 +109,7 @@ public class BattleMap {
 
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        cell.setTile(new DrawableTiledMapTile(new DrawableMarker(assetManagerLoaderV2.getAssetManager().get("info/RangeMarker.png", Texture.class))));
+        cell.setTile(new DrawableTiledMapTile(new DrawableMarker(assetManagerLoaderV2.assetManager.get("info/RangeMarker.png", Texture.class))));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("rangeMarkersLayer");
         layer.setCell(x, y, cell);
     }
@@ -131,7 +130,7 @@ public class BattleMap {
 
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        cell.setTile(new DrawableTiledMapTile(new DrawableMarker(assetManagerLoaderV2.getAssetManager().get("info/MovementMarker.png", Texture.class))));
+        cell.setTile(new DrawableTiledMapTile(new DrawableMarker(assetManagerLoaderV2.assetManager.get("info/MovementMarker.png", Texture.class))));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("movementMarkersLayer");
         layer.setCell(x, y, cell);
     }
@@ -154,16 +153,16 @@ public class BattleMap {
 
         switch (direction) {
             case Up:
-                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionUp.png", Texture.class))));
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.assetManager.get("info/MovementDirectionUp.png", Texture.class))));
                 break;
             case Down:
-                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionDown.png", Texture.class))));
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.assetManager.get("info/MovementDirectionDown.png", Texture.class))));
                 break;
             case Left:
-                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionLeft.png", Texture.class))));
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.assetManager.get("info/MovementDirectionLeft.png", Texture.class))));
                 break;
             case Right:
-                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.getAssetManager().get("info/MovementDirectionRight.png", Texture.class))));
+                cell.setTile(new DrawableTiledMapTile(new MovementDirectionDrawable(assetManagerLoaderV2.assetManager.get("info/MovementDirectionRight.png", Texture.class))));
                 break;
         }
 
@@ -180,7 +179,7 @@ public class BattleMap {
 
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
 
-        cell.setTile(new DrawableTiledMapTile(new MovementPathTile(assetManagerLoaderV2.getAssetManager().get("info/PathMarker.png", Texture.class), this, x, y)));
+        cell.setTile(new DrawableTiledMapTile(new MovementPathTile(assetManagerLoaderV2.assetManager.get("info/PathMarker.png", Texture.class), this, x, y)));
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("pathLayer");
         layer.setCell(x, y, cell);
     }

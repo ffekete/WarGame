@@ -5,10 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class AssetManagerLoaderV2 {
 
-    private AssetManager assetManager;
+    public static AssetManager assetManager;
 
-    public AssetManagerLoaderV2(AssetManager assetManager) {
-        this.assetManager = assetManager;
+    public AssetManagerLoaderV2(AssetManager aAssetManager) {
+        assetManager = aAssetManager;
     }
 
     public void load() {
@@ -87,6 +87,7 @@ public class AssetManagerLoaderV2 {
         assetManager.load("bullets/IonBullet.png", Texture.class);
         assetManager.load("bullets/FlamerBullet.png", Texture.class);
         assetManager.load("bullets/FlamerHit.png", Texture.class);
+        assetManager.load("bullets/Smoke.png", Texture.class);
 
         assetManager.load("effects/Explosion.png", Texture.class);
 
@@ -105,9 +106,5 @@ public class AssetManagerLoaderV2 {
         assetManager.load("portraits/Portrait05.png", Texture.class);
 
         assetManager.finishLoading();
-    }
-
-    public AssetManager getAssetManager() {
-        return assetManager;
     }
 }

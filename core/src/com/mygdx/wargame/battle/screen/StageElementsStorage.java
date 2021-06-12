@@ -10,5 +10,4 @@ public class StageElementsStorage {
     public static Stage stage;
     public static Stage hudStage;
 
-
 }
