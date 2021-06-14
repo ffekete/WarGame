@@ -11,6 +11,7 @@ import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.action.DestroyTileAction;
 import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.facade.GameState;
+import com.mygdx.wargame.battle.screen.IsoUtils;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
@@ -123,6 +124,11 @@ RangedAttackAnimationAction extends Action {
                 delay++;
                 DelayAction delayAction = new DelayAction(0.05f * delay);
 
+                Vector2 startScreen = IsoUtils.ISO_UTILS.worldToScreen(start.x, start.y);
+                Vector2 endScreen = IsoUtils.ISO_UTILS.worldToScreen(ex, ey);
+
+                float distance = (float)MathUtils.getDistance(startScreen.x, startScreen.y, endScreen.x, endScreen.y);
+
                 AbstractBullet bullet;
                 if (weapon.getType() == WeaponType.Plasma)
                     bullet = new PlasmaBullet(assetManager);
@@ -135,7 +141,7 @@ RangedAttackAnimationAction extends Action {
                 } else if (weapon.getType() == WeaponType.Missile) {
                     bullet = new MissileBullet(assetManager);
                 } else if (weapon.getType() == WeaponType.Laser) {
-                    bullet = new LaserBullet(assetManager);
+                    bullet = new LaserBeamEffect((int)distance);
                 } else if (weapon.getType() == WeaponType.Ion) {
                     bullet = new IonBullet(assetManager);
                 } else if (weapon.getType() == WeaponType.Flamer) {
@@ -180,19 +186,15 @@ RangedAttackAnimationAction extends Action {
                     moveToAction.setTarget(bullet);
                 }
 
-                RotateToAction rotateToAction = new RotateToAction();
-                rotateToAction.setRotation(MathUtils.getAngle(new double[]{start.x, start.y}, new double[]{ex, ey}));
-                rotateToAction.setTarget(bullet);
+                float angle = MathUtils.getAngle(new Vector2(startScreen.x, startScreen.y), new Vector2(endScreen.x, endScreen.y));
 
-                //SequenceAction sequenceAction = new SequenceAction();
+                bullet.setRotation(angle);
+
                 selectedWeaponFiringAction.addAction(new LockAction());
                 VisibleAction hideAction = new VisibleAction();
                 hideAction.setVisible(false);
                 hideAction.setTarget(bullet);
                 selectedWeaponFiringAction.addAction(hideAction);
-
-                if (weapon.getType() != WeaponType.Missile && weapon.getType() != WeaponType.Flamer)
-                    selectedWeaponFiringAction.addAction(rotateToAction);
 
                 selectedWeaponFiringAction.addAction(delayAction);
 
@@ -200,6 +202,11 @@ RangedAttackAnimationAction extends Action {
 
                 if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer)
                     selectedWeaponFiringAction.addAction(moveActorByBezierLine);
+                else if(weapon.getType() == WeaponType.Laser) {
+                    AlphaAction action = Actions.fadeOut(0.15f);
+                    action.setActor(bullet);
+                    selectedWeaponFiringAction.addAction(action);
+                }
                 else
                     selectedWeaponFiringAction.addAction(moveToAction);
 

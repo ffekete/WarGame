@@ -11,12 +11,12 @@ public class MissileSmoke extends AbstractBullet {
     private IsometricAnimatedSprite isometricAnimatedSprite;
 
     public MissileSmoke(AssetManager assetManager) {
-        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Smoke.png", Texture.class), 5);
+        this.isometricAnimatedSprite = new IsometricAnimatedSprite(assetManager.get("bullets/Smoke.png", Texture.class), 10);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(Color.WHITE);
+        isometricAnimatedSprite.setColor(Color.valueOf("FFFFFF99"));
         isometricAnimatedSprite.setPosition(getX(), getY());
         isometricAnimatedSprite.setRotation(getRotation() - 45);
         isometricAnimatedSprite.draw(batch, parentAlpha);

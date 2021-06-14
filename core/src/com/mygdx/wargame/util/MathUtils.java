@@ -25,4 +25,9 @@ public class MathUtils {
         ) * 180.0d / Math.PI);
     }
 
+    public static double ISO = (-45 - 90) / 180 * Math.PI;
+
+    public static float convertToIso(float angle) {
+        return (float) Math.atan2(Math.sin(angle), Math.cos(angle - (ISO)));
+    }
 }

@@ -9,6 +9,7 @@ import com.mygdx.wargame.battle.screen.AssetManagerLoaderV2;
 import com.mygdx.wargame.battle.screen.IsometricAnimatedSprite;
 import com.mygdx.wargame.common.component.Component;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
+import com.mygdx.wargame.common.component.weapon.laser.LargeLaser;
 import com.mygdx.wargame.common.component.weapon.missile.MissileLauncher;
 
 import java.util.HashSet;
@@ -63,9 +64,9 @@ public class Fighter extends AbstractMech {
 
         weaponSlots = ImmutableMap.<BodyPart, List<WeaponSlot>>builder()
                 .put(BodyPart.LeftLeg, ImmutableList.of(
-                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma))))
+                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Laser, WeaponType.Ion, WeaponType.Plasma))))
                 .put(BodyPart.RightLeg, ImmutableList.of(
-                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Flamer, WeaponType.Ion, WeaponType.Plasma))))
+                        new WeaponSlot(ImmutableList.of(WeaponType.Ballistic, WeaponType.Missile, WeaponType.Laser, WeaponType.Ion, WeaponType.Plasma))))
                 .build();
 
         bodyDefinition = ImmutableMap.<BodyPart, Optional<String>>builder()
@@ -77,8 +78,8 @@ public class Fighter extends AbstractMech {
                 .put(BodyPart.RightArm, Optional.empty())
                 .build();
 
-        addWeapon(BodyPart.LeftLeg, new MissileLauncher());
-        addWeapon(BodyPart.RightLeg, new MissileLauncher());
+        addWeapon(BodyPart.LeftLeg, new LargeLaser());
+        addWeapon(BodyPart.RightLeg, new LargeLaser());
     }
 
 

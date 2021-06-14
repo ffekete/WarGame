@@ -246,7 +246,7 @@ AbstractMech extends Actor implements Mech {
     public int getAmmoCount() {
         return getAllWeapons().stream().map(w -> ((Weapon) w).getAmmo()).reduce((a, b) -> {
             return Optional.of(a.orElse(0) + b.orElse(0));
-        }).orElse(Optional.of(0)).get();
+        }).orElse(Optional.of(0)).orElse(0);
     }
 
     @Override
