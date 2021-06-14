@@ -734,7 +734,7 @@ HudElementsFacade {
         SequenceAction sequenceAction1 = new SequenceAction();
         sequenceAction1.addAction(Actions.delay(GameState.messageDelayDuringSingleAttack));
         sequenceAction1.addAction(new AddActorToStageAction(StageElementsStorage.stage, table));
-        sequenceAction1.addAction(Actions.moveBy(8, 32, 0.5f));
+        sequenceAction1.addAction(Actions.moveBy(8, 32, 0.75f));
         sequenceAction1.addAction(new RemoveActorFromStageAction(StageElementsStorage.stage, table));
         sequenceAction1.setActor(table);
 

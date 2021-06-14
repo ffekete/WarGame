@@ -93,7 +93,7 @@ public class DamageCalculator {
 
                     targetMech.setHp(bodyPart, targetMech.getHp(bodyPart) - damage);
 
-                    HudElementsFacade.createDamageIndicatorFloatingLabelFromString("Body damage: ", Integer.toString(damage), targetMech.getX(), targetMech.getY(), GameState.fireSingleWeaponAction);
+                    HudElementsFacade.createDamageIndicatorFloatingLabelFromString(String.format("%s", damage), String.format(" %s", targetMech.getDefinedBodyParts().get(bodyPart)), targetMech.getX(), targetMech.getY(), GameState.fireSingleWeaponAction);
 
                     // destroy body part and all of its components
                     if (targetMech.getHp(bodyPart) <= 0) {

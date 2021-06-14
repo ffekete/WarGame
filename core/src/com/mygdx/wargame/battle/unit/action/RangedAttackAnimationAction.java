@@ -168,7 +168,7 @@ RangedAttackAnimationAction extends Action {
                     float yOffset = flipBezierControlPoint ? -(length / 8f) : (length / 8f);
 
                     moveActorByBezierLine = new MoveActorByBezierLine(start.x, start.y, ex, ey, xOffset, yOffset + new Random().nextInt(2), angle);
-                    moveActorByBezierLine.setDuration(length * 0.25f);
+                    moveActorByBezierLine.setDuration(length * 0.33f);
                     moveActorByBezierLine.setTarget(bullet);
 
                 } else {

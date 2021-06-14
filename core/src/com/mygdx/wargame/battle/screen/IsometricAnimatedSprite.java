@@ -47,7 +47,7 @@ public class IsometricAnimatedSprite extends Actor {
         Vector2 v2 = isoUtils.worldToScreen(getX(), getY());
         textureRegion.setRegion(0 + step * 64, 0, 64, 64);
 
-        batch.draw(textureRegion, v2.x + 32, v2.y + 10 + oy, 32, 32, 64, 64, 1, 1, getRotation());
+        batch.draw(textureRegion, v2.x + 32, v2.y + 10 + oy, 32, 32, 64, 64, getScaleX(), getScaleY(), getRotation());
     }
 
     @Override

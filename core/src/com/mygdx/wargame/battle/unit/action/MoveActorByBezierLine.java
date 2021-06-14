@@ -56,6 +56,11 @@ public class MoveActorByBezierLine extends TemporalAction {
 
         getTarget().setPosition(out.x, out.y);
 
-        getTarget().setRotation(angle);
+        //        if (rotate) {
+            bezier.derivativeAt(out, percent);
+            getTarget().setRotation(out.angle());
+//        }
+
+        //getTarget().setRotation(angle);
     }
 }
