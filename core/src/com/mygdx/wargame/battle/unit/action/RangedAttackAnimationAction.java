@@ -13,6 +13,7 @@ import com.mygdx.wargame.battle.map.render.IsometricTiledMapRendererWithSprites;
 import com.mygdx.wargame.battle.rules.facade.GameState;
 import com.mygdx.wargame.battle.screen.IsoUtils;
 import com.mygdx.wargame.battle.screen.StageElementsStorage;
+import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.common.component.weapon.Weapon;
 import com.mygdx.wargame.common.component.weapon.WeaponType;
 import com.mygdx.wargame.common.component.weapon.ballistic.MachineGun;
@@ -200,6 +201,15 @@ RangedAttackAnimationAction extends Action {
 
                 selectedWeaponFiringAction.addAction(new AddActorAction(isometricTiledMapRendererWithSprites, bullet));
 
+                ParallelAction attackingStateAction = new ParallelAction();
+                // switch to attack animation
+                attackingStateAction.addAction(new SetStateAction(attackerMech, State.Attack));
+                attackingStateAction.addAction(Actions.delay(0.15f));
+                attackingStateAction.addAction(new SetStateAction(attackerMech, State.Idle));
+
+                selectedWeaponFiringAction.addAction(attackingStateAction);
+
+                // move bullet
                 if (weapon.getType() == WeaponType.Missile || weapon.getType() == WeaponType.Flamer)
                     selectedWeaponFiringAction.addAction(moveActorByBezierLine);
                 else if(weapon.getType() == WeaponType.Laser) {

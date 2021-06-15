@@ -5,9 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.Node;
+import com.mygdx.wargame.battle.unit.State;
 import com.mygdx.wargame.battle.unit.action.AddDirectionMarkerAction;
 import com.mygdx.wargame.battle.unit.action.ChangeDirectionAction;
 import com.mygdx.wargame.battle.unit.action.RemoveDirectionMarkerAction;
+import com.mygdx.wargame.battle.unit.action.SetStateAction;
 import com.mygdx.wargame.common.mech.AbstractMech;
 
 public class MoveActorAlongPathActionFactory {
@@ -44,7 +46,7 @@ public class MoveActorAlongPathActionFactory {
 
                 moveToActionStep = new IsoMoveToAction(mech);
                 moveToActionStep.setPosition(node.getX(), node.getY());
-                moveToActionStep.setDuration(0.25f);
+                moveToActionStep.setDuration(1.25f);
 
                 moveToAction.addAction(moveToActionStep);
                 previous = node;
@@ -53,6 +55,7 @@ public class MoveActorAlongPathActionFactory {
         }
 
         moveToAction.addAction(new RemovePathMarkersAction(battleMap));
+        moveToAction.addAction(new SetStateAction(mech, State.Idle));
 
         moveParallelAction.addAction(moveToAction);
 

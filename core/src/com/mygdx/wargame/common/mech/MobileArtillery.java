@@ -28,9 +28,13 @@ public class MobileArtillery extends AbstractMech {
     private String name;
     private int movementPoints;
 
-    public MobileArtillery(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(30, new IsometricAnimatedSprite(assetManagerLoader.assetManager.get("mechs/MobileArtillery.png", Texture.class), 60),
-                new IsometricAnimatedSprite(assetManagerLoader.assetManager.get("info/EnemyMarker.png", Texture.class), 60));
+    public MobileArtillery(String name) {
+        super(30,
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/MobileArtillery.png", Texture.class), 60),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/MobileArtillery.png", Texture.class), 60),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/MobileArtillery.png", Texture.class), 60),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/MobileArtillery.png", Texture.class), 60),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("info/EnemyMarker.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);

@@ -27,9 +27,13 @@ public class Templar extends AbstractMech {
     private String name;
     private int movementPoints;
 
-    public Templar(String name, AssetManagerLoaderV2 assetManagerLoader) {
-        super(20, new IsometricAnimatedSprite(assetManagerLoader.assetManager.get("mechs/Templar.png", Texture.class), 5),
-                new IsometricAnimatedSprite(assetManagerLoader.assetManager.get("info/EnemyMarker.png", Texture.class), 60));
+    public Templar(String name) {
+        super(20,
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/Templar.png", Texture.class), 5),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/Templar.png", Texture.class), 5),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/Templar.png", Texture.class), 5),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("mechs/Templar.png", Texture.class), 5),
+                new IsometricAnimatedSprite(AssetManagerLoaderV2.assetManager.get("info/EnemyMarker.png", Texture.class), 60));
         this.name = name;
 
         setTouchable(Touchable.enabled);

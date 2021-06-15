@@ -30,6 +30,10 @@ public class AssetManagerLoaderV2 {
         assetManager.load("mechs/Tank.png", Texture.class);
         assetManager.load("mechs/Fighter.png", Texture.class);
         assetManager.load("mechs/Shadow.png", Texture.class);
+        assetManager.load("mechs/MechIdle.png", Texture.class);
+        assetManager.load("mechs/MechWalk.png", Texture.class);
+        assetManager.load("mechs/FighterUp.png", Texture.class);
+        assetManager.load("mechs/FighterRight.png", Texture.class);
 
 
         assetManager.load("info/PathMarker.png", Texture.class);

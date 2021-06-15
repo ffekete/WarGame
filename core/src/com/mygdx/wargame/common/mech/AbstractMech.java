@@ -2,7 +2,6 @@ package com.mygdx.wargame.common.mech;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.wargame.battle.map.BattleMap;
 import com.mygdx.wargame.battle.map.BattleMapStore;
@@ -39,7 +38,10 @@ AbstractMech extends Actor implements Mech {
     private boolean rangedAttack;
     protected Map<BodyPart, List<WeaponSlot>> weaponSlots;
 
-    protected IsometricAnimatedSprite isometricSprite;
+    protected IsometricAnimatedSprite idleAnimation;
+    protected IsometricAnimatedSprite attackAnimation;
+    protected IsometricAnimatedSprite walkUpAnimation;
+    protected IsometricAnimatedSprite walkRightAnimation;
     protected IsometricAnimatedSprite enemyMarker;
 
     protected Map<BodyPart, Optional<String>> bodyDefinition;
@@ -50,9 +52,17 @@ AbstractMech extends Actor implements Mech {
 
     protected Map<BodyPart, Integer> hp = new HashMap<>();
 
-    public AbstractMech(int initiative, IsometricAnimatedSprite isometricSprite, IsometricAnimatedSprite enemyMarker) {
+    public AbstractMech(int initiative,
+                        IsometricAnimatedSprite idleAnimation,
+                        IsometricAnimatedSprite attackAnimation,
+                        IsometricAnimatedSprite walkRightAnimation,
+                        IsometricAnimatedSprite walkUpAnimation,
+                        IsometricAnimatedSprite enemyMarker) {
         this.initiative = initiative;
-        this.isometricSprite = isometricSprite;
+        this.idleAnimation = idleAnimation;
+        this.attackAnimation = attackAnimation;
+        this.walkUpAnimation = walkUpAnimation;
+        this.walkRightAnimation = walkRightAnimation;
         stability = 100;
         heatLevel = 0;
         this.enemyMarker = enemyMarker;
@@ -127,13 +137,34 @@ AbstractMech extends Actor implements Mech {
             enemyMarker.draw(spriteBatch, parentAlpha);
         }
 
-        isometricSprite.setColor(getColor());
+        idleAnimation.setColor(getColor());
         int height = getX() >= 0 && getY() >= 0 && getX() < BattleMap.WIDTH && getY() < BattleMap.HEIGHT ? BattleMapStore.battleMap.getNodeGraph().getNodeWeb()[(int)getX()][(int)getY()].getTile().getTileWorldHeight() : 0;
 
         if(this.canFly())
             height += 16;
 
-        isometricSprite.draw(spriteBatch, parentAlpha, height);
+        switch (state) {
+            case WalkUp:
+                walkUpAnimation.draw(spriteBatch, parentAlpha, height, false);
+                break;
+            case WalkDown:
+                walkRightAnimation.draw(spriteBatch, parentAlpha, height, false);
+                break;
+            case WalkLeft:
+                walkUpAnimation.draw(spriteBatch, parentAlpha, height, true);
+                break;
+            case WalkRight:
+                walkRightAnimation.draw(spriteBatch, parentAlpha, height, true);
+                break;
+            case Idle:
+                idleAnimation.draw(spriteBatch, parentAlpha, height, true);
+                break;
+            case Attack:
+                attackAnimation.draw(spriteBatch, parentAlpha, height, true);
+                break;
+            case Dead:
+                break;
+        }
 
         spriteBatch.setColor(Color.WHITE);
     }
@@ -239,7 +270,10 @@ AbstractMech extends Actor implements Mech {
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
-        isometricSprite.setPosition(x, y);
+        idleAnimation.setPosition(x, y);
+        attackAnimation.setPosition(x, y);
+        walkUpAnimation.setPosition(x, y);
+        walkRightAnimation.setPosition(x, y);
     }
 
     @Override
@@ -321,7 +355,7 @@ AbstractMech extends Actor implements Mech {
         return false;
     }
 
-    public IsometricAnimatedSprite getIsometricSprite() {
-        return isometricSprite;
+    public IsometricAnimatedSprite getIdleAnimation() {
+        return idleAnimation;
     }
 }

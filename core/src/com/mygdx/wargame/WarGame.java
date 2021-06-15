@@ -41,29 +41,29 @@ public class WarGame extends Game {
 
         BattleScreenInputData battleScreenInputData = new BattleScreenInputData();
 
-        AbstractMech mech = new Gunner("PlayerMech",  assetManagerLoaderV2);
+        AbstractMech mech = new Gunner("PlayerMech");
         mech.setActive(true);
         mech.setPosition(-1, -1);
 
-        AbstractMech mobileArtillery = new MobileArtillery("PlayerMobileArtillery", assetManagerLoaderV2);
+        AbstractMech mobileArtillery = new MobileArtillery("PlayerMobileArtillery");
         mobileArtillery.setActive(true);
         mobileArtillery.setPosition(-1, -1);
 
 
-        AbstractMech fighter = new Fighter("PlayerFighter", assetManagerLoaderV2);
+        AbstractMech fighter = new Fighter("PlayerFighter");
         fighter.setActive(true);
         fighter.setPosition(-1, -1);
 
 
-        AbstractMech tank = new Tank("AITank", assetManagerLoaderV2);
+        AbstractMech tank = new Tank("AITank");
         tank.setActive(true);
         tank.setPosition(-1, -1);
 
-        AbstractMech artillery = new Artillery("AIArtillery", assetManagerLoaderV2);
+        AbstractMech artillery = new Artillery("AIArtillery");
         artillery.setActive(true);
         artillery.setPosition(-1, -1);
 
-        AbstractMech mech2 = new Templar("AITemplar", assetManagerLoaderV2);
+        AbstractMech mech2 = new Templar("AITemplar");
         mech2.setActive(true);
         mech2.setPosition(-1, -1);
 

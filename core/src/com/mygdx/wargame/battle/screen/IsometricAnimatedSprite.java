@@ -36,6 +36,10 @@ public class IsometricAnimatedSprite extends Actor {
     }
 
     public void draw(Batch batch, float parentAlpha, float oy) {
+        draw(batch, parentAlpha, oy, false);
+    }
+
+    public void draw(Batch batch, float parentAlpha, float oy, boolean flipX) {
         counter++;
         if(counter >= speed) {
             step = (step + 1) % nrOfSteps;
@@ -46,6 +50,10 @@ public class IsometricAnimatedSprite extends Actor {
         batch.setColor(this.getColor());
         Vector2 v2 = isoUtils.worldToScreen(getX(), getY());
         textureRegion.setRegion(0 + step * 64, 0, 64, 64);
+
+        if (flipX != textureRegion.isFlipX()) {
+            textureRegion.flip(flipX, false);
+        }
 
         batch.draw(textureRegion, v2.x + 32, v2.y + 10 + oy, 32, 32, 64, 64, getScaleX(), getScaleY(), getRotation());
     }

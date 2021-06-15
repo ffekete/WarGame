@@ -101,8 +101,8 @@ public class DeploymentFacade {
 
             spriteBatch.begin();
             for (int i = 0; i < toDeploy.size(); i++) {
-                toDeploy.get(i).getIsometricSprite().getTextureRegion().setRegion(0, 0, 64, 64);
-                spriteBatch.draw(toDeploy.get(i).getIsometricSprite().getTextureRegion(), i * 70 + 20, 10, 64, 64);
+                toDeploy.get(i).getIdleAnimation().getTextureRegion().setRegion(0, 0, 64, 64);
+                spriteBatch.draw(toDeploy.get(i).getIdleAnimation().getTextureRegion(), i * 70 + 20, 10, 64, 64);
             }
             spriteBatch.end();
         }
